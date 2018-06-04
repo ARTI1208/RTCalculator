@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/basic" >
+        <ListPreference android:key="tab_default" android:title="@string/tab_default" android:entries="@array/default_tab" android:entryValues="@array/default_tab_values" android:defaultValue="calc_tab" />
+        <ListPreference android:key="app_theme" android:title="@string/app_theme" android:entries="@array/app_theme" android:entryValues="@array/app_theme_values" android:defaultValue="light" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_calc" >
+        <SwitchPreference android:title="@string/zero_div" android:summaryOff="@string/error" android:key="zero_div" android:summaryOn="@string/infinity" android:defaultValue="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

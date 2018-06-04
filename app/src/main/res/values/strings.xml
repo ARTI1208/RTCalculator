@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Calculator</string>
+    <string name="title_calc">Calculator</string>
+    <string name="title_unit">Unit Converter</string>
+    <string name="title_currency">Currency</string>
+    <string name="title_settings">Settings</string>
+    <string name="error">Error</string>
+    <string name="infinity">∞</string>
+    <string name="basic">Basic</string>
+    <string name="tab_default">Default tab</string>
+    <string name="zero_div">Divide by zero</string>
+    <string name="app_theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_daynight">Day/Night</string>
+    <string name="unit_category_distance">Distance</string>
+    <string name="unit_category_velocity">Velocity</string>
+</resources>

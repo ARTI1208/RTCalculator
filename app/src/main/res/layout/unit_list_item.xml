@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="60dp" android:minHeight="60dp">
+
+    <EditText
+        android:id="@+id/value"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:text="0"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="0dp"
+        android:layout_weight="1.0"
+        android:textSize="25sp"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="Type" />
+
+</LinearLayout>
+
+<!--<TextView-->
+<!--android:id="@+id/type"-->
+<!--android:layout_width="fill_parent"-->
+<!--android:layout_height="40dp"-->
+<!--android:gravity="center"-->
+<!--android:text="TextView" xmlns:android="http://schemas.android.com/apk/res/android"/>-->

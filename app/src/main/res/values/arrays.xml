@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="default_tab">
+        <item>@string/title_currency</item>
+        <item>@string/title_calc</item>
+        <item>@string/title_unit</item>
+        <item>@string/title_settings</item>
+    </array>
+    <array name="default_tab_values">
+        <item>currency_tab</item>
+        <item>calc_tab</item>
+        <item>unit_tab</item>
+        <item>settings_tab</item>
+    </array>
+    <array name="app_theme">
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
+        <item>@string/theme_daynight</item>
+    </array>
+    <array name="app_theme_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>daynight</item>
+    </array>
+    <array name="distance_items">
+        <item>mm</item>
+        <item>cm</item>
+        <item>dm</item>
+        <item>m</item>
+        <item>km</item>
+        <item>in</item>
+        <item>ft</item>
+        <item>yd</item>
+        <item>mi</item>
+        <item>nmi</item>
+        <item>ly</item>
+        <item>аршин</item>
+    </array>
+    <array name="velocity_items">
+        <item>m/s</item>
+        <item>m/min</item>
+        <item>km/min</item>
+        <item>km/h</item>
+        <item>ft/s</item>
+        <item>mph</item>
+        <item>mach</item>
+        <item>kn</item>
+    </array>
+</resources>

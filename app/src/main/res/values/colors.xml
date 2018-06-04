@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fafafa</color>
+    <color name="colorPrimaryDark">#fafafa</color>
+    <color name="colorPrimaryThemeDark">#404040</color>
+    <color name="colorPrimaryDarkThemeDark">#404040</color>
+    <color name="colorAccent">#0dafed</color>
+    <color name="inputBack">#dedede</color>
+</resources>

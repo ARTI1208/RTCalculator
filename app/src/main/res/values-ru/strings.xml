@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Калькулятор</string>
+    <string name="title_calc">Калькулятор</string>
+    <string name="title_unit">Конвертер</string>
+    <string name="title_currency">Валюты</string>
+    <string name="title_settings">Настройки</string>
+    <string name="error">Ошибка</string>
+    <string name="basic">Общее</string>
+    <string name="tab_default">Вкладка по умолчанию</string>
+    <string name="zero_div">Деление на ноль</string>
+    <string name="app_theme">Тема</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_daynight">День/Ночь</string>
+    <string name="unit_category_distance">Расстояние</string>
+    <string name="unit_category_velocity">Скорость</string>
+</resources>
