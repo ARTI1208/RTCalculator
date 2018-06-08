@@ -8,4 +8,7 @@
     <PreferenceCategory android:title="@string/title_calc" >
         <SwitchPreference android:title="@string/zero_div" android:summaryOff="@string/error" android:key="zero_div" android:summaryOn="@string/infinity" android:defaultValue="false" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_unit" >
+        <SwitchPreference android:title="@string/unit_view" android:summaryOff="@string/unit_view_powerful" android:key="unit_view" android:summaryOn="@string/unit_view_simple" android:defaultValue="true" />
+    </PreferenceCategory>
 </PreferenceScreen>

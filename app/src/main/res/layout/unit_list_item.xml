@@ -11,7 +11,7 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberDecimal"
-        android:text="0"
+        android:text="val"
         android:textSize="25sp" />
 
     <TextView
@@ -21,13 +21,6 @@
         android:textSize="25sp"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:text="Type" />
+        android:text="type" />
 
 </LinearLayout>
-
-<!--<TextView-->
-<!--android:id="@+id/type"-->
-<!--android:layout_width="fill_parent"-->
-<!--android:layout_height="40dp"-->
-<!--android:gravity="center"-->
-<!--android:text="TextView" xmlns:android="http://schemas.android.com/apk/res/android"/>-->

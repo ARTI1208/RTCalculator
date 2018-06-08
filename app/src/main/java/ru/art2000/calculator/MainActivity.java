@@ -3,35 +3,23 @@ package ru.art2000.calculator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-//import android.support.v4.app.FragmentManager;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.Button;
-import java.lang.Math;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public View UnitView;
     public View CurrencyView;
     Button Button_pressed;
+    Boolean unit_view;
     TextView InputTV;
     TextView ResultTV;
     SharedPreferences prefs;
@@ -46,58 +35,23 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
     Fragment fragmentc;
     String buttonText;
-    static final int PAGE_COUNT = 8;
-
+    boolean doubleBackToExitPressedOnce = false;
     ViewPager pager;
-    PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String prefstr;
         Boolean prefbl;
-
-
-//        pager = (ViewPager) findViewById(R.id.pager);
-//        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-//        pager.setAdapter(pagerAdapter);
-//
-//        pager.setOnPageChangeListener(new OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset,
-//                                       int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-
-
         pager = findViewById(R.id.pager);
-
         fragmentManager = getFragmentManager();
         fragmentc = new SettingsFragment();
-//        fragmentc = new CalculatorFragment();
-//        getFragmentManager().beginTransaction().add(R.id.fragment_container, fragmentc, "CalcFragment").commit();
-
-        // Получаем ссылку на второй фрагмент по ID
-//        fragmentc = (Fragment) fragmentManager.findFragmentById(R.id.calc_fragment);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefstr = prefs.getString("app_theme", "light");
-
-//        fragmentc.t
+        unit_view = prefs.getBoolean("unit_view", true);
         if (prefs.getBoolean("is_first_run", true)){
             prefsEd = prefs.edit().putBoolean("is_first_run", true);
             prefsEd.apply();
         }
-//        if (prefstr.equals("dark"))
-//            setTheme(R.style.AppTheme_Dark);
         switch (prefstr){
             case "dark":
                 setTheme(R.style.AppTheme_Dark);
@@ -116,14 +70,6 @@ public class MainActivity extends AppCompatActivity {
         UnitView = findViewById(R.id.unit_layout);
         CurrencyView = findViewById(R.id.currency_layout);
         pager = UnitView.findViewById(R.id.pager);
-        CalcView.setVisibility(View.VISIBLE);
-//        InputTV = findViewById(R.id.tv_input);
-//        ResultTV = findViewById(R.id.tv_result);
-//        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalculatorFragment()).commit();
-//                CalcView = findViewById(R.id.calc_layout);
-//        UnitView = findViewById(R.id.unit_layout);
-//        CurrencyView = findViewById(R.id.currency_layout);
-//        CalcView.setVisibility(View.VISIBLE);
         InputTV = findViewById(R.id.tv_input);
         ResultTV = findViewById(R.id.tv_result);
         Window window = getWindow();
@@ -132,10 +78,7 @@ public class MainActivity extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(getBaseContext(),R.color.inputBack));
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         prefstr = prefs.getString("tab_default", "calc_tab");
-
-
         switch (prefstr){
             case "calc_tab":
                 navigation.setSelectedItemId(R.id.navigation_calc);
@@ -158,19 +101,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    boolean doubleBackToExitPressedOnce = false;
-
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, R.string.twice_tap_exit, Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -200,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Window window = getWindow();
@@ -213,9 +150,6 @@ public class MainActivity extends AppCompatActivity {
                     CurrencyView.setVisibility(View.GONE);
                     window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.inputBack));
                     getFragmentManager().beginTransaction().remove(fragmentc).commit();
-//                    fragmentc = new CalculatorFragment();
-//                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentc, "CalcFragment").commit();
-//                    setListener(new CalculatorFragment());
                     return true;
                 case R.id.navigation_unit:
                     CalcView.setVisibility(View.GONE);
@@ -224,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
                     window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
                     getFragmentManager().beginTransaction().remove(fragmentc).commit();
                     createUnitView();
-//                    fragmentc = new UnitFragment();
-//                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentc, "UnitFragment").commit();
                     return true;
                 case R.id.navigation_currency:
                     CalcView.setVisibility(View.GONE);
@@ -233,15 +165,12 @@ public class MainActivity extends AppCompatActivity {
                     CurrencyView.setVisibility(View.VISIBLE);
                     window.setStatusBarColor(ContextCompat.getColor(getBaseContext(),R.color.colorPrimary));
                     getFragmentManager().beginTransaction().remove(fragmentc).commit();
-//                    fragmentc = new CurrencyFragment();
-//                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentc, "CurrencyFragment").commit();
                     return true;
                 case R.id.navigation_settings:
                     CalcView.setVisibility(View.GONE);
                     UnitView.setVisibility(View.GONE);
                     CurrencyView.setVisibility(View.GONE);
                     window.setStatusBarColor(ContextCompat.getColor(getBaseContext(),R.color.colorPrimary));
-
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentc, "SettingsFragment").commit();
                     return true;
             }
@@ -257,43 +186,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createUnitView(){
-
         UnitClass adapter = new UnitClass(getBaseContext(), getSupportFragmentManager());
-
-
-        // Set the adapter onto the view pager
         pager.setAdapter(adapter);
-
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(pager);
     }
-
-
-    private void setupViewPager(ViewPager viewPager) {
-//        Adapter adapter = new Adapter(fragmentManager.getFragments().);
-//        adapter.addFragment(new Tab1Fragment(), "PHOTOS");
-//        adapter.addFragment(new Tab2Fragment(), "HI-FIVES");
-//        pager.setAdapter(adapter);
-    }
-
-//    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-//
-//        public MyFragmentPagerAdapter(FragmentManager fm1) {
-//            super(fm1);
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//            return CalculatorFragment.newInstance(position);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return PAGE_COUNT;
-//        }
-//
-//    }
-
 }
 

@@ -1,21 +1,18 @@
 package ru.art2000.calculator;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatDelegate;
 
 public class SettingsFragment extends PreferenceFragment {
 
     SharedPreferences.Editor prefsEd;
     SharedPreferences prefs;
-//    ListPreference TabList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,10 +21,10 @@ public class SettingsFragment extends PreferenceFragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
         ListPreference TabList = (ListPreference) findPreference("tab_default");
         SwitchPreference ZeroDiv = (SwitchPreference) findPreference("zero_div");
+        SwitchPreference UnitView = (SwitchPreference) findPreference("unit_view");
         ListPreference AppTheme = (ListPreference) findPreference("app_theme");
         if (prefs.getBoolean("is_first_run", false))
             AppTheme.setValue("light");
-//              prefsEd = prefs.edit().putBoolean("zero_div", false);
         String ThemeVal = AppTheme.getValue();
         String TabValue = TabList.getValue();
         CharSequence TabText = TabList.getEntry();
@@ -38,7 +35,7 @@ public class SettingsFragment extends PreferenceFragment {
         prefsEd = prefs.edit().putString("tab_default", TabValue);
         prefsEd = prefs.edit().putString("app_theme", ThemeVal);
         prefsEd = prefs.edit().putBoolean("zero_div", ZeroDiv.isChecked());
-//        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        prefsEd = prefs.edit().putBoolean("unit_view", UnitView.isChecked());
         TabList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -56,7 +53,6 @@ public class SettingsFragment extends PreferenceFragment {
                 AppTheme.setValue(newValue.toString());
                 CharSequence STheme = AppTheme.getEntry();
                 AppTheme.setSummary(STheme);
-
                 switch (newValue.toString()){
                     case "dark":
                         getActivity().getApplication().setTheme(R.style.AppTheme_Dark);
@@ -69,34 +65,12 @@ public class SettingsFragment extends PreferenceFragment {
                         getActivity().getApplication().setTheme(R.style.AppTheme);
                         break;
                 }
-//                if (newValue.toString().equals("dark"))
-//                    getActivity().getApplication().setTheme(R.style.AppTheme_Dark);
-//                else
-//                    getActivity().getApplication().setTheme(R.style.AppTheme);
-//                    setTheme(R.style.AppTheme_Dark);
-
-
                 prefsEd = prefs.edit().putBoolean("theme_changed", true);
                 prefsEd.apply();
                 getActivity().recreate();
-//                BottomNavigationView navigation = getActivity().findViewById(R.id.navigation);
-//                navigation.setSelectedItemId(R.id.navigation_settings);
-
                 return true;
             }
         });
         prefsEd.apply();
     }
-
-
-
-//    ListPreference TabList1
-//    @Override
-//    public boolean onPreferenceChangeListner(Preference preference, Object value) {
-//        ListPreference TabList = (ListPreference) findPreference("tab_default");
-//        CharSequence TabText = TabList.getEntry();
-//        TabList.setSummary(TabText);
-//        return true;
-//    }
-
 }

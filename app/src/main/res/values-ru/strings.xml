@@ -15,4 +15,8 @@
     <string name="theme_daynight">День/Ночь</string>
     <string name="unit_category_distance">Расстояние</string>
     <string name="unit_category_velocity">Скорость</string>
+    <string name="unit_view_simple">Простой</string>
+    <string name="unit_view_powerful">Мощный</string>
+    <string name="unit_view">Вид конвертера</string>
+    <string name="twice_tap_exit">Чтобы выйти, нажмите НАЗАД ещё раз</string>
 </resources>

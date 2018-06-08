@@ -1,5 +1,5 @@
 package ru.art2000.calculator;
-
+//Временно неиспользуемый адаптер для ListView в "мощном" конвертере
 import android.content.Context;
 import android.renderscript.Element;
 import android.support.annotation.NonNull;
@@ -34,8 +34,9 @@ public class UnitItemAdapter extends RecyclerView.Adapter {
         Context mContext;
         private LayoutInflater mlayoutInflater;
         static ArrayList<String> arrayList;
+    private RecyclerView mRecyclerView;
 
-        EditText et;
+    EditText et;
         TextView tv;
         TextWatcher twatcher;
     private InputMethodManager imm;
@@ -57,6 +58,8 @@ public class UnitItemAdapter extends RecyclerView.Adapter {
         mlayoutInflater = LayoutInflater.from(context);  //Dynamic layout mapping
     }
 
+
+
     @NonNull
     @Override
     public ItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
@@ -75,13 +78,26 @@ public class UnitItemAdapter extends RecyclerView.Adapter {
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder personViewHolder, int i) {
-        tv.setText(String.valueOf(arrayList.get(i)));
-        et.setText(inp[i]);
+    public void onBindViewHolder(RecyclerView.ViewHolder ViewHolder, int i) {
+//        ViewHolder.MyCustomEditTextListener.updatePosition(ViewHolder.getAdapterPosition());
+
+        if (tv.getText().toString().equals("type")) {
+            tv.setText(String.valueOf(arrayList.get(ViewHolder.getAdapterPosition())));
+//            Toast tt = Toast.makeText(mContext, "Test", Toast.LENGTH_LONG);
+//                tt.show();
+        }
+//        if (et.getText().toString().equals("val"))
+            et.setText(inp[i]);
+
+//        EditText et1 = ViewHolder.
+
+
         final int pos = i;
+
         et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,24 +109,58 @@ public class UnitItemAdapter extends RecyclerView.Adapter {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                notifyItemChanged(pos);
+//                               Toast tt = Toast.makeText(mContext, inp[pos+1], Toast.LENGTH_LONG);
+//                tt.show();
+//
+                for (int j=0;j<arrayList.size();j++){
+                    final int pp = j;
+                    if (j!=pos) {
+//                        inp[j] = "Test" + String.valueOf(j);
+                        inp[j] = String.valueOf(s.toString());
+                      if (!mRecyclerView.isComputingLayout())
+                                        notifyItemChanged(pp);
 
+              }
+
+
+
+
+
+            }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (et.getText().length() != 1) {
-                    inp[pos+1] = et.getText().toString();
-                    for (int j=0;j<arrayList.size();j++){
-                        if (j!=pos) {
-                            inp[j] = "Test" + String.valueOf(j);
-                            notifyItemChanged(j);
-                        }
-                    }
+//                Toast tt = Toast.makeText(mContext, inp[pos+1], Toast.LENGTH_LONG);
+//                tt.show();
+////                if (et.getText().length() != 1) {
+////                    inp[pos+1] = et.getText().toString();
+//                for (int j=0;j<arrayList.size();j++){
+//                    final int pp = j;
+//                    if (j!=pos) {
+////                        inp[j] = "Test" + String.valueOf(j);
+//                        inp[j] = String.valueOf(s.toString());
+////                                notifyItemChanged(j);
+////                        mRecyclerView.post(new Runnable() {
+////                            @Override public void run() {
+//////                                for (int j=0;j<arrayList.size();j++){
+////                                    if (j!=pos) {
+////                                inp[j] = "Test" + String.valueOf(j);
+//                        if (!mRecyclerView.isComputingLayout())
+//                                        notifyItemChanged(pp);
+//
+////                                    }
+////                                }
+//                            }
+////                        });
+////                    }
+//                }
+
+
+
 //                    notifyItemChanged(pos+1);
-                    Toast tt = Toast.makeText(mContext, inp[pos+1], Toast.LENGTH_LONG);
-                    tt.show();
-                }
+
+//                }
 //                if (pos == 0) {
 //                    inp[pos+1] = "56";
 //                    notifyItemChanged(pos+1);
@@ -124,7 +174,12 @@ public class UnitItemAdapter extends RecyclerView.Adapter {
 //        tv.setText(String.valueOf(arrayList.get(getAdapterPosition())));
     }
 
-    public void haha(View v) {
+    public void haha(int position) {
+
+        for (int i = 0; i<arrayList.size(); i++){
+            if (i != position)
+                notifyItemChanged(i);
+        }
 //        super(v);
 //        taskTV = (TextView)v.findViewById(R.id.taskDesc);
     }
@@ -153,6 +208,29 @@ public class UnitItemAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public class MyCustomEditTextListener implements TextWatcher {
+        private int position;
+
+        public void updatePosition(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            // no op
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+//            arrayList[position] = charSequence.toString();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // no op
+        }
+    }
+//}
 
 
 

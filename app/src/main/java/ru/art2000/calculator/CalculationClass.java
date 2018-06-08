@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -21,13 +20,10 @@ public class CalculationClass extends MainActivity {
     }
 
     public void getButtonType(View v, Button b, String  txt, TextView  inpr, TextView res){
-//        Button_pressed = findViewById(v.getId());
-
         buttonText = txt;
         Button_pressed = b;
         InputTV = inpr;
         ResultTV = res;
-
         if (isCButton(v))
             OnCBtnClick(v);
         else if (isSign(buttonText))
@@ -85,40 +81,8 @@ public class CalculationClass extends MainActivity {
         return (s.contains("/") | s.contains(":") | s.contains("÷"));
     }
 
-//    public void onCBtnClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.buttonClear:
-//                ResultTV.setVisibility(View.INVISIBLE);
-//                InputTV.setText("0");
-//                break;
-//            case R.id.buttonDel:
-//                int InpLen = InputTV.length();
-//                String InputText = InputTV.getText().toString();
-//                String last = InputText.substring(InpLen - 1, InpLen);
-//                String prelast = "-1";
-//                if (InpLen > 1)
-//                    prelast = InputText.substring(InpLen - 2, InpLen - 1);
-//                if (last.equals(".") && prelast.equals("0")) {
-//                    String NewText = InputText.substring(0, InpLen - 2);
-//                    InputTV.setText(NewText);
-//                } else {
-//                    String NewText = InputText.substring(0, InpLen - 1);
-//                    InputTV.setText(NewText);
-//                }
-//                if (InpLen == 1)
-//                    InputTV.setText("0");
-//                if (ResultTV.getVisibility() == View.VISIBLE) {
-//                    InputTV.setText("0");
-//                    ResultTV.setVisibility(View.INVISIBLE);
-//                }
-//                break;
-//        }
-//    }
-
     public void onSignBtnClick(View v) {
         String ToAdd;
-//        Button_pressed = findViewById(v.getId());
-//        String buttonText = Button_pressed.getText().toString();
         int InpLen = InputTV.length();
         String InputText = InputTV.getText().toString();
         String last = InputText.substring(InpLen - 1, InpLen);
@@ -161,9 +125,6 @@ public class CalculationClass extends MainActivity {
         String InputText = InputTV.getText().toString();
         String last = InputText.substring(InpLen - 1, InpLen);
         String ZeroStr = "0";
-//        Button_pressed = findViewById(v.getId());
-//        String buttonText = Button_pressed.getText().toString();
-//        ToAdd = "f";
         if (buttonText.equals("."))
             ToAdd = ",";
         else
@@ -200,8 +161,6 @@ public class CalculationClass extends MainActivity {
         if (InputTV.getText().toString().equals(ZeroStr) && v.getId() != R.id.buttonDot)
             InputTV.setText("");
         InputTV.append(ToAdd);
-//        InputTV.setText("kjc");
-//        return;
     }
 
     public void onResult(View v) {
@@ -241,7 +200,6 @@ public class CalculationClass extends MainActivity {
                         break;
                     }
                 }
-//                String lefty = CountStr.substring(pr, i);
                 int dotl = CountStr.substring(pr, i).indexOf(",");
                 StringBuilder lefty = new StringBuilder(CountStr.substring(pr, i));
                 if (dotl !=-1)
@@ -250,8 +208,6 @@ public class CalculationClass extends MainActivity {
                 StringBuilder righty = new StringBuilder(CountStr.substring(i + 1, nx + 1));
                 if (dotr !=-1)
                     righty.setCharAt(dotr, '.');
-
-//                String righty = ;
                 double left = Double.parseDouble(String.valueOf(lefty));
                 double right = Double.parseDouble(String.valueOf(righty));
                 if (containsDiv(String.valueOf(CountStr.toCharArray()[i])) && (left == 0 || right == 0)) {
@@ -293,8 +249,7 @@ public class CalculationClass extends MainActivity {
                 if (nx != CountStr.length() - 1)
                     aft = CountStr.substring(nx + 1, CountStr.length());
                 String cur = String.valueOf(result);
-//                CountStr = pre + cur + aft;
-                CountStr = cur;
+                CountStr = pre + cur + aft;
                 signCount--;
                 i = 1;
                 continue;
@@ -303,13 +258,7 @@ public class CalculationClass extends MainActivity {
                 CountStr.toCharArray()[i] = '.';
             i++;
         }
-//        if (String.valueOf(nf.format(Double.parseDouble(CountStr))).contains(",")) {
-//            i = String.valueOf(nf.format(Double.parseDouble(CountStr))).indexOf(",");
-//            String.valueOf(nf.format(Double.parseDouble(CountStr))).toCharArray()[i] = '.';
-//            ResultTV.setText(CountStr);
-//        } else
-            ResultTV.setText(String.valueOf(nf.format(Double.parseDouble(CountStr))));
+        ResultTV.setText(String.valueOf(nf.format(Double.parseDouble(CountStr))));
         ResultTV.setVisibility(View.VISIBLE);
     }
-
 }

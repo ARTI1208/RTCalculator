@@ -15,4 +15,8 @@
     <string name="theme_daynight">Day/Night</string>
     <string name="unit_category_distance">Distance</string>
     <string name="unit_category_velocity">Velocity</string>
+    <string name="unit_view">Unit view</string>
+    <string name="unit_view_simple">Simple</string>
+    <string name="unit_view_powerful">Powerful</string>
+    <string name="twice_tap_exit">Click BACK again to exit</string>
 </resources>
