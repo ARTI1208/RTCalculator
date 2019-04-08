@@ -1,5 +1,10 @@
-<resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="calc_field">0dp</dimen>
+    <dimen name="calc_text_size">40sp</dimen>
+    <dimen name="calc_vertical_padding">6.0dip</dimen>
+    <dimen name="sliding_panel_collapsed_height">30dp</dimen>
+    <dimen name="design_bottom_navigation_text_size" tools:override="true">12sp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
 </resources>

@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.sothree.**
+-keep class com.sothree.**
+-keep interface com.sothree.**
+-dontwarn org.apache.**
+-keep class org.apache.**
+-keep interface org.apache.**

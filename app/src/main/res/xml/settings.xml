@@ -1,14 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/basic" >
-        <ListPreference android:key="tab_default" android:title="@string/tab_default" android:entries="@array/default_tab" android:entryValues="@array/default_tab_values" android:defaultValue="calc_tab" />
-        <ListPreference android:key="app_theme" android:title="@string/app_theme" android:entries="@array/app_theme" android:entryValues="@array/app_theme_values" android:defaultValue="light" />
+<?xml version="1.0" encoding="utf-8"?><!--suppress ALL -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory
+        android:key="basic"
+        android:layout="@layout/category"
+        android:title="@string/basic">
+        <ListPreference
+            android:defaultValue="calc_tab"
+            android:entries="@array/default_tab"
+            android:entryValues="@array/default_tab_values"
+            android:key="tab_default"
+            android:title="@string/tab_default"
+            app:iconSpaceReserved="false" />
+        <MultiSelectListPreference
+
+            android:entries="@array/default_tab"
+            android:entryValues="@array/default_tab_values"
+            android:key="tab_defaulter"
+            android:title="@string/tab_default"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="light"
+            android:entries="@array/app_theme"
+            android:entryValues="@array/app_theme_values"
+            android:key="app_theme"
+            android:title="@string/app_theme"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_calc" >
-        <SwitchPreference android:title="@string/zero_div" android:summaryOff="@string/error" android:key="zero_div" android:summaryOn="@string/infinity" android:defaultValue="false" />
+    <PreferenceCategory
+        android:key="currency"
+        android:layout="@layout/category"
+        android:title="@string/title_currency">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="save_currency_value"
+            android:title="@string/save_currency_value"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_unit" >
-        <SwitchPreference android:title="@string/unit_view" android:summaryOff="@string/unit_view_powerful" android:key="unit_view" android:summaryOn="@string/unit_view_simple" android:defaultValue="true" />
+    <PreferenceCategory
+        android:layout="@layout/category"
+        android:title="@string/title_calc">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="zero_div"
+            android:summaryOff="@string/error"
+            android:summaryOn="@string/infinity"
+            android:title="@string/zero_div"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/category"
+        android:title="@string/title_unit">
+        <ListPreference
+            android:entries="@array/unit_view"
+            android:entryValues="@array/unit_view_values"
+            android:key="unit_view"
+            android:title="@string/unit_view"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/category"
+        android:title="@string/about">
+        <Preference
+            android:key="app_version"
+            android:title="@string/app_version"
+            app:iconSpaceReserved="false" />
+        <SeekBarPreference
+            android:max="20"
+            android:title="test" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1.0"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonRDiv"
+            android:text="DIV"
+            android:onClick="CalcBtnClick"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonMod"
+            android:text="MOD"
+            android:layout_weight="1.0"
+            android:onClick="CalcBtnClick"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonSqrt"
+            android:text="√"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle"/>
+
+        <Button
+            android:id="@+id/buttonPow"
+            android:layout_weight="1.0"
+            android:text="^"
+            style="@style/ButtonStyle" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonSin"
+            android:text="sin"
+            android:onClick="CalcBtnClick"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonCos"
+            android:text="cos"
+            android:layout_weight="1.0"
+            android:onClick="CalcBtnClick"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonLg"
+            android:text="lg"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle"/>
+
+        <Button
+            android:id="@+id/buttonLn"
+            android:layout_weight="1.0"
+            android:text="ln"
+            style="@style/ButtonStyle" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonTg"
+            android:text="tg"
+            android:onClick="CalcBtnClick"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonCtg"
+            android:text="ctg"
+            android:layout_weight="1.0"
+            android:onClick="CalcBtnClick"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonPercent"
+            android:text="%"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle"/>
+
+        <Button
+            android:id="@+id/buttonFactorial"
+            android:layout_weight="1.0"
+            android:text="!"
+            style="@style/ButtonStyle" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1.0"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonMPlus"
+            android:text="M+"
+            android:onClick="CalcBtnClick"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonMMinus"
+            android:text="M-"
+            android:layout_weight="1.0"
+            android:onClick="CalcBtnClick"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonMClear"
+            android:layout_weight="1.0"
+            android:text="MC"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonMResult"
+            android:text="MR"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1.0"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonPi"
+            android:text="π"
+            android:onClick="CalcBtnClick"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonEulerNumber"
+            android:text="e"
+            android:layout_weight="1.0"
+            android:onClick="CalcBtnClick"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonGoldenRatio"
+            android:layout_weight="1.0"
+            android:text="φ"
+            style="@style/ButtonStyle" />
+
+        <Button
+            android:id="@+id/buttonDEGRAD"
+            android:text="RAD"
+            android:layout_weight="1.0"
+            style="@style/ButtonStyle"/>
+
+    </LinearLayout>
+</LinearLayout>

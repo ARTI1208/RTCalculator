@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <array name="unit_converter_categories">
+        <item>@string/unit_category_velocity</item>
+        <item>@string/unit_category_distance</item>
+        <item>@string/unit_category_area</item>
+        <item>@string/unit_category_volume</item>
+        <item>@string/unit_category_mass</item>
+        <item>@string/unit_category_pressure</item>
+        <item>@string/unit_category_temperature</item>
+    </array>
     <array name="default_tab">
         <item>@string/title_currency</item>
         <item>@string/title_calc</item>
@@ -20,7 +29,7 @@
     <array name="app_theme_values">
         <item>light</item>
         <item>dark</item>
-        <item>daynight</item>
+        <item>day_night</item>
     </array>
     <array name="distance_items">
         <item>mm</item>
@@ -63,11 +72,73 @@
     <string-array name="velocity_mults">
         <item>1</item>
         <item>0.0166</item>
-        <item>16.66</item>
+        <item>16.66666666666666666</item>
         <item>0.28</item>
         <item>0.305</item>
         <item>0.45</item>
         <item>340</item>
         <item>0.51</item>
     </string-array>
+
+
+    <array name="area_items">
+        <item>mm2</item>
+        <item>cm2</item>
+        <item>m2</item>
+    </array>
+    <string-array name="area_mults">
+        <item>0.0001</item>
+        <item>0.01</item>
+        <item>1</item>
+    </string-array>
+    <array name="volume_items">
+        <item>cm3</item>
+        <item>m3</item>
+    </array>
+    <string-array name="volume_mults">
+        <item>0.001</item>
+        <item>1</item>
+    </string-array>
+
+    <array name="mass_items">
+        <item>g</item>
+        <item>kg</item>
+    </array>
+    <string-array name="mass_mults">
+        <item>1</item>
+        <item>1000</item>
+    </string-array>
+    <array name="pressure_items">
+        <item>atm</item>
+        <item>Pa</item>
+    </array>
+    <string-array name="pressure_mults">
+        <item>1</item>
+        <item>101325</item>
+    </string-array>
+    <array name="temperature_items">
+        <item>˚C</item>
+        <item>˚F</item>
+    </array>
+    <string-array name="temperature_mults">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+
+    <array name="currency_categories">
+        <item>@string/currencies_add</item>
+        <item>@string/currencies_edit</item>
+    </array>
+    <array name="unit_view">
+        <item>@string/unit_view_simple</item>
+        <item>@string/unit_view_half_powerful</item>
+        <item>@string/unit_view_powerful</item>
+    </array>
+    <array name="unit_view_values">
+        <item>simple</item>
+        <item>half</item>
+        <item>powerful</item>
+    </array>
 </resources>

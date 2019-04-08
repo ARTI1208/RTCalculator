@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="?android:windowBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/recycler_layout"
+        android:orientation="vertical"
+        android:layout_weight="1.0"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_list"
+            android:layout_weight="1.0"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:ignore="NestedWeights" />
+
+        <View
+            android:id="@+id/hiding_view"
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:background="#888888" />
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/historyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_margin="10dp"
+                android:text="@string/history"
+                android:textColor="?colorAccent"
+                android:textSize="24sp" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/scroll_up"
+                android:scaleType="center"
+                android:layout_width="36dp"
+                android:layout_marginEnd="5dp"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_toEndOf="@+id/historyTitle"
+                app:srcCompat="@drawable/ic_scroll_up" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/scroll_bottom"
+                android:layout_toEndOf="@id/scroll_up"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/ic_scroll_bottom"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/clear_history"
+                android:tint="#ff000000"
+                android:background="?selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_clear_history"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
+                android:scaleType="center"
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/empty_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:text="@string/no_history"
+        android:gravity="center"
+        android:textSize="40sp" />
+
+    <RelativeLayout
+        android:id="@+id/history_handle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+
+        <TextView
+            android:text="@string/history"
+            android:textSize="16sp"
+            android:id="@+id/history_tv_handle"
+            android:layout_marginStart="10dp"
+            android:gravity="center|center"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="29.5dp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="@drawable/ic_menu_deselect"
+        android:id="@+id/deselect_all"
+        app:showAsAction="always"
+        android:title="Deselect all" />
+    <item
+        android:icon="@drawable/ic_menu_select"
+        android:id="@+id/select_all"
+        app:showAsAction="always"
+        android:title="Select all" />
+</menu>
