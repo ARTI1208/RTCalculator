@@ -204,7 +204,7 @@ public class CalculatorFragment extends Fragment {
 
         if (memory == 0) memoryTextView.setVisibility(View.GONE);
         else {
-            memoryTextView.setText("M"+String.valueOf(memory));
+            memoryTextView.setText("M"+ memory);
             memoryTextView.setVisibility(View.VISIBLE);
         }
 
@@ -712,6 +712,8 @@ public class CalculatorFragment extends Fragment {
         adapter = new HistoryListAdapter(mContext, hdb);
         Log.d("HisAdapter", "es");
         if (hdb.getSize() != 0) {
+            recycler_container.setVisibility(View.VISIBLE);
+            empty.setVisibility(View.GONE);
             history_list.addItemDecoration(new DividerItemDecoration(history_list.getContext(), DividerItemDecoration.VERTICAL));
 //                    adapter.setClickListener();
             history_list.setAdapter(adapter);
@@ -724,14 +726,13 @@ public class CalculatorFragment extends Fragment {
 
     private void writeResult(){
         if (empty.getVisibility() == View.VISIBLE){
-            recycler_container.setVisibility(View.VISIBLE);
-            empty.setVisibility(View.GONE);
+            setupHistoryPart();
         }
         adapter.setNewData();
     }
 
     private void setEmptyView() {
-        recycler_container.setVisibility(View.GONE);
+        recycler_container.setVisibility(View.INVISIBLE);
         empty.setVisibility(View.VISIBLE);
     }
 

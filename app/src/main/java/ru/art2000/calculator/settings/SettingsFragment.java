@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
 import java.util.Objects;
@@ -68,6 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             PrefsHelper.setUnitViewChanged();
             return true;
         });
+
         AppTheme.setOnPreferenceChangeListener((preference, newValue) -> {
             AppTheme.setValue(newValue.toString());
             AppTheme.setSummary(AppTheme.getEntry());

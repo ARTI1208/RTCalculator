@@ -13,13 +13,6 @@
             android:key="tab_default"
             android:title="@string/tab_default"
             app:iconSpaceReserved="false" />
-        <MultiSelectListPreference
-
-            android:entries="@array/default_tab"
-            android:entryValues="@array/default_tab_values"
-            android:key="tab_defaulter"
-            android:title="@string/tab_default"
-            app:iconSpaceReserved="false" />
         <ListPreference
             android:defaultValue="light"
             android:entries="@array/app_theme"
@@ -66,8 +59,5 @@
             android:key="app_version"
             android:title="@string/app_version"
             app:iconSpaceReserved="false" />
-        <SeekBarPreference
-            android:max="20"
-            android:title="test" />
     </PreferenceCategory>
 </PreferenceScreen>
