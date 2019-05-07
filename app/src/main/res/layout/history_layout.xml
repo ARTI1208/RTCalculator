@@ -2,23 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="?android:windowBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:windowBackground"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/recycler_layout"
-        android:orientation="vertical"
-        android:layout_weight="1.0"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/history_list"
-            android:layout_weight="1.0"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1.0"
             tools:ignore="NestedWeights" />
 
         <View
@@ -26,6 +26,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0.5dip"
             android:background="#888888" />
+
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
@@ -43,64 +44,70 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/scroll_up"
-                android:scaleType="center"
                 android:layout_width="36dp"
-                android:layout_marginEnd="5dp"
                 android:layout_height="36dp"
                 android:layout_centerVertical="true"
-                android:background="?selectableItemBackgroundBorderless"
+                android:layout_marginEnd="5dp"
                 android:layout_toEndOf="@+id/historyTitle"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="center"
                 app:srcCompat="@drawable/ic_scroll_up" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/scroll_bottom"
-                android:layout_toEndOf="@id/scroll_up"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_centerVertical="true"
-                app:srcCompat="@drawable/ic_scroll_bottom"
+                android:layout_toEndOf="@id/scroll_up"
                 android:background="?selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
-                android:layout_width="36dp"
-                android:layout_height="36dp" />
+                app:srcCompat="@drawable/ic_scroll_bottom" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/clear_history"
-                android:tint="#ff000000"
-                android:background="?selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_clear_history"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="5dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:scaleType="center"
-                android:layout_width="36dp"
-                android:layout_height="36dp" />
+                android:tint="#ff000000"
+                app:srcCompat="@drawable/ic_clear_history" />
         </RelativeLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/empty_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:text="@string/no_history"
-        android:gravity="center"
-        android:textSize="40sp" />
-
     <RelativeLayout
-        android:id="@+id/history_handle"
         android:layout_width="match_parent"
-        android:layout_height="30dp">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:text="@string/history"
-            android:textSize="16sp"
-            android:id="@+id/history_tv_handle"
-            android:layout_marginStart="10dp"
-            android:gravity="center|center"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="29.5dp" />
-    </RelativeLayout>
+            android:id="@+id/empty_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/no_history"
+            android:textSize="40sp"
+            android:visibility="visible" />
 
+        <RelativeLayout
+            android:id="@+id/history_handle"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/history_tv_handle"
+                android:layout_width="wrap_content"
+                android:layout_height="29.5dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="10dp"
+                android:gravity="center|center"
+                android:text="@string/history"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>
