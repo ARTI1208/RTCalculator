@@ -528,8 +528,8 @@ public class CalculatorFragment extends Fragment {
 
     private void clearHistory() {
         SQLiteDatabase db = hdb.getWritableDatabase();
-        new HistoryDB(mContext).recreateDB(db);
-        adapter.notifyDataSetChanged();
+        HistoryDB.recreateDB(db);
+        adapter.setNewData();
         setEmptyView();
         Toast.makeText(mContext, getString(R.string.history_cleared), Toast.LENGTH_SHORT).show();
     }
@@ -573,6 +573,8 @@ public class CalculatorFragment extends Fragment {
                 if (newState == SlidingUpPanelLayout.PanelState.ANCHORED)
                     panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 Log.d("stattt", newState.toString());
+                Log.d("empty", String.valueOf(empty.getVisibility() == View.VISIBLE));
+
             }
         });
         LinearLayout history = v.findViewById(R.id.history_part);

@@ -26,9 +26,12 @@ public class HistoryDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void recreateDB(SQLiteDatabase db){
+    static void recreateDB(SQLiteDatabase db){
         db.execSQL("DROP TABLE IF EXISTS history");
-        onCreate(db);
+        db.execSQL("create table history ("
+                + "id integer primary key autoincrement,"
+                + "expression text,"
+                + "result text" + ");");
     }
 
     void fixIDs(SQLiteDatabase db, int del){
@@ -66,7 +69,7 @@ public class HistoryDB extends SQLiteOpenHelper {
         return last;
     }
 
-    public int getSize(){
+    int getSize(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cc = db.query("history", null, null, null, null, null, null);
         int ret = 0;
