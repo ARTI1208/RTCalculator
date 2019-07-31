@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<com.google.android.material.appbar.AppBarLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.appbar.AppBarLayout>
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textColor="?colorAccent"
-        android:padding="8dp"
         android:layout_height="wrap_content"
-        android:text="@string/changelog" />
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/changelog"
+        android:textColor="?colorAccent"
+        android:textSize="20sp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="6dp"
-        android:layout_weight="1.0">
+        android:layout_weight="1.0"
+        android:padding="6dp">
 
         <LinearLayout
+            android:id="@+id/chng_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:id="@+id/chng_back"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:padding="6dp">
 
             <TextView
                 android:id="@+id/changelog"
@@ -46,21 +48,16 @@
     <TextView
         android:id="@+id/tvv"
         android:layout_width="40dp"
-        android:gravity="center|center"
-        android:layout_gravity="center"
-        android:textSize="20sp"
-        android:textColor="?colorAccent"
-
         android:layout_height="40dp"
-        android:text="T" />
+        android:layout_gravity="center"
+        android:gravity="center|center"
+        android:text="T"
+
+        android:textColor="?colorAccent"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/fff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        app:srcCompat="@drawable/tst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -72,11 +69,11 @@
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textColor="?colorAccent"
             android:layout_height="wrap_content"
-            android:text="@string/dev" />
+            android:gravity="center"
+            android:text="@string/dev"
+            android:textColor="?colorAccent"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </LinearLayout>

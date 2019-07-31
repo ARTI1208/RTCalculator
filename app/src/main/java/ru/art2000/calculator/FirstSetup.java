@@ -10,7 +10,7 @@ import java.util.List;
 
 import ru.art2000.calculator.settings.PrefsHelper;
 
-public class FistSetup extends AhoyOnboarderActivity {
+public class FirstSetup extends AhoyOnboarderActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

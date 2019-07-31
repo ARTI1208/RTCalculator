@@ -84,4 +84,8 @@
     <string name="paste_replace">Вставить с заменой</string>
     <string name="paste_after">Вставить в конец</string>
     <string name="save_currency_value">Запоминать введённое значение</string>
+    <string name="empty_text_no_currencies_added">Нет добавленных элементов</string>
+    <string name="empty_text_no_currencies_found">Соотвествующие валюты не найдены</string>
+    <string name="empty_text_all_currencies_added">Добавлены все доступные элементы</string>
+    <string name="currencies_no_internet">Ошибка обновления: нет соединения</string>
 </resources>

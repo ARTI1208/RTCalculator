@@ -4,17 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,22 +19,31 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
+
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
 import ru.art2000.extensions.CurrencyValues;
 
 public class CurrenciesEditFragment extends Fragment {
 
+    EditCurrenciesAdapter adapter;
     private View v = null;
     private RecyclerView list;
+    private TextView emptyView;
     private Context mContext;
-    EditCurrenciesAdapter adapter;
-    private EditShownCurrencies parent;
+    private EditCurrenciesActivity parent;
 
-    public CurrenciesEditFragment() {}
-
-    void scrollToTop(){
+    void scrollToTop() {
         list.smoothScrollToPosition(0);
     }
 
@@ -48,9 +53,10 @@ public class CurrenciesEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         if (v == null) {
             mContext = getActivity();
-            parent = (EditShownCurrencies) getActivity();
+            parent = (EditCurrenciesActivity) getActivity();
             v = inflater.inflate(R.layout.modify_currencies_layout, null);
             list = v.findViewById(R.id.modify_currencies_list);
+            emptyView = v.findViewById(R.id.empty_tv);
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             llm.setOrientation(RecyclerView.VERTICAL);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
@@ -70,20 +76,23 @@ public class CurrenciesEditFragment extends Fragment {
                 private void init() {
                     background = new ColorDrawable(Color.RED);
                     xMark = ContextCompat.getDrawable(mContext, R.drawable.ic_clear_history);
-                    xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                    ColorFilter filter = new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                    xMark.setColorFilter(filter);
                     xMarkMargin = (int) mContext.getResources().getDimension(R.dimen.activity_horizontal_margin);
                     initiated = true;
                 }
 
                 @Override
-                public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                public void onChildDraw(@NonNull Canvas c,
+                                        @NonNull RecyclerView recyclerView,
+                                        @NonNull RecyclerView.ViewHolder viewHolder,
+                                        float dX, float dY,
+                                        int actionState, boolean isCurrentlyActive) {
 
                     if (dY == 0) {
                         View itemView = viewHolder.itemView;
 
-                        // not sure why, but this method get's called for viewholder that are already swiped away
                         if (viewHolder.getAdapterPosition() == -1) {
-                            // not interested in those
                             return;
                         }
 
@@ -120,7 +129,6 @@ public class CurrenciesEditFragment extends Fragment {
                         }
                         background.draw(c);
 
-                        // draw x mark
                         xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
                         xMark.draw(c);
@@ -129,52 +137,79 @@ public class CurrenciesEditFragment extends Fragment {
                 }
 
                 @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                public boolean onMove(@NonNull RecyclerView recyclerView,
+                                      @NonNull RecyclerView.ViewHolder viewHolder,
+                                      @NonNull RecyclerView.ViewHolder target) {
                     parent.changeDone = true;
                     CurrencyValues.swap(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                     adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    CurrencyValues.writeValuesToDB(mContext);
                     return true;
                 }
 
                 @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     parent.changeDone = true;
-                    CurrencyValues.hideItems(viewHolder.getAdapterPosition());
+                    CurrencyValues.hideItems(parent, viewHolder.getAdapterPosition());
+                    parent.add.filterList();
                     parent.add.adapter.setNewData();
                     adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                     adapter.size = CurrencyValues.visibleList.size();
+                    toggleEmptyView();
+                    CurrencyValues.writeValuesToDB(mContext);
                 }
             });
             adapter = new EditCurrenciesAdapter(itemTouchHelper);
             itemTouchHelper.attachToRecyclerView(list);
             list.setLayoutManager(llm);
             list.setAdapter(adapter);
-
+            toggleEmptyView();
         }
         return v;
     }
 
+    private void toggleEmptyView(){
+        if (adapter == null)
+            return;
+        if (adapter.getItemCount() == 0){
+            if (emptyView.getVisibility() == View.GONE){
+                emptyView.setText(getEmptyText());
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (emptyView.getVisibility() == View.VISIBLE){
+                emptyView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private String getEmptyText(){
+        return getString(R.string.empty_text_no_currencies_added);
+    }
+
     class EditCurrenciesAdapter extends RecyclerView.Adapter {
 
+        final int REORDER_MODE = 0;
+        final int SELECTION_MODE = 1;
         int size = CurrencyValues.visibleList.size();
         ArrayList<CurrencyItem> itemsToRemove = new ArrayList<>();
         ItemTouchHelper touchHelper;
-        final int REORDER_MODE = 0;
-        final int SELECTION_MODE = 1;
         int curMode = 0;
-        @LayoutRes int selectionItem = R.layout.add_currencies_list_item;
-        @LayoutRes int reorderItem = R.layout.edit_currencies_list_item;
+        @LayoutRes
+        int selectionItem = R.layout.add_currencies_list_item;
+        @LayoutRes
+        int reorderItem = R.layout.edit_currencies_list_item;
 
         EditCurrenciesAdapter(ItemTouchHelper touchHelper) {
             this.touchHelper = touchHelper;
         }
 
-        void deselectAll(){
+        void deselectAll() {
             itemsToRemove.clear();
             notifyModeChanged(null);
         }
 
-        void selectAll(){
+        void selectAll() {
             itemsToRemove.clear();
             itemsToRemove.addAll(CurrencyValues.visibleList);
             notifyDataSetChanged();
@@ -185,9 +220,10 @@ public class CurrenciesEditFragment extends Fragment {
             return curMode;
         }
 
-        void setNewData(){
+        void setNewData() {
             size = CurrencyValues.visibleList.size();
             notifyDataSetChanged();
+            toggleEmptyView();
         }
 
         @NonNull
@@ -199,23 +235,6 @@ public class CurrenciesEditFragment extends Fragment {
             else
                 item = LayoutInflater.from(mContext).inflate(reorderItem, null);
             return new Holder(item);
-        }
-
-        class Holder extends RecyclerView.ViewHolder {
-
-            TextView code;
-            ImageView handle;
-            CheckBox check;
-            TextView name;
-
-            Holder(final View itemView) {
-                super(itemView);
-                code = itemView.findViewById(R.id.currency_code);
-                name = itemView.findViewById(R.id.currency_name);
-                handle = itemView.findViewById(R.id.handle);
-                check = itemView.findViewById(R.id.checkbox_add);
-            }
-
         }
 
         @SuppressLint("ClickableViewAccessibility")
@@ -237,6 +256,7 @@ public class CurrenciesEditFragment extends Fragment {
                 });
                 holder.itemView.setOnLongClickListener(v -> {
                     notifyModeChanged(holder);
+                    Log.d("editcheck", "nonnull");
                     return false;
                 });
             } else {
@@ -247,23 +267,25 @@ public class CurrenciesEditFragment extends Fragment {
                         itemsToRemove.remove(item);
                     if (!isSomethingSelected())
                         notifyModeChanged(holder);
-                        parent.setFABVisibility();
+                    parent.toggleElementsVisibility();
+                    Log.d("editcheck", "oncheck");
                 });
+                Log.d("editcheck", "null");
                 holder.itemView.setOnClickListener(v ->
-                    check.performClick());
+                        check.performClick());
                 check.setChecked(itemsToRemove.contains(item));
             }
         }
 
-        boolean isSomethingSelected(){
+        boolean isSomethingSelected() {
             return itemsToRemove.size() != 0;
         }
 
-        boolean isAllSelected(){
+        boolean isAllSelected() {
             return itemsToRemove.size() == CurrencyValues.visibleList.size();
         }
 
-        boolean isSelectionMode(){
+        boolean isSelectionMode() {
             return curMode == SELECTION_MODE;
         }
 
@@ -272,16 +294,33 @@ public class CurrenciesEditFragment extends Fragment {
             return size;
         }
 
-        void notifyModeChanged(RecyclerView.ViewHolder holder){
+        void notifyModeChanged(RecyclerView.ViewHolder holder) {
             if (curMode == SELECTION_MODE) {
                 curMode = REORDER_MODE;
                 itemsToRemove.clear();
-                parent.setFABVisibility();
+                parent.toggleElementsVisibility();
             } else {
                 curMode = SELECTION_MODE;
                 itemsToRemove.add(CurrencyValues.visibleList.get(holder.getAdapterPosition()));
             }
             notifyDataSetChanged();
+        }
+
+        class Holder extends RecyclerView.ViewHolder {
+
+            TextView code;
+            ImageView handle;
+            CheckBox check;
+            TextView name;
+
+            Holder(final View itemView) {
+                super(itemView);
+                code = itemView.findViewById(R.id.currency_code);
+                name = itemView.findViewById(R.id.currency_name);
+                handle = itemView.findViewById(R.id.handle);
+                check = itemView.findViewById(R.id.checkbox_add);
+            }
+
         }
 
     }

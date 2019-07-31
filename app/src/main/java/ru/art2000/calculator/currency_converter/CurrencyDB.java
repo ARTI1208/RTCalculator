@@ -23,7 +23,7 @@ public class CurrencyDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void writeUpdatedValuesToDB(){
+    public void writeUpdatedValuesToDB(){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("position", -1);

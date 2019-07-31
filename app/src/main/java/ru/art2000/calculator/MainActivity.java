@@ -97,10 +97,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Log.d("cliick", "1");
 
-                    new Handler().post(() -> {
+//                    new Handler().post(() -> {
+
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                                 unit_converter, "UnitConverterFragment").addToBackStack("UnitConverterFragment").commit();
-                    });
+//                    });
 
 
 
@@ -108,11 +109,12 @@ public class MainActivity extends AppCompatActivity {
                         window.setStatusBarColor(status_color);
                     break;
                 case R.id.navigation_currency:
-
+                    Log.d("CurrencyTR", "start");
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             currency_converter, "CurrencyConverterFragment").addToBackStack("CurrencyConverterFragment").commit();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                         window.setStatusBarColor(status_color);
+                    Log.d("CurrencyTR", "end");
                     break;
                 case R.id.navigation_settings:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

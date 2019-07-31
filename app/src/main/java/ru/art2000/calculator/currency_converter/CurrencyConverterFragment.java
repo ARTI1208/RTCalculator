@@ -48,6 +48,7 @@ public class CurrencyConverterFragment extends Fragment {
     public Context mContext;
     public CurrencyListAdapter adapter = null;
     private TextView date;
+    private TextView emptyView;
     private RecyclerView recycler;
     private Activity parent;
     private View v = null;
@@ -80,8 +81,10 @@ public class CurrencyConverterFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 666) {
-            if (resultCode == 1)
+            if (resultCode == 1) {
                 adapter.getDataFromDB();
+                toggleEmptyView();
+            }
         }
     }
 
@@ -89,12 +92,12 @@ public class CurrencyConverterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         if (v == null) {
             mContext = getActivity();
             parent = getActivity();
             v = inflater.inflate(R.layout.currency_layout, null);
             recycler = v.findViewById(R.id.currency_list);
+            emptyView = v.findViewById(R.id.empty_tv);
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             recycler.setLayoutManager(llm);
             adapter = new CurrencyListAdapter(mContext);
@@ -115,10 +118,12 @@ public class CurrencyConverterFragment extends Fragment {
             v.findViewById(R.id.edit_currencies).setOnClickListener(v -> {
                 adapter.removeEditText();
                 focus.requestFocus();
-                Intent intent = new Intent(getActivity(), EditShownCurrencies.class);
+                Intent intent = new Intent(getActivity(), EditCurrenciesActivity.class);
                 startActivityForResult(intent, 666);
             });
+            toggleEmptyView();
         }
+        Log.d("CurrencyTR", "end2");
         return v;
     }
 
@@ -132,6 +137,22 @@ public class CurrencyConverterFragment extends Fragment {
                 CurrencyValues.putRefreshDate(newDate, mContext);
             }
         });
+    }
+
+    private void toggleEmptyView() {
+        if (adapter == null)
+            return;
+        if (adapter.getItemCount() == 0) {
+            if (emptyView.getVisibility() == View.GONE) {
+                emptyView.setVisibility(View.VISIBLE);
+                refresher.setVisibility(View.GONE);
+            }
+        } else {
+            if (emptyView.getVisibility() == View.VISIBLE) {
+                emptyView.setVisibility(View.GONE);
+                refresher.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private String getShownCodesSearch() {
@@ -150,10 +171,8 @@ public class CurrencyConverterFragment extends Fragment {
     @Override
     public void onPause() {
         adapter.removeEditText();
-        Log.d("CurrencyConverter", "pause time!");
         super.onPause();
     }
-
 
     private Double doubleFromString(String string){
         if (string.contains(",")){
@@ -262,11 +281,15 @@ public class CurrencyConverterFragment extends Fragment {
     }
 
     private void updateData() {
+        if (adapter.getItemCount() == 0){
+            setRefreshStatus(false);
+            return;
+        }
         if (isOnline()) {
             parseHTML();
         } else {
             setRefreshStatus(false);
-            Toast.makeText(mContext, "Failed: no Internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.currencies_no_internet, Toast.LENGTH_SHORT).show();
             updateList();
         }
     }

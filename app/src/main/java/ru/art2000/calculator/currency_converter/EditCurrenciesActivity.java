@@ -1,63 +1,130 @@
 package ru.art2000.calculator.currency_converter;
 
-import android.annotation.SuppressLint;
+import android.animation.Animator;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.extensions.CurrencyValues;
 
-public class EditShownCurrencies extends AppCompatActivity {
+public class EditCurrenciesActivity extends AppCompatActivity {
 
+    public CurrenciesAddFragment add = new CurrenciesAddFragment();
+    public CurrenciesEditFragment edit = new CurrenciesEditFragment();
     Context mContext;
     boolean changeDone = false;
-    CurrenciesAddFragment add = new CurrenciesAddFragment();
-    CurrenciesEditFragment edit = new CurrenciesEditFragment();
     FloatingActionButton fab;
     MenuItem deselect;
     MenuItem select;
     int selectedTab = 0;
-    @DrawableRes int checkDrawable = R.drawable.ic_currencies_done;
-    @DrawableRes int deleteDrawable = R.drawable.ic_clear_history;
+    @DrawableRes
+    int checkDrawable = R.drawable.ic_currencies_done;
+    @DrawableRes
+    int deleteDrawable = R.drawable.ic_clear_history;
+    @DrawableRes
+    int currentDrawable = checkDrawable;
+
+
+    LinearLayout searchViewLayout;
+    SearchView barSearchView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(PrefsHelper.getAppTheme());
 
 //        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor_currencies_layout);
         mContext = getBaseContext();
         Toolbar toolbar = findViewById(R.id.toolbar);
         fab = findViewById(R.id.floatingActionButton);
+        fab.addOnShowAnimationListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                fab.setImageResource(currentDrawable);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                fab.setImageResource(currentDrawable);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        searchViewLayout = findViewById(R.id.search_view_layout);
+        searchViewLayout.setVisibility(View.VISIBLE);
+        barSearchView = findViewById(R.id.search_view);
+        barSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                add.setNewList(add.searchByQuery(newText));
+                return true;
+            }
+        });
+
         ViewPager pager = findViewById(R.id.pager);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                int maxScroll = pager.getMeasuredWidth();
+                int currentScroll = maxScroll * position + positionOffsetPixels;
+                double percentage = (double) currentScroll / maxScroll;
+
+                searchViewLayout.setTranslationX(-currentScroll);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         TabLayout tabs = findViewById(R.id.tabs);
         pager.setAdapter(new CurrencyEditorPagerAdapter(getSupportFragmentManager()));
         tabs.setupWithViewPager(pager);
@@ -67,15 +134,16 @@ public class EditShownCurrencies extends AppCompatActivity {
                 selectedTab = tab.getPosition();
                 fab.hide();
                 modifyFAB(tab.getPosition());
-                setFABVisibility();
+                toggleElementsVisibility();
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                switch (tab.getPosition()){
+                switch (tab.getPosition()) {
                     default:
                     case 0:
                         add.scrollToTop();
@@ -91,53 +159,50 @@ public class EditShownCurrencies extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.currencies_editor_menu, menu);
-        deselect = menu.getItem(0);
-        select = menu.getItem(1);
+        deselect = menu.findItem(R.id.deselect_all);
+        select = menu.findItem(R.id.select_all);
+
         deselect.setVisible(false);
         if (add.adapter.size == 0)
             select.setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.deselect_all:
-//                deselect.setVisible(false);
-//                select.setVisible(true);
                 if (selectedTab == 0)
                     add.adapter.deselectAll();
                 else
                     edit.adapter.deselectAll();
                 break;
             case R.id.select_all:
-//                select.setVisible(false);
-//                deselect.setVisible(true);
                 if (selectedTab == 0)
                     add.adapter.selectAll();
                 else
                     edit.adapter.selectAll();
                 break;
         }
+        toggleElementsVisibility();
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onPause() {
-        if (changeDone){
-            new Thread(()->{
-                CurrencyDB DBHelper = new CurrencyDB(mContext);
-                DBHelper.writeUpdatedValuesToDB();
-                DBHelper.close();
-            }).start();
-        }
         super.onPause();
     }
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         if (changeDone)
             setResult(1);
         else
@@ -146,17 +211,9 @@ public class EditShownCurrencies extends AppCompatActivity {
         return true;
     }
 
-    public void setFABVisibility(){
-
-
-        Log.d("vussfg", String.valueOf(fab.getVisibility()));
-//        while (fab.getVisibility() != View.GONE)
-//            fab.hide();
-        if (selectedTab == 0){
-            if (add.adapter.isSomethingSelected()){
-                if (add.selectionState * add.previousSelectionState == 0 ) {
-//                    fab.setImageResource(checkDrawable);
-                }
+    public void toggleElementsVisibility() {
+        if (selectedTab == 0) {
+            if (add.adapter.isSomethingSelected()) {
                 fab.show();
                 deselect.setVisible(true);
             } else {
@@ -164,45 +221,44 @@ public class EditShownCurrencies extends AppCompatActivity {
                 deselect.setVisible(false);
             }
             select.setVisible(!add.adapter.isAllSelected());
-
         } else {
-//            fab.setImageResource(deleteDrawable);
             boolean selection = edit.adapter.isSelectionMode();
             if (selection) {
                 fab.show();
-            } else
+            } else {
                 fab.hide();
+            }
             select.setVisible(selection && !edit.adapter.isAllSelected());
             deselect.setVisible(selection);
         }
     }
 
-    public void setNewFabImage(int resId){
+    public void setNewFabImage(int resId) {
+        currentDrawable = resId;
         fab.hide();
-        fab.setImageResource(resId);
     }
 
-    public void modifyFAB(int tabPos){
-//        setFABVisibility();
-        if (tabPos == 0){
-
+    public void modifyFAB(int tabPos) {
+        if (tabPos == 0) {
             setNewFabImage(checkDrawable);
-
             fab.setOnClickListener(v -> {
-                CurrencyValues.makeItemsVisible(add.adapter.itemsToAdd);
+                CurrencyValues.makeItemsVisible(this, add.adapter.itemsToAdd);
                 changeDone = true;
                 add.adapter.setNewData();
                 edit.adapter.setNewData();
-                setFABVisibility();
+                toggleElementsVisibility();
+                CurrencyValues.writeValuesToDB(mContext);
             });
         } else {
             setNewFabImage(deleteDrawable);
             fab.setOnClickListener(v -> {
-                CurrencyValues.hideItems(edit.adapter.itemsToRemove);
+                CurrencyValues.hideItems(this, edit.adapter.itemsToRemove);
                 changeDone = true;
+                add.filterList();
                 add.adapter.setNewData();
                 edit.adapter.notifyModeChanged(null);
                 edit.adapter.setNewData();
+                CurrencyValues.writeValuesToDB(mContext);
             });
         }
     }
@@ -232,6 +288,7 @@ public class EditShownCurrencies extends AppCompatActivity {
             return categories[position];
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return fragments[position];

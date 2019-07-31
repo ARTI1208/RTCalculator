@@ -31,7 +31,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private int size = 0;
     private int inputItemPos = -1;
-    public int highlighted = 0;
+    private int highlighted = 0;
     private double inputItemVal = 1;
     private NumberFormat dot2dig = new DecimalFormat("#.##");
     private RecyclerView recycler;
@@ -53,9 +53,6 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         if (PrefsHelper.isShouldSaveCurrencyConversion()) {
             highlighted = CurrencyValues.findByCode(PrefsHelper.getConversionCode());
             inputItemVal = PrefsHelper.getConversionValue();
-            Log.d("fromsave", "txt");
-            Log.d("fromsave", String.valueOf(highlighted));
-            Log.d("fromsave", String.valueOf(inputItemVal));
         }
     }
 
@@ -95,7 +92,6 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     }
 
     void removeEditText() {
-        Log.d("Ediir", "remoo");
         int t = inputItemPos;
         inputItemPos = -1;
 //        if (!recycler.isComputingLayout()) {
@@ -112,8 +108,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         Log.d("ffffff", "remoo");
         int t = inputItemPos;
         inputItemPos = -1;
-        inp.value.setText(String.valueOf(dot2dig.format(inputItemVal *
-                CurrencyValues.visibleList.get(inp.getAdapterPosition()).rate)));
+        inp.value.setText(dot2dig.format(inputItemVal *
+                CurrencyValues.visibleList.get(inp.getAdapterPosition()).rate));
         inp.input.setEnabled(false);
         inp.input.setVisibility(View.GONE);
         inp.value.setTextColor(ContextCompat.getColor(mContext, colorAccent));
@@ -216,7 +212,9 @@ Log.d("binnnd", String.valueOf(position));
                         }
                     });
                     InputMethodManager keyboard = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    keyboard.showSoftInput(input, 0);
+                    if (keyboard != null) {
+                        keyboard.showSoftInput(input, 0);
+                    }
                 } else {
                     if (!recycler.isComputingLayout())
                         notifyItemChanged(position);

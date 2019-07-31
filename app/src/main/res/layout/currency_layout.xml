@@ -2,94 +2,81 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-
-
-
-
-    <!--<Spinner-->
-        <!--android:id="@+id/spinner"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="40dp" />-->
-<com.google.android.material.appbar.AppBarLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-
-
-    <RelativeLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_updated"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:textColor="#ff000000"
-            android:textSize="20sp"
-            android:gravity="start|center"
-            android:layout_marginRight="4dp"
-            android:text="@string/updated" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
-        <TextView
-            android:id="@+id/tv_update_date"
-            android:textColor="#ff000000"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:gravity="start|center"
-            android:layout_toRightOf="@id/tv_updated"
-            android:text="Never" />
+            <TextView
+                android:id="@+id/tv_updated"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="4dp"
+                android:gravity="start|center"
+                android:text="@string/updated"
+                android:textColor="#ff000000"
+                android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/focuser"
-            android:layout_width="0dp"
-            android:layout_height="0dp" >
-            <requestFocus/>
-        </EditText>
+            <TextView
+                android:id="@+id/tv_update_date"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/tv_updated"
+                android:gravity="start|center"
+                android:text="Never"
+                android:textColor="#ff000000"
+                android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/edit_currencies"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end|center"
-            android:background="?actionBarItemBackground"
-            android:layout_alignParentRight="true"
-            app:srcCompat="@drawable/ic_edit_currency" />
-    </RelativeLayout>
-</com.google.android.material.appbar.AppBarLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresher"
+            <EditText
+                android:id="@+id/focuser"
+                android:layout_width="0dp"
+                android:layout_height="0dp">
+
+                <requestFocus />
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/edit_currencies"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end|center"
+                android:background="?actionBarItemBackground"
+                app:srcCompat="@drawable/ic_edit_currency" />
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/currency_list"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresher"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-<!--<FrameLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-    <!--<WebView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:id="@+id/wv"-->
-        <!--android:layout_height="match_parent" />-->
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/no_internet"-->
-        <!--android:gravity="center|center"-->
-        <!--android:textSize="60sp"-->
-        <!--android:text="NO INTERNET"-->
-        <!--android:visibility="gone"/>-->
-<!--</FrameLayout>-->
+            android:layout_height="match_parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/currency_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
+        <TextView
+            android:id="@+id/empty_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|center"
+            android:text="@string/empty_text_no_currencies_added"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

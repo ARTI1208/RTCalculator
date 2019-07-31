@@ -84,4 +84,8 @@
     <string name="paste_replace">Replace</string>
     <string name="paste_after">Paste at the end</string>
     <string name="save_currency_value">Save last conversion</string>
+    <string name="empty_text_no_currencies_added">No currency items added</string>
+    <string name="empty_text_no_currencies_found">No matching currencies found</string>
+    <string name="empty_text_all_currencies_added">All available items already added</string>
+    <string name="currencies_no_internet">Update failed: connection unavailable</string>
 </resources>

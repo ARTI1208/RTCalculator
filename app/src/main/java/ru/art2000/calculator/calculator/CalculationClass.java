@@ -1,7 +1,9 @@
 package ru.art2000.calculator.calculator;
 
 import android.util.Log;
+
 import org.apache.commons.math3.special.Gamma;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -9,15 +11,17 @@ import java.util.HashMap;
 
 public class CalculationClass {
 
-    private static HashMap <String, Integer> operationsOrder;
-    private static HashMap <String, Integer> operationsCount;
+    static double memory = 0;
+    static boolean radians = false;
+    private static HashMap<String, Integer> operationsOrder;
+    private static HashMap<String, Integer> operationsCount;
 
     static {
         operationsOrder = new HashMap<>();
         String order = "%;!;_;^_;*;×;÷;+;-;/;:_√;lg;ln;cos;sin;tg;ctg;";
         int o = 1;
-        int p = -1;
-        while ((p = order.indexOf(';')) != -1){
+        int p;
+        while ((p = order.indexOf(';')) != -1) {
             String op = order.substring(0, p);
             if (op.equals("_"))
                 ++o;
@@ -26,10 +30,6 @@ public class CalculationClass {
             order = order.substring(p + 1);
         }
     }
-
-
-    static double memory = 0;
-    static boolean radians = false;
 
     static boolean isSign(String s) {
         String signs = "*×÷+-/:^";
@@ -49,7 +49,7 @@ public class CalculationClass {
         return (s.contains("/") || s.contains(":") || s.contains("÷"));
     }
 
-    static String addRemoveBrackets(String e){
+    static String addRemoveBrackets(String e) {
         int obc = 0;
         int cbc = 0;
         for (char c : e.toCharArray()) {
@@ -68,7 +68,7 @@ public class CalculationClass {
         return removeUnnecessaryBrackets(brFixed);
     }
 
-    private static int countBrs(String expr){
+    private static int countBrs(String expr) {
         int res = 0;
         for (char c : expr.toCharArray()) {
             if (c == ')')
@@ -77,25 +77,25 @@ public class CalculationClass {
         return res;
     }
 
-    static boolean isAfterUnarySign(String s){
+    static boolean isAfterUnarySign(String s) {
         String unarySigns = "%!";
         return unarySigns.contains(s);
     }
 
-    static boolean isAfterUnarySign(char c){
+    static boolean isAfterUnarySign(char c) {
         return isAfterUnarySign(String.valueOf(c));
     }
 
-    static boolean isPreUnarySign(String s){
+    static boolean isPreUnarySign(String s) {
         String unarySigns = "√lglncossintgctg";
         return unarySigns.contains(s);
     }
 
-    static boolean isPreUnarySign(char c){
+    static boolean isPreUnarySign(char c) {
         return isPreUnarySign(String.valueOf(c));
     }
 
-    private static int getLastUnclosedBracket(int[] open, int[] close){
+    private static int getLastUnclosedBracket(int[] open, int[] close) {
         for (int i = open.length - 1; i >= 0; i--) {
             if (open[i] != -1 && close[i] == -1)
                 return i;
@@ -103,22 +103,22 @@ public class CalculationClass {
         return -1;
     }
 
-    private static String removeUnnecessaryBrackets(String toFix){
+    private static String removeUnnecessaryBrackets(String toFix) {
         String brFixed = toFix;
         int j = 0;
         int obc = 0;
         int brs = countBrs(toFix);
-        int [] ops2 = new int[brs];
-        int [] cls2 = new int[brs];
+        int[] ops2 = new int[brs];
+        int[] cls2 = new int[brs];
         for (int i = 0; i < brs; i++) {
             ops2[i] = -1;
             cls2[i] = -1;
         }
         String bw = "";
-        while (j < brFixed.length()){
+        while (j < brFixed.length()) {
             if (brFixed.toCharArray()[j] == '(')
                 ops2[obc++] = j;
-            if (brFixed.toCharArray()[j] == ')'){
+            if (brFixed.toCharArray()[j] == ')') {
                 int lastOpenBr = getLastUnclosedBracket(ops2, cls2);
                 if (lastOpenBr == -1)
                     break;
@@ -146,14 +146,14 @@ public class CalculationClass {
         return brFixed;
     }
 
-    public static double calculateDbl(String expression){
+    public static double calculateDbl(String expression) {
         String e = calculateStr(expression).replace(',', '.');
         if (e.equals("error") || e.equals("zero"))
             return 0.0;
         return Double.parseDouble(e);
     }
 
-    static String calculateStr(String expression){
+    static String calculateStr(String expression) {
         NumberFormat nf = new DecimalFormat("#.#######");
         expression = expression.replaceAll("e", String.valueOf(Math.E));
         expression = expression.replaceAll("π", String.valueOf(Math.PI));
@@ -162,14 +162,14 @@ public class CalculationClass {
         expr = noBracketsWork(expr);
         try {
             expr = nf.format(Double.parseDouble(expr));
-        } catch (Exception e){
+        } catch (Exception e) {
             if (!expr.equals("zero"))
                 expr = "error";
         }
         return expr;
     }
 
-    private static String brackets(String str){
+    private static String brackets(String str) {
         String ret = str;
         int obp = -1;
         int cbp;
@@ -190,27 +190,27 @@ public class CalculationClass {
         return ret;
     }
 
-    static boolean isNumber(String str){
+    static boolean isNumber(String str) {
         return "0123456789".contains(str);
     }
 
-    static boolean isNumber(char c){
+    static boolean isNumber(char c) {
         return isNumber(String.valueOf(c));
     }
 
-    static boolean isDot(String c){
+    static boolean isDot(String c) {
         return c.equals(".") || c.equals(",");
     }
 
-    private static boolean isDot(char c){
+    private static boolean isDot(char c) {
         return c == '.' || c == ',';
     }
 
-    private static boolean isNumberOrDot(char s){
+    private static boolean isNumberOrDot(char s) {
         return isNumber(s) || isDot(s) || s == '-';
     }
 
-    static int signsInExpr(String expr){
+    static int signsInExpr(String expr) {
         int count = 0;
         for (char c : expr.toCharArray())
             if (isSign(c))
@@ -218,7 +218,7 @@ public class CalculationClass {
         return count;
     }
 
-    private static boolean containsPreUnary(String string){
+    private static boolean containsPreUnary(String string) {
         return string.contains("√") || string.contains("ln") || string.contains("lg") ||
                 string.contains("sin") || string.contains("cos");
     }
@@ -227,7 +227,7 @@ public class CalculationClass {
         return Gamma.gamma(x);
     }
 
-    private static String aft(String ex){
+    private static String aft(String ex) {
         ArrayList<String> afterSigns = new ArrayList<>();
         if (ex.contains("%"))
             afterSigns.add("%");
@@ -242,9 +242,9 @@ public class CalculationClass {
         int numc = -1;
         int i = st.length() - 1;
 
-        while (i >=0 && ((isNumberOrDot(strch[i]) ||
+        while (i >= 0 && ((isNumberOrDot(strch[i]) ||
                 strch[i] == '-' ||
-                num == -1))){
+                num == -1))) {
             if (isNumberOrDot(strch[i]) && numc == -1)
                 numc = i;
             if (isNumberOrDot(strch[i]))
@@ -254,7 +254,7 @@ public class CalculationClass {
 
         String under = st.substring(num, numc + 1);
 
-        switch (st.toCharArray()[numc + 1]){
+        switch (st.toCharArray()[numc + 1]) {
             case '%':
                 st = st.substring(0, num) + (Double.parseDouble(under) / 100) +
                         st.substring(numc + 2);
@@ -266,14 +266,14 @@ public class CalculationClass {
         return aft(st);
     }
 
-    private static double stringToDegreesOrRadians(String str){
+    private static double stringToDegreesOrRadians(String str) {
         double val = Double.valueOf(str);
         if (!radians)
             val *= Math.PI / 180;
         return val;
     }
 
-    private static String preUnaryWork(String expr){
+    private static String preUnaryWork(String expr) {
         ArrayList<String> preSigns = new ArrayList<>();
         if (expr.contains("√"))
             preSigns.add("√");
@@ -296,7 +296,6 @@ public class CalculationClass {
         str = aft(str);
 
 
-
         if (preListSize == 0)
             return str;
 
@@ -306,7 +305,7 @@ public class CalculationClass {
         int num = -1;
 
 
-        while (i < len && !isNumberOrDot(strch[i])){
+        while (i < len && !isNumberOrDot(strch[i])) {
             num = i++;
         }
 
@@ -314,55 +313,55 @@ public class CalculationClass {
 
         String under = str.substring(num);
 
-            int lastSign = -1;
-            String op = "√";
+        int lastSign = -1;
+        String op = "√";
 
-            for (int j = 0; j < preListSize; j++) {
-                String oper = preSigns.get(j);
-                int pos = expr.lastIndexOf(oper);
-                if (pos > lastSign) {
-                    lastSign = pos;
-                    op = oper;
-                }
+        for (int j = 0; j < preListSize; j++) {
+            String oper = preSigns.get(j);
+            int pos = expr.lastIndexOf(oper);
+            if (pos > lastSign) {
+                lastSign = pos;
+                op = oper;
             }
+        }
 
 
-            switch (op) {
-                default:
-                case "√":
-                    str = str.substring(0, lastSign) +
-                            Math.sqrt(Double.parseDouble(under));
-                    break;
-                case "lg":
-                    str = str.substring(0, lastSign) +
-                            Math.log10(Double.parseDouble(under));
-                    break;
-                case "ln":
-                    str = str.substring(0, lastSign) +
-                            Math.log(Double.parseDouble(under));
-                    break;
-                case "sin":
-                    str = str.substring(0, lastSign) +
-                            Math.sin(stringToDegreesOrRadians(under));
-                    break;
-                case "cos":
-                    str = str.substring(0, lastSign) +
-                            Math.cos(stringToDegreesOrRadians(under));
-                    break;
-                case "tg":
-                    str = str.substring(0, lastSign) +
-                            Math.tan(stringToDegreesOrRadians(under));
-                    break;
-                case "ctg":
-                    str = str.substring(0, lastSign)
-                            + String.valueOf(Math.cos(stringToDegreesOrRadians(under))
-                            / Math.sin(stringToDegreesOrRadians(under)));
-                    break;
-            }
+        switch (op) {
+            default:
+            case "√":
+                str = str.substring(0, lastSign) +
+                        Math.sqrt(Double.parseDouble(under));
+                break;
+            case "lg":
+                str = str.substring(0, lastSign) +
+                        Math.log10(Double.parseDouble(under));
+                break;
+            case "ln":
+                str = str.substring(0, lastSign) +
+                        Math.log(Double.parseDouble(under));
+                break;
+            case "sin":
+                str = str.substring(0, lastSign) +
+                        Math.sin(stringToDegreesOrRadians(under));
+                break;
+            case "cos":
+                str = str.substring(0, lastSign) +
+                        Math.cos(stringToDegreesOrRadians(under));
+                break;
+            case "tg":
+                str = str.substring(0, lastSign) +
+                        Math.tan(stringToDegreesOrRadians(under));
+                break;
+            case "ctg":
+                str = str.substring(0, lastSign)
+                        + Math.cos(stringToDegreesOrRadians(under))
+                        / Math.sin(stringToDegreesOrRadians(under));
+                break;
+        }
         return preUnaryWork(str);
     }
 
-    private static String noBracketsWork(String expression){
+    private static String noBracketsWork(String expression) {
         try {
             int i = 1;
             int signCount = 0;
@@ -379,14 +378,6 @@ public class CalculationClass {
 //                }
 //            }
 //            while ()
-
-
-
-
-
-
-
-
 
 
             while (i < len) {
@@ -409,21 +400,20 @@ public class CalculationClass {
             i = 1;
 
 
-
             Log.d("fuuu", String.valueOf(signCount));
 
             if (signCount == 0)
                 return preUnaryWork(expression.replace(',', '.'));
 
             while (signCount > 0) {
-                if (i < expression.length() &&( ((expression.toCharArray()[i] == '^') || (expression.toCharArray()[i] == '/') || (expression.toCharArray()[i] == ':') ||
+                if (i < expression.length() && (((expression.toCharArray()[i] == '^') || (expression.toCharArray()[i] == '/') || (expression.toCharArray()[i] == ':') ||
                         (expression.toCharArray()[i] == '×') || (expression.toCharArray()[i] == '÷'))
                         || (!containsUpClass(expression) && ((expression.toCharArray()[i] == '+') ||
                         (expression.toCharArray()[i] == '-'))) && !isPreUnarySign(expression.substring(0, i)))) {
                     for (int j = i - 1; j >= 0; j--) {
                         pr = j;
                         Log.d("sufwe", String.valueOf(j));
-                        if (isSign(String.valueOf(expression.toCharArray()[j])) && j !=  0 &&
+                        if (isSign(String.valueOf(expression.toCharArray()[j])) && j != 0 &&
                                 !isPreUnarySign(expression.substring(0, j))) {
                             Log.d("su", expression.substring(0, j + 1));
                             pr = j + 1;
@@ -497,9 +487,9 @@ public class CalculationClass {
                     if (pr != 0)
                         pre = expression.substring(0, pr);
                     if (nx != expression.length() - 1)
-                        aft = expression.substring(nx + 1, expression.length());
+                        aft = expression.substring(nx + 1);
                     String cur = String.valueOf(result);
-                    Log.d("cur", String.valueOf(left)+expression.toCharArray()[i]+String.valueOf(right)+"="+cur);
+                    Log.d("cur", String.valueOf(left) + expression.toCharArray()[i] + right + "=" + cur);
                     if (signCount == 1)
                         expression = cur;
                     else
