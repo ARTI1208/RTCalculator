@@ -88,4 +88,5 @@
     <string name="empty_text_no_currencies_found">Соотвествующие валюты не найдены</string>
     <string name="empty_text_all_currencies_added">Добавлены все доступные элементы</string>
     <string name="currencies_no_internet">Ошибка обновления: нет соединения</string>
+    <string name="tab_last_opened">Последняя открытая</string>
 </resources>

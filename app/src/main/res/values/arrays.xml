@@ -14,12 +14,14 @@
         <item>@string/title_calc</item>
         <item>@string/title_unit</item>
         <item>@string/title_settings</item>
+        <item>@string/tab_last_opened</item>
     </array>
     <array name="default_tab_values">
         <item>currency_tab</item>
         <item>calc_tab</item>
         <item>unit_tab</item>
         <item>settings_tab</item>
+        <item>last_tab</item>
     </array>
     <array name="app_theme">
         <item>@string/theme_light</item>

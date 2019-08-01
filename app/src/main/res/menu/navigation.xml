@@ -10,19 +10,19 @@
     <item
         android:id="@+id/navigation_calc"
         android:icon="@drawable/ic_calc"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:title="@string/title_calc" />
 
     <item
         android:id="@+id/navigation_unit"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:title="@string/title_unit" />
 
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         android:title="@string/title_settings" />
 
 </menu>

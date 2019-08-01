@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             }
+            PrefsHelper.setDefaultTab(this, item.getOrder());
             switch (item.getItemId()) {
                 default:
                 case R.id.navigation_calc:

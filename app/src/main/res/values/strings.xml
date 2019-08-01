@@ -88,4 +88,5 @@
     <string name="empty_text_no_currencies_found">No matching currencies found</string>
     <string name="empty_text_all_currencies_added">All available items already added</string>
     <string name="currencies_no_internet">Update failed: connection unavailable</string>
+    <string name="tab_last_opened">Last opened</string>
 </resources>
