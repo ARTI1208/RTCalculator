@@ -4,14 +4,14 @@ import android.os.Bundle;
 import android.util.TypedValue;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.settings.PrefsHelper;
+import ru.art2000.extensions.DayNightActivity;
 
-public class AllUnitsActivity extends AppCompatActivity {
+public class AllUnitsActivity extends DayNightActivity {
 
     int value;
     int pos;

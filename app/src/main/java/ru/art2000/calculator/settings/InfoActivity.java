@@ -1,21 +1,13 @@
 package ru.art2000.calculator.settings;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
@@ -26,8 +18,9 @@ import java.io.InputStreamReader;
 import ru.art2000.calculator.FirstSetup;
 import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
+import ru.art2000.extensions.DayNightActivity;
 
-public class InfoActivity extends AppCompatActivity {
+public class InfoActivity extends DayNightActivity {
 
     Context mContext;
 
@@ -49,7 +42,6 @@ public class InfoActivity extends AppCompatActivity {
         findViewById(R.id.chng_back).setBackground(back);
         TextView changelog = findViewById(R.id.changelog);
         changelog.setText(getChangeLogText());
-
         GradientDrawable gd = new GradientDrawable();
         TypedValue accentTypedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, accentTypedValue, true);

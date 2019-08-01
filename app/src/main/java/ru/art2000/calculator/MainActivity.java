@@ -4,27 +4,30 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceFragmentCompat;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceFragmentCompat;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 import java.util.Objects;
+
 import ru.art2000.calculator.calculator.CalculatorFragment;
 import ru.art2000.calculator.currency_converter.CurrencyConverterFragment;
 import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.calculator.settings.SettingsFragment;
 import ru.art2000.calculator.unit_converter.UnitConverterFragment;
 import ru.art2000.extensions.CurrencyValues;
+import ru.art2000.extensions.DayNightActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends DayNightActivity {
 
     boolean doubleBackToExitPressedOnce = false;
     BottomNavigationView navigation;
@@ -35,14 +38,32 @@ public class MainActivity extends AppCompatActivity {
     PreferenceFragmentCompat settings = new SettingsFragment();
 
     @Override
+    protected void onPreNightModeChanged(int mode) {
+        switch (navigation.getSelectedItemId()) {
+            case R.id.navigation_calc:
+                getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
+                break;
+            case R.id.navigation_unit:
+                getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
+                break;
+            case R.id.navigation_currency:
+                getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
+                break;
+            case R.id.navigation_settings:
+                getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
+                break;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = getApplicationContext();
         currency_converter.mContext = this;
         PrefsHelper.initialSetup(mContext);
         setTheme(PrefsHelper.getAppTheme());
         Window window = getWindow();
-        window.setUiOptions(1,1);
-        
+        window.setUiOptions(1, 1);
+
         new Thread(() -> CurrencyValues.getDataFromDB(mContext)).start();
         View view = window.getDecorView();
         int flags = view.getSystemUiVisibility();
@@ -61,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemReselectedListener(item -> {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.navigation_currency:
                     currency_converter.scrollToTop();
                     break;
@@ -93,17 +114,16 @@ public class MainActivity extends AppCompatActivity {
                         window.setStatusBarColor(calc_status_color);
                     break;
                 case R.id.navigation_unit:
-                    if (PrefsHelper.isUnitViewChanged()){
+                    if (PrefsHelper.isUnitViewChanged()) {
                         unit_converter = new UnitConverterFragment();
                     }
                     Log.d("cliick", "1");
 
 //                    new Handler().post(() -> {
 
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                unit_converter, "UnitConverterFragment").addToBackStack("UnitConverterFragment").commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            unit_converter, "UnitConverterFragment").addToBackStack("UnitConverterFragment").commit();
 //                    });
-
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -163,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (navigation.getSelectedItemId() == R.id.navigation_calc && (
                 calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
-        calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED))
+                        calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED))
             calculator.panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else {
             if (doubleBackToExitPressedOnce) {

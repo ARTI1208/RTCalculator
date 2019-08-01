@@ -2,19 +2,15 @@ package ru.art2000.calculator.currency_converter;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -29,8 +25,9 @@ import com.google.android.material.tabs.TabLayout;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.extensions.CurrencyValues;
+import ru.art2000.extensions.DayNightActivity;
 
-public class EditCurrenciesActivity extends AppCompatActivity {
+public class EditCurrenciesActivity extends DayNightActivity {
 
     public CurrenciesAddFragment add = new CurrenciesAddFragment();
     public CurrenciesEditFragment edit = new CurrenciesEditFragment();
@@ -55,8 +52,6 @@ public class EditCurrenciesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(PrefsHelper.getAppTheme());
-
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editor_currencies_layout);
@@ -107,11 +102,8 @@ public class EditCurrenciesActivity extends AppCompatActivity {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
                 int maxScroll = pager.getMeasuredWidth();
                 int currentScroll = maxScroll * position + positionOffsetPixels;
-                double percentage = (double) currentScroll / maxScroll;
-
                 searchViewLayout.setTranslationX(-currentScroll);
             }
 
