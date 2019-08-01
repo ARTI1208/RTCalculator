@@ -10,7 +10,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -256,7 +255,7 @@ public class CurrenciesEditFragment extends Fragment {
                 });
                 holder.itemView.setOnLongClickListener(v -> {
                     notifyModeChanged(holder);
-                    Log.d("editcheck", "nonnull");
+                    parent.toggleElementsVisibility();
                     return false;
                 });
             } else {
@@ -268,9 +267,7 @@ public class CurrenciesEditFragment extends Fragment {
                     if (!isSomethingSelected())
                         notifyModeChanged(holder);
                     parent.toggleElementsVisibility();
-                    Log.d("editcheck", "oncheck");
                 });
-                Log.d("editcheck", "null");
                 holder.itemView.setOnClickListener(v ->
                         check.performClick());
                 check.setChecked(itemsToRemove.contains(item));
