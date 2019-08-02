@@ -30,6 +30,18 @@ public class DayNightActivity extends AppCompatActivity {
                 onResumeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);
             }
+        } else if (theme == R.style.AppTheme_System) {
+            int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onResumeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        } else if (theme == R.style.AppTheme_Battery) {
+            int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onResumeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
         }
     }
 
@@ -44,6 +56,18 @@ public class DayNightActivity extends AppCompatActivity {
                 newMode = AppCompatDelegate.MODE_NIGHT_NO;
             }
 
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onSetThemeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        } else if (resId == R.style.AppTheme_System) {
+            int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onSetThemeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        } else if (resId == R.style.AppTheme_Battery) {
+            int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
             if (AppCompatDelegate.getDefaultNightMode() != newMode) {
                 onSetThemeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);

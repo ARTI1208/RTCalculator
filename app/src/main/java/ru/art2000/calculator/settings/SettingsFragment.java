@@ -11,8 +11,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import java.util.Objects;
-
 import ru.art2000.calculator.BuildConfig;
 import ru.art2000.calculator.R;
 
@@ -59,34 +57,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         ListPreference appTheme = findPreference("app_theme");
         appTheme.setSummary(appTheme.getEntry());
         appTheme.setOnPreferenceChangeListener((preference, newValue) -> {
+
+            if (appTheme.getValue().equals(newValue)) {
+                return false;
+            }
+
             appTheme.setValue(newValue.toString());
             appTheme.setSummary(appTheme.getEntry());
             switch (newValue.toString()) {
-                case "dark":
-                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_Dark);
-                    break;
-                case "day_night":
-                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_DayNight);
-                    break;
                 case "system":
-                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_System);
-                    Toast.makeText(mContext, R.string.daynight_support_message, Toast.LENGTH_LONG).show();
-                    break;
                 case "battery":
-                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_Battery);
                     Toast.makeText(mContext, R.string.daynight_support_message, Toast.LENGTH_LONG).show();
-                    break;
-                default:
-                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme);
                     break;
             }
+
             PrefsHelper.setAppTheme(newValue.toString());
-            Intent intent = getActivity().getIntent();
-            intent.setAction("ru.art2000.calculator.action.SETTINGS");
             Activity parent = getActivity();
+            Intent intent = parent.getIntent();
+            intent.setAction("ru.art2000.calculator.action.SETTINGS");
             parent.finish();
             parent.startActivity(intent);
-            getActivity().recreate();
+            parent.recreate();
             return true;
         });
 
