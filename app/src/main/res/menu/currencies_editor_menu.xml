@@ -10,6 +10,6 @@
     <item
         android:icon="@drawable/ic_menu_select"
         android:id="@+id/select_all"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="Select all" />
 </menu>

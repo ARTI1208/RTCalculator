@@ -27,11 +27,15 @@
         <item>@string/theme_light</item>
         <item>@string/theme_dark</item>
         <item>@string/theme_daynight</item>
+        <item>@string/theme_daynight_system</item>
+        <item>@string/theme_daynight_battery</item>
     </array>
     <array name="app_theme_values">
         <item>light</item>
         <item>dark</item>
         <item>day_night</item>
+        <item>system</item>
+        <item>battery</item>
     </array>
     <array name="distance_items">
         <item>mm</item>

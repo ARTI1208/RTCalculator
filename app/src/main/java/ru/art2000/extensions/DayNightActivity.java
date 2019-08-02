@@ -17,25 +17,60 @@ public class DayNightActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         int theme = PrefsHelper.getAppTheme();
-        if (theme == R.style.AppTheme_DayNight) {
-            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
+        if (theme == R.style.AppTheme_DayNight && isResumeNightModeChangeEnabled()) {
             int newMode;
 
-            if (hour <= 7 || hour >= 12) {
+            if (nightModeCondition()) {
                 newMode = AppCompatDelegate.MODE_NIGHT_YES;
             } else {
                 newMode = AppCompatDelegate.MODE_NIGHT_NO;
             }
 
             if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onPreNightModeChanged(newMode);
+                onResumeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);
             }
         }
     }
 
-    protected void onPreNightModeChanged(int mode) {
+    @Override
+    public void setTheme(int resId) {
+        if (resId == R.style.AppTheme_DayNight && isSetThemeNightModeChangeEnabled()) {
+            int newMode;
+
+            if (nightModeCondition()) {
+                newMode = AppCompatDelegate.MODE_NIGHT_YES;
+            } else {
+                newMode = AppCompatDelegate.MODE_NIGHT_NO;
+            }
+
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onSetThemeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        }
+        super.setTheme(resId);
+    }
+
+    protected void onResumeNightModeChanged(int mode) {
 
     }
+
+    protected boolean isResumeNightModeChangeEnabled() {
+        return true;
+    }
+
+    protected void onSetThemeNightModeChanged(int mode) {
+
+    }
+
+    protected boolean isSetThemeNightModeChangeEnabled() {
+        return true;
+    }
+
+    protected boolean nightModeCondition() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        return hour <= 7 || hour >= 22;
+    }
+
 }

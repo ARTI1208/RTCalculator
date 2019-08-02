@@ -9,6 +9,8 @@
         <item name="btn_text_color">@color/LightTheme_buttonTextColor</item>
         <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="android:preferenceStyle">@style/PreferenceTheme</item>
+        <item name="actionBarStyle">@style/ActionStyle</item>
+        <item name="actionBarTheme">@style/ActionTheme</item>
     </style>
     <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
 
@@ -16,6 +18,10 @@
     <style name="StartTheme" parent="Theme.AppCompat.Light"/>
     <style name="PrefCategory">
         <item name="android:layout">@layout/category</item>
+    </style>
+    <style name="ActionTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:textColorPrimary">?colorAccent</item>
     </style>
     <style name="ActionStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:textColor">?colorAccent</item>
@@ -36,6 +42,7 @@
         <item name="btn_text_color">@color/DarkTheme_buttonTextColor</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:preferenceStyle">@style/PreferenceTheme</item>
+        <item name="actionBarStyle">@style/ActionStyle</item>
     </style>
     <style name="PreferenceCategoryTextAppearance">
         <item name="android:textSize">14sp</item>
@@ -45,6 +52,8 @@
     </style>
     <style name="AppTheme.Dark" parent="Base.AppTheme.Dark" />
     <style name="AppTheme.DayNight" parent="AppTheme" />
+    <style name="AppTheme.System" parent="AppTheme" />
+    <style name="AppTheme.Battery" parent="AppTheme" />
     <style name="Base.ButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:layout_height">90dp</item>
         <item name="android:layout_width">wrap_content</item>

@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -29,15 +28,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         /* tabList preference */
         ListPreference tabList = findPreference("tab_default");
-        if (!getResources().getBoolean(R.bool.show_settings_as_default_tab)){
+        if (!getResources().getBoolean(R.bool.show_settings_as_default_tab)) {
             CharSequence[] tabEntries = tabList.getEntries();
             CharSequence[] tabValues = tabList.getEntryValues();
             CharSequence[] newTabEntries = new CharSequence[tabEntries.length - 1];
             CharSequence[] newTabValues = new CharSequence[tabValues.length - 1];
             short found = 0;
-            for (int i = 0; i < tabValues.length; ++i){
+            for (int i = 0; i < tabValues.length; ++i) {
                 CharSequence sequence = tabValues[i];
-                if (sequence.equals("settings_tab")){
+                if (sequence.equals("settings_tab")) {
                     found = 1;
                 } else {
                     newTabEntries[i - found] = tabEntries[i];
@@ -68,7 +67,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     break;
                 case "day_night":
                     Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_DayNight);
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                    break;
+                case "system":
+                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_System);
+                    Toast.makeText(mContext, R.string.daynight_support_message, Toast.LENGTH_LONG).show();
+                    break;
+                case "battery":
+                    Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme_Battery);
+                    Toast.makeText(mContext, R.string.daynight_support_message, Toast.LENGTH_LONG).show();
                     break;
                 default:
                     Objects.requireNonNull(getActivity()).getApplication().setTheme(R.style.AppTheme);

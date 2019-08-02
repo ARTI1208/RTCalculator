@@ -12,7 +12,9 @@
     <string name="app_theme">Theme</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
-    <string name="theme_daynight">Day/Night</string>
+    <string name="theme_daynight">Time-based Day/Night</string>
+    <string name="theme_daynight_system">Follow System</string>
+    <string name="theme_daynight_battery">Follow Battery Saver</string>
     <string name="unit_category_velocity">Velocity</string>
     <string name="unit_category_distance">Distance</string>
     <string name="unit_category_area">Area</string>
@@ -89,4 +91,5 @@
     <string name="empty_text_all_currencies_added">All available items already added</string>
     <string name="currencies_no_internet">Update failed: connection unavailable</string>
     <string name="tab_last_opened">Last opened</string>
+    <string name="daynight_support_message">If the system doesn\'t support Day/Night switch, this option won\'t work either</string>
 </resources>

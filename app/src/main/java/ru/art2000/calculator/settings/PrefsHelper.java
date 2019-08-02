@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import androidx.appcompat.app.AppCompatDelegate;
-
-import java.util.Calendar;
-
 import ru.art2000.calculator.R;
 
 public class PrefsHelper {
@@ -104,12 +100,12 @@ public class PrefsHelper {
                 break;
             case "day_night":
                 sAppTheme = R.style.AppTheme_DayNight;
-                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                if (hour <= 7 || hour >= 12){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
+                break;
+            case "system":
+                sAppTheme = R.style.AppTheme_System;
+                break;
+            case "battery":
+                sAppTheme = R.style.AppTheme_Battery;
                 break;
         }
         sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value", false);

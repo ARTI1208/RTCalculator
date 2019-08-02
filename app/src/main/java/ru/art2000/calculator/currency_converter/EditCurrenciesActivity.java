@@ -2,6 +2,9 @@ package ru.art2000.calculator.currency_converter;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.extensions.CurrencyValues;
@@ -44,10 +48,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
     @DrawableRes
     int currentDrawable = checkDrawable;
 
-
     LinearLayout searchViewLayout;
     SearchView barSearchView;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
         setContentView(R.layout.editor_currencies_layout);
         mContext = getBaseContext();
         Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fab = findViewById(R.id.floatingActionButton);
         fab.addOnShowAnimationListener(new Animator.AnimatorListener() {
             @Override
@@ -79,8 +83,6 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             }
         });
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         searchViewLayout = findViewById(R.id.search_view_layout);
         searchViewLayout.setVisibility(View.VISIBLE);
@@ -158,10 +160,14 @@ public class EditCurrenciesActivity extends DayNightActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.currencies_editor_menu, menu);
-        deselect = menu.findItem(R.id.deselect_all);
-        select = menu.findItem(R.id.select_all);
 
+        deselect = menu.findItem(R.id.deselect_all);
+        applyMenuIconTint(deselect.getIcon());
         deselect.setVisible(false);
+
+        select = menu.findItem(R.id.select_all);
+        applyMenuIconTint(select.getIcon());
+        
         if (add.adapter.size == 0)
             select.setVisible(false);
 
@@ -201,6 +207,10 @@ public class EditCurrenciesActivity extends DayNightActivity {
             setResult(0);
         finish();
         return true;
+    }
+
+    private void applyMenuIconTint(Drawable icon){
+        icon.setColorFilter(new PorterDuffColorFilter(Helper.getAccentColor(this), PorterDuff.Mode.SRC_ATOP));
     }
 
     public void toggleElementsVisibility() {

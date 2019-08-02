@@ -12,7 +12,9 @@
     <string name="app_theme">Тема</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Тёмная</string>
-    <string name="theme_daynight">День/Ночь</string>
+    <string name="theme_daynight">День/Ночь по времени</string>
+    <string name="theme_daynight_system">Как в системе</string>
+    <string name="theme_daynight_battery">По сбережению батареи</string>
     <string name="unit_category_distance">Расстояние</string>
     <string name="unit_category_velocity">Скорость</string>
     <string name="unit_view_simple">Простой</string>
@@ -89,4 +91,5 @@
     <string name="empty_text_all_currencies_added">Добавлены все доступные элементы</string>
     <string name="currencies_no_internet">Ошибка обновления: нет соединения</string>
     <string name="tab_last_opened">Последняя открытая</string>
+    <string name="daynight_support_message">Если система не имеет поддержки переключения светлой/тёмной темы, то эта опция также не будет работать</string>
 </resources>

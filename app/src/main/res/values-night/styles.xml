@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.DayNight" parent="AppTheme.Dark">
-        <!-- Customize your theme here. -->
-
-    </style>
+    <style name="AppTheme.DayNight" parent="AppTheme.Dark" />
+    <style name="AppTheme.System" parent="AppTheme.Dark" />
+    <style name="AppTheme.Battery" parent="AppTheme.Dark" />
 </resources>

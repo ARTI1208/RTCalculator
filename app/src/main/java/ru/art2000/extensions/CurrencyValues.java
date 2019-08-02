@@ -10,8 +10,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 
+import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.currency_converter.CurrencyDB;
 import ru.art2000.calculator.currency_converter.EditCurrenciesActivity;
 
@@ -91,11 +93,18 @@ public class CurrencyValues {
             return list;
         ArrayList<CurrencyItem> newList = new ArrayList<>();
         String lowerQuery = query.toLowerCase();
-        for (CurrencyItem item :
-                list) {
+
+        Locale mainLocale = Locale.getDefault();
+
+        for (CurrencyItem item : list) {
+
             String lowerCode = item.code.toLowerCase();
-            String lowerName = context.getString(item.nameResourceId);
-            if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)) {
+            String lowerName = context.getString(item.nameResourceId).toLowerCase();
+
+            if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
+                    || (!mainLocale.equals(Locale.ENGLISH)
+                    && Helper.getLocalizedString(context, Locale.ENGLISH, item.nameResourceId)
+                    .toLowerCase().contains(lowerQuery))) {
                 newList.add(item);
             }
         }
@@ -163,7 +172,7 @@ public class CurrencyValues {
         sortVisibleList();
     }
 
-    public static void writeValuesToDB(Context context){
+    public static void writeValuesToDB(Context context) {
         new Thread(() -> {
             CurrencyDB DBHelper = new CurrencyDB(context);
             DBHelper.writeUpdatedValuesToDB();
