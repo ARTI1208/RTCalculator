@@ -201,4 +201,12 @@ public class PrefsHelper {
         return sSharedPreferences.getString("tab_default", "").equals("last_tab");
     }
 
+    public static void setDeleteTooltipShown(){
+        sSharedPreferences.edit().putBoolean("delete_tooltip_shown", true).apply();
+    }
+
+    public static boolean isDeleteTooltipShown(){
+        return sSharedPreferences.getBoolean("delete_tooltip_shown", false);
+    }
+
 }

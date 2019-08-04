@@ -46,7 +46,7 @@
     <string name="history_clear">Clear</string>
     <string name="updated">Updated: </string>
     <string name="currencies_add">Add</string>
-    <string name="currencies_edit">Edit &amp; Remove</string>
+    <string name="currencies_edit">Edit</string>
     <string name="currencies_list_modify">Set up currencies</string>
     <string name="currency_AUD">Australian dollar</string>
     <string name="currency_AZN">Azerbaijani manat</string>
@@ -95,4 +95,6 @@
     <string name="action_edit">Edit</string>
     <string name="action_select_all">Select all</string>
     <string name="action_deselect_all">Deselect all</string>
+    <string name="tooltip_remove_currency">Long click on item toggles deletion mode</string>
+    <string name="action_tooltip_got_it">Got it</string>
 </resources>

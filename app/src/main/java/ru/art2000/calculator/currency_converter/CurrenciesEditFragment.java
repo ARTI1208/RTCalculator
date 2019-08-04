@@ -167,22 +167,22 @@ public class CurrenciesEditFragment extends Fragment {
         return v;
     }
 
-    private void toggleEmptyView(){
+    private void toggleEmptyView() {
         if (adapter == null)
             return;
-        if (adapter.getItemCount() == 0){
-            if (emptyView.getVisibility() == View.GONE){
+        if (adapter.getItemCount() == 0) {
+            if (emptyView.getVisibility() == View.GONE) {
                 emptyView.setText(getEmptyText());
                 emptyView.setVisibility(View.VISIBLE);
             }
         } else {
-            if (emptyView.getVisibility() == View.VISIBLE){
+            if (emptyView.getVisibility() == View.VISIBLE) {
                 emptyView.setVisibility(View.GONE);
             }
         }
     }
 
-    private String getEmptyText(){
+    private String getEmptyText() {
         return getString(R.string.empty_text_no_currencies_added);
     }
 
@@ -295,11 +295,15 @@ public class CurrenciesEditFragment extends Fragment {
             if (curMode == SELECTION_MODE) {
                 curMode = REORDER_MODE;
                 itemsToRemove.clear();
-                parent.toggleElementsVisibility();
             } else {
                 curMode = SELECTION_MODE;
+                if (parent.deleteTooltip != null) {
+                    parent.isFirstTimeTooltipShown = false;
+                    parent.deleteTooltip.dismiss();
+                }
                 itemsToRemove.add(CurrencyValues.visibleList.get(holder.getAdapterPosition()));
             }
+            parent.toggleElementsVisibility();
             notifyDataSetChanged();
         }
 

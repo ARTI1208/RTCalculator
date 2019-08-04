@@ -46,7 +46,7 @@
     <string name="history_clear">Очистить</string>
     <string name="updated">Обновлено: </string>
     <string name="currencies_add">Добавление</string>
-    <string name="currencies_edit">Изменение и удаление</string>
+    <string name="currencies_edit">Изменение</string>
     <string name="currencies_list_modify">Настройка валют</string>
     <string name="currency_AUD">Австралийский доллар</string>
     <string name="currency_AZN">Азербайджанский манат</string>
@@ -95,4 +95,6 @@
     <string name="action_edit">Редактировать</string>
     <string name="action_select_all">Выбрать все</string>
     <string name="action_deselect_all">Отменить выбор</string>
+    <string name="tooltip_remove_currency">Удержание элемента переводит список в режим удаления</string>
+    <string name="action_tooltip_got_it">Понятно</string>
 </resources>

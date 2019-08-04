@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import ru.art2000.calculator.Helper;
@@ -49,6 +50,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
     @DrawableRes
     int currentDrawable = checkDrawable;
 
+    boolean isFirstTimeTooltipShown = !PrefsHelper.isDeleteTooltipShown();
+    Snackbar deleteTooltip;
+
     LinearLayout searchViewLayout;
     SearchView barSearchView;
 
@@ -62,7 +66,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        applyMenuIconTint(toolbar.getNavigationIcon());
+
         fab = findViewById(R.id.floatingActionButton);
         fab.addOnShowAnimationListener(new Animator.AnimatorListener() {
             @Override
@@ -131,6 +135,11 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 fab.hide();
                 modifyFAB(tab.getPosition());
                 toggleElementsVisibility();
+                if (selectedTab == 1) {
+                    showDeleteTip();
+                } else if (deleteTooltip != null) {
+                    deleteTooltip.dismiss();
+                }
             }
 
             @Override
@@ -200,6 +209,32 @@ public class EditCurrenciesActivity extends DayNightActivity {
             setResult(0);
         finish();
         return true;
+    }
+
+    public void showDeleteTip() {
+        if (!isFirstTimeTooltipShown) {
+            return;
+        }
+
+        deleteTooltip = Snackbar.make(findViewById(R.id.coordinator),
+                R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE);
+        deleteTooltip.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar sb) {
+                PrefsHelper.setDeleteTooltipShown();
+            }
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION
+                        || event == Snackbar.Callback.DISMISS_EVENT_SWIPE) {
+                    isFirstTimeTooltipShown = false;
+                }
+            }
+        });
+        deleteTooltip.setAction(R.string.action_tooltip_got_it, actionView -> deleteTooltip.dismiss());
+
+        deleteTooltip.show();
     }
 
     private void applyMenuIconTint(Drawable icon) {
