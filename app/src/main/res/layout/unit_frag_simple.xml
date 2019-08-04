@@ -87,26 +87,26 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/button7"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="7" />
 
             <Button
                 android:id="@+id/button8"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="8" />
 
             <Button
                 android:id="@+id/button9"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="9" />
 
             <Button
                 android:id="@+id/buttonClear"
                 android:layout_weight="1.0"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:text="C" />
         </LinearLayout>
         <LinearLayout
@@ -116,25 +116,25 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/button4"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="4" />
 
             <Button
                 android:id="@+id/button5"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="5" />
 
             <Button
                 android:id="@+id/button6"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="6" />
 
             <Button
                 android:id="@+id/buttonDel"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="DEL" />
         </LinearLayout>
@@ -145,25 +145,25 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/button1"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="1" />
 
             <Button
                 android:id="@+id/button2"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="2" />
 
             <Button
                 android:id="@+id/button3"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="3" />
 
             <Button
                 android:id="@+id/buttonMinus"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="+/-" />
         </LinearLayout>
@@ -174,25 +174,25 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/button0"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="0" />
 
             <Button
                 android:id="@+id/buttonDot"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="." />
 
             <Button
                 android:id="@+id/button00"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="00" />
 
             <ImageButton
                 android:id="@+id/buttonN"
-                style="@style/ButtonStyle"
+                style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:tint="?btn_text_color"
                 android:rotation="90.0"

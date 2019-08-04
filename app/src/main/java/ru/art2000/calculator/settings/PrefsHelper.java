@@ -93,19 +93,19 @@ public class PrefsHelper {
         switch (sSharedPreferences.getString("app_theme", "light")) {
             default:
             case "light":
-                sAppTheme = R.style.AppTheme;
+                sAppTheme = R.style.RT_AppTheme_Light;
                 break;
             case "dark":
-                sAppTheme = R.style.AppTheme_Dark;
+                sAppTheme = R.style.RT_AppTheme_Dark;
                 break;
             case "day_night":
-                sAppTheme = R.style.AppTheme_DayNight;
+                sAppTheme = R.style.RT_AppTheme_DayNight;
                 break;
             case "system":
-                sAppTheme = R.style.AppTheme_System;
+                sAppTheme = R.style.RT_AppTheme_System;
                 break;
             case "battery":
-                sAppTheme = R.style.AppTheme_Battery;
+                sAppTheme = R.style.RT_AppTheme_Battery;
                 break;
         }
         sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value", false);

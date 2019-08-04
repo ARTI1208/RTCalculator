@@ -8,12 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?calc_input_bg"
-        android:paddingStart="6dp"
         android:paddingTop="4.0dip"
-        android:paddingEnd="6dp"
+
         android:paddingBottom="4.0dip">
 
         <RelativeLayout
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -52,6 +53,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
                 android:longClickable="true"
                 android:scrollbars="none">
 
@@ -72,6 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
                 android:scrollbars="none">
 
 

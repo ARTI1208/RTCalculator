@@ -9,12 +9,12 @@
             android:layout_height="180dip"
             android:background="?calc_input_bg"
             android:minHeight="180dip"
-            android:paddingStart="6dp"
             android:paddingTop="4.0dip"
-            android:paddingEnd="6dp"
             android:paddingBottom="4.0dip">
 
             <RelativeLayout
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -52,6 +52,8 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
                     android:layout_weight="1.0"
                     android:longClickable="true"
                     android:scrollbars="none">
@@ -72,6 +74,8 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
                     android:layout_weight="1.0"
                     android:scrollbars="none">
 

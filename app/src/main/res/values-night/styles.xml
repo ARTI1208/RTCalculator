@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.DayNight" parent="AppTheme.Dark" />
-    <style name="AppTheme.System" parent="AppTheme.Dark" />
-    <style name="AppTheme.Battery" parent="AppTheme.Dark" />
+
+    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Dark" />
+
+    <style name="RT.AppTheme.DayNight" parent="RT.AppTheme.Dark" />
+
+    <style name="RT.AppTheme.System" parent="RT.AppTheme.Dark" />
+
 </resources>

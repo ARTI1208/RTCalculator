@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,6 +62,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        applyMenuIconTint(toolbar.getNavigationIcon());
         fab = findViewById(R.id.floatingActionButton);
         fab.addOnShowAnimationListener(new Animator.AnimatorListener() {
             @Override
@@ -153,11 +155,6 @@ public class EditCurrenciesActivity extends DayNightActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.currencies_editor_menu, menu);
 
@@ -167,7 +164,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
         select = menu.findItem(R.id.select_all);
         applyMenuIconTint(select.getIcon());
-        
+
         if (add.adapter.size == 0)
             select.setVisible(false);
 
@@ -176,6 +173,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d("menuitem", String.valueOf(item.getItemId()));
         switch (item.getItemId()) {
             case R.id.deselect_all:
                 if (selectedTab == 0)
@@ -195,11 +193,6 @@ public class EditCurrenciesActivity extends DayNightActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
         if (changeDone)
             setResult(1);
@@ -209,8 +202,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
         return true;
     }
 
-    private void applyMenuIconTint(Drawable icon){
-        icon.setColorFilter(new PorterDuffColorFilter(Helper.getAccentColor(this), PorterDuff.Mode.SRC_ATOP));
+    private void applyMenuIconTint(Drawable icon) {
+        icon.setColorFilter(new PorterDuffColorFilter(
+                Helper.getAccentColor(this), PorterDuff.Mode.SRC_ATOP));
     }
 
     public void toggleElementsVisibility() {

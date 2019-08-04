@@ -17,7 +17,7 @@ public class DayNightActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         int theme = PrefsHelper.getAppTheme();
-        if (theme == R.style.AppTheme_DayNight && isResumeNightModeChangeEnabled()) {
+        if (theme == R.style.RT_AppTheme_DayNight && isResumeNightModeChangeEnabled()) {
             int newMode;
 
             if (nightModeCondition()) {
@@ -30,13 +30,13 @@ public class DayNightActivity extends AppCompatActivity {
                 onResumeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);
             }
-        } else if (theme == R.style.AppTheme_System) {
+        } else if (theme == R.style.RT_AppTheme_System) {
             int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             if (AppCompatDelegate.getDefaultNightMode() != newMode) {
                 onResumeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);
             }
-        } else if (theme == R.style.AppTheme_Battery) {
+        } else if (theme == R.style.RT_AppTheme_Battery) {
             int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
             if (AppCompatDelegate.getDefaultNightMode() != newMode) {
                 onResumeNightModeChanged(newMode);
@@ -47,7 +47,7 @@ public class DayNightActivity extends AppCompatActivity {
 
     @Override
     public void setTheme(int resId) {
-        if (resId == R.style.AppTheme_DayNight && isSetThemeNightModeChangeEnabled()) {
+        if (resId == R.style.RT_AppTheme_DayNight && isSetThemeNightModeChangeEnabled()) {
             int newMode;
 
             if (nightModeCondition()) {
@@ -60,13 +60,13 @@ public class DayNightActivity extends AppCompatActivity {
                 onSetThemeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);
             }
-        } else if (resId == R.style.AppTheme_System) {
+        } else if (resId == R.style.RT_AppTheme_System) {
             int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             if (AppCompatDelegate.getDefaultNightMode() != newMode) {
                 onSetThemeNightModeChanged(newMode);
                 AppCompatDelegate.setDefaultNightMode(newMode);
             }
-        } else if (resId == R.style.AppTheme_Battery) {
+        } else if (resId == R.style.RT_AppTheme_Battery) {
             int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
             if (AppCompatDelegate.getDefaultNightMode() != newMode) {
                 onSetThemeNightModeChanged(newMode);

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!--LightTheme colors-->
     <color name="LightTheme_colorPrimary">#fafafa</color>
     <color name="LightTheme_colorPrimaryDark">@color/LightTheme_inputBackground</color>
     <color name="LightTheme_colorAccent">#3F51B5</color>
     <color name="LightTheme_inputBackground">#dedede</color>
-    <color name="LightTheme_buttonTextColor">#3F51B5</color>
+    <color name="LightTheme_buttonTextColor">@color/LightTheme_colorAccent</color>
+
     <!--DarkTheme colors-->
     <color name="DarkTheme_colorPrimary">#404040</color>
     <color name="DarkTheme_colorPrimaryDark">@color/DarkTheme_colorPrimary</color>
@@ -16,8 +18,10 @@
     <!--BlackTheme colors-->
     <color name="BlackTheme_colorPrimary">#000000</color>
     <color name="BlackTheme_colorPrimaryDark">@color/BlackTheme_colorPrimary</color>
-    <color name="BlackTheme_colorAccent">#8E8CD8</color>
+    <color name="BlackTheme_colorAccent">@color/DarkTheme_colorAccent</color>
     <color name="BlackTheme_inputBackground">@color/BlackTheme_colorPrimary</color>
     <color name="BlackTheme_buttonTextColor">@color/DarkTheme_colorAccent</color>
+
     <!--Other colors-->
+
 </resources>

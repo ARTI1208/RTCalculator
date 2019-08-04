@@ -61,7 +61,7 @@ public class UnitPageFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.d("deettacccch", category);
+        Log.d("deettacccch", category != null ? category : "null category");
         super.onDetach();
     }
 

@@ -16,26 +16,26 @@
             android:text="DIV"
             android:onClick="CalcBtnClick"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonMod"
             android:text="MOD"
             android:layout_weight="1.0"
             android:onClick="CalcBtnClick"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonSqrt"
             android:text="√"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle"/>
+            style="@style/RT.Widget.Button"/>
 
         <Button
             android:id="@+id/buttonPow"
             android:layout_weight="1.0"
             android:text="^"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
     </LinearLayout>
 
     <LinearLayout
@@ -49,26 +49,26 @@
             android:text="sin"
             android:onClick="CalcBtnClick"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonCos"
             android:text="cos"
             android:layout_weight="1.0"
             android:onClick="CalcBtnClick"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonLg"
             android:text="lg"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle"/>
+            style="@style/RT.Widget.Button"/>
 
         <Button
             android:id="@+id/buttonLn"
             android:layout_weight="1.0"
             android:text="ln"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
     </LinearLayout>
 
     <LinearLayout
@@ -82,26 +82,26 @@
             android:text="tg"
             android:onClick="CalcBtnClick"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonCtg"
             android:text="ctg"
             android:layout_weight="1.0"
             android:onClick="CalcBtnClick"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonPercent"
             android:text="%"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle"/>
+            style="@style/RT.Widget.Button"/>
 
         <Button
             android:id="@+id/buttonFactorial"
             android:layout_weight="1.0"
             android:text="!"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -114,26 +114,26 @@
             android:text="M+"
             android:onClick="CalcBtnClick"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonMMinus"
             android:text="M-"
             android:layout_weight="1.0"
             android:onClick="CalcBtnClick"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonMClear"
             android:layout_weight="1.0"
             android:text="MC"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonMResult"
             android:text="MR"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle"/>
+            style="@style/RT.Widget.Button"/>
 
     </LinearLayout>
     <LinearLayout
@@ -147,26 +147,26 @@
             android:text="π"
             android:onClick="CalcBtnClick"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonEulerNumber"
             android:text="e"
             android:layout_weight="1.0"
             android:onClick="CalcBtnClick"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonGoldenRatio"
             android:layout_weight="1.0"
             android:text="φ"
-            style="@style/ButtonStyle" />
+            style="@style/RT.Widget.Button" />
 
         <Button
             android:id="@+id/buttonDEGRAD"
             android:text="RAD"
             android:layout_weight="1.0"
-            style="@style/ButtonStyle"/>
+            style="@style/RT.Widget.Button"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_downward_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Users/leona/AppData/Local/JetBrains/Toolbox/apps/AndroidStudio/ch-0/183.5452501/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_back_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,7 +33,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="music_draw" />
+                            <entry key="outputName" value="ic_ab_back" />
                             <entry key="sourceFile" value="C:\Users\leona" />
                           </map>
                         </option>

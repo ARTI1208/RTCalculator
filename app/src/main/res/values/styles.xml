@@ -1,36 +1,22 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.AppTheme" parent="Theme.AppCompat.Light">
-        <item name="background">@color/LightTheme_colorPrimary</item>
+<resources>
+
+    <style name="Base.RT.AppTheme.Light" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="background">@color/LightTheme_colorPrimary</item>
+        <item name="android:windowBackground">@color/LightTheme_colorPrimary</item>
         <item name="colorPrimary">@color/LightTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/LightTheme_colorAccent</item>
         <item name="calc_input_bg">@color/LightTheme_inputBackground</item>
         <item name="btn_text_color">@color/LightTheme_buttonTextColor</item>
-        <item name="preferenceTheme">@style/PreferenceTheme</item>
-        <item name="android:preferenceStyle">@style/PreferenceTheme</item>
-        <item name="actionBarStyle">@style/ActionStyle</item>
-        <item name="actionBarTheme">@style/ActionTheme</item>
+        <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
+        <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
+        <item name="tabStyle">@style/RT.Widget.TabLayout</item>
+        <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>"
     </style>
-    <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
 
-    </style>
-    <style name="StartTheme" parent="Theme.AppCompat.Light"/>
-    <style name="PrefCategory">
-        <item name="android:layout">@layout/category</item>
-    </style>
-    <style name="ActionTheme" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:textColorPrimary">?colorAccent</item>
-    </style>
-    <style name="ActionStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:textColorPrimary">?colorAccent</item>
-    </style>
-    <style name="AppTheme" parent="Base.AppTheme">
-        <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
-    </style>
-    <style name="Base.AppTheme.Dark" parent="Theme.AppCompat">
+    <style name="Base.RT.AppTheme.Dark" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="background">@color/DarkTheme_colorPrimary</item>
@@ -40,21 +26,19 @@
         <item name="colorAccent">@color/DarkTheme_colorAccent</item>
         <item name="calc_input_bg">@color/DarkTheme_inputBackground</item>
         <item name="btn_text_color">@color/DarkTheme_buttonTextColor</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="android:preferenceStyle">@style/PreferenceTheme</item>
-        <item name="actionBarStyle">@style/ActionStyle</item>
+        <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
+        <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
+        <item name="tabStyle">@style/RT.Widget.TabLayout</item>
+        <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
     </style>
-    <style name="PreferenceCategoryTextAppearance">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/colorAccent</item>
-        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
-        <item name="android:textStyle">normal</item>
+
+    <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">
+        <item name="android:textColor">@color/tab_icon_text_color_selector</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">16.0sp</item>
     </style>
-    <style name="AppTheme.Dark" parent="Base.AppTheme.Dark" />
-    <style name="AppTheme.DayNight" parent="AppTheme" />
-    <style name="AppTheme.System" parent="AppTheme" />
-    <style name="AppTheme.Battery" parent="AppTheme" />
-    <style name="Base.ButtonStyle" parent="Widget.AppCompat.Button">
+
+    <style name="Base.RT.Widget.Button" parent="Widget.AppCompat.Button">
         <item name="android:layout_height">90dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center|center</item>
@@ -63,7 +47,52 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
-    <style name="ButtonStyle" parent="Base.ButtonStyle">
+
+    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Light" />
+
+    <style name="RT.AppTheme.Dark" parent="Base.RT.AppTheme.Dark" />
+
+    <style name="RT.AppTheme.DayNight" parent="RT.AppTheme.Light" />
+
+    <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light" />
+
+    <style name="RT.AppTheme.Light" parent="Base.RT.AppTheme.Light" />
+
+    <style name="RT.AppTheme.System" parent="RT.AppTheme.Light" />
+
+    <style name="RT.PreferenceTheme" parent="PreferenceThemeOverlay.v14" />
+
+    <style name="RT.TextAppearance.PreferenceCategory" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RT.TextAppearance.Tab" parent="Base.RT.TextAppearance.Tab" />
+
+    <style name="RT.Widget.Button" parent="Base.RT.Widget.Button">
         <item name="android:background">?selectableItemBackgroundBorderless</item>
     </style>
+
+    <style name="RT.Widget.TabLayout" parent="@style/Widget.Design.TabLayout">
+        <item name="tabIndicator">@drawable/tab_rounded_line_indicator</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabInlineLabel">true</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabTextAppearance">@style/RT.TextAppearance.Tab</item>
+        <item name="tabIconTint">@color/tab_icon_text_color_selector</item>
+        <item name="tabIndicatorColor">?colorAccent</item>
+        <item name="tabRippleColor">@color/tab_ripple_color_selector</item>
+        <item name="tabTextColor">@color/tab_icon_text_color_selector</item>
+        <item name="tabUnboundedRipple">true</item>
+        <item name="android:background">?android:windowBackground</item>
+    </style>
+
+    <style name="RT.Widget.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="titleTextColor">?colorAccent</item>
+        <item name="colorControlNormal">?colorAccent</item>
+    </style>
+
 </resources>

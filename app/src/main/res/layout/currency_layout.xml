@@ -9,51 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:contentInsetStart="6dp"
+            app:contentInsetEnd="6dp"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
+            android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/tv_updated"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="4dp"
-                android:gravity="start|center"
-                android:text="@string/updated"
-                android:textColor="#ff000000"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tv_update_date"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toEndOf="@id/tv_updated"
-                android:gravity="start|center"
-                android:text="Never"
-                android:textColor="#ff000000"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/focuser"
-                android:layout_width="0dp"
-                android:layout_height="0dp">
-
-                <requestFocus />
-            </EditText>
-
-            <ImageButton
-                android:id="@+id/edit_currencies"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end|center"
-                android:background="?actionBarItemBackground"
-                app:srcCompat="@drawable/ic_edit_currency" />
-        </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout

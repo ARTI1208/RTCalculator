@@ -13,17 +13,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -42,10 +31,25 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.settings.PrefsHelper;
+
 import static ru.art2000.calculator.calculator.CalculationClass.isAfterUnarySign;
 import static ru.art2000.calculator.calculator.CalculationClass.isDot;
 import static ru.art2000.calculator.calculator.CalculationClass.isNumber;
@@ -57,8 +61,14 @@ import static ru.art2000.calculator.calculator.CalculationClass.radians;
 
 public class CalculatorFragment extends Fragment {
 
-    private Context mContext;
+    private static final int COPY_ALL = 101;
+    private static final int COPY_EXPR = 102;
+    private static final int COPY_RES = 103;
+    private static final int DELETE = 104;
+    private static final int PASTE = 105;
+    private static final int PASTE_AFTER = 106;
     public SlidingUpPanelLayout panel;
+    private Context mContext;
     private TextView InputTV;
     private TextView ResultTV;
     private TextView memoryTextView;
@@ -71,12 +81,6 @@ public class CalculatorFragment extends Fragment {
     private HistoryDB hdb;
     private SQLiteDatabase db;
     private HistoryListAdapter adapter;
-    private static final int COPY_ALL = 101;
-    private static final int COPY_EXPR = 102;
-    private static final int COPY_RES = 103;
-    private static final int DELETE = 104;
-    private static final int PASTE = 105;
-    private static final int PASTE_AFTER = 106;
     private TextView empty;
     private ViewGroup recycler_container;
 
@@ -103,15 +107,17 @@ public class CalculatorFragment extends Fragment {
             });
             InputTV.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
 
                 @Override
                 public void afterTextChanged(Editable s) {
                     hsv.postDelayed(() ->
-                            hsv.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+                            hsv.smoothScrollTo(InputTV.getWidth(), 0), 100L);
                 }
             });
             ResultTV = v.findViewById(R.id.tv_result);
@@ -149,46 +155,48 @@ public class CalculatorFragment extends Fragment {
             onBtnClick(button_pressed);
     }
 
-    private void onDegBtnClick(Button button){
+    private void onDegBtnClick(Button button) {
         CalculationClass.radians ^= true;
         button.setText(!radians ? "RAD" : "DEG");
         degRadTextView.setText(radians ? "Rad" : "Deg");
     }
 
-    private void onConstantBtnClick(String text){
+    private void onConstantBtnClick(String text) {
         String ex = InputTV.getText().toString();
         String last = ex.substring(ex.length() - 1);
         String append;
-        if (isNumber(last)){
+        if (isNumber(last)) {
             append = "×" + text;
-        } else if (isDot(last)){
+        } else if (isDot(last)) {
             append = "0×" + text;
         } else
             append = text;
         InputTV.append(append);
     }
 
-    private boolean isConstant(String string){
+    private boolean isConstant(String string) {
         return "eπφ".contains(string);
     }
 
-    private void onMemoryBtnClick(String text){
-        switch (text.substring(text.length()-1)){
+    private void onMemoryBtnClick(String text) {
+        switch (text.substring(text.length() - 1)) {
             default:
             case "+":
                 onResult();
                 try {
                     CalculationClass.memory += Integer.parseInt(ResultTV.getText().toString());
-                } catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
                 break;
             case "-":
                 onResult();
                 try {
                     CalculationClass.memory -= Integer.parseInt(ResultTV.getText().toString());
-                } catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
                 break;
             case "R":
-                if (CalculationClass.memory !=0) {
+                if (CalculationClass.memory != 0) {
                     if (ResultTV.getVisibility() == View.VISIBLE)
                         ResultTV.setVisibility(View.INVISIBLE);
                     if (memory < 0)
@@ -204,7 +212,7 @@ public class CalculatorFragment extends Fragment {
 
         if (memory == 0) memoryTextView.setVisibility(View.GONE);
         else {
-            memoryTextView.setText("M"+ memory);
+            memoryTextView.setText("M" + memory);
             memoryTextView.setVisibility(View.VISIBLE);
         }
 
@@ -276,7 +284,7 @@ public class CalculatorFragment extends Fragment {
                 break;
             case DELETE:
                 toastText = getResources().getString(R.string.deleted) + " " + expr + "=" + res;
-                db.delete("history", "id=" + position+1, null);
+                db.delete("history", "id=" + position + 1, null);
                 hdb.fixIDs(db, position);
                 adapter.setNewData();
                 break;
@@ -389,7 +397,7 @@ public class CalculatorFragment extends Fragment {
         } else if (ToAdd.equals("-"))
             InputTV.setText(ToAdd);
         hsv.postDelayed(() ->
-                hsv.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+                hsv.smoothScrollTo(InputTV.getWidth(), 0), 100L);
     }
 
     private void onBtnClick(View v) {
@@ -726,8 +734,8 @@ public class CalculatorFragment extends Fragment {
             setEmptyView();
     }
 
-    private void writeResult(){
-        if (empty.getVisibility() == View.VISIBLE){
+    private void writeResult() {
+        if (empty.getVisibility() == View.VISIBLE) {
             setupHistoryPart();
         }
         adapter.setNewData();
@@ -823,13 +831,13 @@ public class CalculatorFragment extends Fragment {
         Context ctx;
         int[] pages = {R.layout.calculator_page1, R.layout.calculator_page2};
 
+        CalculatorPagesAdapter(Context context) {
+            ctx = context;
+        }
+
         @Override
         public int getCount() {
             return pages.length;
-        }
-
-        CalculatorPagesAdapter(Context context) {
-            ctx = context;
         }
 
         @NonNull

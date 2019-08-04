@@ -6,19 +6,24 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +44,7 @@ import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
 import ru.art2000.extensions.CurrencyValues;
@@ -47,7 +53,6 @@ public class CurrencyConverterFragment extends Fragment {
 
     public Context mContext;
     public CurrencyListAdapter adapter = null;
-    private TextView date;
     private TextView emptyView;
     private RecyclerView recycler;
     private Activity parent;
@@ -56,9 +61,8 @@ public class CurrencyConverterFragment extends Fragment {
     private SwipeRefreshLayout refresher;
     private boolean isUpdating;
 
-    public CurrencyConverterFragment() {
-        super();
-    }
+    private Toolbar mToolbar;
+    private String titleUpdatedString;
 
     private static boolean isOnline() {
         try {
@@ -68,7 +72,7 @@ public class CurrencyConverterFragment extends Fragment {
         }
     }
 
-    private void setRefreshStatus(boolean status){
+    private void setRefreshStatus(boolean status) {
         refresher.setRefreshing(status);
         isUpdating = status;
     }
@@ -95,9 +99,15 @@ public class CurrencyConverterFragment extends Fragment {
         if (v == null) {
             mContext = getActivity();
             parent = getActivity();
+
+            titleUpdatedString = mContext.getString(R.string.updated);
+
             v = inflater.inflate(R.layout.currency_layout, null);
             recycler = v.findViewById(R.id.currency_list);
             emptyView = v.findViewById(R.id.empty_tv);
+            mToolbar = v.findViewById(R.id.toolbar);
+            mToolbar.inflateMenu(R.menu.currencies_converter_menu);
+
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             recycler.setLayoutManager(llm);
             adapter = new CurrencyListAdapter(mContext);
@@ -112,12 +122,13 @@ public class CurrencyConverterFragment extends Fragment {
             setRefreshStatus(true);
             updateData();
             refresher.setOnRefreshListener(this::updateData);
-            date = v.findViewById(R.id.tv_update_date);
             updateDate(null);
-            EditText focus = v.findViewById(R.id.focuser);
-            v.findViewById(R.id.edit_currencies).setOnClickListener(v -> {
+
+            ActionMenuItemView editMenuItem = v.findViewById(R.id.edit_currencies);
+            editMenuItem.getItemData().getIcon().setColorFilter(new PorterDuffColorFilter(
+                    Helper.getAccentColor(mContext), PorterDuff.Mode.SRC_ATOP));
+            editMenuItem.setOnClickListener(v -> {
                 adapter.removeEditText();
-                focus.requestFocus();
                 Intent intent = new Intent(getActivity(), EditCurrenciesActivity.class);
                 startActivityForResult(intent, 666);
             });
@@ -127,13 +138,22 @@ public class CurrencyConverterFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void setCurrenciesUpdateDate(String date) {
+        mToolbar.setTitle(titleUpdatedString + " " + date);
+    }
+
     private void updateDate(String newDate) {
         parent.runOnUiThread(() -> {
             if (newDate == null) {
                 updDate = CurrencyValues.updateDate;
-                date.setText(updDate);
+                setCurrenciesUpdateDate(updDate);
             } else {
-                date.setText(newDate);
+                setCurrenciesUpdateDate(newDate);
                 CurrencyValues.putRefreshDate(newDate, mContext);
             }
         });
@@ -174,13 +194,13 @@ public class CurrencyConverterFragment extends Fragment {
         super.onPause();
     }
 
-    private Double doubleFromString(String string){
-        if (string.contains(",")){
+    private Double doubleFromString(String string) {
+        if (string.contains(",")) {
             string = string.replace(',', '.');
         }
         try {
             return Double.parseDouble(string);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
@@ -281,7 +301,7 @@ public class CurrencyConverterFragment extends Fragment {
     }
 
     private void updateData() {
-        if (adapter.getItemCount() == 0){
+        if (adapter.getItemCount() == 0) {
             setRefreshStatus(false);
             return;
         }

@@ -92,4 +92,7 @@
     <string name="currencies_no_internet">Ошибка обновления: нет соединения</string>
     <string name="tab_last_opened">Последняя открытая</string>
     <string name="daynight_support_message">Если система не имеет поддержки переключения светлой/тёмной темы, то эта опция также не будет работать</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_select_all">Выбрать все</string>
+    <string name="action_deselect_all">Отменить выбор</string>
 </resources>

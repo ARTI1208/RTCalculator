@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -83,6 +82,7 @@ public class MainActivity extends DayNightActivity {
             getTheme().resolveAttribute(R.attr.colorPrimaryDark, statusBarColor, true);
             int status_color = ContextCompat.getColor(mContext, statusBarColor.resourceId);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             }
