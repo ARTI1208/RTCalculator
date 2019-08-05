@@ -195,9 +195,9 @@ public class CurrenciesEditFragment extends Fragment {
         ItemTouchHelper touchHelper;
         int curMode = 0;
         @LayoutRes
-        int selectionItem = R.layout.add_currencies_list_item;
+        int selectionItem = R.layout.item_add_currencies_list;
         @LayoutRes
-        int reorderItem = R.layout.edit_currencies_list_item;
+        int reorderItem = R.layout.item_edit_currencies_list;
 
         EditCurrenciesAdapter(ItemTouchHelper touchHelper) {
             this.touchHelper = touchHelper;

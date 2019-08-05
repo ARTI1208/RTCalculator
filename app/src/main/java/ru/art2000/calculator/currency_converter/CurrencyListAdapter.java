@@ -76,7 +76,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(mContext).
-                inflate(R.layout.currency_list_item, parent, false);
+                inflate(R.layout.item_currency_converter_list, parent, false);
         return new Holder(viewGroup);
     }
 

@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 
 import ru.art2000.calculator.R;
 
@@ -105,7 +103,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(mContext).
-                inflate(R.layout.unit_list_item, parent, false);
+                inflate(R.layout.item_unit_converter_list, parent, false);
         if (!powerfulConverter) {
             TextView value = new TextView(mContext);
             value.setTextSize(25);

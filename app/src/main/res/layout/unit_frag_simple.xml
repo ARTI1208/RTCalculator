@@ -186,6 +186,7 @@
 
             <Button
                 android:id="@+id/button00"
+                android:background="@null"
                 style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="00" />

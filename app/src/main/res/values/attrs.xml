@@ -2,4 +2,5 @@
 <resources>
     <attr name="calc_input_bg">color|reference</attr>
     <attr name="btn_text_color">color|reference</attr>
+    <attr name="colorAccentTransparent">color|reference</attr>
 </resources>

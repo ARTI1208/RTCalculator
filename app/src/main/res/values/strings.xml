@@ -97,4 +97,5 @@
     <string name="action_deselect_all">Deselect all</string>
     <string name="tooltip_remove_currency">Long click on item toggles deletion mode</string>
     <string name="action_tooltip_got_it">Got it</string>
+    <string name="hint_currency_search">Search for currencies…</string>
 </resources>

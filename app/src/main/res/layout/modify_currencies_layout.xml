@@ -6,7 +6,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:clipToPadding="false"
-        android:paddingBottom="80dp"
+        android:paddingBottom="100dp"
         android:id="@+id/modify_currencies_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

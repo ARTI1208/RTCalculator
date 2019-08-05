@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coordinator"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -36,26 +36,36 @@
         android:id="@+id/search_view_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="center_vertical|bottom"
-        android:visibility="gone"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <View
-            android:id="@+id/divider_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?calc_input_bg" />
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_view"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:windowBackground"
-            app:iconifiedByDefault="false"
-            app:queryHint="Search for currency..."
-            app:searchHintIcon="@null" />
+            android:layout_marginStart="8.0dip"
+            android:layout_marginEnd="8.0dip"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="8.0dip"
+            app:cardUseCompatPadding="true"
+            app:strokeColor="?calc_input_bg"
+            app:strokeWidth="1.0dip">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/hint_currency_search"
+                app:searchHintIcon="@null"
+                app:searchIcon="@null">
+
+            </androidx.appcompat.widget.SearchView>
+
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -63,10 +73,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginBottom="30dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="50dp"
         android:visibility="invisible"
         app:backgroundTint="?colorAccent"
+        app:tint="@color/white"
         app:srcCompat="@drawable/ic_currencies_done" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

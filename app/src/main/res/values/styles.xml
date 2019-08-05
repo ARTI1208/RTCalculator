@@ -1,6 +1,6 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.RT.AppTheme.Light" parent="Theme.AppCompat.Light">
+    <style name="Base.RT.AppTheme.Light" parent="Theme.MaterialComponents.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="background">@color/LightTheme_colorPrimary</item>
@@ -8,15 +8,20 @@
         <item name="colorPrimary">@color/LightTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/LightTheme_colorAccent</item>
+        <item name="colorAccentTransparent">@color/LightTheme_colorAccentTransparent</item>
         <item name="calc_input_bg">@color/LightTheme_inputBackground</item>
         <item name="btn_text_color">@color/LightTheme_buttonTextColor</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
         <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
         <item name="tabStyle">@style/RT.Widget.TabLayout</item>
-        <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>"
+        <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
+        <item name="buttonBarButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/RT.Widget.ButtonBar.TextButton.Neutral</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Dark" parent="Theme.AppCompat">
+    <style name="Base.RT.AppTheme.Dark" parent="Theme.MaterialComponents">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="background">@color/DarkTheme_colorPrimary</item>
@@ -24,12 +29,17 @@
         <item name="colorPrimary">@color/DarkTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/DarkTheme_colorAccent</item>
+        <item name="colorAccentTransparent">@color/DarkTheme_colorAccentTransparent</item>
         <item name="calc_input_bg">@color/DarkTheme_inputBackground</item>
         <item name="btn_text_color">@color/DarkTheme_buttonTextColor</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
         <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
         <item name="tabStyle">@style/RT.Widget.TabLayout</item>
         <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
+        <item name="buttonBarButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/RT.Widget.ButtonBar.TextButton.Neutral</item>
     </style>
 
     <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">
@@ -38,7 +48,7 @@
         <item name="android:textSize">16.0sp</item>
     </style>
 
-    <style name="Base.RT.Widget.Button" parent="Widget.AppCompat.Button">
+    <style name="Base.RT.Widget.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_height">90dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center|center</item>
@@ -46,6 +56,8 @@
         <item name="android:textColor">?btn_text_color</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="elevation">0dp</item>
+        <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
     </style>
 
     <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Light" />
@@ -73,6 +85,19 @@
 
     <style name="RT.Widget.Button" parent="Base.RT.Widget.Button">
         <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="enforceMaterialTheme">false</item>
+    </style>
+
+    <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="rippleColor">?colorAccentTransparent</item>
+    </style>
+
+    <style name="RT.Widget.ButtonBar.TextButton.Neutral" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="rippleColor">?colorAccentTransparent</item>
     </style>
 
     <style name="RT.Widget.TabLayout" parent="@style/Widget.Design.TabLayout">
@@ -93,6 +118,7 @@
         <item name="contentInsetStartWithNavigation">0dp</item>
         <item name="titleTextColor">?colorAccent</item>
         <item name="colorControlNormal">?colorAccent</item>
+        <item name="android:background">?colorPrimary</item>
     </style>
 
 </resources>

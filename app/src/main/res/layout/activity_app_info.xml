@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -56,8 +57,32 @@
         android:textColor="?colorAccent"
         android:textSize="20sp" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8.0dip"
+        android:layout_marginEnd="8.0dip"
+        app:cardCornerRadius="8.0dip"
+        app:cardElevation="0.0dip"
+        app:cardUseCompatPadding="true"
+        app:strokeColor="?calc_input_bg"
+        app:strokeWidth="1.0dip">
+
+        <androidx.appcompat.widget.SearchView
+            android:layout_width="match_parent"
+            app:queryHint="Test"
+            app:iconifiedByDefault="false"
+            app:searchHintIcon="@null"
+            app:searchIcon="@null"
+            android:layout_height="wrap_content">
+
+        </androidx.appcompat.widget.SearchView>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <Button
         android:id="@+id/fff"
+        android:theme="@style/RT.Widget.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

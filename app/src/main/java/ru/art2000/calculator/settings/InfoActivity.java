@@ -29,7 +29,7 @@ public class InfoActivity extends DayNightActivity {
         mContext = getApplicationContext();
         setTheme(PrefsHelper.getAppTheme());
         super.onCreate(savedInstance);
-        setContentView(R.layout.info_layout);
+        setContentView(R.layout.activity_app_info);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GradientDrawable back = new GradientDrawable();

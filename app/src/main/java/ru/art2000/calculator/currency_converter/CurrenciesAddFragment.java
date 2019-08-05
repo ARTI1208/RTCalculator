@@ -131,7 +131,7 @@ public class CurrenciesAddFragment extends Fragment {
         @Override
         @SuppressLint("InflateParams")
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View item = LayoutInflater.from(mContext).inflate(R.layout.add_currencies_list_item, null);
+            View item = LayoutInflater.from(mContext).inflate(R.layout.item_add_currencies_list, null);
             return new Holder(item);
         }
 
@@ -213,7 +213,6 @@ public class CurrenciesAddFragment extends Fragment {
                 code = itemView.findViewById(R.id.currency_code);
                 checkBox = itemView.findViewById(R.id.checkbox_add);
                 name = itemView.findViewById(R.id.currency_name);
-                checkBox.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             }
 
         }

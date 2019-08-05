@@ -28,7 +28,7 @@ public class AllUnitsActivity extends DayNightActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(PrefsHelper.getAppTheme());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_units_activity);
+        setContentView(R.layout.activity_all_units);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         value = getIntent().getIntExtra("value", 1);
