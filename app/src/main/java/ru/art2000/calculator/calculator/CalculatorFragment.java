@@ -76,7 +76,6 @@ public class CalculatorFragment extends Fragment {
     private HorizontalScrollView hsv;
     private ViewPager horizontal;
     private View v = null;
-    private View hiding_view = null;
     private RecyclerView history_list;
     private HistoryDB hdb;
     private SQLiteDatabase db;
@@ -556,7 +555,6 @@ public class CalculatorFragment extends Fragment {
 
     private void setupHistoryPart() {
         panel = v.findViewById(R.id.sliding_panel);
-        hiding_view = v.findViewById(R.id.hiding_view);
         RelativeLayout handle = v.findViewById(R.id.history_handle);
         handle.setOnClickListener(view -> {
             panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
@@ -603,17 +601,6 @@ public class CalculatorFragment extends Fragment {
         recycler_container = v.findViewById(R.id.recycler_layout);
         empty = v.findViewById(R.id.empty_tv);
         history_list = v.findViewById(R.id.history_list);
-
-        history_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (recyclerView.canScrollVertically(1)) {
-                    hiding_view.setVisibility(View.VISIBLE);
-                } else {
-                    hiding_view.setVisibility(View.GONE);
-                }
-            }
-        });
 
         v.findViewById(R.id.clear_history).setOnClickListener(clearBtn -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

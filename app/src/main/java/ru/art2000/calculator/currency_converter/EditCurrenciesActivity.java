@@ -34,6 +34,7 @@ import ru.art2000.calculator.R;
 import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.extensions.CurrencyValues;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.extensions.ExtendedSnackbar;
 
 public class EditCurrenciesActivity extends DayNightActivity {
 
@@ -91,9 +92,32 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             }
         });
+        fab.addOnHideAnimationListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (currentDrawable == deleteDrawable){
+                    showDeleteTip();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
 
         searchViewLayout = findViewById(R.id.search_view_layout);
-        searchViewLayout.setVisibility(View.VISIBLE);
         barSearchView = findViewById(R.id.search_view);
         barSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -115,6 +139,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 int maxScroll = pager.getMeasuredWidth();
                 int currentScroll = maxScroll * position + positionOffsetPixels;
                 searchViewLayout.setTranslationX(-currentScroll);
+                if (deleteTooltip != null){
+                    deleteTooltip.getView().setTranslationX(maxScroll - currentScroll);
+                }
             }
 
             @Override
@@ -137,9 +164,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 fab.hide();
                 modifyFAB(tab.getPosition());
                 toggleElementsVisibility();
-                if (selectedTab == 1) {
+                if (selectedTab == 1 && !fab.isShown()) {
                     showDeleteTip();
-                } else if (deleteTooltip != null) {
+                } else if (selectedTab == 0 && deleteTooltip != null) {
                     deleteTooltip.dismiss();
                 }
             }
@@ -184,7 +211,6 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.d("menuitem", String.valueOf(item.getItemId()));
         switch (item.getItemId()) {
             case R.id.deselect_all:
                 if (selectedTab == 0)
@@ -218,8 +244,18 @@ public class EditCurrenciesActivity extends DayNightActivity {
             return;
         }
 
-        deleteTooltip = Snackbar.make(findViewById(R.id.coordinator),
+        if (deleteTooltip != null){
+            if (deleteTooltip.isShown()){
+                return;
+            } else {
+                deleteTooltip.show();
+                return;
+            }
+        }
+
+        deleteTooltip = ExtendedSnackbar.createThemedSnackbar(findViewById(R.id.coordinator),
                 R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE);
+
         deleteTooltip.addCallback(new Snackbar.Callback() {
             @Override
             public void onShown(Snackbar sb) {
@@ -234,8 +270,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 }
             }
         });
-        deleteTooltip.setAction(R.string.action_tooltip_got_it, actionView -> deleteTooltip.dismiss());
-
+        deleteTooltip.setAction(R.string.action_tooltip_got_it, actionView -> {});
         deleteTooltip.show();
     }
 
@@ -311,7 +346,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         Fragment[] fragments = {add, edit};
 
         CurrencyEditorPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             categories = getResources().getStringArray(R.array.currency_categories);
         }
 

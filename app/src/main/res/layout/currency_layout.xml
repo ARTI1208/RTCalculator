@@ -7,14 +7,15 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="@dimen/actionbar_elevation">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:contentInsetStart="6dp"
-            app:contentInsetEnd="6dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:contentInsetEnd="6dp"
+            app:contentInsetStart="6dp"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -29,6 +30,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/currency_list"
+                style="@style/RT.Widget.ListView.TopIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

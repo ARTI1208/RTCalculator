@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.viewpager.widget.ViewPager
+    <LinearLayout
+        android:id="@+id/topPanel"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/pager"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
@@ -18,6 +19,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             app:tabMode="scrollable" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?android:listDivider" />
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topPanel">
 
     </androidx.viewpager.widget.ViewPager>
 </RelativeLayout>

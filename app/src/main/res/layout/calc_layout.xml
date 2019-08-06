@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:background="?calc_input_bg"
         android:paddingTop="4.0dip"
-
         android:paddingBottom="4.0dip">
 
         <RelativeLayout
@@ -48,7 +47,6 @@
             android:paddingTop="4.0dip"
             android:paddingBottom="4.0dip">
 
-
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,7 +55,6 @@
                 android:paddingEnd="6dp"
                 android:longClickable="true"
                 android:scrollbars="none">
-
 
                 <TextView
                     android:id="@+id/tv_input"
@@ -79,7 +76,6 @@
                 android:paddingEnd="6dp"
                 android:scrollbars="none">
 
-
                 <TextView
                     android:id="@+id/tv_result"
                     android:layout_width="wrap_content"
@@ -92,136 +88,9 @@
                     android:textSize="@dimen/calc_text_size"
                     android:visibility="invisible" />
             </HorizontalScrollView>
-
-
         </LinearLayout>
     </FrameLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="0.5dip"
-        android:background="#888888" />
 
     <include layout="@layout/main_calculator_panel" />
 
 </LinearLayout>
-
-
-
-
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<com.sothree.slidinguppanel.SlidingUpPanelLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--android:gravity="bottom"-->
-    <!--android:id="@+id/sliding_panel"-->
-    <!--app:umanoPanelHeight="@dimen/sliding_panel_collapsed_height"-->
-    <!--app:umanoFadeColor="#00000000"-->
-    <!--app:umanoScrollableView="@id/history_list"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--<LinearLayout-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-
-        <!--<FrameLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="?calc_input_bg"-->
-            <!--android:paddingStart="6dp"-->
-            <!--android:paddingTop="4.0dip"-->
-            <!--android:paddingEnd="6dp"-->
-            <!--android:paddingBottom="4.0dip">-->
-
-            <!--<RelativeLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content">-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/degRadTv"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentStart="true"-->
-                    <!--android:layout_alignParentTop="true"-->
-                    <!--android:layout_gravity="start|top"-->
-                    <!--android:text="Deg"-->
-                    <!--android:textSize="18sp" />-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/memory"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentStart="true"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--android:layout_gravity="start|bottom"-->
-                    <!--android:text="M"-->
-                    <!--android:textSize="18sp"-->
-                    <!--android:visibility="gone" />-->
-            <!--</RelativeLayout>-->
-
-            <!--<LinearLayout-->
-                <!--android:id="@+id/io_box"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="vertical"-->
-                <!--android:paddingTop="4.0dip"-->
-                <!--android:paddingBottom="4.0dip">-->
-
-
-                <!--<HorizontalScrollView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1.0"-->
-                    <!--android:longClickable="true"-->
-                    <!--android:scrollbars="none">-->
-
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/tv_input"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="end"-->
-                        <!--android:gravity="end"-->
-                        <!--android:overScrollMode="always"-->
-                        <!--android:scrollHorizontally="true"-->
-                        <!--android:text="0"-->
-                        <!--android:textSize="@dimen/calc_text_size" />-->
-                <!--</HorizontalScrollView>-->
-
-                <!--<HorizontalScrollView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1.0"-->
-                    <!--android:scrollbars="none">-->
-
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/tv_result"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_gravity="end"-->
-                        <!--android:layout_marginTop="6dp"-->
-                        <!--android:gravity="end|bottom"-->
-                        <!--android:text="0"-->
-                        <!--android:textColor="?colorAccent"-->
-                        <!--android:textSize="@dimen/calc_text_size"-->
-                        <!--android:visibility="invisible" />-->
-                <!--</HorizontalScrollView>-->
-
-
-            <!--</LinearLayout>-->
-        <!--</FrameLayout>-->
-      <!---->
-        <!--<androidx.viewpager.widget.ViewPager-->
-            <!--android:id="@+id/button_pager"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp" />-->
-
-    <!--</LinearLayout>-->
-    <!--<include android:id="@+id/history_part" layout="@layout/history_layout"/>-->
-<!--</com.sothree.slidinguppanel.SlidingUpPanelLayout>-->

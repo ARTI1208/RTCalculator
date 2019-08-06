@@ -7,4 +7,6 @@
     <dimen name="sliding_panel_collapsed_height">30dp</dimen>
     <dimen name="design_bottom_navigation_text_size" tools:override="true">12sp</dimen>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
+    <dimen name="floating_bottom_margin_horizontal">8.0dip</dimen>
+    <dimen name="actionbar_elevation">0dp</dimen>
 </resources>

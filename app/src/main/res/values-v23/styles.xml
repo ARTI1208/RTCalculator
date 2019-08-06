@@ -9,4 +9,16 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView">
+        <item name="android:scrollIndicators">top</item>
+    </style>
+
+    <style name="RT.Widget.ListView.VerticalIndicators" parent="@style/Widget.AppCompat.ListView">
+        <item name="android:scrollIndicators">bottom|top</item>
+    </style>
+
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView">
+        <item name="android:scrollIndicators">top</item>
+    </style>
+
 </resources>

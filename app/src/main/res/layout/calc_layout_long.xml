@@ -48,7 +48,6 @@
                 android:paddingTop="14.0dip"
                 android:paddingBottom="14.0dip">
 
-
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +56,6 @@
                     android:layout_weight="1.0"
                     android:longClickable="true"
                     android:scrollbars="none">
-
 
                     <TextView
                         android:id="@+id/tv_input"
@@ -79,7 +77,6 @@
                     android:layout_weight="1.0"
                     android:scrollbars="none">
 
-
                     <TextView
                         android:id="@+id/tv_result"
                         android:layout_width="wrap_content"
@@ -92,14 +89,9 @@
                         android:textSize="50sp"
                         android:visibility="invisible" />
                 </HorizontalScrollView>
-
-
             </LinearLayout>
         </FrameLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="0.5dip"
-        android:background="#888888" />
+
        <include layout="@layout/main_calculator_panel"/>
 
     </LinearLayout>

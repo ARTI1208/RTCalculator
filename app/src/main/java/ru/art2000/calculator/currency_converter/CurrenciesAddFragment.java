@@ -25,8 +25,6 @@ public class CurrenciesAddFragment extends Fragment {
 
     AddCurrenciesAdapter adapter;
 
-    private int selectionState = 0;
-    private int previousSelectionState = -1;
     private View v = null;
     private RecyclerView recycler;
     private TextView emptyView;
@@ -175,16 +173,6 @@ public class CurrenciesAddFragment extends Fragment {
                     itemsToAdd.add(currencyItem);
                 else if (!isChecked)
                     itemsToAdd.remove(currencyItem);
-                if (isAllSelected()) {
-                    previousSelectionState = selectionState;
-                    selectionState = 2;
-                } else if (isSomethingSelected()) {
-                    previousSelectionState = selectionState;
-                    selectionState = 1;
-                } else {
-                    previousSelectionState = selectionState;
-                    selectionState = 0;
-                }
                 parent.toggleElementsVisibility();
             });
             if (itemsToAdd.contains(currencyItem))

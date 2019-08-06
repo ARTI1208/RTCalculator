@@ -23,13 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.0"
+                style="@style/RT.Widget.ListView.VerticalIndicators"
                 tools:ignore="NestedWeights" />
-
-            <View
-                android:id="@+id/hiding_view"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dip"
-                android:background="#888888" />
 
             <RelativeLayout
                 android:id="@+id/header"

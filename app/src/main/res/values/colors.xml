@@ -8,6 +8,8 @@
     <color name="LightTheme_colorAccentTransparent">#203F51B5</color>
     <color name="LightTheme_inputBackground">#dedede</color>
     <color name="LightTheme_buttonTextColor">@color/LightTheme_colorAccent</color>
+    <color name="LightTheme_floatingBottomBarBackground">@color/LightTheme_inputBackground</color>
+    <color name="LightTheme_strokeColor">#a7a7a7</color>
 
     <!--DarkTheme colors-->
     <color name="DarkTheme_colorPrimary">#404040</color>
@@ -16,6 +18,8 @@
     <color name="DarkTheme_colorAccentTransparent">#208E8CD8</color>
     <color name="DarkTheme_inputBackground">#000000</color>
     <color name="DarkTheme_buttonTextColor">@color/DarkTheme_colorAccent</color>
+    <color name="DarkTheme_floatingBottomBarBackground">#1e1e1e</color>
+    <color name="DarkTheme_strokeColor">#000000</color>
 
     <!--BlackTheme colors-->
     <color name="BlackTheme_colorPrimary">#000000</color>

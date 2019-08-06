@@ -19,6 +19,12 @@
         <item name="buttonBarPositiveButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
         <item name="buttonBarNegativeButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
         <item name="buttonBarNeutralButtonStyle">@style/RT.Widget.ButtonBar.TextButton.Neutral</item>
+        <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
+        <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
+        <item name="floatingBottomBarBackground">@color/LightTheme_floatingBottomBarBackground</item>
+        <item name="strokeColor">@color/LightTheme_strokeColor</item>
+        <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
+        <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Theme.MaterialComponents">
@@ -40,6 +46,12 @@
         <item name="buttonBarPositiveButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
         <item name="buttonBarNegativeButtonStyle">@style/RT.Widget.ButtonBar.TextButton</item>
         <item name="buttonBarNeutralButtonStyle">@style/RT.Widget.ButtonBar.TextButton.Neutral</item>
+        <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
+        <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
+        <item name="floatingBottomBarBackground">@color/DarkTheme_floatingBottomBarBackground</item>
+        <item name="strokeColor">@color/DarkTheme_strokeColor</item>
+        <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
+        <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
     </style>
 
     <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">
@@ -97,6 +109,25 @@
     <style name="RT.Widget.ButtonBar.TextButton.Neutral" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
         <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
         <item name="android:textColor">?colorAccent</item>
+        <item name="rippleColor">?colorAccentTransparent</item>
+    </style>
+
+    <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView"/>
+
+    <style name="RT.Widget.ListView.VerticalIndicators" parent="@style/Widget.AppCompat.ListView"/>
+
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView"/>
+
+    <style name="RT.Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:textColor">?colorAccent</item>
+    </style>
+
+    <style name="RT.Widget.Snackbar.TextButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
         <item name="rippleColor">?colorAccentTransparent</item>
     </style>
 

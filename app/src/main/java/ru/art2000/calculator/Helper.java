@@ -52,4 +52,9 @@ public class Helper {
         return ContextCompat.getColor(context, accentTypedValue.resourceId);
     }
 
+    public static int getTextColorSecondary(Context context) {
+        TypedValue textColorTypedValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.textColorSecondary, textColorTypedValue, true);
+        return ContextCompat.getColor(context, textColorTypedValue.resourceId);
+    }
 }
