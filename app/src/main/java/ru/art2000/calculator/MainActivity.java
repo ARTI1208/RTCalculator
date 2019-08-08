@@ -20,11 +20,11 @@ import java.util.Objects;
 
 import ru.art2000.calculator.calculator.CalculatorFragment;
 import ru.art2000.calculator.currency_converter.CurrencyConverterFragment;
-import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.calculator.settings.SettingsFragment;
 import ru.art2000.calculator.unit_converter.UnitConverterFragment;
-import ru.art2000.extensions.CurrencyValues;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.helpers.CurrencyValuesHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 public class MainActivity extends DayNightActivity {
 
@@ -60,7 +60,7 @@ public class MainActivity extends DayNightActivity {
         PrefsHelper.initialSetup(mContext);
         setTheme(PrefsHelper.getAppTheme());
         Window window = getWindow();
-        new Thread(() -> CurrencyValues.getDataFromDB(mContext)).start();
+        new Thread(() -> CurrencyValuesHelper.getDataFromDB(mContext)).start();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navigation = findViewById(R.id.navigation);

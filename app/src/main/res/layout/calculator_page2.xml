@@ -79,7 +79,7 @@
 
         <Button
             android:id="@+id/buttonTg"
-            android:text="tg"
+            android:text="tan"
             android:onClick="CalcBtnClick"
             android:layout_weight="1.0"
             style="@style/RT.Widget.Button" />

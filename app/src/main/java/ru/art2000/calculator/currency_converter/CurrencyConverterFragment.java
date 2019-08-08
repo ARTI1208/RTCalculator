@@ -44,10 +44,10 @@ import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
-import ru.art2000.extensions.CurrencyValues;
+import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.CurrencyValuesHelper;
 
 public class CurrencyConverterFragment extends Fragment {
 
@@ -126,7 +126,7 @@ public class CurrencyConverterFragment extends Fragment {
 
             ActionMenuItemView editMenuItem = v.findViewById(R.id.edit_currencies);
             editMenuItem.getItemData().getIcon().setColorFilter(new PorterDuffColorFilter(
-                    Helper.getAccentColor(mContext), PorterDuff.Mode.SRC_ATOP));
+                    AndroidHelper.getAccentColor(mContext), PorterDuff.Mode.SRC_ATOP));
             editMenuItem.setOnClickListener(v -> {
                 adapter.removeEditText();
                 Intent intent = new Intent(getActivity(), EditCurrenciesActivity.class);
@@ -150,11 +150,11 @@ public class CurrencyConverterFragment extends Fragment {
     private void updateDate(String newDate) {
         parent.runOnUiThread(() -> {
             if (newDate == null) {
-                updDate = CurrencyValues.updateDate;
+                updDate = CurrencyValuesHelper.updateDate;
                 setCurrenciesUpdateDate(updDate);
             } else {
                 setCurrenciesUpdateDate(newDate);
-                CurrencyValues.putRefreshDate(newDate, mContext);
+                CurrencyValuesHelper.putRefreshDate(newDate, mContext);
             }
         });
     }
@@ -179,7 +179,7 @@ public class CurrencyConverterFragment extends Fragment {
         StringBuilder builder = new StringBuilder();
         String def = "tr:contains(";
         int i = 0;
-        for (CurrencyItem item : CurrencyValues.visibleList) {
+        for (CurrencyItem item : CurrencyValuesHelper.visibleList) {
             if (i != 0)
                 builder.append(", ");
             builder.append(def).append(item.code).append(")");
@@ -244,7 +244,7 @@ public class CurrencyConverterFragment extends Fragment {
                 }
 
                 Double ru_val = Double.parseDouble(table.select("tr:contains(USD)").first().child(4).text().replace(',', '.'));
-                CurrencyValues.updateRate("RUB", ru_val);
+                CurrencyValuesHelper.updateRate("RUB", ru_val);
                 NumberFormat dot2dig = new DecimalFormat("#.##");
                 table.remove(0);
                 for (Element child : table.select(getShownCodesSearch())) {
@@ -255,7 +255,7 @@ public class CurrencyConverterFragment extends Fragment {
                     Double units = doubleFromString(child.child(2).text());
                     Double valuePerUnit = doubleFromString(dot2dig.format(ru_val * units / value));
                     String letterCode = child.child(1).text();
-                    CurrencyValues.updateRate(letterCode, valuePerUnit);
+                    CurrencyValuesHelper.updateRate(letterCode, valuePerUnit);
                 }
                 updateList();
                 updateDate(date);
@@ -270,7 +270,7 @@ public class CurrencyConverterFragment extends Fragment {
                     Double units = Double.parseDouble(child.child(2).text().replace(',', '.'));
                     Double valuesPerUnit = Double.parseDouble(dot2dig.format(ru_val / (values / units)).replace(',', '.'));
                     String letterCode = child.child(1).text();
-                    CurrencyValues.updateRate(letterCode, valuesPerUnit);
+                    CurrencyValuesHelper.updateRate(letterCode, valuesPerUnit);
                     contentValues.put("rate", valuesPerUnit);
                     database.update("currency", contentValues,
                             "codeLetter = ?", new String[]{letterCode});

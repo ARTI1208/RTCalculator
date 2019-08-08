@@ -3,25 +3,24 @@ package ru.art2000.calculator.unit_converter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Locale;
-import ru.art2000.calculator.Helper;
+
 import ru.art2000.calculator.R;
+import ru.art2000.helpers.AndroidHelper;
 
 public class UnitConverterFragment extends Fragment {
 
@@ -29,12 +28,13 @@ public class UnitConverterFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager pager;
     private View v;
+    private FragmentManager fm;
 
     @SuppressLint("InflateParams")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (v == null){
+        if (v == null) {
             v = inflater.inflate(R.layout.unit_layout, null);
             pager = v.findViewById(R.id.pager);
             tabLayout = v.findViewById(R.id.tabs);
@@ -45,14 +45,12 @@ public class UnitConverterFragment extends Fragment {
         return v;
     }
 
-    private void setNewAdapter(){
+    private void setNewAdapter() {
         fm = getChildFragmentManager();
         UnitPagerAdapter pagerAdapter = new UnitPagerAdapter();
         pager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(pager);
     }
-
-    FragmentManager fm;
 
     class UnitPagerAdapter extends FragmentPagerAdapter {
 
@@ -61,9 +59,9 @@ public class UnitConverterFragment extends Fragment {
 
 
         UnitPagerAdapter() {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             categoriesNames = getResources().getStringArray(R.array.unit_converter_categories);
-            String[] categoriesEnglish = Helper.getLocalizedResources(mContext, Locale.ENGLISH).getStringArray(R.array.unit_converter_categories);
+            String[] categoriesEnglish = AndroidHelper.getLocalizedResources(mContext, Locale.ENGLISH).getStringArray(R.array.unit_converter_categories);
             fragments = new Fragment[categoriesNames.length];
             for (int i = 0; i < categoriesNames.length; ++i) {
                 fragments[i] = UnitPageFragment.newInstance(categoriesEnglish[i].toLowerCase());
@@ -102,20 +100,16 @@ public class UnitConverterFragment extends Fragment {
             return super.instantiateItem(container, position);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
-            Log.d("fuuuuuuuuuuuuuuuuu", "whaaaaaaaaaat");
-//            return fragments[position];
-            String[] categoriesEnglish = Helper.getLocalizedResources(mContext, Locale.ENGLISH).getStringArray(R.array.unit_converter_categories);
+            String[] categoriesEnglish = AndroidHelper.getLocalizedResources(mContext, Locale.ENGLISH).getStringArray(R.array.unit_converter_categories);
             return UnitPageFragment.newInstance(categoriesEnglish[position].toLowerCase());
         }
 
         @Override
         public int getCount() {
-            Log.d("sizeeeee", "yeeeeeeeeeep");
             return categoriesNames.length;
         }
     }
-
-
 }

@@ -25,6 +25,7 @@
         <item name="strokeColor">@color/LightTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
+        <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Theme.MaterialComponents">
@@ -52,6 +53,7 @@
         <item name="strokeColor">@color/DarkTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
+        <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
     </style>
 
     <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">

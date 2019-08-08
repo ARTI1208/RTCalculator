@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import ru.art2000.extensions.CurrencyValues;
+
+import ru.art2000.helpers.CurrencyValuesHelper;
 
 public class CurrencyDB extends SQLiteOpenHelper {
 
@@ -28,11 +29,11 @@ public class CurrencyDB extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("position", -1);
         db.update("currency", cv, null, null);
-        for (int i = 0, size = CurrencyValues.visibleList.size(); i < size; i++) {
+        for (int i = 0, size = CurrencyValuesHelper.visibleList.size(); i < size; i++) {
             cv = new ContentValues();
-            Log.d(CurrencyValues.visibleList.get(i).code +" v", String.valueOf(CurrencyValues.visibleList.get(i).position));
-            cv.put("position", CurrencyValues.visibleList.get(i).position);
-            db.update("currency", cv, "codeLetter = ?", new String[]{CurrencyValues.visibleList.get(i).code});
+            Log.d(CurrencyValuesHelper.visibleList.get(i).code + " v", String.valueOf(CurrencyValuesHelper.visibleList.get(i).position));
+            cv.put("position", CurrencyValuesHelper.visibleList.get(i).position);
+            db.update("currency", cv, "codeLetter = ?", new String[]{CurrencyValuesHelper.visibleList.get(i).code});
         }
     }
 

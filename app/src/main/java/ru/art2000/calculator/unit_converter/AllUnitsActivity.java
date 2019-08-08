@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.helpers.PrefsHelper;
 
 public class AllUnitsActivity extends DayNightActivity {
 

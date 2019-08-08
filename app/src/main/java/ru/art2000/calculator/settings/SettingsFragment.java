@@ -13,6 +13,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import ru.art2000.calculator.BuildConfig;
 import ru.art2000.calculator.R;
+import ru.art2000.helpers.PrefsHelper;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -99,10 +100,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         ListPreference unitView = findPreference("unit_view");
         unitView.setSummary(unitView.getEntry());
         unitView.setOnPreferenceChangeListener((preference, newValue) -> {
+
+            if (unitView.getValue().equals(newValue)) {
+                return false;
+            }
+
             unitView.setValue(newValue.toString());
             unitView.setSummary(unitView.getEntry());
             PrefsHelper.setUnitViewType(newValue.toString());
-            PrefsHelper.setUnitViewChanged();
             return true;
         });
 

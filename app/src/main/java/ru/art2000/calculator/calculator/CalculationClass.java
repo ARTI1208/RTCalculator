@@ -1,35 +1,114 @@
 package ru.art2000.calculator.calculator;
 
-import android.util.Log;
-
 import org.apache.commons.math3.special.Gamma;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import ru.art2000.helpers.GeneralHelper;
 
 public class CalculationClass {
 
     static double memory = 0;
     static boolean radians = false;
     private static HashMap<String, Integer> operationsOrder;
-    private static HashMap<String, Integer> operationsCount;
+    private static HashMap<String, Integer> operationsCount = new HashMap<>();
+    private static int priorityLevels;
+    private static ArrayList<String> afterUnaryOperations;
+    private static ArrayList<String> preUnaryOperations;
 
     static {
         operationsOrder = new HashMap<>();
-        String order = "%;!;_;^_;*;×;÷;+;-;/;:_√;lg;ln;cos;sin;tg;ctg;";
+        afterUnaryOperations = new ArrayList<>(Arrays.asList("%", "!"));
+        preUnaryOperations = new ArrayList<>(
+                Arrays.asList("√", "lg", "ln", "cos", "sin", "ctg", "tan"));
+        String order = GeneralHelper.joinToString(
+                afterUnaryOperations, ";", "", ";_;")
+                + "^;_;*;×;÷;/;:;_;+;-;"
+                + GeneralHelper.joinToString(
+                preUnaryOperations, ";", "_;", ";");
         int o = 1;
         int p;
         while ((p = order.indexOf(';')) != -1) {
             String op = order.substring(0, p);
-            if (op.equals("_"))
+            if (op.equals("_")) {
                 ++o;
-            else
+            } else {
                 operationsOrder.put(op, o);
+            }
             order = order.substring(p + 1);
         }
+        priorityLevels = o;
     }
+
+    private static boolean isOperation(String toCheck) {
+        return operationsOrder.containsKey(toCheck);
+    }
+
+    private static boolean isFoundOperation(String toCheck) {
+        return operationsCount.containsKey(toCheck);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private static boolean isOfUpperClass(String operation) throws Exception {
+        if (!operationsOrder.containsKey(operation)) {
+            throw new Exception("Unknown op " + operation);
+        }
+
+        int o = operationsOrder.get(operation);
+        if (o == priorityLevels) {
+            return true;
+        }
+
+        if (operationsCount == null) {
+            throw new Exception("No operations");
+        }
+
+        for (String otherOperation : operationsCount.keySet()) {
+            if (operationsCount.get(otherOperation) > 0 && operationsOrder.get(otherOperation) < o)
+                return false;
+        }
+
+        return true;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private static void pushToOperationList(String operation) throws Exception {
+        if (operationsCount == null) {
+            throw new Exception("No operations");
+        }
+        if (!operationsOrder.containsKey(operation)) {
+            throw new Exception("Unknown operation " + operation);
+        }
+        if (operationsCount.containsKey(operation)) {
+            int val = operationsCount.get(operation) + 1;
+            operationsCount.put(operation, val);
+        } else {
+            operationsCount.put(operation, 1);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private static void removeFromOperationList(String operation) throws Exception {
+        if (operationsCount == null) {
+            throw new Exception("No operations");
+        }
+        if (!operationsOrder.containsKey(operation)) {
+            throw new Exception("Unknown operation " + operation);
+        }
+        if (operationsCount.containsKey(operation)) {
+            int val = operationsCount.get(operation) - 1;
+            operationsCount.put(operation, val);
+        }
+    }
+
+    private static boolean isBinaryOperation(String operation) {
+        return "^*×÷/:+-".contains(operation);
+    }
+
 
     static boolean isSign(String s) {
         String signs = "*×÷+-/:^";
@@ -38,11 +117,6 @@ public class CalculationClass {
 
     static boolean isSign(char c) {
         return isSign(String.valueOf(c));
-    }
-
-    private static boolean containsUpClass(String s) {
-        return (s.contains("*") || s.contains("/") || s.contains(":") || s.contains("×") ||
-                s.contains("÷") || s.contains("^"));
     }
 
     private static boolean containsDiv(String s) {
@@ -64,11 +138,11 @@ public class CalculationClass {
             cbc++;
         }
         String brFixed = sb.toString();
-        Log.d("or", brFixed);
+
         return removeUnnecessaryBrackets(brFixed);
     }
 
-    private static int countBrs(String expr) {
+    private static int countBrackets(String expr) {
         int res = 0;
         for (char c : expr.toCharArray()) {
             if (c == ')')
@@ -78,8 +152,13 @@ public class CalculationClass {
     }
 
     static boolean isAfterUnarySign(String s) {
-        String unarySigns = "%!";
-        return unarySigns.contains(s);
+        for (String val : afterUnaryOperations) {
+            if (val.equals(s)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     static boolean isAfterUnarySign(char c) {
@@ -87,8 +166,13 @@ public class CalculationClass {
     }
 
     static boolean isPreUnarySign(String s) {
-        String unarySigns = "√lglncossintgctg";
-        return unarySigns.contains(s);
+        for (String val : preUnaryOperations) {
+            if (val.equals(s)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     static boolean isPreUnarySign(char c) {
@@ -107,7 +191,7 @@ public class CalculationClass {
         String brFixed = toFix;
         int j = 0;
         int obc = 0;
-        int brs = countBrs(toFix);
+        int brs = countBrackets(toFix);
         int[] ops2 = new int[brs];
         int[] cls2 = new int[brs];
         for (int i = 0; i < brs; i++) {
@@ -129,7 +213,7 @@ public class CalculationClass {
                     brFixed = brFixed.substring(0, op + 1) + bw + brFixed.substring(j);
                     j = -1;
                     obc = 0;
-                    brs = countBrs(toFix);
+                    brs = countBrackets(toFix);
                     ops2 = new int[brs];
                     cls2 = new int[brs];
                     for (int i = 0; i < brs; i++) {
@@ -154,11 +238,12 @@ public class CalculationClass {
     }
 
     static String calculateStr(String expression) {
+        operationsCount.clear();
         NumberFormat nf = new DecimalFormat("#.#######");
         expression = expression.replaceAll("e", String.valueOf(Math.E));
         expression = expression.replaceAll("π", String.valueOf(Math.PI));
         expression = expression.replaceAll("φ", "1.6180339887");
-        String expr = brackets(expression);
+        String expr = bracketsWork(expression);
         expr = noBracketsWork(expr);
         try {
             expr = nf.format(Double.parseDouble(expr));
@@ -169,7 +254,7 @@ public class CalculationClass {
         return expr;
     }
 
-    private static String brackets(String str) {
+    private static String bracketsWork(String str) {
         String ret = str;
         int obp = -1;
         int cbp;
@@ -212,299 +297,318 @@ public class CalculationClass {
 
     static int signsInExpr(String expr) {
         int count = 0;
-        for (char c : expr.toCharArray())
-            if (isSign(c))
+        for (char c : expr.toCharArray()) {
+            if (isSign(c)) {
                 count++;
+            }
+        }
         return count;
     }
 
-    private static boolean containsPreUnary(String string) {
-        return string.contains("√") || string.contains("ln") || string.contains("lg") ||
-                string.contains("sin") || string.contains("cos");
-    }
-
     private static double factorial(double x) {
-        return Gamma.gamma(x);
-    }
-
-    private static String aft(String ex) {
-        ArrayList<String> afterSigns = new ArrayList<>();
-        if (ex.contains("%"))
-            afterSigns.add("%");
-        if (ex.contains("!"))
-            afterSigns.add("!");
-        int afterListSize = afterSigns.size();
-        if (afterListSize == 0)
-            return ex;
-        String st = ex;
-        char[] strch = st.toCharArray();
-        int num = -1;
-        int numc = -1;
-        int i = st.length() - 1;
-
-        while (i >= 0 && ((isNumberOrDot(strch[i]) ||
-                strch[i] == '-' ||
-                num == -1))) {
-            if (isNumberOrDot(strch[i]) && numc == -1)
-                numc = i;
-            if (isNumberOrDot(strch[i]))
-                num = i;
-            i--;
-        }
-
-        String under = st.substring(num, numc + 1);
-
-        switch (st.toCharArray()[numc + 1]) {
-            case '%':
-                st = st.substring(0, num) + (Double.parseDouble(under) / 100) +
-                        st.substring(numc + 2);
-                break;
-            case '!':
-                st = st.substring(0, num) + factorial(Double.parseDouble(under) + 1) + st.substring(numc + 2);
-                break;
-        }
-        return aft(st);
+        return Gamma.gamma(x + 1);
     }
 
     private static double stringToDegreesOrRadians(String str) {
         double val = Double.valueOf(str);
-        if (!radians)
+        if (!radians) {
             val *= Math.PI / 180;
+        }
         return val;
     }
 
-    private static String preUnaryWork(String expr) {
-        ArrayList<String> preSigns = new ArrayList<>();
-        if (expr.contains("√"))
-            preSigns.add("√");
-        if (expr.contains("lg"))
-            preSigns.add("lg");
-        if (expr.contains("ln"))
-            preSigns.add("ln");
-        if (expr.contains("sin"))
-            preSigns.add("sin");
-        if (expr.contains("cos"))
-            preSigns.add("cos");
-        if (expr.contains("tg") && (!expr.contains("c") || expr.indexOf("c") != expr.indexOf("tg") - 1))
-            preSigns.add("tg");
-        if (expr.contains("ctg"))
-            preSigns.add("ctg");
+    private static String afterUnaryWork(String expression) {
+        int pos = -1;
+        String operation = null;
 
-        int preListSize = preSigns.size();
-
-        String str = expr;
-        str = aft(str);
-
-
-        if (preListSize == 0)
-            return str;
-
-        int i = 0;
-        int len = str.length() - 1;
-        char[] strch = str.toCharArray();
-        int num = -1;
-
-
-        while (i < len && !isNumberOrDot(strch[i])) {
-            num = i++;
-        }
-
-        num++;
-
-        String under = str.substring(num);
-
-        int lastSign = -1;
-        String op = "√";
-
-        for (int j = 0; j < preListSize; j++) {
-            String oper = preSigns.get(j);
-            int pos = expr.lastIndexOf(oper);
-            if (pos > lastSign) {
-                lastSign = pos;
-                op = oper;
+        for (String sign : afterUnaryOperations) {
+            int newPos = expression.indexOf(sign);
+            if (newPos != -1 && (newPos < pos || pos == -1)) {
+                pos = newPos;
+                operation = sign;
             }
         }
 
+        if (operation == null) {
+            return expression;
+        }
 
-        switch (op) {
+        String under = findOperationValues(operation, pos, expression).get(0);
+        int lastPositionBeforeValue = pos - under.length();
+        int firstPositionAfterOperation = pos + operation.length();
+
+        expression = expression.substring(0, lastPositionBeforeValue)
+                + executeAfterUnaryOperation(operation, under)
+                + expression.substring(firstPositionAfterOperation);
+
+        return afterUnaryWork(expression);
+    }
+
+    private static String preUnaryWork(String expression) {
+        int pos = -1;
+        String operation = null;
+
+        for (String sign : preUnaryOperations) {
+            int newPos = expression.lastIndexOf(sign);
+            if (newPos != -1 && newPos > pos) {
+                pos = newPos;
+                operation = sign;
+            }
+        }
+
+        if (operation == null) {
+            return expression;
+        }
+
+        String under = findOperationValues(operation, pos, expression).get(0);
+        expression = expression.substring(0, pos)
+                + executeBeforeUnaryOperation(operation, under);
+
+        return preUnaryWork(expression);
+    }
+
+    private static String unaryOperationWork(String expression) {
+        String initialValue = expression;
+
+        expression = afterUnaryWork(expression);
+        expression = preUnaryWork(expression);
+
+        if (expression.equals(initialValue)) {
+            return initialValue;
+        }
+
+        return unaryOperationWork(expression);
+    }
+
+    private static String executeBeforeUnaryOperation(String operation, String valueStr) {
+        double result;
+        switch (operation) {
             default:
+                throw new ArithmeticException(
+                        "Unknown before unary operation \"" + operation + "\"");
             case "√":
-                str = str.substring(0, lastSign) +
-                        Math.sqrt(Double.parseDouble(under));
+                result = Math.sqrt(Double.parseDouble(valueStr));
                 break;
             case "lg":
-                str = str.substring(0, lastSign) +
-                        Math.log10(Double.parseDouble(under));
+                result = Math.log10(Double.parseDouble(valueStr));
                 break;
             case "ln":
-                str = str.substring(0, lastSign) +
-                        Math.log(Double.parseDouble(under));
+                result = Math.log(Double.parseDouble(valueStr));
                 break;
             case "sin":
-                str = str.substring(0, lastSign) +
-                        Math.sin(stringToDegreesOrRadians(under));
+                result = Math.sin(stringToDegreesOrRadians(valueStr));
                 break;
             case "cos":
-                str = str.substring(0, lastSign) +
-                        Math.cos(stringToDegreesOrRadians(under));
+                result = Math.cos(stringToDegreesOrRadians(valueStr));
                 break;
-            case "tg":
-                str = str.substring(0, lastSign) +
-                        Math.tan(stringToDegreesOrRadians(under));
+            case "tan":
+                result = Math.tan(stringToDegreesOrRadians(valueStr));
                 break;
             case "ctg":
-                str = str.substring(0, lastSign)
-                        + Math.cos(stringToDegreesOrRadians(under))
-                        / Math.sin(stringToDegreesOrRadians(under));
+                result = Math.cos(stringToDegreesOrRadians(valueStr))
+                        / Math.sin(stringToDegreesOrRadians(valueStr));
                 break;
         }
-        return preUnaryWork(str);
+        return String.valueOf(result);
+    }
+
+    private static String executeAfterUnaryOperation(String operation, String valueStr) {
+        double result;
+        switch (operation) {
+            case "%":
+                result = (Double.parseDouble(valueStr) / 100);
+                break;
+            case "!":
+                result = factorial(Double.parseDouble(valueStr));
+                break;
+            default:
+                throw new ArithmeticException("Unknown after unary operation \"" + operation + "\"");
+        }
+        return String.valueOf(result);
+    }
+
+    private static String executeBinaryOperation(String operation, String leftStr, String rightStr) {
+        double result;
+        double left = Double.parseDouble(leftStr);
+        double right = Double.parseDouble(rightStr);
+        if (containsDiv(operation) && right == 0)
+            return "zero";
+        switch (operation) {
+            case "+":
+                result = left + right;
+                break;
+            case "-":
+                result = left - right;
+                break;
+            case "*":
+            case "×":
+                result = left * right;
+                break;
+            case "÷":
+                result = left / right;
+                break;
+            case "/":
+                if (left / right >= 0)
+                    result = Math.floor(left / right);
+                else
+                    result = Math.floor(left / right) + 1;
+                break;
+            case ":":
+                result = left % right;
+                break;
+            case "^":
+                result = Math.pow(left, right);
+                break;
+            default:
+                throw new ArithmeticException("Unknown binary operation \"" + operation + "\"");
+        }
+        return String.valueOf(result);
+    }
+
+    private static ArrayList<String> findOperationValues(
+            String operation, int positionInExpression, String expression) {
+        ArrayList<String> values = new ArrayList<>();
+        char[] charExpression = expression.toCharArray();
+        if (isBinaryOperation(operation)) {
+            int valueBeforeStartPosition = 0;
+            int valueAfterEndPosition = expression.length() - 1;
+            for (int j = positionInExpression - 1; j >= 0; --j) {
+                valueBeforeStartPosition = j;
+
+                if (isSign(String.valueOf(charExpression[j])) && j != 0 &&
+                        !isPreUnarySign(expression.substring(0, j))) {
+
+                    valueBeforeStartPosition = j + 1;
+                    break;
+                }
+            }
+            for (int j = positionInExpression + 1, l = expression.length(); j < l; j++) {
+                valueAfterEndPosition = j;
+                if (!isPreUnarySign(expression.substring(positionInExpression + 1, j))
+                        && isSign(String.valueOf(charExpression[j]))
+                        ^ (String.valueOf(charExpression[j]).equals("-")
+                        && isSign(String.valueOf(charExpression[j - 1])))) {
+                    valueAfterEndPosition = j - 1;
+                    break;
+                }
+            }
+
+            String leftStr = expression
+                    .substring(valueBeforeStartPosition, positionInExpression)
+                    .replace(",", ".");
+            String rightStr = expression
+                    .substring(positionInExpression + 1, valueAfterEndPosition + 1)
+                    .replace(",", ".");
+            values.add(leftStr);
+            values.add(rightStr);
+        } else if (isAfterUnarySign(operation)) {
+            int valueStartPosition = -1;
+            int valueEndPosition = -1;
+            int i = positionInExpression - 1;
+
+            while (i >= 0 && ((isNumberOrDot(charExpression[i]) ||
+                    charExpression[i] == '-' ||
+                    valueStartPosition == -1))) {
+                if (isNumberOrDot(charExpression[i]) && valueEndPosition == -1)
+                    valueEndPosition = i;
+                if (isNumberOrDot(charExpression[i]))
+                    valueStartPosition = i;
+                i--;
+            }
+
+            String under = expression.substring(valueStartPosition, valueEndPosition + 1);
+            values.add(under);
+        } else if (isPreUnarySign(operation)) {
+            int valueStartPosition = 0;
+            int len = expression.length() - 1;
+
+            while (valueStartPosition < len && !isNumberOrDot(charExpression[valueStartPosition])) {
+                ++valueStartPosition;
+            }
+
+            String under = expression.substring(valueStartPosition);
+            values.add(under);
+        }
+        return values;
     }
 
     private static String noBracketsWork(String expression) {
         try {
             int i = 1;
             int signCount = 0;
-            int lpos = 0;
             int len = expression.length();
 
-
-//            int t = 1;
-//            String tmp = expression;
-//            while (t < tmp.length()){
-//                for (String s: operationsOrder.keySet()) {
-//                    if (tmp.substring(0,t).contains(s))
-//
-//                }
-//            }
-//            while ()
-
-
             while (i < len) {
-//                Log.d("pr", expression.substring(lpos + 1, i));
-                if (isSign(String.valueOf(expression.toCharArray()[i])) &&
-                        (!String.valueOf(expression.toCharArray()[i]).equals("-") ||
-                                isNumber((expression.toCharArray()[i - 1])))) {
+                if (isSign(String.valueOf(expression.toCharArray()[i]))
+                        && (!String.valueOf(expression.toCharArray()[i]).equals("-")
+                        || !isSign(expression.toCharArray()[i - 1]))) {
                     signCount++;
 
-                    lpos = i;
+                    pushToOperationList(String.valueOf(expression.toCharArray()[i]));
+
                     i++;
                 } else if (String.valueOf(expression.toCharArray()[i]).equals("-") &&
                         isSign(String.valueOf(expression.toCharArray()[i])))
                     i += 2;
                 else i++;
             }
-            double result = 0;
-            int pr = 0;
-            int nx = expression.length() - 1;
+
+            int pr;
+            int nx;
             i = 1;
 
-
-            Log.d("fuuu", String.valueOf(signCount));
-
             if (signCount == 0)
-                return preUnaryWork(expression.replace(',', '.'));
+                return unaryOperationWork(expression.replace(',', '.'));
 
             while (signCount > 0) {
-                if (i < expression.length() && (((expression.toCharArray()[i] == '^') || (expression.toCharArray()[i] == '/') || (expression.toCharArray()[i] == ':') ||
-                        (expression.toCharArray()[i] == '×') || (expression.toCharArray()[i] == '÷'))
-                        || (!containsUpClass(expression) && ((expression.toCharArray()[i] == '+') ||
-                        (expression.toCharArray()[i] == '-'))) && !isPreUnarySign(expression.substring(0, i)))) {
-                    for (int j = i - 1; j >= 0; j--) {
-                        pr = j;
-                        Log.d("sufwe", String.valueOf(j));
-                        if (isSign(String.valueOf(expression.toCharArray()[j])) && j != 0 &&
-                                !isPreUnarySign(expression.substring(0, j))) {
-                            Log.d("su", expression.substring(0, j + 1));
-                            pr = j + 1;
-                            break;
-                        }
+                if (i < expression.length()) {
+                    String elem = String.valueOf(expression.toCharArray()[i]);
+                    if (isOperation(elem) && isFoundOperation(elem)
+                            && isOfUpperClass(elem)) {
+
+                        String leftStr;
+                        String rightStr;
+
+                        ArrayList<String> values = findOperationValues(elem, i, expression);
+                        leftStr = values.get(0);
+                        rightStr = values.get(1);
+
+                        pr = i - leftStr.length();
+                        nx = i + rightStr.length();
+
+
+                        leftStr = unaryOperationWork(leftStr);
+                        rightStr = unaryOperationWork(rightStr);
+
+                        String cur = executeBinaryOperation(elem, leftStr, rightStr);
+
+                        String pre = "";
+                        String aft = "";
+                        if (pr != 0)
+                            pre = expression.substring(0, pr);
+                        if (nx != expression.length() - 1)
+                            aft = expression.substring(nx + 1);
+
+
+                        removeFromOperationList(elem);
+
+                        if (signCount == 1)
+                            expression = cur;
+                        else
+                            expression = pre + cur + aft;
+                        signCount--;
+
+                        i = 1;
+                        continue;
                     }
-                    for (int j = i + 1, l = expression.length(); j < l; j++) {
-                        nx = j;
-                        if (!isPreUnarySign(expression.substring(i + 1, j)) && isSign(String.valueOf(expression.toCharArray()[j])) ^
-                                (String.valueOf(expression.toCharArray()[j]).equals("-") &&
-                                        isSign(String.valueOf(expression.toCharArray()[j - 1])))) {
-                            nx = j - 1;
-                            break;
-                        }
-                    }
-                    int dotl = expression.substring(pr, i).indexOf(",");
-                    StringBuilder lefty = new StringBuilder(expression.substring(pr, i));
-                    if (dotl != -1)
-                        lefty.setCharAt(dotl, '.');
-                    int dotr = expression.substring(i + 1, nx + 1).indexOf(",");
-                    StringBuilder righty;
-                    if (signCount > 1)
-                        righty = new StringBuilder(expression.substring(i + 1, nx + 1));
-                    else
-                        righty = new StringBuilder(expression.substring(i + 1));
-                    if (dotr != -1)
-                        righty.setCharAt(dotr, '.');
-
-                    String leftStr = lefty.toString();
-                    String rightStr = righty.toString();
-                    Log.d("left", leftStr);
-                    Log.d("right", rightStr);
-
-                    leftStr = preUnaryWork(leftStr);
-                    rightStr = preUnaryWork(rightStr);
-
-
-                    double left = Double.parseDouble(leftStr);
-                    double right = Double.parseDouble(rightStr);
-                    if (containsDiv(String.valueOf(expression.toCharArray()[i])) && right == 0)
-                        return "zero";
-                    switch (expression.toCharArray()[i]) {
-                        case '+':
-                            result = left + right;
-                            break;
-                        case '-':
-                            result = left - right;
-                            break;
-                        case '*':
-                        case '×':
-                            result = left * right;
-                            break;
-                        case '÷':
-                            result = left / right;
-                            break;
-                        case '/':
-                            if (left / right >= 0)
-                                result = Math.floor(left / right);
-                            else
-                                result = Math.floor(left / right) + 1;
-                            break;
-                        case ':':
-                            result = left % right;
-                            break;
-                        case '^':
-                            result = Math.pow(left, right);
-                            break;
-                    }
-                    String pre = "";
-                    String aft = "";
-                    if (pr != 0)
-                        pre = expression.substring(0, pr);
-                    if (nx != expression.length() - 1)
-                        aft = expression.substring(nx + 1);
-                    String cur = String.valueOf(result);
-                    Log.d("cur", String.valueOf(left) + expression.toCharArray()[i] + right + "=" + cur);
-                    if (signCount == 1)
-                        expression = cur;
-                    else
-                        expression = pre + cur + aft;
-                    signCount--;
-                    i = 1;
-                    Log.d("wat3", expression);
-                    continue;
+                } else {
+                    break;
                 }
 
-                Log.d("wat", "ef");
                 if (expression.toCharArray()[i] == ',')
                     expression.toCharArray()[i] = '.';
+
                 i++;
-                Log.d("wat2", "ef");
             }
             expression = expression.replace(",", ".");
         } catch (Exception e) {

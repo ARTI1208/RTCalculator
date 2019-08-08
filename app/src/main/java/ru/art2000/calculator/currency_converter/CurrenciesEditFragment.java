@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
-import ru.art2000.extensions.CurrencyValues;
+import ru.art2000.helpers.CurrencyValuesHelper;
 
 public class CurrenciesEditFragment extends Fragment {
 
@@ -140,22 +140,22 @@ public class CurrenciesEditFragment extends Fragment {
                                       @NonNull RecyclerView.ViewHolder viewHolder,
                                       @NonNull RecyclerView.ViewHolder target) {
                     parent.changeDone = true;
-                    CurrencyValues.swap(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    CurrencyValuesHelper.swap(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                     adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                    CurrencyValues.writeValuesToDB(mContext);
+                    CurrencyValuesHelper.writeValuesToDB(mContext);
                     return true;
                 }
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     parent.changeDone = true;
-                    CurrencyValues.hideItems(parent, viewHolder.getAdapterPosition());
+                    CurrencyValuesHelper.hideItems(viewHolder.getAdapterPosition());
                     parent.add.filterList();
                     parent.add.adapter.setNewData();
                     adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-                    adapter.size = CurrencyValues.visibleList.size();
+                    adapter.size = CurrencyValuesHelper.visibleList.size();
                     toggleEmptyView();
-                    CurrencyValues.writeValuesToDB(mContext);
+                    CurrencyValuesHelper.writeValuesToDB(mContext);
                 }
             });
             adapter = new EditCurrenciesAdapter(itemTouchHelper);
@@ -190,7 +190,7 @@ public class CurrenciesEditFragment extends Fragment {
 
         final int REORDER_MODE = 0;
         final int SELECTION_MODE = 1;
-        int size = CurrencyValues.visibleList.size();
+        int size = CurrencyValuesHelper.visibleList.size();
         ArrayList<CurrencyItem> itemsToRemove = new ArrayList<>();
         ItemTouchHelper touchHelper;
         int curMode = 0;
@@ -210,7 +210,7 @@ public class CurrenciesEditFragment extends Fragment {
 
         void selectAll() {
             itemsToRemove.clear();
-            itemsToRemove.addAll(CurrencyValues.visibleList);
+            itemsToRemove.addAll(CurrencyValuesHelper.visibleList);
             notifyDataSetChanged();
         }
 
@@ -220,7 +220,7 @@ public class CurrenciesEditFragment extends Fragment {
         }
 
         void setNewData() {
-            size = CurrencyValues.visibleList.size();
+            size = CurrencyValuesHelper.visibleList.size();
             notifyDataSetChanged();
             toggleEmptyView();
         }
@@ -243,7 +243,7 @@ public class CurrenciesEditFragment extends Fragment {
             TextView name = ((Holder) holder).name;
             ImageView handle = ((Holder) holder).handle;
             CheckBox check = ((Holder) holder).check;
-            CurrencyItem item = CurrencyValues.visibleList.get(position);
+            CurrencyItem item = CurrencyValuesHelper.visibleList.get(position);
             code.setText(item.code);
             name.setText(item.nameResourceId);
             if (handle != null) {
@@ -279,7 +279,7 @@ public class CurrenciesEditFragment extends Fragment {
         }
 
         boolean isAllSelected() {
-            return itemsToRemove.size() == CurrencyValues.visibleList.size();
+            return itemsToRemove.size() == CurrencyValuesHelper.visibleList.size();
         }
 
         boolean isSelectionMode() {
@@ -301,7 +301,7 @@ public class CurrenciesEditFragment extends Fragment {
                     parent.isFirstTimeTooltipShown = false;
                     parent.deleteTooltip.dismiss();
                 }
-                itemsToRemove.add(CurrencyValues.visibleList.get(holder.getAdapterPosition()));
+                itemsToRemove.add(CurrencyValuesHelper.visibleList.get(holder.getAdapterPosition()));
             }
             parent.toggleElementsVisibility();
             notifyDataSetChanged();

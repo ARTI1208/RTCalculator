@@ -1,4 +1,4 @@
-package ru.art2000.calculator;
+package ru.art2000.helpers;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -12,7 +12,9 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
 
-public class Helper {
+import ru.art2000.calculator.R;
+
+public class AndroidHelper {
 
     private static double ratio(Context ctx) {
         DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();

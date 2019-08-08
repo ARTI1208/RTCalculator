@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
-import ru.art2000.extensions.CurrencyValues;
+import ru.art2000.helpers.CurrencyValuesHelper;
 
 public class CurrenciesAddFragment extends Fragment {
 
@@ -51,13 +51,13 @@ public class CurrenciesAddFragment extends Fragment {
             llm.setOrientation(RecyclerView.VERTICAL);
             recycler.setLayoutManager(llm);
             Log.d("Addi", "1");
-            setNewList(CurrencyValues.hiddenList);
+            setNewList(CurrencyValuesHelper.hiddenList);
         }
         return v;
     }
 
     ArrayList<CurrencyItem> searchByQuery(String query) {
-        return CurrencyValues.findAllItems(mContext, CurrencyValues.hiddenList, query);
+        return CurrencyValuesHelper.findAllItems(mContext, CurrencyValuesHelper.hiddenList, query);
     }
 
     void filterList() {
@@ -100,7 +100,7 @@ public class CurrenciesAddFragment extends Fragment {
     }
 
     private String getEmptyText() {
-        if (parent.barSearchView.getQuery().length() > 0 && CurrencyValues.hiddenList.size() > 0) {
+        if (parent.barSearchView.getQuery().length() > 0 && CurrencyValuesHelper.hiddenList.size() > 0) {
             return getString(R.string.empty_text_no_currencies_found);
         } else {
             return getString(R.string.empty_text_all_currencies_added);

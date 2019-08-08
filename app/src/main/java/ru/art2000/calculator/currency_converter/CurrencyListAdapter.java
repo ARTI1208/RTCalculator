@@ -23,11 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.settings.PrefsHelper;
 import ru.art2000.extensions.CurrencyItem;
-import ru.art2000.extensions.CurrencyValues;
+import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.CurrencyValuesHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 public class CurrencyListAdapter extends RecyclerView.Adapter {
 
@@ -49,7 +49,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         mContext.getTheme().resolveAttribute(R.attr.colorAccent, accentValue, true);
         colorAccent = accentValue.resourceId;
         if (PrefsHelper.isShouldSaveCurrencyConversion()) {
-            highlighted = CurrencyValues.findByCode(PrefsHelper.getConversionCode());
+            highlighted = CurrencyValuesHelper.findByCode(PrefsHelper.getConversionCode());
             inputItemVal = PrefsHelper.getConversionValue();
         }
     }
@@ -61,7 +61,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     }
 
     void getDataFromDB() {
-        size = CurrencyValues.visibleList.size();
+        size = CurrencyValuesHelper.visibleList.size();
         if (inputItemPos == -1) {
             notifyDataSetChanged();
         } else {
@@ -98,7 +98,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         int t = inputItemPos;
         inputItemPos = -1;
         inp.value.setText(dot2dig.format(inputItemVal *
-                CurrencyValues.visibleList.get(inp.getAdapterPosition()).rate));
+                CurrencyValuesHelper.visibleList.get(inp.getAdapterPosition()).rate));
         inp.input.setEnabled(false);
         inp.input.setVisibility(View.GONE);
         inp.value.setTextColor(ContextCompat.getColor(mContext, colorAccent));
@@ -138,18 +138,18 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
             name.setTextColor(ContextCompat.getColor(mContext, colorAccent));
             value.setTextColor(ContextCompat.getColor(mContext, colorAccent));
             code.setTypeface(null, Typeface.BOLD);
-            code.setTextSize(Helper.sp2px(mContext, 8f));
+            code.setTextSize(AndroidHelper.sp2px(mContext, 8f));
         } else {
             Log.d("high", String.valueOf(highlighted));
             Log.d("pos", String.valueOf(position));
-            code.setTextSize(Helper.sp2px(mContext, 7f));
+            code.setTextSize(AndroidHelper.sp2px(mContext, 7f));
             code.setTextColor(csl);
             name.setTextColor(csl);
             value.setTextColor(csl);
             code.setTypeface(null, Typeface.NORMAL);
         }
 
-        CurrencyItem currencyItem = CurrencyValues.visibleList.get(position);
+        CurrencyItem currencyItem = CurrencyValuesHelper.visibleList.get(position);
 
         value.setText(dot2dig.format(inputItemVal * currencyItem.rate));
         code.setText(currencyItem.code);
@@ -171,7 +171,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
                 code.setTextColor(ContextCompat.getColor(mContext, colorAccent));
                 name.setTextColor(ContextCompat.getColor(mContext, colorAccent));
                 code.setTypeface(null, Typeface.BOLD);
-                code.setTextSize(Helper.sp2px(mContext, 8f));
+                code.setTextSize(AndroidHelper.sp2px(mContext, 8f));
                 inputItemPos = holder.getAdapterPosition();
                 highlighted = holder.getAdapterPosition();
                 input.addTextChangedListener(new TextWatcher() {
@@ -182,7 +182,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (!s.toString().equals("")) {
-                            inputItemVal = Double.parseDouble(s.toString()) / CurrencyValues.visibleList.get(inputItemPos).rate;
+                            inputItemVal = Double.parseDouble(s.toString()) / CurrencyValuesHelper.visibleList.get(inputItemPos).rate;
                             for (int i = 0; i < getItemCount(); i++) {
                                 if (i != holder.getAdapterPosition()) {
                                     Log.d("OOOO", "FFFFFFF");
@@ -207,7 +207,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
                 if (!recycler.isComputingLayout())
                     notifyItemChanged(position);
 //                    onBindViewHolder(holder, position);
-//                    code.setTextSize(Helper.sp2px(mContext, 7f));
+//                    code.setTextSize(AndroidHelper.sp2px(mContext, 7f));
 //                    code.setTextColor(csl);
 //                    name.setTextColor(csl);
 //                    code.setTypeface(null, Typeface.NORMAL);

@@ -9,7 +9,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -46,9 +48,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.settings.PrefsHelper;
+import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 import static ru.art2000.calculator.calculator.CalculationClass.isAfterUnarySign;
 import static ru.art2000.calculator.calculator.CalculationClass.isDot;
@@ -89,7 +91,7 @@ public class CalculatorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (v == null) {
             mContext = getActivity();
-            if (Helper.isLongScreen(mContext))
+            if (AndroidHelper.isLongScreen(mContext))
                 v = inflater.inflate(R.layout.calc_layout_long, null);
             else
                 v = inflater.inflate(R.layout.calc_layout, null);
@@ -629,14 +631,21 @@ public class CalculatorFragment extends Fragment {
             private void init() {
                 background = new ColorDrawable(Color.RED);
                 xMark = ContextCompat.getDrawable(mContext, R.drawable.ic_clear_history);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                ColorFilter whiteColorFilter =
+                        new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                xMark.setColorFilter(whiteColorFilter);
                 xMarkMargin = (int) mContext.getResources().getDimension(R.dimen.activity_horizontal_margin);
                 initiated = true;
             }
 
 
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(Canvas c,
+                                    RecyclerView recyclerView,
+                                    RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY,
+                                    int actionState,
+                                    boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
 
                 // not sure why, but this method get's called for viewholder that are already swiped away

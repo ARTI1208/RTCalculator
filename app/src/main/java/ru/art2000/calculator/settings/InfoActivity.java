@@ -16,9 +16,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import ru.art2000.calculator.FirstSetup;
-import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 public class InfoActivity extends DayNightActivity {
 
@@ -38,7 +39,7 @@ public class InfoActivity extends DayNightActivity {
         getTheme().resolveAttribute(R.attr.calc_input_bg, changelog_back, true);
         int back_color = ContextCompat.getColor(mContext, changelog_back.resourceId);
         back.setColor(back_color);
-        back.setCornerRadius(Helper.dip2px(this, 8));
+        back.setCornerRadius(AndroidHelper.dip2px(this, 8));
         findViewById(R.id.chng_back).setBackground(back);
         TextView changelog = findViewById(R.id.changelog);
         changelog.setText(getChangeLogText());
@@ -46,7 +47,7 @@ public class InfoActivity extends DayNightActivity {
         TypedValue accentTypedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, accentTypedValue, true);
         int accentColor = ContextCompat.getColor(mContext, accentTypedValue.resourceId);
-        gd.setStroke(Helper.dip2px(this, 4), accentColor);
+        gd.setStroke(AndroidHelper.dip2px(this, 4), accentColor);
         gd.setShape(GradientDrawable.OVAL);
         TextView tv = findViewById(R.id.tvv);
         tv.setBackground(gd);

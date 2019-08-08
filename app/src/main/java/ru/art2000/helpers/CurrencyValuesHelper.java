@@ -1,4 +1,4 @@
-package ru.art2000.extensions;
+package ru.art2000.helpers;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -13,11 +13,11 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 
-import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.currency_converter.CurrencyDB;
 import ru.art2000.calculator.currency_converter.EditCurrenciesActivity;
+import ru.art2000.extensions.CurrencyItem;
 
-public class CurrencyValues {
+public class CurrencyValuesHelper {
 
     public static ArrayList<CurrencyItem> visibleList;
     public static ArrayList<CurrencyItem> hiddenList;
@@ -28,9 +28,11 @@ public class CurrencyValues {
         hiddenList = new ArrayList<>();
         try {
             File db = new File(ctx.getDatabasePath("currency.db").getAbsolutePath());
-            if (!db.exists() && (Objects.requireNonNull(db.getParentFile()).exists() || db.getParentFile().mkdirs())) {
+            if (!db.exists() && (Objects.requireNonNull(db.getParentFile()).exists()
+                    || db.getParentFile().mkdirs())) {
                 InputStream inputStream = ctx.getAssets().open("currency.db");
-                OutputStream outputStream = new FileOutputStream(ctx.getDatabasePath("currency.db").getAbsolutePath());
+                OutputStream outputStream = new FileOutputStream(
+                        ctx.getDatabasePath("currency.db").getAbsolutePath());
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = inputStream.read(buffer)) > 0)
@@ -43,12 +45,20 @@ public class CurrencyValues {
         }
         CurrencyDB DBHelper = new CurrencyDB(ctx);
         SQLiteDatabase currenciesDB = DBHelper.getWritableDatabase();
-        Cursor cc = currenciesDB.query("currency", null, null, null, null, null, null);
+        Cursor cc = currenciesDB.query(
+                "currency",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
         for (int i = 0, fullSize = DBHelper.getSize(); i < fullSize; i++) {
             if (cc.moveToNext()) {
                 String curCode = cc.getString(cc.getColumnIndex("codeLetter"));
                 String name = "currency_" + curCode;
-                Integer id = ctx.getResources().getIdentifier(name, "string", ctx.getPackageName());
+                Integer id = ctx.getResources().getIdentifier(
+                        name, "string", ctx.getPackageName());
                 int pos = cc.getInt(cc.getColumnIndex("position"));
                 Double rate = cc.getDouble(cc.getColumnIndex("rate"));
                 CurrencyItem item = new CurrencyItem();
@@ -103,7 +113,7 @@ public class CurrencyValues {
 
             if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
                     || (!mainLocale.equals(Locale.ENGLISH)
-                    && Helper.getLocalizedString(context, Locale.ENGLISH, item.nameResourceId)
+                    && AndroidHelper.getLocalizedString(context, Locale.ENGLISH, item.nameResourceId)
                     .toLowerCase().contains(lowerQuery))) {
                 newList.add(item);
             }
@@ -111,7 +121,8 @@ public class CurrencyValues {
         return newList;
     }
 
-    public static void makeItemsVisible(EditCurrenciesActivity activity, ArrayList<CurrencyItem> list) {
+    public static void makeItemsVisible(EditCurrenciesActivity activity,
+                                        ArrayList<CurrencyItem> list) {
         visibleList.addAll(list);
         hiddenList.removeAll(list);
         activity.add.removeFromCurrentList(list);
@@ -119,19 +130,19 @@ public class CurrencyValues {
         fixPositions();
     }
 
-    public static void hideItems(EditCurrenciesActivity activity, ArrayList<CurrencyItem> list) {
+    public static void hideItems(ArrayList<CurrencyItem> list) {
         hiddenList.addAll(list);
         visibleList.removeAll(list);
         list.clear();
         fixPositions();
     }
 
-    public static void hideItems(EditCurrenciesActivity activity, Integer... positions) {
+    public static void hideItems(Integer... positions) {
         ArrayList<CurrencyItem> list = new ArrayList<>();
         for (int i : positions) {
             list.add(visibleList.get(i));
         }
-        hideItems(activity, list);
+        hideItems(list);
     }
 
     private static void fixPositions() {
@@ -142,28 +153,14 @@ public class CurrencyValues {
         sortHiddenList();
     }
 
-    private static ArrayList<CurrencyItem> sortVisibleList() {
+    private static void sortVisibleList() {
         Collections.sort(visibleList, (o1, o2) ->
                 Integer.compare(o1.position, o2.position));
-        return visibleList;
     }
 
-    private static ArrayList<CurrencyItem> sortVisibleList(ArrayList<CurrencyItem> visibleList) {
-        Collections.sort(visibleList, (o1, o2) ->
-                Integer.compare(o1.position, o2.position));
-        return visibleList;
-    }
-
-    private static ArrayList<CurrencyItem> sortHiddenList() {
+    private static void sortHiddenList() {
         Collections.sort(hiddenList, (o1, o2) ->
                 o1.code.compareTo(o2.code));
-        return hiddenList;
-    }
-
-    private static ArrayList<CurrencyItem> sortHiddenList(ArrayList<CurrencyItem> hiddenList) {
-        Collections.sort(hiddenList, (o1, o2) ->
-                o1.code.compareTo(o2.code));
-        return hiddenList;
     }
 
     public static void swap(int pos1, int pos2) {

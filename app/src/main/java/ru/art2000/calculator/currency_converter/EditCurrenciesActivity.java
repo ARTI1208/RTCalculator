@@ -2,15 +2,12 @@ package ru.art2000.calculator.currency_converter;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -19,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -29,12 +25,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import ru.art2000.calculator.Helper;
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.settings.PrefsHelper;
-import ru.art2000.extensions.CurrencyValues;
 import ru.art2000.extensions.DayNightActivity;
-import ru.art2000.extensions.ExtendedSnackbar;
+import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.CurrencyValuesHelper;
+import ru.art2000.helpers.PrefsHelper;
+import ru.art2000.helpers.SnackbarThemeHelper;
 
 public class EditCurrenciesActivity extends DayNightActivity {
 
@@ -253,7 +249,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
         }
 
-        deleteTooltip = ExtendedSnackbar.createThemedSnackbar(findViewById(R.id.coordinator),
+        deleteTooltip = SnackbarThemeHelper.createThemedSnackbar(findViewById(R.id.coordinator),
                 R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE);
 
         deleteTooltip.addCallback(new Snackbar.Callback() {
@@ -276,7 +272,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     private void applyMenuIconTint(Drawable icon) {
         icon.setColorFilter(new PorterDuffColorFilter(
-                Helper.getAccentColor(this), PorterDuff.Mode.SRC_ATOP));
+                AndroidHelper.getAccentColor(this), PorterDuff.Mode.SRC_ATOP));
     }
 
     public void toggleElementsVisibility() {
@@ -310,23 +306,23 @@ public class EditCurrenciesActivity extends DayNightActivity {
         if (tabPos == 0) {
             setNewFabImage(checkDrawable);
             fab.setOnClickListener(v -> {
-                CurrencyValues.makeItemsVisible(this, add.adapter.itemsToAdd);
+                CurrencyValuesHelper.makeItemsVisible(this, add.adapter.itemsToAdd);
                 changeDone = true;
                 add.adapter.setNewData();
                 edit.adapter.setNewData();
                 toggleElementsVisibility();
-                CurrencyValues.writeValuesToDB(mContext);
+                CurrencyValuesHelper.writeValuesToDB(mContext);
             });
         } else {
             setNewFabImage(deleteDrawable);
             fab.setOnClickListener(v -> {
-                CurrencyValues.hideItems(this, edit.adapter.itemsToRemove);
+                CurrencyValuesHelper.hideItems(edit.adapter.itemsToRemove);
                 changeDone = true;
                 add.filterList();
                 add.adapter.setNewData();
                 edit.adapter.notifyModeChanged(null);
                 edit.adapter.setNewData();
-                CurrencyValues.writeValuesToDB(mContext);
+                CurrencyValuesHelper.writeValuesToDB(mContext);
             });
         }
     }

@@ -1,8 +1,9 @@
-package ru.art2000.calculator.settings;
+package ru.art2000.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import ru.art2000.calculator.R;
 
@@ -21,10 +22,6 @@ public class PrefsHelper {
     private static double sConversionValue;
 
 
-    static void setUnitViewChanged() {
-        sIsUnitViewChanged = true;
-    }
-
     public static int getExtraButtonAction() {
         return sUnitViewExtraButtonAction;
     }
@@ -38,7 +35,7 @@ public class PrefsHelper {
         return sShouldSaveCurrencyConversion;
     }
 
-    static void setShouldSaveCurrencyConversion(boolean value) {
+    public static void setShouldSaveCurrencyConversion(boolean value) {
         sShouldSaveCurrencyConversion = value;
         sSharedPreferences.edit().putBoolean("save_currency_value", value).apply();
         if (!value)
@@ -57,10 +54,12 @@ public class PrefsHelper {
         putDouble("last_conversion_double", value);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void putDouble(final String key, final double value) {
         sSharedPreferences.edit().putLong(key, Double.doubleToRawLongBits(value)).apply();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static double getDouble(final String key, final double defaultValue) {
         return Double.longBitsToDouble(sSharedPreferences.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
@@ -138,12 +137,13 @@ public class PrefsHelper {
         sUnitViewType = sSharedPreferences.getString("unit_view", "powerful");
     }
 
-    public static String getsUnitViewType() {
+    public static String getUnitViewType() {
         return sUnitViewType;
     }
 
-    static void setUnitViewType(String view) {
+    public static void setUnitViewType(String view) {
         sUnitViewType = view;
+        sIsUnitViewChanged = true;
         sSharedPreferences.edit().putString("unit_view", view).apply();
     }
 
@@ -170,7 +170,7 @@ public class PrefsHelper {
         }
     }
 
-    static void setDefaultTab(String tab) {
+    public static void setDefaultTab(String tab) {
         sSharedPreferences.edit().putString("default_opened_tab", tab).apply();
     }
 
@@ -178,7 +178,7 @@ public class PrefsHelper {
         return sAppTheme;
     }
 
-    static void setAppTheme(String theme) {
+    public static void setAppTheme(String theme) {
         sSharedPreferences.edit().putString("app_theme", theme).apply();
     }
 
@@ -189,7 +189,7 @@ public class PrefsHelper {
             return R.string.error;
     }
 
-    static void setZeroDivResult(boolean b) {
+    public static void setZeroDivResult(boolean b) {
         sSharedPreferences.edit().putBoolean("zero_div", b).apply();
     }
 
@@ -201,11 +201,11 @@ public class PrefsHelper {
         return sSharedPreferences.getString("tab_default", "").equals("last_tab");
     }
 
-    public static void setDeleteTooltipShown(){
+    public static void setDeleteTooltipShown() {
         sSharedPreferences.edit().putBoolean("delete_tooltip_shown", true).apply();
     }
 
-    public static boolean isDeleteTooltipShown(){
+    public static boolean isDeleteTooltipShown() {
         return sSharedPreferences.getBoolean("delete_tooltip_shown", false);
     }
 

@@ -8,7 +8,7 @@ import com.codemybrainsout.onboarder.AhoyOnboarderCard;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.art2000.calculator.settings.PrefsHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 public class FirstSetup extends AhoyOnboarderActivity {
 

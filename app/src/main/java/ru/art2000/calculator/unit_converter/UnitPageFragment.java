@@ -17,7 +17,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +25,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.settings.PrefsHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 public class UnitPageFragment extends Fragment {
 
@@ -74,7 +74,7 @@ public class UnitPageFragment extends Fragment {
     }
 
     private View inflateUnitView(LayoutInflater inflater, ViewGroup container) {
-        switch (PrefsHelper.getsUnitViewType()) {
+        switch (PrefsHelper.getUnitViewType()) {
             case "simple":
                 return simpleUnitView(inflater, container);
             case "powerful":

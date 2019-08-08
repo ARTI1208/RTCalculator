@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import java.util.Calendar;
 
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.settings.PrefsHelper;
+import ru.art2000.helpers.PrefsHelper;
 
 @SuppressLint("Registered")
 public class DayNightActivity extends AppCompatActivity {
