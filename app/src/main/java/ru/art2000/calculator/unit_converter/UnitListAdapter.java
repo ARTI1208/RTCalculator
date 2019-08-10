@@ -1,14 +1,9 @@
 package ru.art2000.calculator.unit_converter;
 
 import android.content.Context;
-
-import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,78 +14,81 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ru.art2000.calculator.R;
+import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.GeneralHelper;
 
 public class UnitListAdapter extends RecyclerView.Adapter {
 
+    double inp = 1;
+    int curDim = 0;
+    UnitPageFragment fragment;
+    private int colorAccent;
+    private int colorDefault;
     private String[] dimensions;
-//    private ArrayList<Float> multipliers;
     private Context mContext;
-    private double inp = 1;
-    private int curDim = 0;
     private RecyclerView recycler;
     private boolean powerfulConverter;
-    private int posit;
-    private ViewGroup item;
+    private int pagePosition;
     private Formulas formulas = new Formulas();
-    NumberFormat nf = new DecimalFormat("#.#######");
-    @ColorRes int colorAccent;
-    int colorDefault;
 
     UnitListAdapter(Context ctx, String[] dims, int page, boolean isPowerfulConverter) {
         dimensions = dims;
-        posit = page;
+        pagePosition = page;
         mContext = ctx;
         powerfulConverter = isPowerfulConverter;
-        TypedValue attr = new TypedValue();
-        mContext.getTheme().resolveAttribute(R.attr.colorAccent, attr, true);
-        colorAccent = attr.resourceId;
-        mContext.getTheme().resolveAttribute(android.R.attr.textColorPrimary, attr, true);
-        colorDefault = attr.resourceId;
+        colorAccent = AndroidHelper.getAccentColor(mContext);
+        colorDefault = AndroidHelper.getTextColorSecondary(mContext);
     }
 
-    UnitListAdapter(Context ctx, String[] dims, int page, int pos, double value, int accent) {
+    UnitListAdapter(Context ctx, String[] dims, int page, int pos, double value) {
         dimensions = dims;
-        posit = page;
+        pagePosition = page;
         curDim = pos;
         inp = value;
         mContext = ctx;
-        formulas.calc(posit, curDim, inp);
-        colorAccent = accent;
+        formulas.calc(pagePosition, curDim, inp);
+        colorAccent = AndroidHelper.getAccentColor(mContext);
+        colorDefault = AndroidHelper.getTextColorSecondary(mContext);
     }
 
-    void setCurDim(int pos){
+    void setCurDim(int pos) {
+        int previousDimension = curDim;
         curDim = pos;
-        formulas.calc(posit, pos, inp);
+        Log.d(createTag("ChngDim"), "2||was " + previousDimension + ", now " + curDim);
+        formulas.calc(pagePosition, pos, inp);
         notifyDataSetChanged();
     }
 
-    void setInputValue(String val){
+    void setInputValue(String val) {
         inp = Double.valueOf(val.replace(',', '.'));
-        formulas.calc(posit, curDim, inp);
+        formulas.calc(pagePosition, curDim, inp);
         for (int i = 0; i < getItemCount(); i++) {
-            if (!recycler.isComputingLayout() && (!powerfulConverter || (powerfulConverter && i != curDim)))
+            if (!recycler.isComputingLayout() && (!powerfulConverter || i != curDim))
                 notifyItemChanged(i);
         }
     }
 
-    public class Holder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    private String createTag(String text) {
+        return text + "_" + pagePosition;
+    }
 
-        Holder(final View itemView) {
-            super(itemView);
-            itemView.setOnCreateContextMenuListener(this);
+    void setValueAndDimension(double value, int dimension, boolean redraw) {
+
+        int previousDimension = curDim;
+        inp = value;
+        curDim = dimension;
+        Log.d(createTag("ChngDim"), "3||was " + previousDimension + ", now " + curDim);
+        if (redraw) {
+            formulas.calc(pagePosition, curDim, inp);
+            for (int i = 0; i < getItemCount(); i++) {
+                if (!recycler.isComputingLayout() && (!powerfulConverter || i != curDim))
+                    notifyItemChanged(i);
+            }
         }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            item = (ViewGroup) v;
-            menu.setHeaderTitle(mContext.getString(R.string.you_can));
-            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.copy));
-        }
-
     }
 
     @Override
@@ -117,38 +115,107 @@ public class UnitListAdapter extends RecyclerView.Adapter {
 
             viewGroup.removeViewAt(0);
             viewGroup.addView(value, 0);
-        } else {
-//           Log.d ("kjhg", String.valueOf(((EditText)viewGroup.getChildAt(0)).getImeOptions()));
         }
-        return new Holder(viewGroup);
+        return new UnitItemHolder(viewGroup);
+    }
+
+    private void setTextColors(TextView name, TextView value, boolean isSelected) {
+        if (isSelected) {
+            name.setTextColor(colorAccent);
+            value.setTextColor(colorAccent);
+        } else {
+            name.setTextColor(colorDefault);
+            value.setTextColor(colorDefault);
+        }
+    }
+
+    void requestFocusForCurrent() {
+        if (!powerfulConverter) {
+            return;
+        }
+
+        RecyclerView.ViewHolder previousHolder = recycler.findViewHolderForLayoutPosition(curDim);
+        if (previousHolder != null) {
+            ViewGroup previousView = (ViewGroup) previousHolder.itemView;
+            EditText previousValue = (EditText) previousView.getChildAt(0);
+            previousValue.requestFocus();
+            Log.d(createTag("curReq"), String.valueOf(curDim));
+        }
+    }
+
+    private void switchFocus(int fromPosition, int toPosition) {
+
+        if (fromPosition == toPosition)
+            return;
+
+        Log.d("FOCSWitch", "from " + fromPosition + " to " + toPosition);
+
+        RecyclerView.ViewHolder previousHolder = recycler.findViewHolderForLayoutPosition(fromPosition);
+        RecyclerView.ViewHolder newHolder = recycler.findViewHolderForLayoutPosition(toPosition);
+
+        if (previousHolder != null) {
+
+            ViewGroup previousView = (ViewGroup)
+                    previousHolder.itemView;
+            TextView previousName = previousView.findViewById(R.id.type);
+            TextView previousValue = (TextView) previousView.getChildAt(0);
+            setTextColors(previousName, previousValue, false);
+
+        }
+        if (newHolder != null) {
+            ViewGroup newView = (ViewGroup)
+                    newHolder.itemView;
+            TextView newName = newView.findViewById(R.id.type);
+            TextView newValue = (TextView) newView.getChildAt(0);
+            setTextColors(newName, newValue, true);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         final ViewGroup item = (ViewGroup) holder.itemView;
-        TextView tv = item.findViewById(R.id.type);
-//        float mult = (getMultItem(curDim) / getMultItem(position));
+        TextView dimensionNameView = item.findViewById(R.id.type);
+        TextView dimensionValueView = (TextView) item.getChildAt(0);
 
-        TextView zero = (TextView) item.getChildAt(0);
+        dimensionNameView.setText(dimensions[position]);
 
-//        if (powerfulConverter) {
-//
-//
-//        } else
-//            value.setText(String.valueOf(inp * mult));
-
-        tv.setText(dimensions[position]);
-        try {
-            if (position == curDim)
-                tv.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-        } catch (Exception e){}
         if (powerfulConverter) {
-            EditText et = (EditText) zero;
-            if (position == curDim)
-                et.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-//            Log.d("Calling from page " + String.valueOf(posit), "with position " + position);
-            et.setText(String.valueOf(nf.format(formulas.getResult(posit, position))));
-            et.addTextChangedListener(new TextWatcher() {
+            EditText editValueView = (EditText) dimensionValueView;
+
+            editValueView.setOnFocusChangeListener((view, isFocused) -> {
+                int previousDimension = curDim;
+                Log.d(createTag("editFocus"), "Changed to " + isFocused + " for " + position);
+                if (isFocused) {
+
+                    curDim = holder.getAdapterPosition();
+                    Log.d(createTag("ChngDim"), "4||was " + previousDimension + ", now " + curDim);
+                    String value;
+                    if (editValueView.getText().length() > 0)
+                        value = editValueView.getText().toString();
+                    else
+                        value = "1";
+
+                    setValueAndDimension(
+                            Double.valueOf(value.replace(',', '.')),
+                            position,
+                            false);
+
+                    editValueView.setSelection(editValueView.getText().length());
+                }
+
+                if (fragment != null && fragment.isCurrentPage) {
+                    switchFocus(previousDimension, curDim);
+                }
+            });
+
+            if (holder.getAdapterPosition() == curDim) {
+                Log.d(createTag("firstFoc"), String.valueOf(curDim));
+                //editValueView.requestFocus();
+            }
+
+            editValueView.setText(GeneralHelper.resultNumberFormat.format(
+                    formulas.getResult(pagePosition, position)));
+            editValueView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -156,11 +223,15 @@ public class UnitListAdapter extends RecyclerView.Adapter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    curDim = holder.getAdapterPosition();
-                    if (s.toString().length() > 0)
-                        setInputValue(s.toString());
-                    else
-                        setInputValue("1");
+                    if (editValueView.hasFocus()) {
+                        int previousDimension = curDim;
+                        curDim = holder.getAdapterPosition();
+                        Log.d(createTag("ChngDim"), "1||was " + previousDimension + ", now " + curDim);
+                        if (s.toString().length() > 0)
+                            setInputValue(s.toString());
+                        else
+                            setInputValue("1");
+                    }
                 }
 
                 @Override
@@ -169,15 +240,10 @@ public class UnitListAdapter extends RecyclerView.Adapter {
                 }
             });
         } else {
-            TextView value = zero;
-            value.setText(nf.format(formulas.getResult(posit, position)));
-            try {
-                if (position == curDim)
-                    value.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-                else if (colorDefault != 0)
-                    value.setTextColor(ContextCompat.getColor(mContext, colorDefault));
-            } catch (Exception e){}
+            dimensionValueView.setText(GeneralHelper.resultNumberFormat.format(
+                    formulas.getResult(pagePosition, position)));
         }
+        setTextColors(dimensionNameView, dimensionValueView, position == curDim);
     }
 
     @Override
@@ -185,4 +251,17 @@ public class UnitListAdapter extends RecyclerView.Adapter {
         return dimensions.length;
     }
 
+    public class UnitItemHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+
+        UnitItemHolder(final View itemView) {
+            super(itemView);
+            itemView.setOnCreateContextMenuListener(this);
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle(mContext.getString(R.string.you_can));
+            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.copy));
+        }
+    }
 }

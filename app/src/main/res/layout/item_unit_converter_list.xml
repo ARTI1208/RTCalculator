@@ -16,7 +16,7 @@
         android:gravity="left|center_vertical"
         android:imeOptions="actionDone"
         android:inputType="numberDecimal"
-        android:text="val"
+        android:text="1"
         android:textSize="25sp" />
 
     <View
