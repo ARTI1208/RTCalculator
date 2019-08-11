@@ -50,6 +50,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import ru.art2000.calculator.R;
 import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.GeneralHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 import static ru.art2000.calculator.calculator.CalculationClass.isAfterUnarySign;
@@ -84,6 +85,8 @@ public class CalculatorFragment extends Fragment {
     private HistoryListAdapter adapter;
     private TextView empty;
     private ViewGroup recycler_container;
+
+    private boolean isNumberResult;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -198,12 +201,10 @@ public class CalculatorFragment extends Fragment {
                 break;
             case "R":
                 if (CalculationClass.memory != 0) {
-                    if (ResultTV.getVisibility() == View.VISIBLE)
+                    if (ResultTV.getVisibility() == View.VISIBLE) {
                         ResultTV.setVisibility(View.INVISIBLE);
-                    if (memory < 0)
-                        InputTV.append(String.valueOf(CalculationClass.memory));
-                    else
-                        InputTV.append(String.valueOf(CalculationClass.memory));
+                    }
+                    InputTV.setText(GeneralHelper.resultNumberFormat.format(CalculationClass.memory));
                 }
                 break;
             case "C":
@@ -211,12 +212,15 @@ public class CalculatorFragment extends Fragment {
                 break;
         }
 
+        updateMemoryView();
+    }
+
+    private void updateMemoryView() {
         if (memory == 0) memoryTextView.setVisibility(View.GONE);
         else {
-            memoryTextView.setText("M" + memory);
+            memoryTextView.setText("M" + GeneralHelper.resultNumberFormat.format(memory));
             memoryTextView.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void onAfterUnarySignClick(String buttonText) {
@@ -374,12 +378,17 @@ public class CalculatorFragment extends Fragment {
                 ToAdd = v.getText().toString();
                 break;
         }
+
         if (ResultTV.getVisibility() == View.VISIBLE) {
             ResultTV.setVisibility(View.INVISIBLE);
-            ToAdd = ResultTV.getText() + ToAdd;
-            InputTV.setText(ToAdd);
-            return;
+            if (isNumberResult) {
+                ToAdd = ResultTV.getText() + ToAdd;
+                InputTV.setText(ToAdd);
+                isNumberResult = false;
+                return;
+            }
         }
+
         if (!(InputText.equals("0") || InputText.equals("-"))) {
             if (isSign(last) && !ToAdd.equals("-")) {
                 String Copied = InputText.substring(0, InpLen - 1) + ToAdd;
@@ -463,7 +472,7 @@ public class CalculatorFragment extends Fragment {
         SQLiteDatabase db = hdb.getWritableDatabase();
         hdb.nextId(db);
         CountStr = CalculationClass.calculateStr(expression);
-
+        isNumberResult = false;
         switch (CountStr) {
             case "zero":
                 CountStr = getString(PrefsHelper.getZeroDivResult());
@@ -473,6 +482,9 @@ public class CalculatorFragment extends Fragment {
                 CountStr = getString(R.string.error);
                 Log.d("eero", CountStr);
                 err = true;
+                break;
+            default:
+                isNumberResult = true;
                 break;
         }
         if (!err) {
