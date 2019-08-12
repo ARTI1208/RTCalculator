@@ -40,8 +40,8 @@ public class UnitListAdapter extends RecyclerView.Adapter {
         pagePosition = page;
         mContext = ctx;
         powerfulConverter = isPowerfulConverter;
-        colorAccent = AndroidHelper.getAccentColor(mContext);
-        colorDefault = AndroidHelper.getTextColorSecondary(mContext);
+        colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
+        colorDefault = AndroidHelper.getColorAttribute(mContext, android.R.attr.textColorSecondary);
     }
 
     UnitListAdapter(Context ctx, String[] dims, int page, int pos, double value) {
@@ -51,8 +51,8 @@ public class UnitListAdapter extends RecyclerView.Adapter {
         inp = value;
         mContext = ctx;
         formulas.calc(pagePosition, curDim, inp);
-        colorAccent = AndroidHelper.getAccentColor(mContext);
-        colorDefault = AndroidHelper.getTextColorSecondary(mContext);
+        colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
+        colorDefault = AndroidHelper.getColorAttribute(mContext, android.R.attr.textColorSecondary);
     }
 
     void setCurDim(int pos) {

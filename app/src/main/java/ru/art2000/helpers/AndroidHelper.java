@@ -6,13 +6,13 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
-
-import ru.art2000.calculator.R;
 
 public class AndroidHelper {
 
@@ -48,15 +48,10 @@ public class AndroidHelper {
         return getLocalizedResources(context, desiredLocale).getString(resId);
     }
 
-    public static int getAccentColor(Context context) {
-        TypedValue accentTypedValue = new TypedValue();
-        context.getTheme().resolveAttribute(R.attr.colorAccent, accentTypedValue, true);
-        return ContextCompat.getColor(context, accentTypedValue.resourceId);
-    }
-
-    public static int getTextColorSecondary(Context context) {
-        TypedValue textColorTypedValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.textColorSecondary, textColorTypedValue, true);
-        return ContextCompat.getColor(context, textColorTypedValue.resourceId);
+    @ColorInt
+    public static int getColorAttribute(@NonNull Context context, @AttrRes int attribute) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attribute, typedValue, true);
+        return ContextCompat.getColor(context, typedValue.resourceId);
     }
 }

@@ -5,12 +5,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
+import androidx.annotation.ColorInt;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +24,7 @@ import ru.art2000.calculator.currency_converter.CurrencyConverterFragment;
 import ru.art2000.calculator.settings.SettingsFragment;
 import ru.art2000.calculator.unit_converter.UnitConverterFragment;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 
@@ -35,6 +37,13 @@ public class MainActivity extends DayNightActivity {
     CalculatorFragment calculator = new CalculatorFragment();
     UnitConverterFragment unit_converter = new UnitConverterFragment();
     PreferenceFragmentCompat settings = new SettingsFragment();
+    Fragment currentFragment = currency_converter;
+    FragmentManager fragmentManager = getSupportFragmentManager();
+
+    @ColorInt
+    private int statusBarColor;
+    @ColorInt
+    private int calculatorStatusBarColor;
 
     @Override
     protected void onResumeNightModeChanged(int mode) {
@@ -56,7 +65,7 @@ public class MainActivity extends DayNightActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mContext = getApplicationContext();
+        mContext = this;
         PrefsHelper.initialSetup(mContext);
         setTheme(PrefsHelper.getAppTheme());
         Window window = getWindow();
@@ -64,6 +73,20 @@ public class MainActivity extends DayNightActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navigation = findViewById(R.id.navigation);
+
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, currency_converter, "CurrencyConverterFragment")
+
+                .add(R.id.fragment_container, calculator, "CalculatorFragment")
+                .hide(calculator)
+                .add(R.id.fragment_container, unit_converter, "UnitConverterFragment")
+                .hide(unit_converter)
+                .add(R.id.fragment_container, settings, "SettingsFragment")
+                .hide(settings)
+
+                .commit();
+
         navigation.setOnNavigationItemReselectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_currency:
@@ -78,11 +101,7 @@ public class MainActivity extends DayNightActivity {
             }
         });
         navigation.setOnNavigationItemSelectedListener(item -> {
-            TypedValue statusBarColor = new TypedValue();
-            getTheme().resolveAttribute(R.attr.colorPrimaryDark, statusBarColor, true);
-            int status_color = ContextCompat.getColor(mContext, statusBarColor.resourceId);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             }
@@ -91,45 +110,61 @@ public class MainActivity extends DayNightActivity {
                 default:
                 case R.id.navigation_calc:
                     getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                    getTheme().resolveAttribute(R.attr.calc_input_bg, statusBarColor, true);
-                    int calc_status_color = ContextCompat.getColor(mContext, statusBarColor.resourceId);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            calculator, "CalculatorFragment").addToBackStack("CalculatorFragment").commit();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        window.setStatusBarColor(calc_status_color);
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(currentFragment)
+                            .show(calculator)
+                            .runOnCommit(() -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                                    window.setStatusBarColor(calculatorStatusBarColor);
+                            })
+                            .commit();
+                    currentFragment = calculator;
                     break;
                 case R.id.navigation_unit:
                     getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
                     if (PrefsHelper.isUnitViewChanged()) {
-                        unit_converter = new UnitConverterFragment();
+                        unit_converter.setNewAdapter();
                     }
-                    Log.d("cliick", "1");
-
-//                    new Handler().post(() -> {
-
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            unit_converter, "UnitConverterFragment").addToBackStack("UnitConverterFragment").commit();
-//                    });
-
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        window.setStatusBarColor(status_color);
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(currentFragment)
+                            .show(unit_converter)
+                            .runOnCommit(() -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                                    window.setStatusBarColor(statusBarColor);
+                            })
+                            .commit();
+                    currentFragment = unit_converter;
                     break;
                 case R.id.navigation_currency:
                     getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
                     Log.d("CurrencyTR", "start");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            currency_converter, "CurrencyConverterFragment").addToBackStack("CurrencyConverterFragment").commit();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        window.setStatusBarColor(status_color);
-                    Log.d("CurrencyTR", "end");
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(currentFragment)
+                            .show(currency_converter)
+                            .runOnCommit(() -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                                    window.setStatusBarColor(statusBarColor);
+
+                                Log.d("CurrencyTR", "mend");
+                            })
+                            .commit();
+                    currentFragment = currency_converter;
                     break;
                 case R.id.navigation_settings:
                     getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            settings, "SettingsFragment").addToBackStack(null).commit();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        window.setStatusBarColor(status_color);
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(currentFragment)
+                            .show(settings)
+                            .runOnCommit(() -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                                    window.setStatusBarColor(statusBarColor);
+                            })
+                            .commit();
+                    currentFragment = settings;
                     break;
             }
             return true;
@@ -154,9 +189,9 @@ public class MainActivity extends DayNightActivity {
                     break;
             }
         }
-        if (tabId == R.id.navigation_currency)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    currency_converter, "CurrencyConverterFragment").commit();
+        if (tabId == R.id.navigation_currency) {
+
+        }
         navigation.setSelectedItemId(tabId);
     }
 

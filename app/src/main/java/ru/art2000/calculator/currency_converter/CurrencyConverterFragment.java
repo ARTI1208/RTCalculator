@@ -112,13 +112,13 @@ public class CurrencyConverterFragment extends Fragment {
             recycler.setLayoutManager(llm);
             adapter = new CurrencyListAdapter(mContext);
             recycler.setAdapter(adapter);
-            updateList();
+//            updateList();
+            adapter.getDataFromDB();
             recycler.setOnFocusChangeListener((v, hasFocus) ->
                     adapter.removeEditText());
             refresher = v.findViewById(R.id.refresher);
-            TypedValue accentValue = new TypedValue();
-            mContext.getTheme().resolveAttribute(R.attr.colorAccent, accentValue, true);
-            refresher.setColorSchemeColors(ContextCompat.getColor(mContext, accentValue.resourceId));
+
+            refresher.setColorSchemeColors(AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent));
             setRefreshStatus(true);
             updateData();
             refresher.setOnRefreshListener(this::updateData);
@@ -126,7 +126,8 @@ public class CurrencyConverterFragment extends Fragment {
 
             ActionMenuItemView editMenuItem = v.findViewById(R.id.edit_currencies);
             editMenuItem.getItemData().getIcon().setColorFilter(new PorterDuffColorFilter(
-                    AndroidHelper.getAccentColor(mContext), PorterDuff.Mode.SRC_ATOP));
+                    AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent),
+                    PorterDuff.Mode.SRC_ATOP));
             editMenuItem.setOnClickListener(v -> {
                 adapter.removeEditText();
                 Intent intent = new Intent(getActivity(), EditCurrenciesActivity.class);
@@ -310,7 +311,6 @@ public class CurrencyConverterFragment extends Fragment {
         } else {
             setRefreshStatus(false);
             Toast.makeText(mContext, R.string.currencies_no_internet, Toast.LENGTH_SHORT).show();
-            updateList();
         }
     }
 

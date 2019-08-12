@@ -272,7 +272,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     private void applyMenuIconTint(Drawable icon) {
         icon.setColorFilter(new PorterDuffColorFilter(
-                AndroidHelper.getAccentColor(this), PorterDuff.Mode.SRC_ATOP));
+                AndroidHelper.getColorAttribute(this, R.attr.colorAccent),
+                PorterDuff.Mode.SRC_ATOP));
     }
 
     public void toggleElementsVisibility() {

@@ -22,7 +22,7 @@ public class SnackbarThemeHelper {
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) snackbar.getView().getLayoutParams();
         params.setMargins(horizontalMargin, 0, horizontalMargin, bottomMargin);
         snackbar.getView().setLayoutParams(params);
-        snackbar.setTextColor(AndroidHelper.getTextColorSecondary(context));
+        snackbar.setTextColor(AndroidHelper.getColorAttribute(context, android.R.attr.textColorSecondary));
         snackbar.getView().setBackground(ContextCompat.getDrawable(context, R.drawable.background_snackbar));
         snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_FADE);
         return snackbar;

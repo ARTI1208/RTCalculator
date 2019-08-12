@@ -193,7 +193,7 @@ public class CurrenciesEditFragment extends Fragment {
         int size = CurrencyValuesHelper.visibleList.size();
         ArrayList<CurrencyItem> itemsToRemove = new ArrayList<>();
         ItemTouchHelper touchHelper;
-        int curMode = 0;
+        int curMode = REORDER_MODE;
         @LayoutRes
         int selectionItem = R.layout.item_add_currencies_list;
         @LayoutRes
