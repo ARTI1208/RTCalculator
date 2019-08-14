@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v27.AppTheme.Light" />
+
+    <style name="Base.RT.v27.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light">
+        <item name="android:navigationBarColor">@color/LightTheme_colorPrimary</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+</resources>

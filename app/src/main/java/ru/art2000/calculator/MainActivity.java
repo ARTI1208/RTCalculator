@@ -5,14 +5,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Window;
-import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.transition.Slide;
+import androidx.transition.Transition;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -38,7 +42,11 @@ public class MainActivity extends DayNightActivity {
     UnitConverterFragment unit_converter = new UnitConverterFragment();
     PreferenceFragmentCompat settings = new SettingsFragment();
     Fragment currentFragment = currency_converter;
+    int currentOrder = 0;
     FragmentManager fragmentManager = getSupportFragmentManager();
+
+    boolean isTransitionRunning;
+    boolean isTransitioned;
 
     @ColorInt
     private int statusBarColor;
@@ -72,6 +80,20 @@ public class MainActivity extends DayNightActivity {
         new Thread(() -> CurrencyValuesHelper.getDataFromDB(mContext)).start();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            for (String key : bundle.keySet()) {
+                Log.d("MainActivityKeys", key);
+            }
+        } else {
+            Log.d("MainActivityKeys", "No keys");
+        }
+
+        statusBarColor = AndroidHelper.getColorAttribute(this, R.attr.colorPrimaryDark);
+        calculatorStatusBarColor =
+                AndroidHelper.getColorAttribute(this, R.attr.calc_input_bg);
+
         navigation = findViewById(R.id.navigation);
 
         fragmentManager
@@ -101,72 +123,91 @@ public class MainActivity extends DayNightActivity {
             }
         });
         navigation.setOnNavigationItemSelectedListener(item -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            if (isTransitionRunning && isTransitioned) {
+                return false;
             }
+
             PrefsHelper.setDefaultTab(this, item.getOrder());
+
+            Fragment nextFragment;
+            int nextOrder = item.getOrder();
+            int nextStatusBarColor;
+
             switch (item.getItemId()) {
                 default:
                 case R.id.navigation_calc:
                     getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                    fragmentManager
-                            .beginTransaction()
-                            .hide(currentFragment)
-                            .show(calculator)
-                            .runOnCommit(() -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                                    window.setStatusBarColor(calculatorStatusBarColor);
-                            })
-                            .commit();
-                    currentFragment = calculator;
+                    nextFragment = calculator;
+                    nextStatusBarColor = calculatorStatusBarColor;
                     break;
                 case R.id.navigation_unit:
                     getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
                     if (PrefsHelper.isUnitViewChanged()) {
                         unit_converter.setNewAdapter();
                     }
-                    fragmentManager
-                            .beginTransaction()
-                            .hide(currentFragment)
-                            .show(unit_converter)
-                            .runOnCommit(() -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                                    window.setStatusBarColor(statusBarColor);
-                            })
-                            .commit();
-                    currentFragment = unit_converter;
+                    nextFragment = unit_converter;
+                    nextStatusBarColor = statusBarColor;
                     break;
                 case R.id.navigation_currency:
                     getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
-                    Log.d("CurrencyTR", "start");
-                    fragmentManager
-                            .beginTransaction()
-                            .hide(currentFragment)
-                            .show(currency_converter)
-                            .runOnCommit(() -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                                    window.setStatusBarColor(statusBarColor);
-
-                                Log.d("CurrencyTR", "mend");
-                            })
-                            .commit();
-                    currentFragment = currency_converter;
+                    nextFragment = currency_converter;
+                    nextStatusBarColor = statusBarColor;
                     break;
                 case R.id.navigation_settings:
                     getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                    fragmentManager
-                            .beginTransaction()
-                            .hide(currentFragment)
-                            .show(settings)
-                            .runOnCommit(() -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                                    window.setStatusBarColor(statusBarColor);
-                            })
-                            .commit();
-                    currentFragment = settings;
+                    nextFragment = settings;
+                    nextStatusBarColor = statusBarColor;
                     break;
             }
+
+            //noinspection ConstantConditions
+            nextFragment.setEnterTransition(
+                    getEnterTransition(currentOrder, nextOrder)
+                            .addTarget(nextFragment.getView()));
+
+            //noinspection ConstantConditions
+            currentFragment.setExitTransition(
+                    getExitTransition(currentOrder, item.getOrder())
+                            .addTarget(currentFragment.getView())
+                            .addListener(new Transition.TransitionListener() {
+                                @Override
+                                public void onTransitionStart(@NonNull Transition transition) {
+                                }
+
+                                @Override
+                                public void onTransitionEnd(@NonNull Transition transition) {
+                                    isTransitionRunning = false;
+                                }
+
+                                @Override
+                                public void onTransitionCancel(@NonNull Transition transition) {
+                                    isTransitionRunning = false;
+                                }
+
+                                @Override
+                                public void onTransitionPause(@NonNull Transition transition) {
+                                }
+
+                                @Override
+                                public void onTransitionResume(@NonNull Transition transition) {
+                                }
+                            }));
+
+            isTransitionRunning = true;
+            isTransitioned = nextFragment.getView() != null;
+            fragmentManager
+                    .beginTransaction()
+                    .hide(currentFragment)
+                    .show(nextFragment)
+                    .runOnCommit(() -> {
+                        currentFragment = nextFragment;
+                        currentOrder = nextOrder;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            window.setStatusBarColor(nextStatusBarColor);
+                        }
+                    })
+                    .commit();
+
             return true;
         });
         int tabId;
@@ -189,9 +230,6 @@ public class MainActivity extends DayNightActivity {
                     break;
             }
         }
-        if (tabId == R.id.navigation_currency) {
-
-        }
         navigation.setSelectedItemId(tabId);
     }
 
@@ -204,11 +242,12 @@ public class MainActivity extends DayNightActivity {
 
     @Override
     public void onBackPressed() {
-        if (navigation.getSelectedItemId() == R.id.navigation_calc && (
-                calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
-                        calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED))
+        if (navigation.getSelectedItemId() == R.id.navigation_calc
+                && (calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
+                calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+
             calculator.panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        else {
+        } else {
             if (doubleBackToExitPressedOnce) {
                 finish();
                 return;
@@ -220,4 +259,23 @@ public class MainActivity extends DayNightActivity {
         }
     }
 
+    private Transition getEnterTransition(int fromPosition, int toPosition) {
+        Transition transition;
+        if (fromPosition < toPosition) {
+            transition = new Slide(Gravity.END);
+        } else {
+            transition = new Slide(Gravity.START);
+        }
+        return transition.setInterpolator(new AccelerateInterpolator());
+    }
+
+    private Transition getExitTransition(int fromPosition, int toPosition) {
+        Transition transition;
+        if (fromPosition < toPosition) {
+            transition = new Slide(Gravity.START);
+        } else {
+            transition = new Slide(Gravity.END);
+        }
+        return transition.setInterpolator(new AccelerateInterpolator());
+    }
 }

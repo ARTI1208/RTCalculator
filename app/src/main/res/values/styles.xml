@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.RT.AppTheme.Light" parent="Theme.MaterialComponents.Light">
+    <style name="Base.RT.v18.AppTheme.Light" parent="Theme.MaterialComponents.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="background">@color/LightTheme_colorPrimary</item>
@@ -28,7 +28,9 @@
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Dark" parent="Theme.MaterialComponents">
+    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light" />
+
+    <style name="Base.RT.v18.AppTheme.Dark" parent="Theme.MaterialComponents">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="background">@color/DarkTheme_colorPrimary</item>
@@ -55,6 +57,8 @@
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
     </style>
+
+    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark" />
 
     <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">
         <item name="android:textColor">@color/tab_icon_text_color_selector</item>

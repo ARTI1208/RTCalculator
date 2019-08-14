@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark" />
+
+    <style name="Base.RT.v21.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark">
+        <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
+    </style>
+
     <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:statusBarColor">#00000000</item>
+        <item name="android:navigationBarColor">#00000000</item>
     </style>
 
     <style name="RT.TextAppearance.Tab" parent="Base.RT.TextAppearance.Tab">
