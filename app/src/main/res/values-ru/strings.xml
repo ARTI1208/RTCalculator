@@ -31,13 +31,13 @@
     <string name="history_cleared">История очищена!</string>
     <string name="no_history">История пуста</string>
     <string name="you_can">Вы можете…</string>
-    <string name="copy_all">Скопировать всё</string>
-    <string name="copy_expr">Скопировать выражение</string>
-    <string name="copy_res">Скопировать результат</string>
+    <string name="context_menu_copy_all">Скопировать всё</string>
+    <string name="context_menu_copy_expr">Скопировать выражение</string>
+    <string name="context_menu_copy_res">Скопировать результат</string>
     <string name="delete_record">Удалить запись</string>
     <string name="about">Справка</string>
     <string name="app_version">Версия приложения</string>
-    <string name="copy">Скопировать</string>
+    <string name="context_menu_copy">Скопировать</string>
     <string name="unit_category_area">Площадь</string>
     <string name="unit_category_volume">Объём</string>
     <string name="unit_category_mass">Масса</string>

@@ -261,7 +261,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle(mContext.getString(R.string.you_can));
-            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.copy));
+            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.context_menu_copy));
         }
     }
 }

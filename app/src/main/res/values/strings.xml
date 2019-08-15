@@ -36,10 +36,10 @@
     <string name="history_cleared">History cleared!</string>
     <string name="no_history">No history yet</string>
     <string name="you_can">You can…</string>
-    <string name="copy">Copy</string>
-    <string name="copy_all">Copy all</string>
-    <string name="copy_expr">Copy expression</string>
-    <string name="copy_res">Copy result</string>
+    <string name="context_menu_copy">Copy</string>
+    <string name="context_menu_copy_all">Copy all</string>
+    <string name="context_menu_copy_expr">Copy expression</string>
+    <string name="context_menu_copy_res">Copy result</string>
     <string name="delete_record">Delete record</string>
     <string name="about">About</string>
     <string name="app_version">App version</string>
