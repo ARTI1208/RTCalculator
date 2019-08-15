@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
+import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 
 public class CurrenciesEditFragment extends Fragment {
@@ -55,6 +56,7 @@ public class CurrenciesEditFragment extends Fragment {
             parent = (EditCurrenciesActivity) getActivity();
             v = inflater.inflate(R.layout.modify_currencies_layout, null);
             list = v.findViewById(R.id.modify_currencies_list);
+            list.setPadding(0, 0, 0, AndroidHelper.dip2px(mContext, 20));
             emptyView = v.findViewById(R.id.empty_tv);
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             llm.setOrientation(RecyclerView.VERTICAL);

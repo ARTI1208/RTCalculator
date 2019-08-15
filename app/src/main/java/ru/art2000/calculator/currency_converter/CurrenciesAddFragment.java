@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Px;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,8 @@ public class CurrenciesAddFragment extends Fragment {
     private RecyclerView recycler;
     private TextView emptyView;
     private Context mContext;
+    @Px
+    int recyclerViewBottomPadding;
 
     private EditCurrenciesActivity parent;
 
@@ -44,13 +47,12 @@ public class CurrenciesAddFragment extends Fragment {
             mContext = getActivity();
             parent = (EditCurrenciesActivity) getActivity();
             v = inflater.inflate(R.layout.modify_currencies_layout, null);
-            recycler = v.findViewById(R.id.modify_currencies_list);
             emptyView = v.findViewById(R.id.empty_tv);
-
+            recycler = v.findViewById(R.id.modify_currencies_list);
+            recycler.setPadding(0, 0, 0, recyclerViewBottomPadding);
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             llm.setOrientation(RecyclerView.VERTICAL);
             recycler.setLayoutManager(llm);
-            Log.d("Addi", "1");
             setNewList(CurrencyValuesHelper.hiddenList);
         }
         return v;
@@ -74,7 +76,6 @@ public class CurrenciesAddFragment extends Fragment {
             }
             ArrayList<CurrencyItem> selected = adapter.itemsToAdd;
             adapter.currentList = list;
-//            adapter = new AddCurrenciesAdapter(list);
             adapter.itemsToAdd = selected;
             adapter.setNewData();
         } else {
@@ -168,7 +169,6 @@ public class CurrenciesAddFragment extends Fragment {
             name.setText(currencyItem.nameResourceId);
             CheckBox check = ((Holder) holder).checkBox;
             check.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
                 if (isChecked && !itemsToAdd.contains(currencyItem))
                     itemsToAdd.add(currencyItem);
                 else if (!isChecked)

@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="@dimen/actionbar_elevation">
@@ -26,7 +26,6 @@
         </com.google.android.material.tabs.TabLayout>
 
         <View
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="?android:listDivider" />
@@ -53,9 +52,9 @@
             android:layout_marginStart="8.0dip"
             android:layout_marginEnd="8.0dip"
             android:layout_marginBottom="2.3dp"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="8.0dip"
             app:cardBackgroundColor="?floatingBottomBarBackground"
+            app:cardCornerRadius="8.0dip"
+            app:cardUseCompatPadding="true"
             app:strokeColor="?strokeColor"
             app:strokeWidth="1.0dip"
             tools:ignore="PrivateResource">
@@ -84,6 +83,9 @@
         android:layout_marginBottom="50dp"
         android:visibility="invisible"
         app:backgroundTint="?colorAccent"
+        app:layout_anchor="@id/pager"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="ru.art2000.extensions.FloatingActionButtonScrollingBehaviour"
         app:srcCompat="@drawable/ic_currencies_done"
         app:tint="@color/white" />
 

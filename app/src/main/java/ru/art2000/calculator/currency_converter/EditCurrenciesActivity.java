@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -96,7 +97,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                if (currentDrawable == deleteDrawable){
+                if (currentDrawable == deleteDrawable) {
                     showDeleteTip();
                 }
             }
@@ -111,7 +112,6 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             }
         });
-
 
         searchViewLayout = findViewById(R.id.search_view_layout);
         barSearchView = findViewById(R.id.search_view);
@@ -135,7 +135,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 int maxScroll = pager.getMeasuredWidth();
                 int currentScroll = maxScroll * position + positionOffsetPixels;
                 searchViewLayout.setTranslationX(-currentScroll);
-                if (deleteTooltip != null){
+                if (deleteTooltip != null) {
                     deleteTooltip.getView().setTranslationX(maxScroll - currentScroll);
                 }
             }
@@ -158,7 +158,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 selectedTab = tab.getPosition();
                 fab.hide();
-                modifyFAB(tab.getPosition());
+                modifyVisualElements(tab.getPosition());
                 toggleElementsVisibility();
                 if (selectedTab == 1 && !fab.isShown()) {
                     showDeleteTip();
@@ -185,7 +185,14 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
 
         });
-        modifyFAB(0);
+        modifyVisualElements(0);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        add.recyclerViewBottomPadding = searchViewLayout.getMeasuredHeight();
     }
 
     @Override
@@ -240,8 +247,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
             return;
         }
 
-        if (deleteTooltip != null){
-            if (deleteTooltip.isShown()){
+        if (deleteTooltip != null) {
+            if (deleteTooltip.isShown()) {
                 return;
             } else {
                 deleteTooltip.show();
@@ -266,7 +273,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 }
             }
         });
-        deleteTooltip.setAction(R.string.action_tooltip_got_it, actionView -> {});
+        deleteTooltip.setAction(R.string.action_tooltip_got_it, actionView -> {
+        });
         deleteTooltip.show();
     }
 
@@ -303,7 +311,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         fab.hide();
     }
 
-    public void modifyFAB(int tabPos) {
+    public void modifyVisualElements(int tabPos) {
         if (tabPos == 0) {
             setNewFabImage(checkDrawable);
             fab.setOnClickListener(v -> {
