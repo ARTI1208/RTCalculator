@@ -75,7 +75,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(mContext).
+        View viewGroup = LayoutInflater.from(mContext).
                 inflate(R.layout.item_currency_converter_list, parent, false);
         return new Holder(viewGroup);
     }
@@ -94,7 +94,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     public void removeEditText2() {
         if (inp == null || inp.getAdapterPosition() < 0)
             return;
-        Log.d("ffffff", "remoo");
+        Log.d("CLAdapter", "remoo");
         int t = inputItemPos;
         inputItemPos = -1;
         inp.value.setText(dot2dig.format(inputItemVal *

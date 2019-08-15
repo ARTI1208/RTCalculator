@@ -98,4 +98,7 @@
     <string name="tooltip_remove_currency">Удержание элемента переводит список в режим удаления</string>
     <string name="action_tooltip_got_it">Понятно</string>
     <string name="hint_currency_search">Поиск валют…</string>
+    <string name="currencies_update_failed">Ошибка загрузки: обновите приложение или свяжитесь с разрабочиком, если это не справлено в последней версии</string>
+    <string name="currencies_update_exception">Исключение при загрузке: обновите приложение или свяжитесь с разрабочиком, если это не справлено в последней версии</string>
+    <string name="currencies_update_toast">Обновление…</string>
 </resources>

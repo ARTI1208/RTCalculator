@@ -54,7 +54,6 @@
         android:layout_gravity="center"
         android:gravity="center|center"
         android:text="T"
-
         android:textColor="?colorAccent"
         android:textSize="20sp" />
 
@@ -72,5 +71,4 @@
             android:textColor="?colorAccent"
             android:textSize="20sp" />
     </LinearLayout>
-
 </LinearLayout>

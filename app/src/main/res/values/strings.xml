@@ -98,4 +98,7 @@
     <string name="tooltip_remove_currency">Long click on item toggles deletion mode</string>
     <string name="action_tooltip_got_it">Got it</string>
     <string name="hint_currency_search">Search for currencies…</string>
+    <string name="currencies_update_failed">Load failed: update app or contact dev if it is not fixed in last version</string>
+    <string name="currencies_update_exception">Load exception: update app or contact dev if it is not fixed in last version</string>
+    <string name="currencies_update_toast">Updating…</string>
 </resources>

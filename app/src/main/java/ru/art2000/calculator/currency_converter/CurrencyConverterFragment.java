@@ -11,10 +11,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -139,11 +135,6 @@ public class CurrencyConverterFragment extends Fragment {
         return v;
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     private void setCurrenciesUpdateDate(String date) {
         mToolbar.setTitle(titleUpdatedString + " " + date);
     }
@@ -225,14 +216,16 @@ public class CurrencyConverterFragment extends Fragment {
                     return;
                 }
                 parent.runOnUiThread(() ->
-                        Toast.makeText(mContext, "Обновление...", Toast.LENGTH_SHORT).show());
+                        Toast.makeText(
+                                mContext,
+                                R.string.currencies_update_toast,
+                                Toast.LENGTH_SHORT).show());
                 CurrencyDB currencyDB = new CurrencyDB(mContext);
                 ContentValues contentValues = new ContentValues();
                 SQLiteDatabase database = currencyDB.getWritableDatabase();
 
                 Elements table = null;
-                for (Element el :
-                        webpage.select("table")) {
+                for (Element el : webpage.select("table")) {
                     if (el.hasClass("data")) {
                         table = el.children().first().children();
                     }
@@ -240,7 +233,10 @@ public class CurrencyConverterFragment extends Fragment {
 
                 if (table == null) {
                     parent.runOnUiThread(() ->
-                            Toast.makeText(mContext, "Load failed: update app or contact dev if it is not fixed in last version", Toast.LENGTH_SHORT).show());
+                            Toast.makeText(
+                                    mContext,
+                                    R.string.currencies_update_failed,
+                                    Toast.LENGTH_SHORT).show());
                     return;
                 }
 
@@ -248,29 +244,26 @@ public class CurrencyConverterFragment extends Fragment {
                 CurrencyValuesHelper.updateRate("RUB", ru_val);
                 NumberFormat dot2dig = new DecimalFormat("#.##");
                 table.remove(0);
-                for (Element child : table.select(getShownCodesSearch())) {
-//                    Double value = Double.parseDouble(child.child(4).text().replace(',', '.'));
-//                    Double units = Double.parseDouble(child.child(2).text().replace(',', '.'));
-//                    Double valuePerUnit = Double.parseDouble(dot2dig.format(ru_val * units / value).replace(',', '.'));
-                    Double value = doubleFromString(child.child(4).text());
-                    Double units = doubleFromString(child.child(2).text());
+                for (Element row : table.select(getShownCodesSearch())) {
+                    Double value = doubleFromString(row.child(4).text());
+                    Double units = doubleFromString(row.child(2).text());
                     Double valuePerUnit = doubleFromString(dot2dig.format(ru_val * units / value));
-                    String letterCode = child.child(1).text();
+                    String letterCode = row.child(1).text();
                     CurrencyValuesHelper.updateRate(letterCode, valuePerUnit);
                 }
                 updateList();
                 updateDate(date);
 
-                for (Element child : table) {
-//                                Log.d("Цифр. код", child.child(0).text());
-//                                Log.d("Букв. код", child.child(1).text());
-//                                Log.d("Единиц", child.child(2).text());
-//                                Log.d("Валюта", child.child(3).text());
-//                                Log.d("Курс", child.child(4).text());
-                    Double values = Double.parseDouble(child.child(4).text().replace(',', '.'));
-                    Double units = Double.parseDouble(child.child(2).text().replace(',', '.'));
+                for (Element row : table) {
+//                                Log.d("Цифр. код", row.child(0).text());
+//                                Log.d("Букв. код", row.child(1).text());
+//                                Log.d("Единиц", row.child(2).text());
+//                                Log.d("Валюта", row.child(3).text());
+//                                Log.d("Курс", row.child(4).text());
+                    Double values = Double.parseDouble(row.child(4).text().replace(',', '.'));
+                    Double units = Double.parseDouble(row.child(2).text().replace(',', '.'));
                     Double valuesPerUnit = Double.parseDouble(dot2dig.format(ru_val / (values / units)).replace(',', '.'));
-                    String letterCode = child.child(1).text();
+                    String letterCode = row.child(1).text();
                     CurrencyValuesHelper.updateRate(letterCode, valuesPerUnit);
                     contentValues.put("rate", valuesPerUnit);
                     database.update("currency", contentValues,
@@ -281,9 +274,16 @@ public class CurrencyConverterFragment extends Fragment {
                 database.update("currency", contentValues,
                         "codeLetter = ?", new String[]{"RUB"});
                 currencyDB.close();
-                setRefreshStatus(false);
             } catch (Exception e) {
                 e.printStackTrace();
+                parent.runOnUiThread(() ->
+                        Toast.makeText(
+                                mContext,
+                                R.string.currencies_update_exception,
+                                Toast.LENGTH_SHORT).show());
+            } finally {
+                parent.runOnUiThread(() ->
+                        setRefreshStatus(false));
             }
         }).start();
     }
@@ -310,7 +310,10 @@ public class CurrencyConverterFragment extends Fragment {
             parseHTML();
         } else {
             setRefreshStatus(false);
-            Toast.makeText(mContext, R.string.currencies_no_internet, Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    mContext,
+                    R.string.currencies_no_internet,
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
