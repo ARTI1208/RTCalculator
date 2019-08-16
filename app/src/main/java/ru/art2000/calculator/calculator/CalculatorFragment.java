@@ -78,7 +78,7 @@ public class CalculatorFragment extends Fragment {
     private TextView degRadTextView;
     private HorizontalScrollView hsv;
     private ViewPager horizontal;
-    private View v = null;
+    private View v;
     private RecyclerView history_list;
     private HistoryDB hdb;
     private SQLiteDatabase db;
@@ -465,6 +465,9 @@ public class CalculatorFragment extends Fragment {
                 ResultTV.getVisibility() == View.VISIBLE)
             return;
         String expression = CalculationClass.addRemoveBrackets(CountStr);
+        if (expression.length() == 0) {
+            expression = mContext.getString(R.string.error);
+        }
         InputTV.setText(expression);
 
         HistoryDB hdb = new HistoryDB(mContext);
