@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:windowBackground"
     android:orientation="vertical">
 
     <FrameLayout
@@ -12,10 +13,10 @@
         android:paddingBottom="4.0dip">
 
         <RelativeLayout
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
             <TextView
                 android:id="@+id/degRadTv"
@@ -51,9 +52,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:longClickable="true"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
-                android:longClickable="true"
                 android:scrollbars="none">
 
                 <TextView

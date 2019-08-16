@@ -1,24 +1,35 @@
 package ru.art2000.calculator.settings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import ru.art2000.calculator.BuildConfig;
+import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
+import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private Context mContext;
     private int dev = 0;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.setBackgroundColor(
+                AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground));
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -73,12 +84,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
 
             PrefsHelper.setAppTheme(newValue.toString());
-            Activity parent = getActivity();
+            MainActivity parent = (MainActivity) getActivity();
             Intent intent = parent.getIntent();
             intent.setAction("ru.art2000.calculator.action.SETTINGS");
             parent.finish();
             parent.startActivity(intent);
-            parent.recreate();
             return true;
         });
 
