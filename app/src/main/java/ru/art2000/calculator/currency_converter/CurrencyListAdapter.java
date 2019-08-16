@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.ColorRes;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
@@ -40,14 +38,18 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     private RecyclerView recycler;
     private ColorStateList csl = null;
     private Holder inp;
-    @ColorRes
+    @ColorInt
     private int colorAccent;
+    private float codeTextSizeNormal;
+    private float codeTextSizeHighlighted;
 
     CurrencyListAdapter(Context ctx) {
         mContext = ctx;
-        TypedValue accentValue = new TypedValue();
-        mContext.getTheme().resolveAttribute(R.attr.colorAccent, accentValue, true);
-        colorAccent = accentValue.resourceId;
+        colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
+        codeTextSizeNormal =
+                mContext.getResources().getDimension(R.dimen.currency_list_item_code_normal);
+        codeTextSizeHighlighted =
+                mContext.getResources().getDimension(R.dimen.currency_list_item_code_highlight);
         if (PrefsHelper.isShouldSaveCurrencyConversion()) {
             highlighted = CurrencyValuesHelper.findByCode(PrefsHelper.getConversionCode());
             inputItemVal = PrefsHelper.getConversionValue();
@@ -86,7 +88,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         if (!recycler.isComputingLayout()) {
             notifyItemChanged(t);
         }
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm =
+                (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
         assert imm != null;
         imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0);
     }
@@ -94,15 +97,14 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     public void removeEditText2() {
         if (inp == null || inp.getAdapterPosition() < 0)
             return;
-        Log.d("CLAdapter", "remoo");
-        int t = inputItemPos;
         inputItemPos = -1;
         inp.value.setText(dot2dig.format(inputItemVal *
                 CurrencyValuesHelper.visibleList.get(inp.getAdapterPosition()).rate));
         inp.input.setEnabled(false);
         inp.input.setVisibility(View.GONE);
-        inp.value.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inp.value.setTextColor(colorAccent);
+        InputMethodManager imm =
+                (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
         assert imm != null;
         imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0);
     }
@@ -115,12 +117,9 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         input.setText("");
         input.clearFocus();
         input.setEnabled(false);
+        input.setVisibility(View.GONE);
         TextView code = ((Holder) holder).codeView;
         TextView name = ((Holder) holder).nameView;
-//        code.clearFocus();
-
-//        if ()
-
 
         if (csl == null)
             csl = code.getTextColors();
@@ -129,23 +128,17 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
             inputItemPos = -1;
         }
 
-        Log.d("binnnd", String.valueOf(position));
-
         if (highlighted == position) {
-            Log.d("t2", String.valueOf(highlighted));
-            Log.d("pos", String.valueOf(position));
-            code.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-            name.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-            value.setTextColor(ContextCompat.getColor(mContext, colorAccent));
+            code.setTextColor(colorAccent);
+            name.setTextColor(colorAccent);
+            value.setTextColor(colorAccent);
+            code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
             code.setTypeface(null, Typeface.BOLD);
-            code.setTextSize(AndroidHelper.sp2px(mContext, 8f));
         } else {
-            Log.d("high", String.valueOf(highlighted));
-            Log.d("pos", String.valueOf(position));
-            code.setTextSize(AndroidHelper.sp2px(mContext, 7f));
             code.setTextColor(csl);
             name.setTextColor(csl);
             value.setTextColor(csl);
+            code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeNormal);
             code.setTypeface(null, Typeface.NORMAL);
         }
 
@@ -156,22 +149,20 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         name.setText(currencyItem.nameResourceId);
 
         input.setOnFocusChangeListener((v, hasFocus) -> {
-//            if (inputItemPos * holder.getAdapterPosition() > 0)
             if (hasFocus) {
                 if (highlighted != holder.getAdapterPosition())
                     if (!recycler.isComputingLayout()) {
-                        Log.d("NNNNN", "FFFFFFF");
-                        Log.d("NNNNN", String.valueOf(inputItemPos));
-                        Log.d("NNNNN", String.valueOf(holder.getAdapterPosition()));
                         notifyItemChanged(highlighted);
-                    } else
+                    } else {
                         return;
+                    }
                 value.setText("");
                 inp = (Holder) holder;
-                code.setTextColor(ContextCompat.getColor(mContext, colorAccent));
-                name.setTextColor(ContextCompat.getColor(mContext, colorAccent));
+                code.setTextColor(colorAccent);
+                input.setTextColor(colorAccent);
+                name.setTextColor(colorAccent);
+                code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
                 code.setTypeface(null, Typeface.BOLD);
-                code.setTextSize(AndroidHelper.sp2px(mContext, 8f));
                 inputItemPos = holder.getAdapterPosition();
                 highlighted = holder.getAdapterPosition();
                 input.addTextChangedListener(new TextWatcher() {
@@ -181,11 +172,11 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (!s.toString().equals("")) {
-                            inputItemVal = Double.parseDouble(s.toString()) / CurrencyValuesHelper.visibleList.get(inputItemPos).rate;
+                        if (s.length() > 0) {
+                            inputItemVal = Double.parseDouble(s.toString()) /
+                                    CurrencyValuesHelper.visibleList.get(inputItemPos).rate;
                             for (int i = 0; i < getItemCount(); i++) {
                                 if (i != holder.getAdapterPosition()) {
-                                    Log.d("OOOO", "FFFFFFF");
                                     notifyItemChanged(i);
                                 }
                             }
@@ -199,18 +190,15 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
                                     inputItemVal);
                     }
                 });
-                InputMethodManager keyboard = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager keyboard =
+                        (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (keyboard != null) {
                     keyboard.showSoftInput(input, 0);
                 }
             } else {
-                if (!recycler.isComputingLayout())
+                if (!recycler.isComputingLayout()) {
                     notifyItemChanged(position);
-//                    onBindViewHolder(holder, position);
-//                    code.setTextSize(AndroidHelper.sp2px(mContext, 7f));
-//                    code.setTextColor(csl);
-//                    name.setTextColor(csl);
-//                    code.setTypeface(null, Typeface.NORMAL);
+                }
             }
         });
 
@@ -238,7 +226,5 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
             value = itemView.findViewById(R.id.currency_value);
             input = itemView.findViewById(R.id.currency_input_value);
         }
-
     }
-
 }

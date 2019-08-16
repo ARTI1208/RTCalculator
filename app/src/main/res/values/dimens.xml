@@ -9,4 +9,6 @@
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
     <dimen name="floating_bottom_margin_horizontal">8.0dip</dimen>
     <dimen name="actionbar_elevation">0dp</dimen>
+    <dimen name="currency_list_item_code_normal">18.0sp</dimen>
+    <dimen name="currency_list_item_code_highlight">22.0sp</dimen>
 </resources>

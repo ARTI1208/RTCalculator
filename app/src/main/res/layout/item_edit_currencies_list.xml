@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:padding="6dp"
-    android:minHeight="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:layout_height="50dp">
+    android:minHeight="50dp"
+    android:orientation="horizontal"
+    android:padding="6dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/currency_code"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Code" />
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Code"
+            android:textSize="@dimen/currency_list_item_code_normal" />
 
         <TextView
             android:id="@+id/currency_name"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Name" />
     </LinearLayout>
 
     <ImageView
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:id="@+id/handle"
-        android:tint="?colorAccent"
-        app:srcCompat="@drawable/ic_drag_handle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:tint="?colorAccent"
+        app:srcCompat="@drawable/ic_drag_handle" />
 
 </RelativeLayout>
