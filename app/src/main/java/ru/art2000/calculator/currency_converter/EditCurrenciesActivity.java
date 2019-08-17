@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -42,6 +43,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
     FloatingActionButton fab;
     MenuItem deselect;
     MenuItem select;
+
+    TabLayout tabs;
+
     int selectedTab = 0;
     @DrawableRes
     int checkDrawable = R.drawable.ic_currencies_done;
@@ -123,7 +127,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                add.setNewList(add.searchByQuery(newText));
+                if (add.adapter != null) {
+                    add.setNewList(add.searchByQuery(newText));
+                }
                 return true;
             }
         });
@@ -150,9 +156,17 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             }
         });
-        TabLayout tabs = findViewById(R.id.tabs);
+        tabs = findViewById(R.id.tabs);
         pager.setAdapter(new CurrencyEditorPagerAdapter(getSupportFragmentManager()));
         tabs.setupWithViewPager(pager);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        add.recyclerViewBottomPadding = searchViewLayout.getMeasuredHeight();
+
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -185,14 +199,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
 
         });
-        modifyVisualElements(0);
-    }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        add.recyclerViewBottomPadding = searchViewLayout.getMeasuredHeight();
+        selectedTab = tabs.getSelectedTabPosition();
+        modifyVisualElements(selectedTab);
     }
 
     @Override
@@ -206,7 +215,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         select = menu.findItem(R.id.select_all);
         applyMenuIconTint(select.getIcon());
 
-        if (add.adapter.size == 0)
+        if (add.adapter.size == 0 || selectedTab == 1)
             select.setVisible(false);
 
         return super.onCreateOptionsMenu(menu);
@@ -353,6 +362,23 @@ public class EditCurrenciesActivity extends DayNightActivity {
         CurrencyEditorPagerAdapter(FragmentManager fm) {
             super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             categories = getResources().getStringArray(R.array.currency_categories);
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            Object ret = super.instantiateItem(container, position);
+            switch (position) {
+                case 0:
+                    add = (CurrenciesAddFragment) ret;
+                    break;
+                case 1:
+                    edit = (CurrenciesEditFragment) ret;
+                    break;
+                default:
+                    throw new IllegalStateException("Only two tabs must be here");
+            }
+            return ret;
         }
 
         @Nullable

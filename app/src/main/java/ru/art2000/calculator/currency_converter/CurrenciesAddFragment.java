@@ -25,14 +25,12 @@ import ru.art2000.helpers.CurrencyValuesHelper;
 public class CurrenciesAddFragment extends Fragment {
 
     AddCurrenciesAdapter adapter;
-
+    @Px
+    int recyclerViewBottomPadding;
     private View v = null;
     private RecyclerView recycler;
     private TextView emptyView;
     private Context mContext;
-    @Px
-    int recyclerViewBottomPadding;
-
     private EditCurrenciesActivity parent;
 
     void scrollToTop() {
