@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -26,6 +25,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.List;
 
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.DayNightActivity;
@@ -127,9 +128,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (add.adapter != null) {
-                    add.setNewList(add.searchByQuery(newText));
-                }
+                add.setNewList(add.searchByQuery(newText));
                 return true;
             }
         });
@@ -357,28 +356,23 @@ public class EditCurrenciesActivity extends DayNightActivity {
     class CurrencyEditorPagerAdapter extends FragmentPagerAdapter {
 
         String[] categories;
-        Fragment[] fragments = {add, edit};
+        Fragment[] fragments;
 
         CurrencyEditorPagerAdapter(FragmentManager fm) {
             super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             categories = getResources().getStringArray(R.array.currency_categories);
-        }
 
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            Object ret = super.instantiateItem(container, position);
-            switch (position) {
-                case 0:
-                    add = (CurrenciesAddFragment) ret;
-                    break;
-                case 1:
-                    edit = (CurrenciesEditFragment) ret;
-                    break;
-                default:
-                    throw new IllegalStateException("Only two tabs must be here");
+            List<Fragment> list = fm.getFragments();
+            if (list.size() > 0) {
+                fragments = new Fragment[list.size()];
+                fragments = list.toArray(fragments);
+                add = (CurrenciesAddFragment) fragments[0];
+                edit = (CurrenciesEditFragment) fragments[1];
             }
-            return ret;
+
+            if (fragments == null) {
+                fragments = new Fragment[]{add, edit};
+            }
         }
 
         @Nullable
