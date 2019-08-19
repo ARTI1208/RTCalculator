@@ -173,9 +173,6 @@ public class MainActivity extends DayNightActivity {
                         break;
                     case R.id.navigation_unit:
                         getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                        if (PrefsHelper.isUnitViewChanged()) {
-                            unit_converter.regenerateAdapter();
-                        }
                         nextStatusBarColor = statusBarColor;
                         break;
                     case R.id.navigation_currency:
@@ -237,9 +234,6 @@ public class MainActivity extends DayNightActivity {
                         break;
                     case R.id.navigation_unit:
                         getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                        if (PrefsHelper.isUnitViewChanged()) {
-                            unit_converter.regenerateAdapter();
-                        }
                         nextStatusBarColor = statusBarColor;
                         break;
                     case R.id.navigation_currency:
@@ -308,9 +302,6 @@ public class MainActivity extends DayNightActivity {
                         break;
                     case R.id.navigation_unit:
                         getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                        if (PrefsHelper.isUnitViewChanged()) {
-                            unit_converter.regenerateAdapter();
-                        }
                         nextFragment = unit_converter;
                         nextStatusBarColor = statusBarColor;
                         break;
@@ -424,6 +415,10 @@ public class MainActivity extends DayNightActivity {
             new Handler().postDelayed(() ->
                     doubleBackToExitPressedOnce = false, 2000);
         }
+    }
+
+    public void updateUnitView() {
+        unit_converter.regenerateAdapter();
     }
 
     private Transition getEnterTransition(int fromPosition, int toPosition) {

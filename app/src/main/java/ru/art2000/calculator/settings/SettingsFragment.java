@@ -118,6 +118,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             unitView.setValue(newValue.toString());
             unitView.setSummary(unitView.getEntry());
             PrefsHelper.setUnitViewType(newValue.toString());
+
+            ((MainActivity) getActivity()).updateUnitView();
+
             return true;
         });
 
