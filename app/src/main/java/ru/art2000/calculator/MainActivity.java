@@ -143,7 +143,7 @@ public class MainActivity extends DayNightActivity {
                 case R.id.navigation_unit:
                     getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
                     if (PrefsHelper.isUnitViewChanged()) {
-                        unit_converter.setNewAdapter();
+                        unit_converter.regenerateAdapter();
                     }
                     nextFragment = unit_converter;
                     nextStatusBarColor = statusBarColor;

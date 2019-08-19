@@ -13,8 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.Locale;
 
@@ -29,6 +32,9 @@ public class UnitConverterFragment extends Fragment {
     private View v;
     private FragmentManager fm;
 
+    private ViewPager2 pager2;
+    private boolean useViewPager2 = false;
+
     @SuppressLint("InflateParams")
     @Nullable
     @Override
@@ -36,16 +42,49 @@ public class UnitConverterFragment extends Fragment {
         if (v == null) {
             v = inflater.inflate(R.layout.unit_layout, null);
             pager = v.findViewById(R.id.pager);
+            pager2 = v.findViewById(R.id.pager2);
             tabLayout = v.findViewById(R.id.tabs);
             mContext = getActivity();
-            setNewAdapter();
+            fm = getChildFragmentManager();
+            if (useViewPager2) {
+                pager.setVisibility(View.GONE);
+                setNewAdapter2();
+            } else {
+                pager2.setVisibility(View.GONE);
+                setNewAdapter();
+            }
         }
 
         return v;
     }
 
-    public void setNewAdapter() {
-        fm = getChildFragmentManager();
+    public void regenerateAdapter() {
+        if (useViewPager2) {
+            setNewAdapter2();
+        } else {
+            setNewAdapter();
+        }
+    }
+
+    private void setNewAdapter2() {
+        UnitPager2Adapter pager2Adapter = new UnitPager2Adapter();
+        pager2.setAdapter(pager2Adapter);
+        pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < pager2Adapter.fragments.length; i++) {
+                    pager2Adapter.fragments[i].isCurrentPage = i == position;
+                }
+                if (pager2Adapter.fragments[position].adapter != null) {
+                    pager2Adapter.fragments[position].adapter.requestFocusForCurrent();
+                }
+            }
+        });
+        new TabLayoutMediator(tabLayout, pager2, (tab, position) ->
+                tab.setText(pager2Adapter.getPageTitle(position))).attach();
+    }
+
+    private void setNewAdapter() {
         UnitPagerAdapter pagerAdapter = new UnitPagerAdapter();
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -71,6 +110,41 @@ public class UnitConverterFragment extends Fragment {
         });
 
         tabLayout.setupWithViewPager(pager);
+    }
+
+    class UnitPager2Adapter extends FragmentStateAdapter {
+
+        String[] categoriesNames;
+        UnitPageFragment[] fragments;
+
+        UnitPager2Adapter() {
+            super(UnitConverterFragment.this);
+            categoriesNames = getResources().getStringArray(R.array.unit_converter_categories);
+            String[] categoriesEnglish =
+                    AndroidHelper.getLocalizedResources(mContext, Locale.ENGLISH)
+                            .getStringArray(R.array.unit_converter_categories);
+            fragments = new UnitPageFragment[categoriesNames.length];
+            for (int i = 0; i < categoriesNames.length; ++i) {
+                fragments[i] = UnitPageFragment.newInstance(categoriesEnglish[i].toLowerCase());
+            }
+            fragments[0].isCurrentPage = true;
+        }
+
+        @Nullable
+        CharSequence getPageTitle(int position) {
+            return categoriesNames[position];
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments[position];
+        }
+
+        @Override
+        public int getItemCount() {
+            return categoriesNames.length;
+        }
     }
 
     class UnitPagerAdapter extends FragmentStatePagerAdapter {

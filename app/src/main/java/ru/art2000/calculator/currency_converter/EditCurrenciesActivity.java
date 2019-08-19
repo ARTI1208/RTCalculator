@@ -21,10 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.List;
 
@@ -60,6 +63,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     LinearLayout searchViewLayout;
     SearchView barSearchView;
+
+    boolean useViewPager2 = false;
+    boolean optionsMenuCreated = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,38 +139,58 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
         });
 
-        ViewPager pager = findViewById(R.id.pager);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int maxScroll = pager.getMeasuredWidth();
-                int currentScroll = maxScroll * position + positionOffsetPixels;
-                searchViewLayout.setTranslationX(-currentScroll);
-                if (deleteTooltip != null) {
-                    deleteTooltip.getView().setTranslationX(maxScroll - currentScroll);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         tabs = findViewById(R.id.tabs);
-        pager.setAdapter(new CurrencyEditorPagerAdapter(getSupportFragmentManager()));
-        tabs.setupWithViewPager(pager);
-    }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        add.recyclerViewBottomPadding = searchViewLayout.getMeasuredHeight();
+        ViewPager pager = findViewById(R.id.pager);
+        ViewPager2 pager2 = findViewById(R.id.pager2);
+
+        if (useViewPager2) {
+            pager.setVisibility(View.GONE);
+
+            pager2.setOffscreenPageLimit(2);
+            pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    int maxScroll = pager2.getMeasuredWidth();
+                    int currentScroll = maxScroll * position + positionOffsetPixels;
+                    searchViewLayout.setTranslationX(-currentScroll);
+                    if (deleteTooltip != null) {
+                        deleteTooltip.getView().setTranslationX(maxScroll - currentScroll);
+                    }
+                }
+            });
+            CurrencyEditorPager2Adapter pager2Adapter = new CurrencyEditorPager2Adapter();
+            pager2.setAdapter(pager2Adapter);
+            new TabLayoutMediator(tabs, pager2, (tab, position) ->
+                    tab.setText(pager2Adapter.getPageTitle(position))).attach();
+        } else {
+
+            pager2.setVisibility(View.GONE);
+
+            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    int maxScroll = pager.getMeasuredWidth();
+                    int currentScroll = maxScroll * position + positionOffsetPixels;
+                    searchViewLayout.setTranslationX(-currentScroll);
+                    if (deleteTooltip != null) {
+                        deleteTooltip.getView().setTranslationX(maxScroll - currentScroll);
+                    }
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+            pager.setAdapter(new CurrencyEditorPagerAdapter(getSupportFragmentManager()));
+            tabs.setupWithViewPager(pager);
+        }
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -172,7 +198,9 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 selectedTab = tab.getPosition();
                 fab.hide();
                 modifyVisualElements(tab.getPosition());
-                toggleElementsVisibility();
+                if (optionsMenuCreated) {
+                    toggleElementsVisibility();
+                }
                 if (selectedTab == 1 && !fab.isShown()) {
                     showDeleteTip();
                 } else if (selectedTab == 0 && deleteTooltip != null) {
@@ -198,6 +226,13 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
 
         });
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        add.recyclerViewBottomPadding = searchViewLayout.getMeasuredHeight();
 
         selectedTab = tabs.getSelectedTabPosition();
         modifyVisualElements(selectedTab);
@@ -216,6 +251,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
         if (add.adapter.size == 0 || selectedTab == 1)
             select.setVisible(false);
+
+        optionsMenuCreated = true;
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -351,6 +388,53 @@ public class EditCurrenciesActivity extends DayNightActivity {
         else
             setResult(0);
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tabs.clearOnTabSelectedListeners();
+    }
+
+    class CurrencyEditorPager2Adapter extends FragmentStateAdapter {
+
+        String[] categories;
+        Fragment[] fragments;
+
+        CurrencyEditorPager2Adapter() {
+            super(EditCurrenciesActivity.this);
+            categories = getResources().getStringArray(R.array.currency_categories);
+
+            List<Fragment> list = EditCurrenciesActivity.this.getSupportFragmentManager().getFragments();
+            if (list.size() > 0) {
+                fragments = new Fragment[list.size()];
+                fragments = list.toArray(fragments);
+                add = (CurrenciesAddFragment) fragments[0];
+                if (list.size() > 1) {
+                    edit = (CurrenciesEditFragment) fragments[1];
+                }
+            }
+
+            if (fragments == null) {
+                fragments = new Fragment[]{add, edit};
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.length;
+        }
+
+        @Nullable
+        public CharSequence getPageTitle(int position) {
+            return categories[position];
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments[position];
+        }
     }
 
     class CurrencyEditorPagerAdapter extends FragmentPagerAdapter {

@@ -60,9 +60,12 @@ public class CurrenciesEditFragment extends Fragment {
             emptyView = v.findViewById(R.id.empty_tv);
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             llm.setOrientation(RecyclerView.VERTICAL);
+
+            int startOrLeft = parent.useViewPager2 ? ItemTouchHelper.START : ItemTouchHelper.LEFT;
+
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                     ItemTouchHelper.DOWN | ItemTouchHelper.UP,
-                    ItemTouchHelper.LEFT) {
+                    startOrLeft) {
 
                 Drawable background;
                 Drawable xMark;

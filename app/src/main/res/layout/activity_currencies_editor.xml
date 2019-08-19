@@ -37,6 +37,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <LinearLayout
         android:id="@+id/search_view_layout"
         android:layout_width="match_parent"
@@ -83,8 +89,6 @@
         android:layout_marginBottom="50dp"
         android:visibility="invisible"
         app:backgroundTint="?colorAccent"
-        app:layout_anchor="@id/pager"
-        app:layout_anchorGravity="bottom|end"
         app:layout_behavior="ru.art2000.extensions.FloatingActionButtonScrollingBehaviour"
         app:srcCompat="@drawable/ic_currencies_done"
         app:tint="@color/white" />

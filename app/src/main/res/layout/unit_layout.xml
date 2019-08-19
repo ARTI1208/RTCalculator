@@ -34,4 +34,12 @@
         android:layout_below="@id/topPanel">
 
     </androidx.viewpager.widget.ViewPager>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topPanel">
+
+    </androidx.viewpager2.widget.ViewPager2>
 </RelativeLayout>
