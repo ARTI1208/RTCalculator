@@ -18,30 +18,17 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/fragment_container" >
+            android:id="@+id/fragment_container" />
 
-        <include
-            android:id="@+id/calc_layout"
-            layout="@layout/calc_layout"
+        <ru.art2000.extensions.NotScrollableViewPager
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:layout_height="match_parent" />
 
-        <include
-            android:id="@+id/unit_layout"
-            layout="@layout/unit_layout"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
-        <include
-            android:id="@+id/currency_layout"
-            layout="@layout/currency_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
-        </FrameLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
