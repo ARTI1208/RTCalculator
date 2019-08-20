@@ -86,6 +86,11 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         notifyDataSetChanged();
     }
 
+    void setNewData(int position) {
+        size = hdb.getSize();
+        notifyItemRemoved(position);
+    }
+
     @Override
     public int getItemCount() {
         return size;

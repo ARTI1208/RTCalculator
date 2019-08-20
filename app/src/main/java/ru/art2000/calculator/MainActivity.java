@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,10 +15,12 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Slide;
 import androidx.transition.Transition;
 import androidx.viewpager.widget.ViewPager;
@@ -27,6 +30,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.List;
 import java.util.Objects;
 
 import ru.art2000.calculator.calculator.CalculatorFragment;
@@ -154,6 +158,23 @@ public class MainActivity extends DayNightActivity {
                 }
 
                 @Override
+                public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+                    super.onAttachedToRecyclerView(recyclerView);
+                    List<Fragment> list = MainActivity.this.getSupportFragmentManager().getFragments();
+                    for (Fragment fragment : list) {
+                        if (fragment instanceof CurrencyConverterFragment) {
+                            currency_converter = (CurrencyConverterFragment) fragment;
+                        } else if (fragment instanceof CalculatorFragment) {
+                            calculator = (CalculatorFragment) fragment;
+                        } else if (fragment instanceof UnitConverterFragment) {
+                            unit_converter = (UnitConverterFragment) fragment;
+                        } else if (fragment instanceof SettingsFragment) {
+                            settings = (SettingsFragment) fragment;
+                        }
+                    }
+                }
+
+                @Override
                 public int getItemCount() {
                     return 4;
                 }
@@ -211,6 +232,23 @@ public class MainActivity extends DayNightActivity {
                             return unit_converter;
                         case 3:
                             return settings;
+                    }
+                }
+
+                @Override
+                public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
+                    super.restoreState(state, loader);
+                    List<Fragment> list = MainActivity.this.getSupportFragmentManager().getFragments();
+                    for (Fragment fragment : list) {
+                        if (fragment instanceof CurrencyConverterFragment) {
+                            currency_converter = (CurrencyConverterFragment) fragment;
+                        } else if (fragment instanceof CalculatorFragment) {
+                            calculator = (CalculatorFragment) fragment;
+                        } else if (fragment instanceof UnitConverterFragment) {
+                            unit_converter = (UnitConverterFragment) fragment;
+                        } else if (fragment instanceof SettingsFragment) {
+                            settings = (SettingsFragment) fragment;
+                        }
                     }
                 }
 

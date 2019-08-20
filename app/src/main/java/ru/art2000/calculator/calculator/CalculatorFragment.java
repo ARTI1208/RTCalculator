@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +93,7 @@ public class CalculatorFragment extends Fragment {
     private HistoryListAdapter adapter;
     private TextView empty;
     private ViewGroup recycler_container;
+    private RelativeLayout handle;
 
     private boolean isNumberResult;
 
@@ -136,7 +136,6 @@ public class CalculatorFragment extends Fragment {
             ResultTV = v.findViewById(R.id.tv_result);
             setupHistoryPart();
         }
-        Log.d("CalcFrag", "huhuhu");
         return v;
     }
 
@@ -595,25 +594,24 @@ public class CalculatorFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (panel != null && panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            handle.setVisibility(View.GONE);
+            panel.setDragView(R.id.header);
+        }
     }
 
     private void setupHistoryPart() {
         panel = v.findViewById(R.id.sliding_panel);
-        RelativeLayout handle = v.findViewById(R.id.history_handle);
+        handle = v.findViewById(R.id.history_handle);
         handle.setOnClickListener(view -> {
             panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            Log.d("Click", "handle");
         });
         v.findViewById(R.id.header).setOnClickListener(view -> {
             panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            Log.d("Click", "head");
         });
         panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -627,13 +625,15 @@ public class CalculatorFragment extends Fragment {
             @Override
             public void onPanelStateChanged(View panelView, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 if (newState == SlidingUpPanelLayout.PanelState.DRAGGING &&
-                        previousState == SlidingUpPanelLayout.PanelState.COLLAPSED)
+                        previousState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     history_list.scrollToPosition(adapter.getItemCount() - 1);
-                if (newState == SlidingUpPanelLayout.PanelState.ANCHORED)
+                }
+                if (newState == SlidingUpPanelLayout.PanelState.ANCHORED) {
                     panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                Log.d("stattt", newState.toString());
-                Log.d("empty", String.valueOf(empty.getVisibility() == View.VISIBLE));
-
+                }
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    panel.setDragView(handle);
+                }
             }
         });
         LinearLayout history = v.findViewById(R.id.history_part);
@@ -756,7 +756,7 @@ public class CalculatorFragment extends Fragment {
                 if (hdb.getSize() == 0)
                     setEmptyView();
                 hdb.fixIDs(db, item);
-                adapter.setNewData();
+                adapter.setNewData(item - 1);
             }
         });
 
