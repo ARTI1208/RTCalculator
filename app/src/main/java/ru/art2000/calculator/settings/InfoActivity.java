@@ -4,18 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import ru.art2000.calculator.FirstSetup;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.DayNightActivity;
 import ru.art2000.helpers.AndroidHelper;
@@ -27,26 +23,23 @@ public class InfoActivity extends DayNightActivity {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        mContext = getApplicationContext();
+        mContext = this;
         setTheme(PrefsHelper.getAppTheme());
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_app_info);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        GradientDrawable back = new GradientDrawable();
-        back.setShape(GradientDrawable.RECTANGLE);
-        TypedValue changelog_back = new TypedValue();
-        getTheme().resolveAttribute(R.attr.calc_input_bg, changelog_back, true);
-        int back_color = ContextCompat.getColor(mContext, changelog_back.resourceId);
-        back.setColor(back_color);
-        back.setCornerRadius(AndroidHelper.dip2px(this, 8));
-        findViewById(R.id.chng_back).setBackground(back);
+        GradientDrawable changelogBackgroundDrawable = new GradientDrawable();
+        changelogBackgroundDrawable.setShape(GradientDrawable.RECTANGLE);
+        int changelogBackgroundColor =
+                AndroidHelper.getColorAttribute(mContext, R.attr.calc_input_bg);
+        changelogBackgroundDrawable.setColor(changelogBackgroundColor);
+        changelogBackgroundDrawable.setCornerRadius(AndroidHelper.dip2px(this, 8));
+        findViewById(R.id.chng_back).setBackground(changelogBackgroundDrawable);
         TextView changelog = findViewById(R.id.changelog);
         changelog.setText(getChangeLogText());
         GradientDrawable gd = new GradientDrawable();
-        TypedValue accentTypedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorAccent, accentTypedValue, true);
-        int accentColor = ContextCompat.getColor(mContext, accentTypedValue.resourceId);
+        int accentColor = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
         gd.setStroke(AndroidHelper.dip2px(this, 4), accentColor);
         gd.setShape(GradientDrawable.OVAL);
         TextView tv = findViewById(R.id.tvv);

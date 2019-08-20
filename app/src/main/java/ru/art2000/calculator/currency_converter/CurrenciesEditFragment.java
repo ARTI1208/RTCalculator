@@ -10,7 +10,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -105,9 +104,7 @@ public class CurrenciesEditFragment extends Fragment {
                             init();
                         }
 
-                        TypedValue itemBackground = new TypedValue();
-                        mContext.getTheme().resolveAttribute(android.R.attr.windowBackground, itemBackground, true);
-                        int windowBackgroundColor = ContextCompat.getColor(mContext, itemBackground.resourceId);
+                        int windowBackgroundColor = AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground);
                         itemView.setBackgroundColor(windowBackgroundColor);
 
                         int itemHeight = itemView.getBottom() - itemView.getTop();

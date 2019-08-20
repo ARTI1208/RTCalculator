@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -632,7 +631,6 @@ public class CalculatorFragment extends Fragment {
                 history_list.smoothScrollToPosition(0));
         v.findViewById(R.id.scroll_bottom).setOnClickListener(scrollDown ->
                 history_list.smoothScrollToPosition(adapter.getItemCount()));
-        TypedValue accent = new TypedValue();
         history_list.setLayoutManager(new LinearLayoutManager(mContext));
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
@@ -673,9 +671,7 @@ public class CalculatorFragment extends Fragment {
                     init();
                 }
 
-                TypedValue itemBackground = new TypedValue();
-                mContext.getTheme().resolveAttribute(android.R.attr.windowBackground, itemBackground, true);
-                int windowBackgroundColor = ContextCompat.getColor(mContext, itemBackground.resourceId);
+                int windowBackgroundColor = AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground);
                 itemView.setBackgroundColor(windowBackgroundColor);
 
                 int itemHeight = itemView.getBottom() - itemView.getTop();
@@ -726,8 +722,6 @@ public class CalculatorFragment extends Fragment {
         });
 
         itemTouchHelper.attachToRecyclerView(history_list);
-        mContext.getTheme().resolveAttribute(R.attr.colorAccent, accent, true);
-        mContext.getTheme().resolveAttribute(R.attr.selectableItemBackground, accent, true);
         hdb = new HistoryDB(mContext);
         db = hdb.getReadableDatabase();
         adapter = new HistoryListAdapter(mContext, hdb);
