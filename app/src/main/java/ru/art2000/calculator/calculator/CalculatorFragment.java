@@ -235,7 +235,9 @@ public class CalculatorFragment extends Fragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NonNull ContextMenu menu,
+                                    @NonNull View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(Menu.NONE, PASTE, Menu.NONE, mContext.getString(R.string.paste_replace));
         menu.add(Menu.NONE, PASTE_AFTER, Menu.NONE, mContext.getString(R.string.paste_after));
         ClipboardManager cmg = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -247,7 +249,7 @@ public class CalculatorFragment extends Fragment {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem menuItem) {
+    public boolean onContextItemSelected(@NonNull MenuItem menuItem) {
         HistoryDB hdb = new HistoryDB(mContext);
         SQLiteDatabase db = hdb.getReadableDatabase();
         Cursor cc = db.query("history", null, null, null, null, null, null);
@@ -542,10 +544,12 @@ public class CalculatorFragment extends Fragment {
     private void setButtonsClickListener(View v) {
         for (int i = 0; i < ((ViewGroup) v).getChildCount(); i++) {
             View child = ((ViewGroup) v).getChildAt(i);
-            if (child instanceof ViewGroup)
+            if (child instanceof ViewGroup) {
                 setButtonsClickListener(child);
-            if (child instanceof Button)
+            }
+            if (child instanceof Button) {
                 child.setOnClickListener(this::buttonClick);
+            }
         }
     }
 
@@ -558,7 +562,7 @@ public class CalculatorFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
@@ -653,9 +657,9 @@ public class CalculatorFragment extends Fragment {
 
 
             @Override
-            public void onChildDraw(Canvas c,
-                                    RecyclerView recyclerView,
-                                    RecyclerView.ViewHolder viewHolder,
+            public void onChildDraw(@NonNull Canvas c,
+                                    @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder,
                                     float dX, float dY,
                                     int actionState,
                                     boolean isCurrentlyActive) {
@@ -706,12 +710,14 @@ public class CalculatorFragment extends Fragment {
             }
 
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int item = viewHolder.getLayoutPosition() + 1;
                 db.delete("history", "id=" + item, null);
                 if (hdb.getSize() == 0)
@@ -729,11 +735,12 @@ public class CalculatorFragment extends Fragment {
         if (hdb.getSize() != 0) {
             recycler_container.setVisibility(View.VISIBLE);
             empty.setVisibility(View.GONE);
-            history_list.addItemDecoration(new DividerItemDecoration(history_list.getContext(), DividerItemDecoration.VERTICAL));
-//                    adapter.setClickListener();
+            history_list.addItemDecoration(
+                    new DividerItemDecoration(
+                            history_list.getContext(),
+                            DividerItemDecoration.VERTICAL));
             history_list.setAdapter(adapter);
             history_list.scrollToPosition(adapter.getItemCount() - 1);
-//            history_list.scrollTo(0, history_list.getHeight());
             setUpAnimationDecoratorHelper();
         } else
             setEmptyView();
@@ -764,7 +771,9 @@ public class CalculatorFragment extends Fragment {
             }
 
             @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            public void onDraw(@NonNull Canvas c,
+                               @NonNull RecyclerView parent,
+                               @NonNull RecyclerView.State state) {
 
                 if (!initiated) {
                     init();
@@ -851,11 +860,12 @@ public class CalculatorFragment extends Fragment {
             View view = LayoutInflater.from(ctx).inflate(pages[position], container, false);
             setButtonsClickListener(view);
             Button del = view.findViewById(R.id.buttonDel);
-            if (del != null)
+            if (del != null) {
                 del.setOnLongClickListener(v -> {
                     clearInput();
                     return false;
                 });
+            }
             container.addView(view);
             return view;
         }
