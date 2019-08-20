@@ -38,13 +38,14 @@ public class CurrenciesEditFragment extends Fragment {
 
     EditCurrenciesAdapter adapter;
     private View v = null;
-    private RecyclerView list;
+    private RecyclerView recycler;
     private TextView emptyView;
     private Context mContext;
     private EditCurrenciesActivity parent;
+    private ItemTouchHelper itemTouchHelper;
 
     void scrollToTop() {
-        list.smoothScrollToPosition(0);
+        recycler.smoothScrollToPosition(0);
     }
 
     @SuppressLint("InflateParams")
@@ -55,15 +56,15 @@ public class CurrenciesEditFragment extends Fragment {
             mContext = getActivity();
             parent = (EditCurrenciesActivity) getActivity();
             v = inflater.inflate(R.layout.modify_currencies_layout, null);
-            list = v.findViewById(R.id.modify_currencies_list);
-            list.setPadding(0, 0, 0, AndroidHelper.dip2px(mContext, 20));
+            recycler = v.findViewById(R.id.modify_currencies_list);
+            recycler.setPadding(0, 0, 0, AndroidHelper.dip2px(mContext, 20));
             emptyView = v.findViewById(R.id.empty_tv);
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
             llm.setOrientation(RecyclerView.VERTICAL);
 
             int startOrLeft = parent.useViewPager2 ? ItemTouchHelper.START : ItemTouchHelper.LEFT;
 
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+            itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                     ItemTouchHelper.DOWN | ItemTouchHelper.UP,
                     startOrLeft) {
 
@@ -163,10 +164,10 @@ public class CurrenciesEditFragment extends Fragment {
                     CurrencyValuesHelper.writeValuesToDB(mContext);
                 }
             });
-            adapter = new EditCurrenciesAdapter(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(list);
-            list.setLayoutManager(llm);
-            list.setAdapter(adapter);
+            adapter = new EditCurrenciesAdapter();
+            itemTouchHelper.attachToRecyclerView(recycler);
+            recycler.setLayoutManager(llm);
+            recycler.setAdapter(adapter);
             toggleEmptyView();
         }
         return v;
@@ -197,16 +198,11 @@ public class CurrenciesEditFragment extends Fragment {
         final int SELECTION_MODE = 1;
         int size = CurrencyValuesHelper.visibleList.size();
         ArrayList<CurrencyItem> itemsToRemove = new ArrayList<>();
-        ItemTouchHelper touchHelper;
         int curMode = REORDER_MODE;
         @LayoutRes
         int selectionItem = R.layout.item_add_currencies_list;
         @LayoutRes
         int reorderItem = R.layout.item_edit_currencies_list;
-
-        EditCurrenciesAdapter(ItemTouchHelper touchHelper) {
-            this.touchHelper = touchHelper;
-        }
 
         void deselectAll() {
             itemsToRemove.clear();
@@ -254,7 +250,7 @@ public class CurrenciesEditFragment extends Fragment {
             if (handle != null) {
                 handle.setOnTouchListener((v, event) -> {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        touchHelper.startDrag(holder);
+                        itemTouchHelper.startDrag(holder);
                     }
                     return false;
                 });
@@ -299,9 +295,11 @@ public class CurrenciesEditFragment extends Fragment {
         void notifyModeChanged(RecyclerView.ViewHolder holder) {
             if (curMode == SELECTION_MODE) {
                 curMode = REORDER_MODE;
+                itemTouchHelper.attachToRecyclerView(recycler);
                 itemsToRemove.clear();
             } else {
                 curMode = SELECTION_MODE;
+                itemTouchHelper.attachToRecyclerView(null);
                 if (parent.deleteTooltip != null) {
                     parent.isFirstTimeTooltipShown = false;
                     parent.deleteTooltip.dismiss();
