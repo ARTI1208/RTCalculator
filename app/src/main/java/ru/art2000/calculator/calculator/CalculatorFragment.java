@@ -61,14 +61,24 @@ import static ru.art2000.calculator.calculator.CalculationClass.memory;
 import static ru.art2000.calculator.calculator.CalculationClass.radians;
 
 
+@SuppressWarnings("CodeBlock2Expr")
 public class CalculatorFragment extends Fragment {
 
-    private static final int COPY_ALL = 101;
-    private static final int COPY_EXPR = 102;
-    private static final int COPY_RES = 103;
-    private static final int DELETE = 104;
-    private static final int PASTE = 105;
-    private static final int PASTE_AFTER = 106;
+    private static final int COPY_ALL = 100;
+    private static final int COPY_EXPR = 101;
+    private static final int COPY_RES = 102;
+
+    private static final int PASTE = 200;
+    private static final int PASTE_AFTER = 201;
+
+    private static final int DELETE = 300;
+
+    private static final String EXTRA_STATE_SAVED = "state_saved";
+    private static final String EXTRA_INPUT = "input";
+    private static final String EXTRA_RESULT = "result";
+    private static final String EXTRA_MEMORY = "memory";
+    private static final String EXTRA_USE_RADIANS = "angle_type";
+
     public SlidingUpPanelLayout panel;
     private Context mContext;
     private TextView InputTV;
@@ -126,7 +136,7 @@ public class CalculatorFragment extends Fragment {
             ResultTV = v.findViewById(R.id.tv_result);
             setupHistoryPart();
         }
-
+        Log.d("CalcFrag", "huhuhu");
         return v;
     }
 
@@ -153,13 +163,15 @@ public class CalculatorFragment extends Fragment {
         else if (isConstant(buttonText))
             onConstantBtnClick(buttonText);
         else if (button_pressed.getId() == R.id.buttonDEGRAD)
-            onDegBtnClick(button_pressed);
+            onAngleTypeChange(button_pressed, true);
         else
             onBtnClick(button_pressed);
     }
 
-    private void onDegBtnClick(Button button) {
-        CalculationClass.radians ^= true;
+    private void onAngleTypeChange(Button button, boolean updateState) {
+        if (updateState) {
+            CalculationClass.radians ^= true;
+        }
         button.setText(!radians ? "RAD" : "DEG");
         degRadTextView.setText(radians ? "Rad" : "Deg");
     }
@@ -250,10 +262,31 @@ public class CalculatorFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem menuItem) {
+        ClipboardManager cmg = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        int id = menuItem.getItemId();
+
+        boolean isPasteItem = id >= PASTE && id <= PASTE_AFTER;
+        boolean isDeleteItem = id >= DELETE && id <= DELETE;
+
+        if (!isDeleteItem && (cmg == null || (isPasteItem && cmg.getPrimaryClip() == null))) {
+            Toast.makeText(
+                    mContext,
+                    "Error getting access to clipboard",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         HistoryDB hdb = new HistoryDB(mContext);
         SQLiteDatabase db = hdb.getReadableDatabase();
-        Cursor cc = db.query("history", null, null, null, null, null, null);
-        ClipboardManager cmg = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        Cursor cc = db.query(
+                "history",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
         ClipData clip;
         boolean shouldShowToast = true;
         String toastText = getString(R.string.error);
@@ -261,7 +294,7 @@ public class CalculatorFragment extends Fragment {
         cc.move(position + 1);
         String expr = cc.getString(cc.getColumnIndex("expression"));
         String res = cc.getString(cc.getColumnIndex("result"));
-        switch (menuItem.getItemId()) {
+        switch (id) {
             case PASTE:
                 ClipData.Item clipItem = cmg.getPrimaryClip().getItemAt(0);
                 InputTV.setText(clipItem.getText().toString());
