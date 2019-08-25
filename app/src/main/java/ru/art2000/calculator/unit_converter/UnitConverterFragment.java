@@ -20,18 +20,21 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.Locale;
+import java.util.Objects;
 
+import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
+import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 
-public class UnitConverterFragment extends Fragment {
+public class UnitConverterFragment extends ReplaceableFragment {
 
     private Context mContext;
     private TabLayout tabLayout;
     private ViewPager pager;
     private View v;
     private FragmentManager fm;
-
     private ViewPager2 pager2;
     private boolean useViewPager2 = false;
 
@@ -110,6 +113,32 @@ public class UnitConverterFragment extends Fragment {
         });
 
         tabLayout.setupWithViewPager(pager);
+    }
+
+    @Override
+    protected void onShown(@Nullable IReplaceable previousReplaceable) {
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .changeStatusBarColor(false);
+    }
+
+    @Override
+    public int getOrder() {
+        return 2;
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.title_unit;
+    }
+
+    @Override
+    public int getIcon() {
+        return R.drawable.ic_dashboard_black_24dp;
+    }
+
+    @Override
+    public int getReplaceableId() {
+        return R.id.navigation_unit;
     }
 
     class UnitPager2Adapter extends FragmentStateAdapter {

@@ -36,7 +36,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,7 +45,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.Objects;
+
+import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
+import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
 import ru.art2000.helpers.PrefsHelper;
@@ -60,8 +64,7 @@ import static ru.art2000.calculator.calculator.CalculationClass.memory;
 import static ru.art2000.calculator.calculator.CalculationClass.radians;
 
 
-@SuppressWarnings("CodeBlock2Expr")
-public class CalculatorFragment extends Fragment {
+public class CalculatorFragment extends ReplaceableFragment {
 
     private static final int COPY_ALL = 100;
     private static final int COPY_EXPR = 101;
@@ -94,7 +97,6 @@ public class CalculatorFragment extends Fragment {
     private TextView empty;
     private ViewGroup recycler_container;
     private RelativeLayout handle;
-
     private boolean isNumberResult;
 
     @SuppressLint("InflateParams")
@@ -871,6 +873,32 @@ public class CalculatorFragment extends Fragment {
             }
 
         });
+    }
+
+    @Override
+    protected void onShown(@Nullable IReplaceable previousReplaceable) {
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .changeStatusBarColor(true);
+    }
+
+    @Override
+    public int getOrder() {
+        return 1;
+    }
+
+    @Override
+    public int getIcon() {
+        return R.drawable.ic_calc;
+    }
+
+    @Override
+    public int getReplaceableId() {
+        return R.id.navigation_calc;
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.title_calc;
     }
 
     class CalculatorPagesAdapter extends PagerAdapter {

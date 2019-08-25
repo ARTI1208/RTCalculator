@@ -4,30 +4,14 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.Slide;
-import androidx.transition.Transition;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.List;
@@ -38,72 +22,62 @@ import ru.art2000.calculator.currency_converter.CurrencyConverterFragment;
 import ru.art2000.calculator.settings.SettingsFragment;
 import ru.art2000.calculator.unit_converter.UnitConverterFragment;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.extensions.ReplaceableBottomNavigation;
+import ru.art2000.extensions.ScrollControlledViewPager;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class MainActivity extends DayNightActivity {
 
-    boolean doubleBackToExitPressedOnce = false;
-    BottomNavigationView navigation;
-    Context mContext;
-    CurrencyConverterFragment currency_converter = new CurrencyConverterFragment();
-    CalculatorFragment calculator = new CalculatorFragment();
-    UnitConverterFragment unit_converter = new UnitConverterFragment();
-    PreferenceFragmentCompat settings = new SettingsFragment();
-    Fragment currentFragment = currency_converter;
-    int currentOrder = 0;
-    FragmentManager fragmentManager = getSupportFragmentManager();
-
-    boolean isTransitionRunning;
-    boolean isTransitioned;
-
     boolean useViewPager = true;
     boolean useViewPager2 = false;
-
+    private boolean doubleBackToExitPressedOnce = false;
+    private ReplaceableBottomNavigation navigation;
+    private Context mContext;
+    private CurrencyConverterFragment currency_converter;
+    private CalculatorFragment calculator;
+    private UnitConverterFragment unit_converter;
+    private SettingsFragment settings;
     @ColorInt
-    private int statusBarColor;
+    private int normalStatusBarColor;
     @ColorInt
     private int calculatorStatusBarColor;
-
-    @Override
-    protected void onResumeNightModeChanged(int mode) {
-        switch (navigation.getSelectedItemId()) {
-            case R.id.navigation_calc:
-                getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                break;
-            case R.id.navigation_unit:
-                getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                break;
-            case R.id.navigation_currency:
-                getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
-                break;
-            case R.id.navigation_settings:
-                getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                break;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         PrefsHelper.initialSetup(mContext);
         setTheme(PrefsHelper.getAppTheme());
-        Window window = getWindow();
         new Thread(() -> CurrencyValuesHelper.getDataFromDB(mContext)).start();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            for (String key : bundle.keySet()) {
-                Log.d("MainActivityKeys", key);
+        List<Fragment> list = getSupportFragmentManager().getFragments();
+        for (Fragment fragment : list) {
+            if (fragment instanceof CurrencyConverterFragment) {
+                currency_converter = (CurrencyConverterFragment) fragment;
+            } else if (fragment instanceof CalculatorFragment) {
+                calculator = (CalculatorFragment) fragment;
+            } else if (fragment instanceof UnitConverterFragment) {
+                unit_converter = (UnitConverterFragment) fragment;
+            } else if (fragment instanceof SettingsFragment) {
+                settings = (SettingsFragment) fragment;
             }
-        } else {
-            Log.d("MainActivityKeys", "No keys");
+        }
+        if (currency_converter == null) {
+            currency_converter = new CurrencyConverterFragment();
+        }
+        if (calculator == null) {
+            calculator = new CalculatorFragment();
+        }
+        if (unit_converter == null) {
+            unit_converter = new UnitConverterFragment();
+        }
+        if (settings == null) {
+            settings = new SettingsFragment();
         }
 
-        statusBarColor = AndroidHelper.getColorAttribute(this, R.attr.colorPrimaryDark);
+        normalStatusBarColor = AndroidHelper.getColorAttribute(this, R.attr.colorPrimaryDark);
         calculatorStatusBarColor =
                 AndroidHelper.getColorAttribute(this, R.attr.calc_input_bg);
 
@@ -123,289 +97,59 @@ public class MainActivity extends DayNightActivity {
             }
         });
 
+        navigation.setOnNavigationItemSelectedListener(item -> {
+            PrefsHelper.setDefaultTab(this, item.getOrder());
+
+            switch (item.getItemId()) {
+                default:
+                case R.id.navigation_calc:
+                    getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
+                    break;
+                case R.id.navigation_unit:
+                    getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
+                    break;
+                case R.id.navigation_currency:
+                    getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
+                    break;
+                case R.id.navigation_settings:
+                    getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
+                    break;
+            }
+            return true;
+        });
+
         FrameLayout frameLayout = findViewById(R.id.fragment_container);
-        ViewPager pager = findViewById(R.id.pager);
+        ScrollControlledViewPager pager = findViewById(R.id.pager);
         ViewPager2 pager2 = findViewById(R.id.pager2);
 
         if (useViewPager2) {
             frameLayout.setVisibility(View.GONE);
             pager.setVisibility(View.GONE);
-            pager2.setOffscreenPageLimit(3);
-            pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                    Log.d("PageCallback", String.valueOf(position));
-                }
-            });
 
-            pager2.setUserInputEnabled(false);
-            pager2.setAdapter(new FragmentStateAdapter(this) {
-                @NonNull
-                @Override
-                public Fragment createFragment(int position) {
-                    switch (position) {
-                        case 0:
-                            return currency_converter;
-                        default:
-                        case 1:
-                            return calculator;
-                        case 2:
-                            return unit_converter;
-                        case 3:
-                            return settings;
-                    }
-                }
-
-                @Override
-                public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-                    super.onAttachedToRecyclerView(recyclerView);
-                    List<Fragment> list = MainActivity.this.getSupportFragmentManager().getFragments();
-                    for (Fragment fragment : list) {
-                        if (fragment instanceof CurrencyConverterFragment) {
-                            currency_converter = (CurrencyConverterFragment) fragment;
-                        } else if (fragment instanceof CalculatorFragment) {
-                            calculator = (CalculatorFragment) fragment;
-                        } else if (fragment instanceof UnitConverterFragment) {
-                            unit_converter = (UnitConverterFragment) fragment;
-                        } else if (fragment instanceof SettingsFragment) {
-                            settings = (SettingsFragment) fragment;
-                        }
-                    }
-                }
-
-                @Override
-                public int getItemCount() {
-                    return 4;
-                }
-            });
-
-            navigation.setOnNavigationItemSelectedListener(item -> {
-                PrefsHelper.setDefaultTab(this, item.getOrder());
-
-                int nextOrder = item.getOrder();
-                int nextStatusBarColor;
-
-                switch (item.getItemId()) {
-                    default:
-                    case R.id.navigation_calc:
-                        getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                        nextStatusBarColor = calculatorStatusBarColor;
-                        break;
-                    case R.id.navigation_unit:
-                        getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                    case R.id.navigation_currency:
-                        getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                    case R.id.navigation_settings:
-                        getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                }
-
-                pager2.setCurrentItem(nextOrder);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    window.setStatusBarColor(nextStatusBarColor);
-                }
-                return true;
-            });
+            navigation.setupWithViewPager2(
+                    this,
+                    pager2,
+                    unit_converter, currency_converter, calculator, settings);
 
         } else if (useViewPager) {
             frameLayout.setVisibility(View.GONE);
             pager2.setVisibility(View.GONE);
-            pager.setOffscreenPageLimit(3);
-            pager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager(),
-                    FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-                @NonNull
-                @Override
-                public Fragment getItem(int position) {
-                    switch (position) {
-                        case 0:
-                            return currency_converter;
-                        default:
-                        case 1:
-                            return calculator;
-                        case 2:
-                            return unit_converter;
-                        case 3:
-                            return settings;
-                    }
-                }
 
-                @Override
-                public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
-                    super.restoreState(state, loader);
-                    List<Fragment> list = MainActivity.this.getSupportFragmentManager().getFragments();
-                    for (Fragment fragment : list) {
-                        if (fragment instanceof CurrencyConverterFragment) {
-                            currency_converter = (CurrencyConverterFragment) fragment;
-                        } else if (fragment instanceof CalculatorFragment) {
-                            calculator = (CalculatorFragment) fragment;
-                        } else if (fragment instanceof UnitConverterFragment) {
-                            unit_converter = (UnitConverterFragment) fragment;
-                        } else if (fragment instanceof SettingsFragment) {
-                            settings = (SettingsFragment) fragment;
-                        }
-                    }
-                }
-
-                @Override
-                public int getCount() {
-                    return 4;
-                }
-            });
-
-            navigation.setOnNavigationItemSelectedListener(item -> {
-                PrefsHelper.setDefaultTab(this, item.getOrder());
-
-                int nextOrder = item.getOrder();
-                int nextStatusBarColor;
-
-                switch (item.getItemId()) {
-                    default:
-                    case R.id.navigation_calc:
-                        getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                        nextStatusBarColor = calculatorStatusBarColor;
-                        break;
-                    case R.id.navigation_unit:
-                        getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                    case R.id.navigation_currency:
-                        getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                    case R.id.navigation_settings:
-                        getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                }
-
-                pager.setCurrentItem(nextOrder);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    window.setStatusBarColor(nextStatusBarColor);
-                }
-                return true;
-            });
+            navigation.setupWithViewPager(
+                    this,
+                    pager,
+                    unit_converter, currency_converter, calculator, settings);
 
         } else {
             pager.setVisibility(View.GONE);
             pager2.setVisibility(View.GONE);
-            fragmentManager
-                    .beginTransaction()
-                    .add(R.id.fragment_container, currency_converter, "CurrencyConverterFragment")
 
-                    .add(R.id.fragment_container, calculator, "CalculatorFragment")
-                    .hide(calculator)
-                    .add(R.id.fragment_container, unit_converter, "UnitConverterFragment")
-                    .hide(unit_converter)
-                    .add(R.id.fragment_container, settings, "SettingsFragment")
-                    .hide(settings)
+            navigation.setupWithFragments(this,
+                    R.id.fragment_container,
+                    currency_converter, calculator, unit_converter, settings);
 
-                    .commit();
-
-            navigation.setOnNavigationItemReselectedListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.navigation_currency:
-                        currency_converter.scrollToTop();
-                        break;
-                    case R.id.navigation_calc:
-                        SlidingUpPanelLayout.PanelState state = SlidingUpPanelLayout.PanelState.EXPANDED;
-                        if (calculator.panel.getPanelState() == state)
-                            state = SlidingUpPanelLayout.PanelState.COLLAPSED;
-                        calculator.panel.setPanelState(state);
-                        break;
-                }
-            });
-            navigation.setOnNavigationItemSelectedListener(item -> {
-                if (isTransitionRunning && isTransitioned) {
-                    return false;
-                }
-
-                PrefsHelper.setDefaultTab(this, item.getOrder());
-
-                Fragment nextFragment;
-                int nextOrder = item.getOrder();
-                int nextStatusBarColor;
-
-                switch (item.getItemId()) {
-                    default:
-                    case R.id.navigation_calc:
-                        getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                        nextFragment = calculator;
-                        nextStatusBarColor = calculatorStatusBarColor;
-                        break;
-                    case R.id.navigation_unit:
-                        getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                        nextFragment = unit_converter;
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                    case R.id.navigation_currency:
-                        getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
-                        nextFragment = currency_converter;
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                    case R.id.navigation_settings:
-                        getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                        nextFragment = settings;
-                        nextStatusBarColor = statusBarColor;
-                        break;
-                }
-
-                //noinspection ConstantConditions
-                nextFragment.setEnterTransition(
-                        getEnterTransition(currentOrder, nextOrder)
-                                .addTarget(nextFragment.getView()));
-
-                //noinspection ConstantConditions
-                currentFragment.setExitTransition(
-                        getExitTransition(currentOrder, item.getOrder())
-                                .addTarget(currentFragment.getView())
-                                .addListener(new Transition.TransitionListener() {
-                                    @Override
-                                    public void onTransitionStart(@NonNull Transition transition) {
-                                    }
-
-                                    @Override
-                                    public void onTransitionEnd(@NonNull Transition transition) {
-                                        isTransitionRunning = false;
-                                    }
-
-                                    @Override
-                                    public void onTransitionCancel(@NonNull Transition transition) {
-                                        isTransitionRunning = false;
-                                    }
-
-                                    @Override
-                                    public void onTransitionPause(@NonNull Transition transition) {
-                                    }
-
-                                    @Override
-                                    public void onTransitionResume(@NonNull Transition transition) {
-                                    }
-                                }));
-
-                isTransitionRunning = true;
-                isTransitioned = nextFragment.getView() != null;
-                fragmentManager
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .show(nextFragment)
-                        .runOnCommit(() -> {
-                            currentFragment = nextFragment;
-                            currentOrder = nextOrder;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                window.setStatusBarColor(nextStatusBarColor);
-                            }
-                        })
-                        .commit();
-
-                return true;
-            });
         }
+
         int tabId;
         if (Objects.requireNonNull(getIntent().getAction()).equals("android.intent.action.MAIN")) {
             tabId = PrefsHelper.getDefaultNavItem();
@@ -459,23 +203,13 @@ public class MainActivity extends DayNightActivity {
         unit_converter.regenerateAdapter();
     }
 
-    private Transition getEnterTransition(int fromPosition, int toPosition) {
-        Transition transition;
-        if (fromPosition < toPosition) {
-            transition = new Slide(Gravity.END);
-        } else {
-            transition = new Slide(Gravity.START);
+    public void changeStatusBarColor(boolean isCalculatorPage) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (isCalculatorPage) {
+                getWindow().setStatusBarColor(calculatorStatusBarColor);
+            } else {
+                getWindow().setStatusBarColor(normalStatusBarColor);
+            }
         }
-        return transition.setInterpolator(new AccelerateInterpolator());
-    }
-
-    private Transition getExitTransition(int fromPosition, int toPosition) {
-        Transition transition;
-        if (fromPosition < toPosition) {
-            transition = new Slide(Gravity.START);
-        } else {
-            transition = new Slide(Gravity.END);
-        }
-        return transition.setInterpolator(new AccelerateInterpolator());
     }
 }

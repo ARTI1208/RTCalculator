@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:id="@+id/fragment_container" />
 
-        <ru.art2000.extensions.NotScrollableViewPager
+        <ru.art2000.extensions.ScrollControlledViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -31,7 +31,7 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <ru.art2000.extensions.ReplaceableBottomNavigation
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

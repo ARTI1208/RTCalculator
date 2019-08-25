@@ -10,16 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+
+import java.util.Objects;
 
 import ru.art2000.calculator.BuildConfig;
 import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
+import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.ReplaceablePreferenceFragment;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends ReplaceablePreferenceFragment {
 
     private Context mContext;
     private int dev = 0;
@@ -29,6 +32,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         super.onViewCreated(view, savedInstanceState);
         view.setBackgroundColor(
                 AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground));
+    }
+
+    @Override
+    protected void onShown(@Nullable IReplaceable previousReplaceable) {
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .changeStatusBarColor(false);
     }
 
     @Override
@@ -135,5 +144,25 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
             return false;
         });
+    }
+
+    @Override
+    public int getOrder() {
+        return 3;
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.title_settings;
+    }
+
+    @Override
+    public int getIcon() {
+        return R.drawable.ic_settings;
+    }
+
+    @Override
+    public int getReplaceableId() {
+        return R.id.navigation_settings;
     }
 }

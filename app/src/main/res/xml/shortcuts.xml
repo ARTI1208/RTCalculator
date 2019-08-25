@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcurs xmlns:android="http://schemas.android.com/apk/res/android">
+
     <shortcut
-        android:shortcutId="converter"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:shortcutShortLabel="@string/title_unit"
-        android:shortcutLongLabel="@string/title_unit" >
-        <intent
-            android:action="ru.art2000.calculator.action.CONVERTER"
-            android:targetPackage="ru.art2000.calculator"
-            android:targetClass="ru.art2000.calculator.MainActivity" />
-    </shortcut>
-    <shortcut
-        android:shortcutId="calculator"
-        android:icon="@drawable/ic_calc"
-        android:shortcutShortLabel="@string/title_calc"
-        android:shortcutLongLabel="@string/title_calc" >
-        <intent
-            android:action="ru.art2000.calculator.action.CALCULATOR"
-            android:targetPackage="ru.art2000.calculator"
-            android:targetClass="ru.art2000.calculator.MainActivity" />
-    </shortcut>
-    <shortcut
-        android:shortcutId="currencies"
         android:icon="@drawable/ic_currency"
-        android:shortcutShortLabel="@string/title_currency"
-        android:shortcutLongLabel="@string/title_currency" >
+        android:shortcutId="currencies"
+        android:shortcutLongLabel="@string/title_currency"
+        android:shortcutShortLabel="@string/title_currency">
+
         <intent
             android:action="ru.art2000.calculator.action.CURRENCIES"
-            android:targetPackage="ru.art2000.calculator"
-            android:targetClass="ru.art2000.calculator.MainActivity" />
+            android:targetClass="ru.art2000.calculator.MainActivity"
+            android:targetPackage="ru.art2000.calculator" />
+    </shortcut>
+
+    <shortcut
+        android:icon="@drawable/ic_calc"
+        android:shortcutId="calculator"
+        android:shortcutLongLabel="@string/title_calc"
+        android:shortcutShortLabel="@string/title_calc">
+
+        <intent
+            android:action="ru.art2000.calculator.action.CALCULATOR"
+            android:targetClass="ru.art2000.calculator.MainActivity"
+            android:targetPackage="ru.art2000.calculator" />
+    </shortcut>
+
+    <shortcut
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:shortcutId="converter"
+        android:shortcutLongLabel="@string/title_unit"
+        android:shortcutShortLabel="@string/title_unit">
+
+        <intent
+            android:action="ru.art2000.calculator.action.CONVERTER"
+            android:targetClass="ru.art2000.calculator.MainActivity"
+            android:targetPackage="ru.art2000.calculator" />
     </shortcut>
 </shortcurs>

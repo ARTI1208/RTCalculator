@@ -1,7 +1,6 @@
 package ru.art2000.calculator.currency_converter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -37,26 +35,30 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.CurrencyItem;
+import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 
-public class CurrencyConverterFragment extends Fragment {
+public class CurrencyConverterFragment extends ReplaceableFragment {
 
     public Context mContext;
     public CurrencyListAdapter adapter = null;
     private TextView emptyView;
     private RecyclerView recycler;
-    private Activity parent;
+    private MainActivity parent;
     private View v = null;
     private String updDate;
     private SwipeRefreshLayout refresher;
     private boolean isUpdating;
-
+    private boolean didFirstUpdate;
     private Toolbar mToolbar;
     private String titleUpdatedString;
 
@@ -69,8 +71,10 @@ public class CurrencyConverterFragment extends Fragment {
     }
 
     private void setRefreshStatus(boolean status) {
-        refresher.setRefreshing(status);
-        isUpdating = status;
+        if (refresher != null) {
+            refresher.setRefreshing(status);
+            isUpdating = status;
+        }
     }
 
     public void scrollToTop() {
@@ -94,7 +98,7 @@ public class CurrencyConverterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (v == null) {
             mContext = getActivity();
-            parent = getActivity();
+            parent = (MainActivity) getActivity();
 
             titleUpdatedString = mContext.getString(R.string.updated);
 
@@ -108,22 +112,20 @@ public class CurrencyConverterFragment extends Fragment {
             recycler.setLayoutManager(llm);
             adapter = new CurrencyListAdapter(mContext);
             recycler.setAdapter(adapter);
-//            updateList();
             adapter.getDataFromDB();
             recycler.setOnFocusChangeListener((v, hasFocus) ->
                     adapter.removeEditText());
             refresher = v.findViewById(R.id.refresher);
 
-            refresher.setColorSchemeColors(AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent));
-            setRefreshStatus(true);
-            updateData();
+            int colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
+
+            refresher.setColorSchemeColors(colorAccent);
             refresher.setOnRefreshListener(this::updateData);
             updateDate(null);
 
             ActionMenuItemView editMenuItem = v.findViewById(R.id.edit_currencies);
-            editMenuItem.getItemData().getIcon().setColorFilter(new PorterDuffColorFilter(
-                    AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent),
-                    PorterDuff.Mode.SRC_ATOP));
+            editMenuItem.getItemData().getIcon().setColorFilter(
+                    new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
             editMenuItem.setOnClickListener(v -> {
                 adapter.removeEditText();
                 Intent intent = new Intent(getActivity(), EditCurrenciesActivity.class);
@@ -199,6 +201,7 @@ public class CurrencyConverterFragment extends Fragment {
     }
 
     private void parseHTML() {
+        setRefreshStatus(true);
         new Thread(() -> {
             try {
                 Document webpage = Jsoup.connect("http://www.cbr.ru/currency_base/daily/").get();
@@ -212,7 +215,8 @@ public class CurrencyConverterFragment extends Fragment {
                     date = dateBlock.substring(matcher.start(), matcher.end());
 
                 if (updDate.equals(date)) {
-                    setRefreshStatus(false);
+                    parent.runOnUiThread(() ->
+                            setRefreshStatus(false));
                     return;
                 }
                 parent.runOnUiThread(() ->
@@ -284,6 +288,7 @@ public class CurrencyConverterFragment extends Fragment {
             } finally {
                 parent.runOnUiThread(() ->
                         setRefreshStatus(false));
+                didFirstUpdate = true;
             }
         }).start();
     }
@@ -302,19 +307,45 @@ public class CurrencyConverterFragment extends Fragment {
     }
 
     private void updateData() {
-        if (adapter.getItemCount() == 0) {
-            setRefreshStatus(false);
-            return;
-        }
         if (isOnline()) {
             parseHTML();
         } else {
-            setRefreshStatus(false);
             Toast.makeText(
                     mContext,
                     R.string.currencies_no_internet,
                     Toast.LENGTH_SHORT).show();
+            didFirstUpdate = true;
+            setRefreshStatus(false);
         }
+    }
+
+    @Override
+    protected void onShown(@Nullable IReplaceable previousReplaceable) {
+        if (!didFirstUpdate) {
+            updateData();
+        }
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .changeStatusBarColor(false);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+
+    @Override
+    public int getReplaceableId() {
+        return R.id.navigation_currency;
+    }
+
+    @Override
+    public int getIcon() {
+        return R.drawable.ic_currency;
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.title_currency;
     }
 
     static class checkOnline extends AsyncTask<Void, Void, Boolean> {
