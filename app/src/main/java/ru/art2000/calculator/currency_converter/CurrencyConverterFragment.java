@@ -115,11 +115,12 @@ public class CurrencyConverterFragment extends ReplaceableFragment {
             adapter.getDataFromDB();
             recycler.setOnFocusChangeListener((v, hasFocus) ->
                     adapter.removeEditText());
-            refresher = v.findViewById(R.id.refresher);
 
             int colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
 
+            refresher = v.findViewById(R.id.refresher);
             refresher.setColorSchemeColors(colorAccent);
+            refresher.setProgressViewEndTarget(true, refresher.getProgressViewEndOffset());
             refresher.setOnRefreshListener(this::updateData);
             updateDate(null);
 
