@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="message_items_shown">
+        <item quantity="one">%d item made shown</item>
+        <item quantity="many">%d items made shown</item>
+    </plurals>
+    <plurals name="message_items_hidden">
+        <item quantity="one">%d item made hidden</item>
+        <item quantity="many">%d items made hidden</item>
+    </plurals>
+</resources>

@@ -152,6 +152,7 @@ public class CurrenciesAddFragment extends Fragment {
         }
 
         void setNewData() {
+            currentList = CurrencyValuesHelper.hiddenList;
             size = currentList.size();
             notifyDataSetChanged();
             toggleEmptyView();

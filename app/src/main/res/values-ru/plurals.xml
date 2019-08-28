@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="message_items_shown">
+        <item quantity="one">Добавлен %d элемент</item>
+        <item quantity="few">Добавлено %d элемента</item>
+        <item quantity="many">Добавлено %d элементов</item>
+    </plurals>
+    <plurals name="message_items_hidden">
+        <item quantity="one">Скрыт %d элемент</item>
+        <item quantity="few">Скрыто %d элемента</item>
+        <item quantity="many">Скрыто %d элементов</item>
+    </plurals>
+</resources>

@@ -152,13 +152,16 @@ public class CurrenciesEditFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     parent.changeDone = true;
-                    CurrencyValuesHelper.hideItems(viewHolder.getAdapterPosition());
+                    int position = viewHolder.getAdapterPosition();
+                    parent.lastModifiedItemCode = CurrencyValuesHelper.visibleList.get(position).code;
+                    CurrencyValuesHelper.hideItems(position);
                     parent.add.filterList();
                     parent.add.adapter.setNewData();
-                    adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                    adapter.notifyItemRemoved(position);
                     adapter.size = CurrencyValuesHelper.visibleList.size();
                     toggleEmptyView();
                     CurrencyValuesHelper.writeValuesToDB(mContext);
+                    parent.generateUndoSnackbar();
                 }
             });
             adapter = new EditCurrenciesAdapter();
@@ -290,6 +293,7 @@ public class CurrenciesEditFragment extends Fragment {
         }
 
         void notifyModeChanged(RecyclerView.ViewHolder holder) {
+            size = CurrencyValuesHelper.visibleList.size();
             if (curMode == SELECTION_MODE) {
                 curMode = REORDER_MODE;
                 itemTouchHelper.attachToRecyclerView(recycler);
@@ -304,6 +308,7 @@ public class CurrenciesEditFragment extends Fragment {
                 itemsToRemove.add(CurrencyValuesHelper.visibleList.get(holder.getAdapterPosition()));
             }
             parent.toggleElementsVisibility();
+            toggleEmptyView();
             notifyDataSetChanged();
         }
 

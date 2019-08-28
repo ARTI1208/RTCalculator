@@ -11,4 +11,9 @@
     <dimen name="actionbar_elevation">0dp</dimen>
     <dimen name="currency_list_item_code_normal">18.0sp</dimen>
     <dimen name="currency_list_item_code_highlight">22.0sp</dimen>
+    <dimen name="bottom_view_corner_radius">8dp</dimen>
+    <dimen name="bottom_view_horizontal_margin">8dp</dimen>
+    <dimen name="bottom_view_vertical_margin">2.3dp</dimen>
+    <dimen name="bottom_view_stroke_width">1dp</dimen>
+    <dimen name="bottom_view_elevation">2dp</dimen>
 </resources>

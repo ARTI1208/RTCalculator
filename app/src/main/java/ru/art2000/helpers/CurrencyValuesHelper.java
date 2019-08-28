@@ -21,6 +21,8 @@ public class CurrencyValuesHelper {
 
     public static ArrayList<CurrencyItem> visibleList;
     public static ArrayList<CurrencyItem> hiddenList;
+    private static ArrayList<CurrencyItem> previousVisibleList;
+    private static ArrayList<CurrencyItem> previousHiddenList;
     public static String updateDate;
 
     public static void getDataFromDB(Context ctx) {
@@ -78,6 +80,8 @@ public class CurrencyValuesHelper {
         DBHelper.close();
         sortVisibleList();
         sortHiddenList();
+        visibleList.trimToSize();
+        hiddenList.trimToSize();
     }
 
     public static void putRefreshDate(String date, Context ctx) {
@@ -123,6 +127,10 @@ public class CurrencyValuesHelper {
 
     public static void makeItemsVisible(EditCurrenciesActivity activity,
                                         ArrayList<CurrencyItem> list) {
+
+        previousVisibleList = new ArrayList<>(visibleList);
+        previousHiddenList = new ArrayList<>(hiddenList);
+
         visibleList.addAll(list);
         hiddenList.removeAll(list);
         activity.add.removeFromCurrentList(list);
@@ -131,6 +139,10 @@ public class CurrencyValuesHelper {
     }
 
     public static void hideItems(ArrayList<CurrencyItem> list) {
+
+        previousVisibleList = new ArrayList<>(visibleList);
+        previousHiddenList = new ArrayList<>(hiddenList);
+
         hiddenList.addAll(list);
         visibleList.removeAll(list);
         list.clear();
@@ -143,6 +155,30 @@ public class CurrencyValuesHelper {
             list.add(visibleList.get(i));
         }
         hideItems(list);
+    }
+
+    public static int getDifference() {
+        return visibleList.size() - previousVisibleList.size();
+    }
+
+    public static void undoChanges() {
+        if (previousVisibleList != null) {
+            ArrayList<CurrencyItem> tmpVisibleList = visibleList;
+            visibleList = previousVisibleList;
+            previousVisibleList = tmpVisibleList;
+        }
+        if (previousHiddenList != null) {
+            ArrayList<CurrencyItem> tmpHiddenList = hiddenList;
+            hiddenList = previousHiddenList;
+            previousHiddenList = tmpHiddenList;
+        }
+    }
+
+    public static void freeResources() {
+        previousVisibleList = null;
+        previousHiddenList = null;
+        visibleList.trimToSize();
+        hiddenList.trimToSize();
     }
 
     private static void fixPositions() {

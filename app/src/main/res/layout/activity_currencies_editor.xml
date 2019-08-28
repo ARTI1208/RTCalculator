@@ -57,16 +57,20 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8.0dip"
-            android:layout_marginEnd="8.0dip"
-            android:layout_marginBottom="2.3dp"
+            android:layout_marginStart="@dimen/bottom_view_horizontal_margin"
+            android:layout_marginTop="@dimen/bottom_view_vertical_margin"
+            android:layout_marginEnd="@dimen/bottom_view_horizontal_margin"
+            android:layout_marginBottom="@dimen/bottom_view_vertical_margin"
             app:cardBackgroundColor="?floatingBottomBarBackground"
-            app:cardCornerRadius="8.0dip"
+            app:cardCornerRadius="@dimen/bottom_view_corner_radius"
             app:cardUseCompatPadding="true"
+            app:cardElevation="@dimen/bottom_view_elevation"
+            app:elevation="@dimen/bottom_view_elevation"
             app:strokeColor="?strokeColor"
-            app:strokeWidth="1.0dip"
+            app:strokeWidth="@dimen/bottom_view_stroke_width"
             tools:ignore="PrivateResource">
 
             <androidx.appcompat.widget.SearchView
@@ -86,12 +90,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="50dp"
         android:visibility="invisible"
+        app:layout_dodgeInsetEdges="top"
         app:backgroundTint="?colorAccent"
         app:layout_behavior="ru.art2000.extensions.FloatingActionButtonScrollingBehaviour"
         app:srcCompat="@drawable/ic_currencies_done"

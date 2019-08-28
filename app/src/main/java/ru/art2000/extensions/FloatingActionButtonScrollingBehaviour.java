@@ -72,64 +72,7 @@ public class FloatingActionButtonScrollingBehaviour extends FloatingActionButton
                                int dxUnconsumed, int dyUnconsumed,
                                int type,
                                @NonNull int[] consumed) {
-        if (dyConsumed > SCROLL_OFFSET && state == SHOWN) {
-            state = ANIMATING_DOWN;
-            CoordinatorLayout.MarginLayoutParams layoutParams =
-                    (CoordinatorLayout.MarginLayoutParams) child.getLayoutParams();
-            child.animate()
-                    .translationY(child.getHeight() + layoutParams.bottomMargin)
-                    .setInterpolator(new LinearInterpolator())
-                    .setDuration(ANIMATION_DURATION)
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            state = HIDDEN;
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    }).start();
-        } else if (dyConsumed < -SCROLL_OFFSET && state == HIDDEN) {
-            state = ANIMATING_UP;
-            child.animate()
-                    .translationY(0)
-                    .setInterpolator(new LinearInterpolator())
-                    .setDuration(ANIMATION_DURATION)
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            state = SHOWN;
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    }).start();
-        }
-
+        setupAnimation(child, dyConsumed);
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed,
                 dxUnconsumed, dyUnconsumed, type, consumed);
     }
@@ -141,6 +84,11 @@ public class FloatingActionButtonScrollingBehaviour extends FloatingActionButton
                                   int dx, int dy,
                                   @NonNull int[] consumed,
                                   int type) {
+        setupAnimation(child, dy);
+        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
+    }
+
+    private void setupAnimation(FloatingActionButton child, int dy) {
         if (dy > SCROLL_OFFSET && state == SHOWN) {
             state = ANIMATING_DOWN;
             CoordinatorLayout.MarginLayoutParams layoutParams =
@@ -198,7 +146,5 @@ public class FloatingActionButtonScrollingBehaviour extends FloatingActionButton
                         }
                     }).start();
         }
-
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
     }
 }

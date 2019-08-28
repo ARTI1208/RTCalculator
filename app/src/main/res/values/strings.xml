@@ -101,4 +101,7 @@
     <string name="currencies_update_failed">Load failed: update app or contact dev if it is not fixed in last version</string>
     <string name="currencies_update_exception">Load exception: update app or contact dev if it is not fixed in last version</string>
     <string name="currencies_update_toast">Updating…</string>
+    <string name="action_undo">Undo</string>
+    <string name="message_item_shown">Item \"%s\" made shown</string>
+    <string name="message_item_hidden">Item \"%s\" made hidden</string>
 </resources>

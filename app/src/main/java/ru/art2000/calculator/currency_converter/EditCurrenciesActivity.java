@@ -5,18 +5,22 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -24,12 +28,15 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.List;
+import java.util.Objects;
 
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.DayNightActivity;
@@ -61,11 +68,14 @@ public class EditCurrenciesActivity extends DayNightActivity {
     boolean isFirstTimeTooltipShown = !PrefsHelper.isDeleteTooltipShown();
     Snackbar deleteTooltip;
 
+    CoordinatorLayout coordinatorLayout;
     LinearLayout searchViewLayout;
     SearchView barSearchView;
 
     boolean useViewPager2 = false;
     boolean optionsMenuCreated = false;
+
+    String lastModifiedItemCode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +86,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         mContext = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         fab = findViewById(R.id.floatingActionButton);
         fab.addOnShowAnimationListener(new Animator.AnimatorListener() {
@@ -124,6 +134,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
         });
 
+        coordinatorLayout = findViewById(R.id.coordinator);
         searchViewLayout = findViewById(R.id.search_view_layout);
         barSearchView = findViewById(R.id.search_view);
         barSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -234,6 +245,10 @@ public class EditCurrenciesActivity extends DayNightActivity {
         searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         add.recyclerViewBottomPadding = searchViewLayout.getMeasuredHeight();
 
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        layoutParams.bottomMargin = add.recyclerViewBottomPadding;
+        fab.setLayoutParams(layoutParams);
+
         selectedTab = tabs.getSelectedTabPosition();
         modifyVisualElements(selectedTab);
     }
@@ -301,7 +316,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
         }
 
-        deleteTooltip = SnackbarThemeHelper.createThemedSnackbar(findViewById(R.id.coordinator),
+        deleteTooltip = createStyledSnackbar(
                 R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE);
 
         deleteTooltip.addCallback(new Snackbar.Callback() {
@@ -356,27 +371,124 @@ public class EditCurrenciesActivity extends DayNightActivity {
         fab.hide();
     }
 
+    private Snackbar styleSnackbar(Snackbar snackbar) {
+        View snackbarView = snackbar.getView();
+
+        MaterialCardView cardView = findViewById(R.id.card_wrapper);
+        ViewGroup.MarginLayoutParams cardLayoutParams =
+                (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+
+        int leftMargin = cardLayoutParams.leftMargin + cardView.getPaddingLeft();
+        int rightMargin = cardLayoutParams.rightMargin + cardView.getPaddingRight();
+        int height = cardView.getChildAt(0).getMeasuredHeight();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            height += cardView.getPaddingBottom()
+                    + cardView.getStrokeWidth()
+                    - (int) cardView.getCardElevation();
+            leftMargin -= cardView.getCardElevation() + cardView.getStrokeWidth();
+            rightMargin -= cardView.getCardElevation() + cardView.getStrokeWidth();
+        } else {
+            snackbarView.setElevation(0);
+        }
+
+        snackbarView.setMinimumHeight(height);
+        snackbarView.setTranslationY(cardView.getPaddingTop() - cardView.getStrokeWidth());
+
+        ViewGroup.MarginLayoutParams snackLayoutParams =
+                (ViewGroup.MarginLayoutParams) snackbarView.getLayoutParams();
+        snackLayoutParams.leftMargin = leftMargin;
+        snackLayoutParams.rightMargin = rightMargin;
+        snackbarView.setLayoutParams(snackLayoutParams);
+
+        return snackbar;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private Snackbar createStyledSnackbar(@StringRes int message, int duration) {
+        return styleSnackbar(
+                SnackbarThemeHelper.createThemedSnackbar(coordinatorLayout, message, duration));
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private Snackbar createStyledSnackbar(@NonNull CharSequence message, int duration) {
+        return styleSnackbar(
+                SnackbarThemeHelper.createThemedSnackbar(coordinatorLayout, message, duration));
+    }
+
+    protected void generateUndoSnackbar() {
+        int count = CurrencyValuesHelper.getDifference();
+        boolean added = count > 0;
+        count = Math.abs(count);
+
+        String message;
+
+        if (count == 1) {
+            message = mContext.getString(
+                    added
+                            ? R.string.message_item_shown
+                            : R.string.message_item_hidden,
+                    lastModifiedItemCode);
+        } else {
+            message = mContext.getResources().getQuantityString(
+                    added
+                            ? R.plurals.message_items_shown
+                            : R.plurals.message_items_hidden,
+                    count,
+                    count);
+        }
+
+        Snackbar undoSnackbar = createStyledSnackbar(message, Snackbar.LENGTH_LONG);
+
+        undoSnackbar.setAction(R.string.action_undo, view -> {
+            CurrencyValuesHelper.undoChanges();
+            add.adapter.setNewData();
+            edit.adapter.setNewData();
+            CurrencyValuesHelper.writeValuesToDB(mContext);
+            generateUndoSnackbar();
+        });
+
+        undoSnackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                if (event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION
+                        && event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE) {
+                    CurrencyValuesHelper.freeResources();
+                }
+            }
+        });
+
+        undoSnackbar.show();
+    }
+
     public void modifyVisualElements(int tabPos) {
         if (tabPos == 0) {
             setNewFabImage(checkDrawable);
             fab.setOnClickListener(v -> {
+                if (add.adapter.itemsToAdd.size() == 1) {
+                    lastModifiedItemCode = add.adapter.itemsToAdd.get(0).code;
+                }
                 CurrencyValuesHelper.makeItemsVisible(this, add.adapter.itemsToAdd);
                 changeDone = true;
                 add.adapter.setNewData();
                 edit.adapter.setNewData();
                 toggleElementsVisibility();
                 CurrencyValuesHelper.writeValuesToDB(mContext);
+                generateUndoSnackbar();
             });
         } else {
             setNewFabImage(deleteDrawable);
             fab.setOnClickListener(v -> {
+                if (edit.adapter.itemsToRemove.size() == 1) {
+                    lastModifiedItemCode = edit.adapter.itemsToRemove.get(0).code;
+                }
                 CurrencyValuesHelper.hideItems(edit.adapter.itemsToRemove);
                 changeDone = true;
                 add.filterList();
                 add.adapter.setNewData();
                 edit.adapter.notifyModeChanged(null);
-                edit.adapter.setNewData();
                 CurrencyValuesHelper.writeValuesToDB(mContext);
+                generateUndoSnackbar();
             });
         }
     }
@@ -426,7 +538,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         }
 
         @Nullable
-        public CharSequence getPageTitle(int position) {
+        CharSequence getPageTitle(int position) {
             return categories[position];
         }
 
