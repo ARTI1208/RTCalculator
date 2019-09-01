@@ -27,9 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.CurrencyItem;
+import ru.art2000.extensions.CurrencyItemWrapper;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 
@@ -155,8 +156,7 @@ public class CurrenciesEditFragment extends Fragment {
                     int position = viewHolder.getAdapterPosition();
                     parent.lastModifiedItemCode = CurrencyValuesHelper.visibleList.get(position).code;
                     CurrencyValuesHelper.hideItems(position);
-                    parent.add.filterList();
-                    parent.add.adapter.setNewData();
+                    parent.add.adapter.reFilterData();
                     adapter.notifyItemRemoved(position);
                     adapter.size = CurrencyValuesHelper.visibleList.size();
                     toggleEmptyView();
@@ -192,27 +192,41 @@ public class CurrenciesEditFragment extends Fragment {
         return getString(R.string.empty_text_no_currencies_added);
     }
 
-    class EditCurrenciesAdapter extends RecyclerView.Adapter {
+    private void updateCheckState(List<CurrencyItemWrapper> list) {
+        for (int i = 0; i < list.size(); ++i) {
+            RecyclerView.ViewHolder holder = recycler.findViewHolderForAdapterPosition(i);
+            if (holder != null) {
+                CheckBox checkBox = ((EditCurrenciesAdapter.Holder) holder).checkBox;
+                if (checkBox != null) {
+                    checkBox.setChecked(list.get(i).isSelected);
+                }
+            }
+        }
+    }
+
+    class EditCurrenciesAdapter extends RecyclerView.Adapter<EditCurrenciesAdapter.Holder> {
 
         final int REORDER_MODE = 0;
         final int SELECTION_MODE = 1;
         int size = CurrencyValuesHelper.visibleList.size();
-        ArrayList<CurrencyItem> itemsToRemove = new ArrayList<>();
+        int selectedCount = 0;
         int curMode = REORDER_MODE;
         @LayoutRes
         int selectionItem = R.layout.item_add_currencies_list;
         @LayoutRes
         int reorderItem = R.layout.item_edit_currencies_list;
 
-        void deselectAll() {
-            itemsToRemove.clear();
-            notifyModeChanged(null);
-        }
+        boolean shouldUpdateVisibility = true;
 
-        void selectAll() {
-            itemsToRemove.clear();
-            itemsToRemove.addAll(CurrencyValuesHelper.visibleList);
-            notifyDataSetChanged();
+        EditCurrenciesAdapter() {
+            for (CurrencyItemWrapper itemWrapper : CurrencyValuesHelper.visibleList) {
+                if (itemWrapper.isSelected) {
+                    ++selectedCount;
+                }
+            }
+            if (selectedCount > 0) {
+                curMode = SELECTION_MODE;
+            }
         }
 
         @Override
@@ -220,15 +234,9 @@ public class CurrenciesEditFragment extends Fragment {
             return curMode;
         }
 
-        void setNewData() {
-            size = CurrencyValuesHelper.visibleList.size();
-            notifyDataSetChanged();
-            toggleEmptyView();
-        }
-
         @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public EditCurrenciesAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View item;
             if (viewType == SELECTION_MODE)
                 item = LayoutInflater.from(mContext).inflate(selectionItem, null);
@@ -237,18 +245,22 @@ public class CurrenciesEditFragment extends Fragment {
             return new Holder(item);
         }
 
+        @Override
+        public void onViewAttachedToWindow(@NonNull Holder holder) {
+            int pos = holder.getAdapterPosition();
+            if (holder.checkBox != null) {
+                holder.checkBox.setChecked(CurrencyValuesHelper.visibleList.get(pos).isSelected);
+            }
+        }
+
         @SuppressLint("ClickableViewAccessibility")
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            TextView code = ((Holder) holder).code;
-            TextView name = ((Holder) holder).name;
-            ImageView handle = ((Holder) holder).handle;
-            CheckBox check = ((Holder) holder).check;
-            CurrencyItem item = CurrencyValuesHelper.visibleList.get(position);
-            code.setText(item.code);
-            name.setText(item.nameResourceId);
-            if (handle != null) {
-                handle.setOnTouchListener((v, event) -> {
+        public void onBindViewHolder(@NonNull EditCurrenciesAdapter.Holder holder, int position) {
+            CurrencyItemWrapper currencyItem = CurrencyValuesHelper.visibleList.get(position);
+            holder.code.setText(currencyItem.code);
+            holder.name.setText(currencyItem.nameResourceId);
+            if (holder.handle != null) {
+                holder.handle.setOnTouchListener((v, event) -> {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         itemTouchHelper.startDrag(holder);
                     }
@@ -260,31 +272,27 @@ public class CurrenciesEditFragment extends Fragment {
                     return false;
                 });
             } else {
-                check.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked && !itemsToRemove.contains(item))
-                        itemsToRemove.add(item);
-                    else if (!isChecked)
-                        itemsToRemove.remove(item);
-                    if (!isSomethingSelected())
-                        notifyModeChanged(holder);
-                    parent.toggleElementsVisibility();
+                holder.checkBox.setOnCheckedChangeListener(null);
+                holder.checkBox.setChecked(currencyItem.isSelected);
+                holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        if (!currencyItem.isSelected) {
+                            currencyItem.isSelected = true;
+                            ++selectedCount;
+                        }
+                    } else {
+                        if (currencyItem.isSelected) {
+                            currencyItem.isSelected = false;
+                            --selectedCount;
+                        }
+                    }
+                    if (shouldUpdateVisibility) {
+                        parent.toggleElementsVisibility();
+                    }
                 });
                 holder.itemView.setOnClickListener(v ->
-                        check.performClick());
-                check.setChecked(itemsToRemove.contains(item));
+                        holder.checkBox.performClick());
             }
-        }
-
-        boolean isSomethingSelected() {
-            return itemsToRemove.size() != 0;
-        }
-
-        boolean isAllSelected() {
-            return itemsToRemove.size() == CurrencyValuesHelper.visibleList.size();
-        }
-
-        boolean isSelectionMode() {
-            return curMode == SELECTION_MODE;
         }
 
         @Override
@@ -292,12 +300,25 @@ public class CurrenciesEditFragment extends Fragment {
             return size;
         }
 
+        ArrayList<CurrencyItemWrapper> getSelectedItems() {
+            ArrayList<CurrencyItemWrapper> selectedItems = new ArrayList<>();
+            for (CurrencyItemWrapper itemWrapper : CurrencyValuesHelper.visibleList) {
+                if (itemWrapper.isSelected) {
+                    selectedItems.add(itemWrapper);
+                }
+            }
+            return selectedItems;
+        }
+
         void notifyModeChanged(RecyclerView.ViewHolder holder) {
             size = CurrencyValuesHelper.visibleList.size();
             if (curMode == SELECTION_MODE) {
                 curMode = REORDER_MODE;
                 itemTouchHelper.attachToRecyclerView(recycler);
-                itemsToRemove.clear();
+                selectedCount = 0;
+                for (CurrencyItemWrapper itemWrapper : CurrencyValuesHelper.visibleList) {
+                    itemWrapper.isSelected = false;
+                }
             } else {
                 curMode = SELECTION_MODE;
                 itemTouchHelper.attachToRecyclerView(null);
@@ -305,18 +326,55 @@ public class CurrenciesEditFragment extends Fragment {
                     parent.isFirstTimeTooltipShown = false;
                     parent.deleteTooltip.dismiss();
                 }
-                itemsToRemove.add(CurrencyValuesHelper.visibleList.get(holder.getAdapterPosition()));
+                ++selectedCount;
+                CurrencyValuesHelper.visibleList.get(holder.getAdapterPosition()).isSelected = true;
             }
             parent.toggleElementsVisibility();
             toggleEmptyView();
             notifyDataSetChanged();
         }
 
+        void deselectAll() {
+            for (CurrencyItemWrapper currencyItemWrapper : CurrencyValuesHelper.visibleList) {
+                currencyItemWrapper.isSelected = false;
+            }
+            selectedCount = 0;
+            notifyModeChanged(null);
+        }
+
+        void selectAll() {
+            for (CurrencyItemWrapper currencyItemWrapper : CurrencyValuesHelper.visibleList) {
+                currencyItemWrapper.isSelected = true;
+            }
+            shouldUpdateVisibility = false;
+            updateCheckState(CurrencyValuesHelper.visibleList);
+            shouldUpdateVisibility = true;
+            selectedCount = size;
+        }
+
+        boolean isSomethingSelected() {
+            return selectedCount != 0;
+        }
+
+        boolean isAllSelected() {
+            return selectedCount == CurrencyValuesHelper.visibleList.size();
+        }
+
+        boolean isSelectionMode() {
+            return curMode == SELECTION_MODE;
+        }
+
+        void setNewData() {
+            size = CurrencyValuesHelper.visibleList.size();
+            notifyDataSetChanged();
+            toggleEmptyView();
+        }
+
         class Holder extends RecyclerView.ViewHolder {
 
             TextView code;
             ImageView handle;
-            CheckBox check;
+            CheckBox checkBox;
             TextView name;
 
             Holder(final View itemView) {
@@ -324,7 +382,7 @@ public class CurrenciesEditFragment extends Fragment {
                 code = itemView.findViewById(R.id.currency_code);
                 name = itemView.findViewById(R.id.currency_name);
                 handle = itemView.findViewById(R.id.handle);
-                check = itemView.findViewById(R.id.checkbox_add);
+                checkBox = itemView.findViewById(R.id.checkbox_add);
             }
 
         }

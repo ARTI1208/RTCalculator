@@ -7,6 +7,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,10 +36,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import ru.art2000.calculator.R;
+import ru.art2000.extensions.CurrencyItemWrapper;
 import ru.art2000.extensions.DayNightActivity;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
@@ -137,18 +140,6 @@ public class EditCurrenciesActivity extends DayNightActivity {
         coordinatorLayout = findViewById(R.id.coordinator);
         searchViewLayout = findViewById(R.id.search_view_layout);
         barSearchView = findViewById(R.id.search_view);
-        barSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                add.setNewList(add.searchByQuery(newText));
-                return true;
-            }
-        });
 
         tabs = findViewById(R.id.tabs);
 
@@ -269,6 +260,21 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
         optionsMenuCreated = true;
 
+        barSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                add.filterList(newText);
+                return true;
+            }
+        });
+
+        toggleElementsVisibility();
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -346,6 +352,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     public void toggleElementsVisibility() {
         if (selectedTab == 0) {
+            Log.d("elVis", String.valueOf(add.adapter.selectedCount));
             if (add.adapter.isSomethingSelected()) {
                 fab.show();
                 deselect.setVisible(true);
@@ -362,7 +369,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 fab.hide();
             }
             select.setVisible(selection && !edit.adapter.isAllSelected());
-            deselect.setVisible(selection);
+            deselect.setVisible(edit.adapter.isSomethingSelected());
         }
     }
 
@@ -465,12 +472,15 @@ public class EditCurrenciesActivity extends DayNightActivity {
         if (tabPos == 0) {
             setNewFabImage(checkDrawable);
             fab.setOnClickListener(v -> {
-                if (add.adapter.itemsToAdd.size() == 1) {
-                    lastModifiedItemCode = add.adapter.itemsToAdd.get(0).code;
+                ArrayList<CurrencyItemWrapper> selectedItems = add.adapter.getSelectedItems();
+
+                if (selectedItems.size() == 1) {
+                    lastModifiedItemCode = selectedItems.get(0).code;
                 }
-                CurrencyValuesHelper.makeItemsVisible(this, add.adapter.itemsToAdd);
+                CurrencyValuesHelper.makeItemsVisible(selectedItems);
+                add.removeFromCurrentList(selectedItems);
                 changeDone = true;
-                add.adapter.setNewData();
+                add.adapter.reFilterData();
                 edit.adapter.setNewData();
                 toggleElementsVisibility();
                 CurrencyValuesHelper.writeValuesToDB(mContext);
@@ -479,13 +489,14 @@ public class EditCurrenciesActivity extends DayNightActivity {
         } else {
             setNewFabImage(deleteDrawable);
             fab.setOnClickListener(v -> {
-                if (edit.adapter.itemsToRemove.size() == 1) {
-                    lastModifiedItemCode = edit.adapter.itemsToRemove.get(0).code;
+                ArrayList<CurrencyItemWrapper> selectedItems = edit.adapter.getSelectedItems();
+
+                if (selectedItems.size() == 1) {
+                    lastModifiedItemCode = selectedItems.get(0).code;
                 }
-                CurrencyValuesHelper.hideItems(edit.adapter.itemsToRemove);
+                CurrencyValuesHelper.hideItems(selectedItems);
                 changeDone = true;
-                add.filterList();
-                add.adapter.setNewData();
+                add.adapter.reFilterData();
                 edit.adapter.notifyModeChanged(null);
                 CurrencyValuesHelper.writeValuesToDB(mContext);
                 generateUndoSnackbar();

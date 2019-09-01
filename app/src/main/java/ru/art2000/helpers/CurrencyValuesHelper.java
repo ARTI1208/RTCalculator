@@ -14,16 +14,19 @@ import java.util.Locale;
 import java.util.Objects;
 
 import ru.art2000.calculator.currency_converter.CurrencyDB;
-import ru.art2000.calculator.currency_converter.EditCurrenciesActivity;
 import ru.art2000.extensions.CurrencyItem;
+import ru.art2000.extensions.CurrencyItemWrapper;
+import ru.art2000.extensions.OnListChangeListener;
 
 public class CurrencyValuesHelper {
 
-    public static ArrayList<CurrencyItem> visibleList;
-    public static ArrayList<CurrencyItem> hiddenList;
-    private static ArrayList<CurrencyItem> previousVisibleList;
-    private static ArrayList<CurrencyItem> previousHiddenList;
+    public static ArrayList<CurrencyItemWrapper> visibleList;
+    public static ArrayList<CurrencyItemWrapper> hiddenList;
+    public static OnListChangeListener<CurrencyItemWrapper> visibleListChangeListener;
+    public static OnListChangeListener<CurrencyItemWrapper> hiddenListChangeListener;
     public static String updateDate;
+    private static ArrayList<CurrencyItemWrapper> previousVisibleList;
+    private static ArrayList<CurrencyItemWrapper> previousHiddenList;
 
     public static void getDataFromDB(Context ctx) {
         visibleList = new ArrayList<>();
@@ -63,7 +66,7 @@ public class CurrencyValuesHelper {
                         name, "string", ctx.getPackageName());
                 int pos = cc.getInt(cc.getColumnIndex("position"));
                 Double rate = cc.getDouble(cc.getColumnIndex("rate"));
-                CurrencyItem item = new CurrencyItem();
+                CurrencyItemWrapper item = new CurrencyItemWrapper();
                 item.code = curCode;
                 item.position = pos;
                 item.rate = rate;
@@ -100,17 +103,17 @@ public class CurrencyValuesHelper {
         return 0;
     }
 
-    public static ArrayList<CurrencyItem> findAllItems(Context context,
-                                                       ArrayList<CurrencyItem> list,
-                                                       String query) {
+    public static ArrayList<CurrencyItemWrapper> findAllItems(Context context,
+                                                              ArrayList<CurrencyItemWrapper> list,
+                                                              String query) {
         if (query == null || query.length() == 0)
             return list;
-        ArrayList<CurrencyItem> newList = new ArrayList<>();
+        ArrayList<CurrencyItemWrapper> newList = new ArrayList<>();
         String lowerQuery = query.toLowerCase();
 
         Locale mainLocale = Locale.getDefault();
 
-        for (CurrencyItem item : list) {
+        for (CurrencyItemWrapper item : list) {
 
             String lowerCode = item.code.toLowerCase();
             String lowerName = context.getString(item.nameResourceId).toLowerCase();
@@ -125,23 +128,43 @@ public class CurrencyValuesHelper {
         return newList;
     }
 
-    public static void makeItemsVisible(EditCurrenciesActivity activity,
-                                        ArrayList<CurrencyItem> list) {
+    public static void makeItemsVisible(ArrayList<CurrencyItemWrapper> list) {
 
         previousVisibleList = new ArrayList<>(visibleList);
         previousHiddenList = new ArrayList<>(hiddenList);
 
+        if (visibleListChangeListener != null) {
+            visibleListChangeListener.onItemsAdded(list);
+        }
+        if (hiddenListChangeListener != null) {
+            hiddenListChangeListener.onItemsRemoved(list);
+        }
+
+        for (CurrencyItemWrapper itemWrapper : list) {
+            itemWrapper.isSelected = false;
+        }
+
         visibleList.addAll(list);
         hiddenList.removeAll(list);
-        activity.add.removeFromCurrentList(list);
         list.clear();
         fixPositions();
     }
 
-    public static void hideItems(ArrayList<CurrencyItem> list) {
+    public static void hideItems(ArrayList<CurrencyItemWrapper> list) {
 
         previousVisibleList = new ArrayList<>(visibleList);
         previousHiddenList = new ArrayList<>(hiddenList);
+
+        if (visibleListChangeListener != null) {
+            visibleListChangeListener.onItemsRemoved(list);
+        }
+        if (hiddenListChangeListener != null) {
+            hiddenListChangeListener.onItemsAdded(list);
+        }
+
+        for (CurrencyItemWrapper itemWrapper : list) {
+            itemWrapper.isSelected = false;
+        }
 
         hiddenList.addAll(list);
         visibleList.removeAll(list);
@@ -150,7 +173,7 @@ public class CurrencyValuesHelper {
     }
 
     public static void hideItems(Integer... positions) {
-        ArrayList<CurrencyItem> list = new ArrayList<>();
+        ArrayList<CurrencyItemWrapper> list = new ArrayList<>();
         for (int i : positions) {
             list.add(visibleList.get(i));
         }
@@ -163,12 +186,12 @@ public class CurrencyValuesHelper {
 
     public static void undoChanges() {
         if (previousVisibleList != null) {
-            ArrayList<CurrencyItem> tmpVisibleList = visibleList;
+            ArrayList<CurrencyItemWrapper> tmpVisibleList = visibleList;
             visibleList = previousVisibleList;
             previousVisibleList = tmpVisibleList;
         }
         if (previousHiddenList != null) {
-            ArrayList<CurrencyItem> tmpHiddenList = hiddenList;
+            ArrayList<CurrencyItemWrapper> tmpHiddenList = hiddenList;
             hiddenList = previousHiddenList;
             previousHiddenList = tmpHiddenList;
         }
