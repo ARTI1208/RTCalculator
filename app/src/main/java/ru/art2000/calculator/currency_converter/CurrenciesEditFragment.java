@@ -289,6 +289,9 @@ public class CurrenciesEditFragment extends Fragment {
                     if (shouldUpdateVisibility) {
                         parent.toggleElementsVisibility();
                     }
+                    if (selectedCount == 0) {
+                        notifyModeChanged(null);
+                    }
                 });
                 holder.itemView.setOnClickListener(v ->
                         holder.checkBox.performClick());
