@@ -3,6 +3,7 @@ package ru.art2000.helpers;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
@@ -53,5 +54,11 @@ public class AndroidHelper {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(attribute, typedValue, true);
         return ContextCompat.getColor(context, typedValue.resourceId);
+    }
+
+    public static Drawable getDrawableAttribute(@NonNull Context context, @AttrRes int attribute) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attribute, typedValue, true);
+        return ContextCompat.getDrawable(context, typedValue.resourceId);
     }
 }

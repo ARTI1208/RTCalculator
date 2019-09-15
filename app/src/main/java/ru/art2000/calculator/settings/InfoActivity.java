@@ -3,7 +3,9 @@ package ru.art2000.calculator.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
 
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.DayNightActivity;
+import ru.art2000.extensions.TextImageView;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
@@ -38,15 +41,23 @@ public class InfoActivity extends DayNightActivity {
         findViewById(R.id.chng_back).setBackground(changelogBackgroundDrawable);
         TextView changelog = findViewById(R.id.changelog);
         changelog.setText(getChangeLogText());
-        GradientDrawable gd = new GradientDrawable();
-        int accentColor = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
-        gd.setStroke(AndroidHelper.dip2px(this, 4), accentColor);
-        gd.setShape(GradientDrawable.OVAL);
-        TextView tv = findViewById(R.id.tvv);
-        tv.setBackground(gd);
-        tv.setOnClickListener(v -> {
-            Intent intent = new Intent(this, FirstSetup.class);
-            startActivity(intent);
+
+        TextImageView devAvatar = findViewById(R.id.dev_avatar);
+        devAvatar.getImageView().setImageResource(R.drawable.dev_avatar);
+        TextView devName = devAvatar.getTextView();
+        devName.setText("ARTI1208");
+        devName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        GradientDrawable devBackground = new GradientDrawable();
+        devBackground.setStroke(AndroidHelper.dip2px(this, 1), changelogBackgroundColor);
+        devBackground.setCornerRadius(AndroidHelper.dip2px(this, 10));
+        devAvatar.setBackground(devBackground);
+
+        TextImageView githubButton = findViewById(R.id.github_button);
+        githubButton.getImageView().setImageResource(R.drawable.github);
+        githubButton.getTextView().setText("GitHub");
+        githubButton.setOnClickListener(view -> {
+            Intent githubIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ARTI1208"));
+            startActivity(githubIntent);
         });
     }
 
