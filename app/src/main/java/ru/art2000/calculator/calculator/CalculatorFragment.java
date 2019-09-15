@@ -66,14 +66,14 @@ import static ru.art2000.calculator.calculator.CalculationClass.radians;
 
 public class CalculatorFragment extends ReplaceableFragment {
 
-    private static final int COPY_ALL = 100;
-    private static final int COPY_EXPR = 101;
-    private static final int COPY_RES = 102;
+    static final int COPY_ALL = 100;
+    static final int COPY_EXPR = 101;
+    static final int COPY_RES = 102;
 
     private static final int PASTE = 200;
     private static final int PASTE_AFTER = 201;
 
-    private static final int DELETE = 300;
+    static final int DELETE = 300;
 
     private static final String EXTRA_STATE_SAVED = "state_saved";
     private static final String EXTRA_INPUT = "input";

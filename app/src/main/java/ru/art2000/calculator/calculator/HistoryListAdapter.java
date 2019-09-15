@@ -16,16 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ru.art2000.calculator.R;
 
+import static ru.art2000.calculator.calculator.CalculatorFragment.COPY_ALL;
+import static ru.art2000.calculator.calculator.CalculatorFragment.COPY_EXPR;
+import static ru.art2000.calculator.calculator.CalculatorFragment.COPY_RES;
+import static ru.art2000.calculator.calculator.CalculatorFragment.DELETE;
+
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.ViewHolder> {
 
     private int position;
     private LayoutInflater mInflater;
     private HistoryDB hdb;
     private Context mContext;
-    private static final int COPY_ALL = 101;
-    private static final int COPY_EXPR = 102;
-    private static final int COPY_RES = 103;
-    private static final int DELETE = 104;
+
     private int size;
 
     HistoryListAdapter(Context context, HistoryDB hdb) {
@@ -61,9 +63,9 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
                 null,
                 null,
                 null);
-        if (position < getItemCount()){
+        if (position < getItemCount()) {
             Log.d("binding pos", String.valueOf(position));
-            cc.move(position+1);
+            cc.move(position + 1);
             holder.expr.setText(cc.getString(cc.getColumnIndex("expression")));
             holder.res.setText(cc.getString(cc.getColumnIndex("result")));
         }
@@ -81,7 +83,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         super.onViewRecycled(holder);
     }
 
-    void setNewData(){
+    void setNewData() {
         size = hdb.getSize();
         notifyDataSetChanged();
     }
