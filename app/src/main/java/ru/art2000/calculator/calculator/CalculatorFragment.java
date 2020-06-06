@@ -701,7 +701,7 @@ public class CalculatorFragment extends ReplaceableFragment {
                 View itemView = viewHolder.itemView;
 
                 // not sure why, but this method get's called for viewholder that are already swiped away
-                if (viewHolder.getAdapterPosition() == -1) {
+                if (viewHolder.getBindingAdapterPosition() == -1) {
                     // not interested in those
                     return;
                 }
@@ -725,16 +725,14 @@ public class CalculatorFragment extends ReplaceableFragment {
                             itemView.getLeft() + (int) dX, itemView.getBottom());
                     xMarkLeft = itemView.getLeft() + xMarkMargin;
                     xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
-                    xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                    xMarkBottom = xMarkTop + intrinsicHeight;
                 } else {
                     background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(),
                             itemView.getRight(), itemView.getBottom());
                     xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                     xMarkRight = itemView.getRight() - xMarkMargin;
-                    xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                    xMarkBottom = xMarkTop + intrinsicHeight;
                 }
+                xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                xMarkBottom = xMarkTop + intrinsicHeight;
                 background.draw(c);
 
                 // draw x mark
@@ -815,7 +813,7 @@ public class CalculatorFragment extends ReplaceableFragment {
                 }
 
                 // only if animation is in progress
-                if (parent.getItemAnimator().isRunning()) {
+                if (parent.getItemAnimator() != null && parent.getItemAnimator().isRunning() && parent.getLayoutManager() != null) {
 
                     // some items might be animating down and some items might be animating up to close the gap left by the removed item
                     // this is not exclusive, both movement can be happening at the same time
@@ -840,6 +838,10 @@ public class CalculatorFragment extends ReplaceableFragment {
                     int childCount = parent.getLayoutManager().getChildCount();
                     for (int i = 0; i < childCount; i++) {
                         View child = parent.getLayoutManager().getChildAt(i);
+
+                        if (child == null)
+                            continue;
+
                         if (child.getTranslationY() < 0) {
                             // view is coming down
                             lastViewComingDown = child;
@@ -877,8 +879,7 @@ public class CalculatorFragment extends ReplaceableFragment {
 
     @Override
     protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .changeStatusBarColor(true);
+        ((MainActivity) requireActivity()).changeStatusBarColor(true);
     }
 
     @Override

@@ -153,7 +153,7 @@ public class CurrenciesAddFragment extends Fragment {
 
         @Override
         public void onViewAttachedToWindow(@NonNull Holder holder) {
-            int pos = holder.getAdapterPosition();
+            int pos = holder.getBindingAdapterPosition();
             holder.checkBox.setChecked(currentList.get(pos).isSelected);
         }
 

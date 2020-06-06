@@ -71,7 +71,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         }
         cc.close();
         holder.itemView.setOnLongClickListener(v -> {
-            setPosition(holder.getAdapterPosition());
+            setPosition(holder.getBindingAdapterPosition());
             return false;
         });
 

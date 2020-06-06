@@ -21,7 +21,7 @@ import ru.art2000.calculator.R;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
 
-public class UnitListAdapter extends RecyclerView.Adapter {
+public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitItemHolder> {
 
     double inp = 1;
     int curDim = 0;
@@ -64,7 +64,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
     }
 
     void setInputValue(String val) {
-        inp = Double.valueOf(val.replace(',', '.'));
+        inp = Double.parseDouble(val.replace(',', '.'));
         formulas.calc(pagePosition, curDim, inp);
         for (int i = 0; i < getItemCount(); i++) {
             if (!recycler.isComputingLayout() && (!powerfulConverter || i != curDim))
@@ -99,7 +99,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UnitItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(mContext).
                 inflate(R.layout.item_unit_converter_list, parent, false);
         if (!powerfulConverter) {
@@ -172,7 +172,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final UnitItemHolder holder, final int position) {
         final ViewGroup item = (ViewGroup) holder.itemView;
         TextView dimensionNameView = item.findViewById(R.id.type);
         TextView dimensionValueView = (TextView) item.getChildAt(0);
@@ -187,7 +187,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
                 Log.d(createTag("editFocus"), "Changed to " + isFocused + " for " + position);
                 if (isFocused) {
 
-                    curDim = holder.getAdapterPosition();
+                    curDim = holder.getBindingAdapterPosition();
                     Log.d(createTag("ChngDim"), "4||was " + previousDimension + ", now " + curDim);
                     String value;
                     if (editValueView.getText().length() > 0)
@@ -196,7 +196,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
                         value = "1";
 
                     setValueAndDimension(
-                            Double.valueOf(value.replace(',', '.')),
+                            Double.parseDouble(value.replace(',', '.')),
                             position,
                             false);
 
@@ -208,7 +208,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
                 }
             });
 
-            if (holder.getAdapterPosition() == curDim) {
+            if (holder.getBindingAdapterPosition() == curDim) {
                 Log.d(createTag("firstFoc"), String.valueOf(curDim));
                 //editValueView.requestFocus();
             }
@@ -225,7 +225,7 @@ public class UnitListAdapter extends RecyclerView.Adapter {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (editValueView.hasFocus()) {
                         int previousDimension = curDim;
-                        curDim = holder.getAdapterPosition();
+                        curDim = holder.getBindingAdapterPosition();
                         Log.d(createTag("ChngDim"), "1||was " + previousDimension + ", now " + curDim);
                         if (s.toString().length() > 0)
                             setInputValue(s.toString());

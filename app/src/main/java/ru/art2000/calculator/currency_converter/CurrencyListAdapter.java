@@ -27,7 +27,7 @@ import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 
-public class CurrencyListAdapter extends RecyclerView.Adapter {
+public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.Holder> {
 
     private Context mContext;
     private int size = 0;
@@ -95,11 +95,11 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     }
 
     public void removeEditText2() {
-        if (inp == null || inp.getAdapterPosition() < 0)
+        if (inp == null || inp.getBindingAdapterPosition() < 0)
             return;
         inputItemPos = -1;
         inp.value.setText(dot2dig.format(inputItemVal *
-                CurrencyValuesHelper.visibleList.get(inp.getAdapterPosition()).rate));
+                CurrencyValuesHelper.visibleList.get(inp.getBindingAdapterPosition()).rate));
         inp.input.setEnabled(false);
         inp.input.setVisibility(View.GONE);
         inp.value.setTextColor(colorAccent);
@@ -110,16 +110,16 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final Holder holder, final int position) {
         final ViewGroup item = (ViewGroup) holder.itemView;
-        TextView value = ((Holder) holder).value;
-        EditText input = ((Holder) holder).input;
+        TextView value = holder.value;
+        EditText input = holder.input;
         input.setText("");
         input.clearFocus();
         input.setEnabled(false);
         input.setVisibility(View.GONE);
-        TextView code = ((Holder) holder).codeView;
-        TextView name = ((Holder) holder).nameView;
+        TextView code = holder.codeView;
+        TextView name = holder.nameView;
 
         if (csl == null)
             csl = code.getTextColors();
@@ -150,21 +150,21 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
 
         input.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                if (highlighted != holder.getAdapterPosition())
+                if (highlighted != holder.getBindingAdapterPosition())
                     if (!recycler.isComputingLayout()) {
                         notifyItemChanged(highlighted);
                     } else {
                         return;
                     }
                 value.setText("");
-                inp = (Holder) holder;
+                inp = holder;
                 code.setTextColor(colorAccent);
                 input.setTextColor(colorAccent);
                 name.setTextColor(colorAccent);
                 code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
                 code.setTypeface(null, Typeface.BOLD);
-                inputItemPos = holder.getAdapterPosition();
-                highlighted = holder.getAdapterPosition();
+                inputItemPos = holder.getBindingAdapterPosition();
+                highlighted = holder.getBindingAdapterPosition();
                 input.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -176,7 +176,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
                             inputItemVal = Double.parseDouble(s.toString()) /
                                     CurrencyValuesHelper.visibleList.get(inputItemPos).rate;
                             for (int i = 0; i < getItemCount(); i++) {
-                                if (i != holder.getAdapterPosition()) {
+                                if (i != holder.getBindingAdapterPosition()) {
                                     notifyItemChanged(i);
                                 }
                             }
@@ -214,7 +214,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter {
         return size;
     }
 
-    public class Holder extends RecyclerView.ViewHolder {
+    public static class Holder extends RecyclerView.ViewHolder {
 
         TextView codeView, nameView, value;
         EditText input;

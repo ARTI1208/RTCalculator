@@ -97,7 +97,7 @@ public class CurrenciesEditFragment extends Fragment {
                     if (dY == 0) {
                         View itemView = viewHolder.itemView;
 
-                        if (viewHolder.getAdapterPosition() == -1) {
+                        if (viewHolder.getBindingAdapterPosition() == -1) {
                             return;
                         }
 
@@ -120,16 +120,14 @@ public class CurrenciesEditFragment extends Fragment {
                                     itemView.getLeft() + (int) dX, itemView.getBottom());
                             xMarkLeft = itemView.getLeft() + xMarkMargin;
                             xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
-                            xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                            xMarkBottom = xMarkTop + intrinsicHeight;
                         } else {
                             background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(),
                                     itemView.getRight(), itemView.getBottom());
                             xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                             xMarkRight = itemView.getRight() - xMarkMargin;
-                            xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                            xMarkBottom = xMarkTop + intrinsicHeight;
                         }
+                        xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                        xMarkBottom = xMarkTop + intrinsicHeight;
                         background.draw(c);
 
                         xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
@@ -144,8 +142,8 @@ public class CurrenciesEditFragment extends Fragment {
                                       @NonNull RecyclerView.ViewHolder viewHolder,
                                       @NonNull RecyclerView.ViewHolder target) {
                     parent.changeDone = true;
-                    CurrencyValuesHelper.swap(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                    adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    CurrencyValuesHelper.swap(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+                    adapter.notifyItemMoved(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
                     CurrencyValuesHelper.writeValuesToDB(mContext);
                     return true;
                 }
@@ -153,7 +151,7 @@ public class CurrenciesEditFragment extends Fragment {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     parent.changeDone = true;
-                    int position = viewHolder.getAdapterPosition();
+                    int position = viewHolder.getBindingAdapterPosition();
                     parent.lastModifiedItemCode = CurrencyValuesHelper.visibleList.get(position).code;
                     CurrencyValuesHelper.hideItems(position);
                     parent.add.adapter.reFilterData();
@@ -247,7 +245,7 @@ public class CurrenciesEditFragment extends Fragment {
 
         @Override
         public void onViewAttachedToWindow(@NonNull Holder holder) {
-            int pos = holder.getAdapterPosition();
+            int pos = holder.getBindingAdapterPosition();
             if (holder.checkBox != null) {
                 holder.checkBox.setChecked(CurrencyValuesHelper.visibleList.get(pos).isSelected);
             }
@@ -330,7 +328,7 @@ public class CurrenciesEditFragment extends Fragment {
                     parent.deleteTooltip.dismiss();
                 }
                 ++selectedCount;
-                CurrencyValuesHelper.visibleList.get(holder.getAdapterPosition()).isSelected = true;
+                CurrencyValuesHelper.visibleList.get(holder.getBindingAdapterPosition()).isSelected = true;
             }
             parent.toggleElementsVisibility();
             toggleEmptyView();
