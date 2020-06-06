@@ -60,7 +60,7 @@ public class SnackbarThemeHelper {
         MaterialShapeDrawable backgroundDrawable = new MaterialShapeDrawable();
         backgroundDrawable.setStroke(resources.getDimension(R.dimen.bottom_view_stroke_width),
                 AndroidHelper.getColorAttribute(context, R.attr.strokeColor));
-        backgroundDrawable.setCornerRadius(cornerRadius);
+        backgroundDrawable.setCornerSize(cornerRadius);
         backgroundDrawable.setFillColor(ColorStateList.valueOf(
                 AndroidHelper.getColorAttribute(context, R.attr.floatingBottomBarBackground)));
         snackbarLayout.setBackground(backgroundDrawable);
