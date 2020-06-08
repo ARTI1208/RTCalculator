@@ -1,4 +1,4 @@
-package ru.art2000.calculator.currency_converter;
+package ru.art2000.calculator.currency_converter.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,19 +22,30 @@ import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListUpdateCallback;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.CurrencyItemWrapper;
+import ru.art2000.calculator.currency_converter.model.CurrencyItem;
+import ru.art2000.calculator.currency_converter.view_model.CurrenciesEditModel;
+import ru.art2000.calculator.currency_converter.view_model.CurrencyDependencies;
 import ru.art2000.helpers.AndroidHelper;
-import ru.art2000.helpers.CurrencyValuesHelper;
 
 public class CurrenciesEditFragment extends Fragment {
 
@@ -41,8 +54,10 @@ public class CurrenciesEditFragment extends Fragment {
     private RecyclerView recycler;
     private TextView emptyView;
     private Context mContext;
-    private EditCurrenciesActivity parent;
+    private CurrenciesSettingsActivity parent;
     private ItemTouchHelper itemTouchHelper;
+
+    private CurrenciesEditModel model;
 
     void scrollToTop() {
         recycler.smoothScrollToPosition(0);
@@ -54,7 +69,10 @@ public class CurrenciesEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         if (v == null) {
             mContext = getActivity();
-            parent = (EditCurrenciesActivity) getActivity();
+            parent = (CurrenciesSettingsActivity) requireActivity();
+
+            model = new CurrenciesEditModel(parent.getApplication());
+
             v = inflater.inflate(R.layout.modify_currencies_layout, null);
             recycler = v.findViewById(R.id.modify_currencies_list);
             recycler.setPadding(0, 0, 0, AndroidHelper.dip2px(mContext, 20));
@@ -142,9 +160,26 @@ public class CurrenciesEditFragment extends Fragment {
                                       @NonNull RecyclerView.ViewHolder viewHolder,
                                       @NonNull RecyclerView.ViewHolder target) {
                     parent.changeDone = true;
-                    CurrencyValuesHelper.swap(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
-                    adapter.notifyItemMoved(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
-                    CurrencyValuesHelper.writeValuesToDB(mContext);
+
+                    EditCurrenciesAdapter.Holder editViewHolder = (EditCurrenciesAdapter.Holder) viewHolder;
+                    EditCurrenciesAdapter.Holder editTarget = (EditCurrenciesAdapter.Holder) target;
+
+                    String firstCode = editViewHolder.code.getText().toString();
+                    String secondCode = editTarget.code.getText().toString();
+
+//                    CurrencyValuesHelper.swap(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+//                    adapter.notifyItemMoved(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+
+                    adapter.swap(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+//                    CurrencyValuesHelper.writeValuesToDB(mContext);
+
+                    new Thread(() -> {
+                        CurrencyDependencies
+                                .getCurrencyDatabase(mContext)
+                                .currencyDao()
+                                .swapPositions(firstCode, secondCode);
+                    }).start();
+
                     return true;
                 }
 
@@ -152,14 +187,26 @@ public class CurrenciesEditFragment extends Fragment {
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     parent.changeDone = true;
                     int position = viewHolder.getBindingAdapterPosition();
-                    parent.lastModifiedItemCode = CurrencyValuesHelper.visibleList.get(position).code;
-                    CurrencyValuesHelper.hideItems(position);
-                    parent.add.adapter.reFilterData();
+                    CurrencyItem removedItem = adapter.data.get(position);
+                    String code = removedItem.code;
+
+//                    parent.add.adapter.reFilterData();
+                    adapter.data.remove(position);
                     adapter.notifyItemRemoved(position);
-                    adapter.size = CurrencyValuesHelper.visibleList.size();
+//                    adapter.size = CurrencyValuesHelper.visibleList.size();
                     toggleEmptyView();
-                    CurrencyValuesHelper.writeValuesToDB(mContext);
-                    parent.generateUndoSnackbar();
+
+                    Maybe
+                            .fromRunnable(() ->
+                                    CurrencyDependencies
+                                            .getCurrencyDatabase(mContext)
+                                            .currencyDao()
+                                            .removeFromVisible(code)
+                            ).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnComplete(() ->
+                                    parent.generateUndoSnackbar(Collections.singletonList(removedItem), false))
+                            .subscribe();
                 }
             });
             adapter = new EditCurrenciesAdapter();
@@ -171,18 +218,25 @@ public class CurrenciesEditFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        LiveData<List<CurrencyItem>> items = model.getVisibleItems();
+        items.observe(getViewLifecycleOwner(), currencyItems -> {
+            if (adapter != null) {
+                adapter.setNewData(currencyItems);
+            }
+        });
+    }
+
     private void toggleEmptyView() {
         if (adapter == null)
             return;
+
         if (adapter.getItemCount() == 0) {
-            if (emptyView.getVisibility() == View.GONE) {
-                emptyView.setText(getEmptyText());
-                emptyView.setVisibility(View.VISIBLE);
-            }
+            emptyView.setText(getEmptyText());
+            emptyView.setVisibility(View.VISIBLE);
         } else {
-            if (emptyView.getVisibility() == View.VISIBLE) {
-                emptyView.setVisibility(View.GONE);
-            }
+            emptyView.setVisibility(View.GONE);
         }
     }
 
@@ -190,7 +244,7 @@ public class CurrenciesEditFragment extends Fragment {
         return getString(R.string.empty_text_no_currencies_added);
     }
 
-    private void updateCheckState(List<CurrencyItemWrapper> list) {
+    private void updateCheckState(List<CurrencyItem> list) {
         for (int i = 0; i < list.size(); ++i) {
             RecyclerView.ViewHolder holder = recycler.findViewHolderForAdapterPosition(i);
             if (holder != null) {
@@ -206,25 +260,97 @@ public class CurrenciesEditFragment extends Fragment {
 
         final int REORDER_MODE = 0;
         final int SELECTION_MODE = 1;
-        int size = CurrencyValuesHelper.visibleList.size();
-        int selectedCount = 0;
+
         int curMode = REORDER_MODE;
+
+        private MutableLiveData<Integer> mCurrentEditMode = new MutableLiveData<>(REORDER_MODE);
+        LiveData<Integer> currentEditMode = mCurrentEditMode;
+
+
         @LayoutRes
         int selectionItem = R.layout.item_add_currencies_list;
         @LayoutRes
         int reorderItem = R.layout.item_edit_currencies_list;
 
-        boolean shouldUpdateVisibility = true;
+        List<CurrencyItem> data = new ArrayList<>();
+        private MutableLiveData<Pair<Integer, Integer>> mSelectedItemsCount = new MutableLiveData<>(new Pair<>(0, 0));
+        LiveData<Pair<Integer, Integer>> selectedItemsCount = mSelectedItemsCount;
+
+
+        public void swap(int position, int anotherPosition) {
+            if (position < 0
+                    || anotherPosition < 0
+                    || position >= getItemCount()
+                    || anotherPosition >= getItemCount()) {
+
+                return;
+            }
+
+            CurrencyItem prev = data.get(position);
+            data.set(position, data.get(anotherPosition));
+            data.set(anotherPosition, prev);
+            data.get(position).position = position;
+            data.get(anotherPosition).position = anotherPosition;
+
+
+            notifyItemMoved(position, anotherPosition);
+        }
+
+
+        public void setNewData(@NonNull List<CurrencyItem> newData) {
+            Log.d("NewData", "aaaaaa");
+            if (data == null || data.isEmpty()) {
+                data = newData;
+                toggleEmptyView();
+                notifyItemRangeInserted(0, newData.size());
+            } else if (data.size() != newData.size() || !data.containsAll(newData)) {
+                DiffUtil.DiffResult result =
+                        DiffUtil.calculateDiff(CurrencyDependencies.getDiffCallback(data, newData));
+
+                result.dispatchUpdatesTo(new ListUpdateCallback() {
+
+                    List<CurrencyItem> oldData = data;
+
+                    @Override
+                    public void onInserted(int position, int count) {
+
+                    }
+
+                    @Override
+                    public void onRemoved(int position, int count) {
+
+                    }
+
+                    @Override
+                    public void onMoved(int fromPosition, int toPosition) {
+                        if (mCurrentEditMode.getValue() == SELECTION_MODE)
+                            newData.get(toPosition).isSelected = oldData.get(fromPosition).isSelected;
+                    }
+
+                    @Override
+                    public void onChanged(int position, int count, @Nullable Object payload) {
+
+                    }
+                });
+
+                data = newData;
+                toggleEmptyView();
+                result.dispatchUpdatesTo(this);
+            }
+        }
 
         EditCurrenciesAdapter() {
-            for (CurrencyItemWrapper itemWrapper : CurrencyValuesHelper.visibleList) {
+            int selectedCount = 0;
+            for (CurrencyItem itemWrapper : data) {
                 if (itemWrapper.isSelected) {
                     ++selectedCount;
                 }
             }
             if (selectedCount > 0) {
                 curMode = SELECTION_MODE;
+                mCurrentEditMode.setValue(SELECTION_MODE);
             }
+            mSelectedItemsCount.setValue(new Pair<>(selectedCount, getItemCount()));
         }
 
         @Override
@@ -247,17 +373,20 @@ public class CurrenciesEditFragment extends Fragment {
         public void onViewAttachedToWindow(@NonNull Holder holder) {
             int pos = holder.getBindingAdapterPosition();
             if (holder.checkBox != null) {
-                holder.checkBox.setChecked(CurrencyValuesHelper.visibleList.get(pos).isSelected);
+                holder.checkBox.setChecked(data.get(pos).isSelected);
             }
         }
 
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull EditCurrenciesAdapter.Holder holder, int position) {
-            CurrencyItemWrapper currencyItem = CurrencyValuesHelper.visibleList.get(position);
+            CurrencyItem currencyItem = data.get(position);
             holder.code.setText(currencyItem.code);
-            holder.name.setText(currencyItem.nameResourceId);
+
+            holder.name.setText(CurrencyDependencies.getNameIdentifierForCode(mContext, currencyItem.code));
+
             if (holder.handle != null) {
+                Log.d("EditSelCount", "nohand");
                 holder.handle.setOnTouchListener((v, event) -> {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         itemTouchHelper.startDrag(holder);
@@ -266,44 +395,41 @@ public class CurrenciesEditFragment extends Fragment {
                 });
                 holder.itemView.setOnLongClickListener(v -> {
                     notifyModeChanged(holder);
-                    parent.toggleElementsVisibility();
+//                    parent.toggleElementsVisibility();
                     return false;
                 });
             } else {
+                Log.d("EditSelCount", "setting");
                 holder.checkBox.setOnCheckedChangeListener(null);
                 holder.checkBox.setChecked(currencyItem.isSelected);
                 holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        if (!currencyItem.isSelected) {
-                            currencyItem.isSelected = true;
-                            ++selectedCount;
+                    CurrencyItem item = data.get(holder.getBindingAdapterPosition());
+
+                    if (isChecked != item.isSelected) {
+                        item.isSelected = !item.isSelected;
+                        int selectedCount = mSelectedItemsCount.getValue().first + (item.isSelected ? 1 : -1);
+                        mSelectedItemsCount.setValue(new Pair<>(selectedCount, getItemCount()));
+                        if (selectedCount == 0) {
+                            notifyModeChanged(null);
                         }
-                    } else {
-                        if (currencyItem.isSelected) {
-                            currencyItem.isSelected = false;
-                            --selectedCount;
-                        }
-                    }
-                    if (shouldUpdateVisibility) {
-                        parent.toggleElementsVisibility();
-                    }
-                    if (selectedCount == 0) {
-                        notifyModeChanged(null);
                     }
                 });
-                holder.itemView.setOnClickListener(v ->
-                        holder.checkBox.performClick());
+                holder.itemView.setOnClickListener(v -> {
+                    holder.checkBox.performClick();
+
+                });
             }
         }
 
         @Override
         public int getItemCount() {
-            return size;
+            return data.size();
         }
 
-        ArrayList<CurrencyItemWrapper> getSelectedItems() {
-            ArrayList<CurrencyItemWrapper> selectedItems = new ArrayList<>();
-            for (CurrencyItemWrapper itemWrapper : CurrencyValuesHelper.visibleList) {
+        ArrayList<CurrencyItem> getSelectedItems() {
+            ArrayList<CurrencyItem> selectedItems = new ArrayList<>();
+            for (CurrencyItem itemWrapper : data) {
+                Log.d("GetSel", itemWrapper.code + "||" + itemWrapper.isSelected);
                 if (itemWrapper.isSelected) {
                     selectedItems.add(itemWrapper);
                 }
@@ -312,63 +438,59 @@ public class CurrenciesEditFragment extends Fragment {
         }
 
         void notifyModeChanged(RecyclerView.ViewHolder holder) {
-            size = CurrencyValuesHelper.visibleList.size();
+//            size = CurrencyValuesHelper.visibleList.size();
             if (curMode == SELECTION_MODE) {
                 curMode = REORDER_MODE;
                 itemTouchHelper.attachToRecyclerView(recycler);
-                selectedCount = 0;
-                for (CurrencyItemWrapper itemWrapper : CurrencyValuesHelper.visibleList) {
+//                selectedCount = 0;
+                mCurrentEditMode.setValue(REORDER_MODE);
+                mSelectedItemsCount.setValue(new Pair<>(0, getItemCount()));
+                for (CurrencyItem itemWrapper : data) {
                     itemWrapper.isSelected = false;
                 }
             } else {
                 curMode = SELECTION_MODE;
+                mCurrentEditMode.setValue(SELECTION_MODE);
                 itemTouchHelper.attachToRecyclerView(null);
                 if (parent.deleteTooltip != null) {
                     parent.isFirstTimeTooltipShown = false;
                     parent.deleteTooltip.dismiss();
                 }
-                ++selectedCount;
-                CurrencyValuesHelper.visibleList.get(holder.getBindingAdapterPosition()).isSelected = true;
+//                ++selectedCount;
+                mSelectedItemsCount.setValue(new Pair<>(1, getItemCount()));
+                data.get(holder.getBindingAdapterPosition()).isSelected = true;
             }
-            parent.toggleElementsVisibility();
+//            parent.toggleElementsVisibility();
             toggleEmptyView();
             notifyDataSetChanged();
         }
 
         void deselectAll() {
-            for (CurrencyItemWrapper currencyItemWrapper : CurrencyValuesHelper.visibleList) {
-                currencyItemWrapper.isSelected = false;
+            for (CurrencyItem CurrencyItem : data) {
+                CurrencyItem.isSelected = false;
             }
-            selectedCount = 0;
+            mSelectedItemsCount.setValue(new Pair<>(0, getItemCount()));
             notifyModeChanged(null);
         }
 
         void selectAll() {
-            for (CurrencyItemWrapper currencyItemWrapper : CurrencyValuesHelper.visibleList) {
-                currencyItemWrapper.isSelected = true;
+            for (CurrencyItem CurrencyItem : data) {
+                CurrencyItem.isSelected = true;
             }
-            shouldUpdateVisibility = false;
-            updateCheckState(CurrencyValuesHelper.visibleList);
-            shouldUpdateVisibility = true;
-            selectedCount = size;
+            updateCheckState(data);
+            mSelectedItemsCount.setValue(new Pair<>(getItemCount(), getItemCount()));
         }
 
         boolean isSomethingSelected() {
-            return selectedCount != 0;
+            return mSelectedItemsCount.getValue().first != 0;
         }
 
         boolean isAllSelected() {
-            return selectedCount == CurrencyValuesHelper.visibleList.size();
+            return mSelectedItemsCount.getValue().first == getItemCount();
         }
 
         boolean isSelectionMode() {
             return curMode == SELECTION_MODE;
-        }
-
-        void setNewData() {
-            size = CurrencyValuesHelper.visibleList.size();
-            notifyDataSetChanged();
-            toggleEmptyView();
         }
 
         class Holder extends RecyclerView.ViewHolder {

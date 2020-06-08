@@ -9,6 +9,7 @@
         android:label="@string/app_name"
         android:usesCleartextTraffic="true"
         android:supportsRtl="true"
+        android:allowBackup="false"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity
@@ -34,7 +35,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".currency_converter.EditCurrenciesActivity" android:label="@string/currencies_list_modify" />
+        <activity android:name=".currency_converter.view.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
         <activity android:name=".unit_converter.AllUnitsActivity" />
         <activity android:name=".FirstSetup" />
     </application>

@@ -1,4 +1,4 @@
-package ru.art2000.calculator.calculator;
+package ru.art2000.calculator.calculator.view_model;
 
 import org.apache.commons.math3.special.Gamma;
 
@@ -12,8 +12,8 @@ import ru.art2000.helpers.GeneralHelper;
 
 public class CalculationClass {
 
-    static double memory = 0;
-    static boolean radians = false;
+    public static double memory = 0;
+    public static boolean radians = false;
     private static HashMap<String, Integer> operationsOrder;
     private static HashMap<String, Integer> operationsCount = new HashMap<>();
     private static int priorityLevels;
@@ -110,12 +110,12 @@ public class CalculationClass {
     }
 
 
-    static boolean isSign(String s) {
+    public static boolean isSign(String s) {
         String signs = "*×÷+-/:^";
         return signs.contains(s);
     }
 
-    static boolean isSign(char c) {
+    public static boolean isSign(char c) {
         return isSign(String.valueOf(c));
     }
 
@@ -123,7 +123,7 @@ public class CalculationClass {
         return (s.contains("/") || s.contains(":") || s.contains("÷"));
     }
 
-    static String addRemoveBrackets(String e) {
+    public static String addRemoveBrackets(String e) {
         int obc = 0;
         int cbc = 0;
         for (char c : e.toCharArray()) {
@@ -151,7 +151,7 @@ public class CalculationClass {
         return res;
     }
 
-    static boolean isAfterUnarySign(String s) {
+    public static boolean isAfterUnarySign(String s) {
         for (String val : afterUnaryOperations) {
             if (val.equals(s)) {
                 return true;
@@ -165,7 +165,7 @@ public class CalculationClass {
         return isAfterUnarySign(String.valueOf(c));
     }
 
-    static boolean isPreUnarySign(String s) {
+    public static boolean isPreUnarySign(String s) {
         for (String val : preUnaryOperations) {
             if (val.equals(s)) {
                 return true;
@@ -237,7 +237,7 @@ public class CalculationClass {
         return Double.parseDouble(e);
     }
 
-    static String calculateStr(String expression) {
+    public static String calculateStr(String expression) {
         operationsCount.clear();
         NumberFormat nf = new DecimalFormat("#.#######");
         expression = expression.replaceAll("e", String.valueOf(Math.E));
@@ -275,15 +275,15 @@ public class CalculationClass {
         return ret;
     }
 
-    static boolean isNumber(String str) {
+    public static boolean isNumber(String str) {
         return "0123456789".contains(str);
     }
 
-    static boolean isNumber(char c) {
+    public static boolean isNumber(char c) {
         return isNumber(String.valueOf(c));
     }
 
-    static boolean isDot(String c) {
+    public static boolean isDot(String c) {
         return c.equals(".") || c.equals(",");
     }
 
@@ -295,7 +295,7 @@ public class CalculationClass {
         return isNumber(s) || isDot(s) || s == '-';
     }
 
-    static int signsInExpr(String expr) {
+    public static int signsInExpr(String expr) {
         int count = 0;
         for (char c : expr.toCharArray()) {
             if (isSign(c)) {

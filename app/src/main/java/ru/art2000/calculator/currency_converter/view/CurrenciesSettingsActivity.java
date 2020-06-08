@@ -1,4 +1,4 @@
-package ru.art2000.calculator.currency_converter;
+package ru.art2000.calculator.currency_converter.view;
 
 import android.animation.Animator;
 import android.content.Context;
@@ -25,6 +25,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -40,15 +44,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.CurrencyItemWrapper;
+import ru.art2000.calculator.currency_converter.model.CurrencyItem;
+import ru.art2000.calculator.currency_converter.view_model.CurrenciesSettingsModel;
+import ru.art2000.calculator.currency_converter.view_model.CurrencyDependencies;
 import ru.art2000.extensions.DayNightActivity;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 import ru.art2000.helpers.SnackbarThemeHelper;
 
-public class EditCurrenciesActivity extends DayNightActivity {
+public class CurrenciesSettingsActivity extends DayNightActivity {
 
     public CurrenciesAddFragment add = new CurrenciesAddFragment();
     public CurrenciesEditFragment edit = new CurrenciesEditFragment();
@@ -78,7 +88,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
     boolean useViewPager2 = false;
     boolean optionsMenuCreated = false;
 
-    String lastModifiedItemCode;
+
+    CurrenciesSettingsModel model;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +101,8 @@ public class EditCurrenciesActivity extends DayNightActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        model = new CurrenciesSettingsModel(this.getApplication());
 
         fab = findViewById(R.id.floatingActionButton);
         fab.addOnShowAnimationListener(new Animator.AnimatorListener() {
@@ -255,7 +268,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
         select = menu.findItem(R.id.select_all);
         applyMenuIconTint(select.getIcon());
 
-        if (add.adapter.size == 0 || selectedTab == 1)
+        if (add.adapter.getItemCount() == 0 || selectedTab == 1)
             select.setVisible(false);
 
         optionsMenuCreated = true;
@@ -273,7 +286,41 @@ public class EditCurrenciesActivity extends DayNightActivity {
             }
         });
 
-        toggleElementsVisibility();
+
+        LifecycleObserver addLifecycleObserver = new LifecycleEventObserver() {
+            @Override
+            public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                if (add.adapter != null) {
+                    add.getLifecycle().removeObserver(this);
+
+                    add.adapter.selectedItemsCount.observe(CurrenciesSettingsActivity.this, selectedAndTotal -> {
+                        toggleElementsVisibility();
+                    });
+                }
+
+            }
+        };
+
+        add.getLifecycle().addObserver(addLifecycleObserver);
+
+
+        LifecycleObserver editLifecycleObserver = new LifecycleEventObserver() {
+            @Override
+            public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                if (edit.adapter != null) {
+                    add.getLifecycle().removeObserver(this);
+
+                    edit.adapter.selectedItemsCount.observe(CurrenciesSettingsActivity.this, selectedAndTotal -> {
+                        toggleElementsVisibility();
+                    });
+                }
+
+            }
+        };
+
+        edit.getLifecycle().addObserver(editLifecycleObserver);
+
+//        toggleElementsVisibility();
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -314,12 +361,10 @@ public class EditCurrenciesActivity extends DayNightActivity {
         }
 
         if (deleteTooltip != null) {
-            if (deleteTooltip.isShown()) {
-                return;
-            } else {
+            if (!deleteTooltip.isShown()) {
                 deleteTooltip.show();
-                return;
             }
+            return;
         }
 
         deleteTooltip = createStyledSnackbar(
@@ -352,15 +397,13 @@ public class EditCurrenciesActivity extends DayNightActivity {
 
     public void toggleElementsVisibility() {
         if (selectedTab == 0) {
-            Log.d("elVis", String.valueOf(add.adapter.selectedCount));
             if (add.adapter.isSomethingSelected()) {
                 fab.show();
-                deselect.setVisible(true);
             } else {
                 fab.hide();
-                deselect.setVisible(false);
             }
             select.setVisible(!add.adapter.isAllSelected());
+            deselect.setVisible(add.adapter.isSomethingSelected());
         } else {
             boolean selection = edit.adapter.isSelectionMode();
             if (selection) {
@@ -369,7 +412,7 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 fab.hide();
             }
             select.setVisible(selection && !edit.adapter.isAllSelected());
-            deselect.setVisible(edit.adapter.isSomethingSelected());
+            deselect.setVisible(selection && edit.adapter.isSomethingSelected());
         }
     }
 
@@ -423,46 +466,42 @@ public class EditCurrenciesActivity extends DayNightActivity {
                 SnackbarThemeHelper.createThemedSnackbar(coordinatorLayout, message, duration));
     }
 
-    protected void generateUndoSnackbar() {
-        int count = CurrencyValuesHelper.getDifference();
-        boolean added = count > 0;
-        count = Math.abs(count);
+    protected void generateUndoSnackbar(List<CurrencyItem> editedItems, boolean added) {
 
         String message;
 
-        if (count == 1) {
+        if (editedItems.size() == 1) {
             message = mContext.getString(
                     added
                             ? R.string.message_item_shown
                             : R.string.message_item_hidden,
-                    lastModifiedItemCode);
+                    editedItems.get(0).code);
         } else {
             message = mContext.getResources().getQuantityString(
                     added
                             ? R.plurals.message_items_shown
                             : R.plurals.message_items_hidden,
-                    count,
-                    count);
+                    editedItems.size(),
+                    editedItems.size());
         }
 
         Snackbar undoSnackbar = createStyledSnackbar(message, Snackbar.LENGTH_LONG);
 
         undoSnackbar.setAction(R.string.action_undo, view -> {
-            CurrencyValuesHelper.undoChanges();
-            add.adapter.setNewData();
-            edit.adapter.setNewData();
-            CurrencyValuesHelper.writeValuesToDB(mContext);
-            generateUndoSnackbar();
-        });
 
-        undoSnackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                if (event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION
-                        && event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE) {
-                    CurrencyValuesHelper.freeResources();
-                }
-            }
+            Completable
+                    .fromRunnable(() -> {
+                        Log.d("UndoAction", added ? "hide" : "add");
+                        if (added) {
+                            model.makeItemsHidden(editedItems);
+                        } else {
+                            model.makeItemsVisible(editedItems);
+                        }
+                    }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnComplete(() -> {
+                        generateUndoSnackbar(editedItems, !added);
+                    }).subscribe();
         });
 
         undoSnackbar.show();
@@ -472,34 +511,45 @@ public class EditCurrenciesActivity extends DayNightActivity {
         if (tabPos == 0) {
             setNewFabImage(checkDrawable);
             fab.setOnClickListener(v -> {
-                ArrayList<CurrencyItemWrapper> selectedItems = add.adapter.getSelectedItems();
+                ArrayList<CurrencyItem> selectedItems = add.adapter.getSelectedItems();
 
-                if (selectedItems.size() == 1) {
-                    lastModifiedItemCode = selectedItems.get(0).code;
-                }
-                CurrencyValuesHelper.makeItemsVisible(selectedItems);
-                add.removeFromCurrentList(selectedItems);
+                Log.d("ToAddCount", String.valueOf(selectedItems.size()));
+                Log.d("ToAddCount", String.valueOf(add.adapter.getSelectedCount()));
+
                 changeDone = true;
-                add.adapter.reFilterData();
-                edit.adapter.setNewData();
-                toggleElementsVisibility();
-                CurrencyValuesHelper.writeValuesToDB(mContext);
-                generateUndoSnackbar();
+
+                Completable
+                        .fromRunnable(() ->
+                                CurrencyDependencies
+                                        .getCurrencyDatabase(mContext)
+                                        .currencyDao()
+                                        .makeItemsVisible(selectedItems)
+                        ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete(() ->
+                                generateUndoSnackbar(selectedItems, true))
+                        .subscribe();
+
             });
         } else {
             setNewFabImage(deleteDrawable);
             fab.setOnClickListener(v -> {
-                ArrayList<CurrencyItemWrapper> selectedItems = edit.adapter.getSelectedItems();
+                List<CurrencyItem> selectedItems = edit.adapter.getSelectedItems();
 
-                if (selectedItems.size() == 1) {
-                    lastModifiedItemCode = selectedItems.get(0).code;
-                }
-                CurrencyValuesHelper.hideItems(selectedItems);
                 changeDone = true;
-                add.adapter.reFilterData();
                 edit.adapter.notifyModeChanged(null);
-                CurrencyValuesHelper.writeValuesToDB(mContext);
-                generateUndoSnackbar();
+
+                Completable
+                        .fromRunnable(() ->
+                                CurrencyDependencies
+                                        .getCurrencyDatabase(mContext)
+                                        .currencyDao()
+                                        .makeItemsHidden(selectedItems)
+                        ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete(() ->
+                                generateUndoSnackbar(selectedItems, false))
+                        .subscribe();
             });
         }
     }
@@ -525,10 +575,10 @@ public class EditCurrenciesActivity extends DayNightActivity {
         Fragment[] fragments;
 
         CurrencyEditorPager2Adapter() {
-            super(EditCurrenciesActivity.this);
+            super(CurrenciesSettingsActivity.this);
             categories = getResources().getStringArray(R.array.currency_categories);
 
-            List<Fragment> list = EditCurrenciesActivity.this.getSupportFragmentManager().getFragments();
+            List<Fragment> list = CurrenciesSettingsActivity.this.getSupportFragmentManager().getFragments();
             if (list.size() > 0) {
                 fragments = new Fragment[list.size()];
                 fragments = list.toArray(fragments);

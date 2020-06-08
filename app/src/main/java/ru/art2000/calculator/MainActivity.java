@@ -49,7 +49,7 @@ public class MainActivity extends DayNightActivity {
         mContext = this;
         PrefsHelper.initialSetup(mContext);
         setTheme(PrefsHelper.getAppTheme());
-        new Thread(() -> CurrencyValuesHelper.getDataFromDB(mContext)).start();
+        new Thread(() -> CurrencyValuesHelper.checkCurrencyDBExists(mContext)).start();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         List<Fragment> list = getSupportFragmentManager().getFragments();

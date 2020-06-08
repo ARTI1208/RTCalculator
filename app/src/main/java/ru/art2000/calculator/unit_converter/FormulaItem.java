@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import ru.art2000.calculator.calculator.CalculationClass;
+import ru.art2000.calculator.calculator.view_model.CalculationClass;
 
 public class FormulaItem {
 

@@ -1,12 +1,9 @@
-package ru.art2000.calculator.calculator;
+package ru.art2000.calculator.calculator.view;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -45,23 +42,27 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
+import ru.art2000.calculator.calculator.view_model.CalculationClass;
+import ru.art2000.calculator.calculator.model.HistoryItem;
+import ru.art2000.calculator.calculator.view_model.CalculatorModel;
 import ru.art2000.extensions.IReplaceable;
 import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
 import ru.art2000.helpers.PrefsHelper;
 
-import static ru.art2000.calculator.calculator.CalculationClass.isAfterUnarySign;
-import static ru.art2000.calculator.calculator.CalculationClass.isDot;
-import static ru.art2000.calculator.calculator.CalculationClass.isNumber;
-import static ru.art2000.calculator.calculator.CalculationClass.isPreUnarySign;
-import static ru.art2000.calculator.calculator.CalculationClass.isSign;
-import static ru.art2000.calculator.calculator.CalculationClass.memory;
-import static ru.art2000.calculator.calculator.CalculationClass.radians;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.isAfterUnarySign;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.isDot;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.isNumber;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.isPreUnarySign;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.isSign;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.memory;
+import static ru.art2000.calculator.calculator.view_model.CalculationClass.radians;
 
 
 public class CalculatorFragment extends ReplaceableFragment {
@@ -91,13 +92,13 @@ public class CalculatorFragment extends ReplaceableFragment {
     private ViewPager horizontal;
     private View v;
     private RecyclerView history_list;
-    private HistoryDB hdb;
-    private SQLiteDatabase db;
     private HistoryListAdapter adapter;
     private TextView empty;
     private ViewGroup recycler_container;
     private RelativeLayout handle;
     private boolean isNumberResult;
+
+    private CalculatorModel model;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -109,6 +110,10 @@ public class CalculatorFragment extends ReplaceableFragment {
                 v = inflater.inflate(R.layout.calc_layout_long, null);
             else
                 v = inflater.inflate(R.layout.calc_layout, null);
+
+
+            model = new CalculatorModel(requireActivity().getApplication());
+
             horizontal = v.findViewById(R.id.button_pager);
             horizontal.setAdapter(new CalculatorPagesAdapter(getActivity()));
             InputTV = v.findViewById(R.id.tv_input);
@@ -150,14 +155,14 @@ public class CalculatorFragment extends ReplaceableFragment {
             onOBCClick();
         else if (buttonText.equals(")"))
             onCBCClick();
-        else if (isSign(buttonText) || buttonText.equalsIgnoreCase("div") ||
+        else if (CalculationClass.isSign(buttonText) || buttonText.equalsIgnoreCase("div") ||
                 buttonText.equalsIgnoreCase("mod"))
             onSignBtnClick(button_pressed);
         else if (buttonText.equals("="))
             onResult();
-        else if (isPreUnarySign(buttonText))
+        else if (CalculationClass.isPreUnarySign(buttonText))
             onPreUnarySignClick(buttonText);
-        else if (isAfterUnarySign(buttonText))
+        else if (CalculationClass.isAfterUnarySign(buttonText))
             onAfterUnarySignClick(buttonText);
         else if (buttonText.startsWith("M"))
             onMemoryBtnClick(buttonText);
@@ -181,9 +186,9 @@ public class CalculatorFragment extends ReplaceableFragment {
         String ex = InputTV.getText().toString();
         String last = ex.substring(ex.length() - 1);
         String append;
-        if (isNumber(last)) {
+        if (CalculationClass.isNumber(last)) {
             append = "×" + text;
-        } else if (isDot(last)) {
+        } else if (CalculationClass.isDot(last)) {
             append = "0×" + text;
         } else
             append = text;
@@ -277,24 +282,13 @@ public class CalculatorFragment extends ReplaceableFragment {
             return false;
         }
 
-        HistoryDB hdb = new HistoryDB(mContext);
-        SQLiteDatabase db = hdb.getReadableDatabase();
-        Cursor cc = db.query(
-                "history",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-
         ClipData clip;
         boolean shouldShowToast = true;
         String toastText = getString(R.string.error);
-        int position = adapter.getPosition();
-        cc.move(position + 1);
-        String expr = cc.getString(cc.getColumnIndex("expression"));
-        String res = cc.getString(cc.getColumnIndex("result"));
+        HistoryItem selectedItem = adapter.getSelectedItem();
+
+        String expr = selectedItem.getExpression();
+        String res = selectedItem.getResult();
         switch (id) {
             case PASTE:
                 ClipData.Item clipItem = cmg.getPrimaryClip().getItemAt(0);
@@ -324,14 +318,15 @@ public class CalculatorFragment extends ReplaceableFragment {
                 break;
             case DELETE:
                 toastText = getResources().getString(R.string.deleted) + " " + expr + "=" + res;
-                db.delete("history", "id=" + position + 1, null);
-                hdb.fixIDs(db, position);
-                adapter.setNewData();
+                model.removeHistoryItem(selectedItem.getId());
                 break;
         }
+
+        adapter.setSelectedItem(null);
+
         if (shouldShowToast)
             Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
-        cc.close();
+//        cc.close();
         return true;
     }
 
@@ -425,16 +420,16 @@ public class CalculatorFragment extends ReplaceableFragment {
         }
 
         if (!(InputText.equals("0") || InputText.equals("-"))) {
-            if (isSign(last) && !ToAdd.equals("-")) {
+            if (CalculationClass.isSign(last) && !ToAdd.equals("-")) {
                 String Copied = InputText.substring(0, InpLen - 1) + ToAdd;
                 InputTV.setText(Copied);
             } else if (last.equals(".") || last.equals(",")) {
                 ToAdd = "0" + ToAdd;
                 InputTV.append(ToAdd);
             } else if (ToAdd.equals("-") && last.equals("-")) {
-                if (isSign(prelast))
+                if (CalculationClass.isSign(prelast))
                     InputTV.setText(InputText.substring(0, InpLen - 1));
-            } else if (ToAdd.equals("-") && isSign(last)) {
+            } else if (ToAdd.equals("-") && CalculationClass.isSign(last)) {
                 InputTV.append("(-");
             } else {
                 InputTV.append(ToAdd);
@@ -470,7 +465,7 @@ public class CalculatorFragment extends ReplaceableFragment {
             case ".":
                 int i;
                 for (i = InpLen - 1; i > 0; i--) {
-                    if (isSign(String.valueOf(InputText.toCharArray()[i]))) {
+                    if (CalculationClass.isSign(String.valueOf(InputText.toCharArray()[i]))) {
                         lastSign = i;
                         break;
                     }
@@ -478,11 +473,11 @@ public class CalculatorFragment extends ReplaceableFragment {
                 String lNum = InputText.substring(lastSign, InpLen);
                 if (lNum.contains(".") || lNum.contains(","))
                     return;
-                else if (isSign(last) && !InputText.equals(ZeroStr))
+                else if (CalculationClass.isSign(last) && !InputText.equals(ZeroStr))
                     ToAdd = "0,";
                 break;
             case "0":
-                if (isSign(last))
+                if (CalculationClass.isSign(last))
                     ToAdd = "0,";
                 break;
         }
@@ -496,7 +491,7 @@ public class CalculatorFragment extends ReplaceableFragment {
         boolean err = false;
         int CountLen = CountStr.length();
         String last = CountStr.substring(CountLen - 1, CountLen);
-        if (last.equals(".") || last.equals(",") || isSign(last) ||
+        if (last.equals(".") || last.equals(",") || CalculationClass.isSign(last) ||
                 ResultTV.getVisibility() == View.VISIBLE)
             return;
         String expression = CalculationClass.addRemoveBrackets(CountStr);
@@ -505,20 +500,14 @@ public class CalculatorFragment extends ReplaceableFragment {
         }
         InputTV.setText(expression);
 
-        HistoryDB hdb = new HistoryDB(mContext);
-        ContentValues cv = new ContentValues();
-        SQLiteDatabase db = hdb.getWritableDatabase();
-        hdb.nextId(db);
         CountStr = CalculationClass.calculateStr(expression);
         isNumberResult = false;
         switch (CountStr) {
             case "zero":
                 CountStr = getString(PrefsHelper.getZeroDivResult());
-                Log.d("zerol", CountStr);
                 break;
             case "error":
                 CountStr = getString(R.string.error);
-                Log.d("eero", CountStr);
                 err = true;
                 break;
             default:
@@ -526,15 +515,10 @@ public class CalculatorFragment extends ReplaceableFragment {
                 break;
         }
         if (!err) {
-            cv.put("expression", expression);
-            cv.put("result", CountStr);
-            db.insert("history", null, cv);
+            model.saveCalculationResult(expression, CountStr);
         }
-
-        hdb.close();
         ResultTV.setText(CountStr);
         ResultTV.setVisibility(View.VISIBLE);
-        writeResult();
     }
 
     private boolean isCButton(View v) {
@@ -588,9 +572,7 @@ public class CalculatorFragment extends ReplaceableFragment {
     }
 
     private void clearHistory() {
-        SQLiteDatabase db = hdb.getWritableDatabase();
-        HistoryDB.recreateDB(db);
-        adapter.setNewData();
+        model.clearDatabase();
         setEmptyView();
         Toast.makeText(mContext, getString(R.string.history_cleared), Toast.LENGTH_SHORT).show();
     }
@@ -609,11 +591,9 @@ public class CalculatorFragment extends ReplaceableFragment {
         handle = v.findViewById(R.id.history_handle);
         handle.setOnClickListener(view -> {
             panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            Log.d("Click", "handle");
         });
         v.findViewById(R.id.header).setOnClickListener(view -> {
             panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            Log.d("Click", "head");
         });
         panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -751,39 +731,39 @@ public class CalculatorFragment extends ReplaceableFragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int item = viewHolder.getLayoutPosition() + 1;
-                db.delete("history", "id=" + item, null);
-                if (hdb.getSize() == 0)
-                    setEmptyView();
-                hdb.fixIDs(db, item);
-                adapter.setNewData(item - 1);
+                model.removeHistoryItem(
+                        adapter
+                                .getHistoryList()
+                                .get(viewHolder.getBindingAdapterPosition())
+                                .getId()
+                );
             }
         });
 
         itemTouchHelper.attachToRecyclerView(history_list);
-        hdb = new HistoryDB(mContext);
-        db = hdb.getReadableDatabase();
-        adapter = new HistoryListAdapter(mContext, hdb);
-        Log.d("HisAdapter", "es");
-        if (hdb.getSize() != 0) {
-            recycler_container.setVisibility(View.VISIBLE);
-            empty.setVisibility(View.GONE);
-            history_list.addItemDecoration(
-                    new DividerItemDecoration(
-                            history_list.getContext(),
-                            DividerItemDecoration.VERTICAL));
-            history_list.setAdapter(adapter);
-            history_list.scrollToPosition(adapter.getItemCount() - 1);
-            setUpAnimationDecoratorHelper();
-        } else
-            setEmptyView();
+        adapter = new HistoryListAdapter(mContext, getViewLifecycleOwner(),model.getHistoryItems());
+        model.getHistoryItems().observe(getViewLifecycleOwner(), data -> {
+            if (data.isEmpty()) {
+                setEmptyView();
+            } else {
+                recycler_container.setVisibility(View.VISIBLE);
+                empty.setVisibility(View.GONE);
+                history_list.addItemDecoration(
+                        new DividerItemDecoration(
+                                history_list.getContext(),
+                                DividerItemDecoration.VERTICAL));
+                history_list.setAdapter(adapter);
+                history_list.scrollToPosition(adapter.getItemCount() - 1);
+                setUpAnimationDecoratorHelper();
+            }
+        });
     }
 
     private void writeResult() {
         if (empty.getVisibility() == View.VISIBLE) {
             setupHistoryPart();
         }
-        adapter.setNewData();
+//        adapter.setNewData();
     }
 
     private void setEmptyView() {

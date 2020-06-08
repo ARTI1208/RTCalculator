@@ -1,4 +1,4 @@
-package ru.art2000.calculator.currency_converter;
+package ru.art2000.calculator.currency_converter.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +17,19 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.CurrencyItem;
+import ru.art2000.calculator.currency_converter.model.CurrencyItem;
+import ru.art2000.calculator.currency_converter.view_model.CurrencyDependencies;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
@@ -30,7 +37,6 @@ import ru.art2000.helpers.PrefsHelper;
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.Holder> {
 
     private Context mContext;
-    private int size = 0;
     private int inputItemPos = -1;
     private int highlighted = 0;
     private double inputItemVal = 1;
@@ -43,6 +49,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
     private float codeTextSizeNormal;
     private float codeTextSizeHighlighted;
 
+    List<CurrencyItem> data = new ArrayList<>();
+
     CurrencyListAdapter(Context ctx) {
         mContext = ctx;
         colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
@@ -51,7 +59,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         codeTextSizeHighlighted =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_highlight);
         if (PrefsHelper.isShouldSaveCurrencyConversion()) {
-            highlighted = CurrencyValuesHelper.findByCode(PrefsHelper.getConversionCode());
+//            highlighted = CurrencyValuesHelper.findByCode(PrefsHelper.getConversionCode());
             inputItemVal = PrefsHelper.getConversionValue();
         }
     }
@@ -62,15 +70,25 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         recycler = recyclerView;
     }
 
-    void getDataFromDB() {
-        size = CurrencyValuesHelper.visibleList.size();
-        if (inputItemPos == -1) {
-            notifyDataSetChanged();
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (i != inputItemPos)
-                    notifyItemChanged(i);
+    public void setNewData(@NonNull List<CurrencyItem> newData) {
+
+        for (int i = 0; i < newData.size(); i++) {
+            CurrencyItem newItem = newData.get(i);
+            if (newItem.code.equals(PrefsHelper.getConversionCode())) {
+                highlighted = i;
+                break;
             }
+        }
+
+        if (data == null || data.isEmpty()) {
+            data = newData;
+            notifyItemRangeInserted(0, newData.size());
+        } else if (data.size() != newData.size() || !data.containsAll(newData)) {
+            DiffUtil.DiffResult result =
+                    DiffUtil.calculateDiff(CurrencyDependencies.getDiffCallback(data, newData));
+
+            data = newData;
+            result.dispatchUpdatesTo(this);
         }
     }
 
@@ -99,7 +117,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             return;
         inputItemPos = -1;
         inp.value.setText(dot2dig.format(inputItemVal *
-                CurrencyValuesHelper.visibleList.get(inp.getBindingAdapterPosition()).rate));
+                data.get(inp.getBindingAdapterPosition()).rate));
         inp.input.setEnabled(false);
         inp.input.setVisibility(View.GONE);
         inp.value.setTextColor(colorAccent);
@@ -128,6 +146,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             inputItemPos = -1;
         }
 
+
+
         if (highlighted == position) {
             code.setTextColor(colorAccent);
             name.setTextColor(colorAccent);
@@ -142,11 +162,12 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             code.setTypeface(null, Typeface.NORMAL);
         }
 
-        CurrencyItem currencyItem = CurrencyValuesHelper.visibleList.get(position);
+        CurrencyItem currencyItem = data.get(position);
 
         value.setText(dot2dig.format(inputItemVal * currencyItem.rate));
         code.setText(currencyItem.code);
-        name.setText(currencyItem.nameResourceId);
+
+        name.setText(CurrencyDependencies.getNameIdentifierForCode(mContext, currencyItem.code));
 
         input.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -174,7 +195,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.length() > 0) {
                             inputItemVal = Double.parseDouble(s.toString()) /
-                                    CurrencyValuesHelper.visibleList.get(inputItemPos).rate;
+                                    data.get(inputItemPos).rate;
                             for (int i = 0; i < getItemCount(); i++) {
                                 if (i != holder.getBindingAdapterPosition()) {
                                     notifyItemChanged(i);
@@ -211,7 +232,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     @Override
     public int getItemCount() {
-        return size;
+        return data.size();
     }
 
     public static class Holder extends RecyclerView.ViewHolder {
