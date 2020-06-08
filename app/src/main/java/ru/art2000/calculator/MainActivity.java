@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -14,11 +15,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import ru.art2000.calculator.calculator.CalculatorFragment;
-import ru.art2000.calculator.currency_converter.CurrencyConverterFragment;
+import ru.art2000.calculator.calculator.view.CalculatorFragment;
+import ru.art2000.calculator.currency_converter.view.CurrencyConverterFragment;
+import ru.art2000.calculator.currency_converter.view_model.CurrencyDependencies;
+import ru.art2000.calculator.databinding.ActivityMainBinding;
+import ru.art2000.calculator.databinding.MainCalculatorPanelBinding;
 import ru.art2000.calculator.settings.SettingsFragment;
 import ru.art2000.calculator.unit_converter.UnitConverterFragment;
 import ru.art2000.extensions.DayNightActivity;
@@ -31,7 +36,7 @@ import ru.art2000.helpers.PrefsHelper;
 public class MainActivity extends DayNightActivity {
 
     boolean useViewPager = true;
-    boolean useViewPager2 = false;
+    boolean useViewPager2 = true;
     private boolean doubleBackToExitPressedOnce = false;
     private ReplaceableBottomNavigation navigation;
     private Context mContext;
@@ -44,14 +49,26 @@ public class MainActivity extends DayNightActivity {
     @ColorInt
     private int calculatorStatusBarColor;
 
+    ActivityMainBinding viewBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Date start = new Date();
         mContext = this;
         PrefsHelper.initialSetup(mContext);
         setTheme(PrefsHelper.getAppTheme());
         new Thread(() -> CurrencyValuesHelper.checkCurrencyDBExists(mContext)).start();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        Date par = new Date();
+
+        viewBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(viewBinding.getRoot());
+
+        Date cntEnd = new Date();
+        Log.d("LoadTime3", String.valueOf(cntEnd.getTime() - par.getTime()));
+
         List<Fragment> list = getSupportFragmentManager().getFragments();
         for (Fragment fragment : list) {
             if (fragment instanceof CurrencyConverterFragment) {
@@ -81,7 +98,8 @@ public class MainActivity extends DayNightActivity {
         calculatorStatusBarColor =
                 AndroidHelper.getColorAttribute(this, R.attr.calc_input_bg);
 
-        navigation = findViewById(R.id.navigation);
+
+        navigation = viewBinding.navigation;
 
         navigation.setOnNavigationItemReselectedListener(item -> {
             switch (item.getItemId()) {
@@ -118,9 +136,9 @@ public class MainActivity extends DayNightActivity {
             return true;
         });
 
-        FrameLayout frameLayout = findViewById(R.id.fragment_container);
-        ScrollControlledViewPager pager = findViewById(R.id.pager);
-        ViewPager2 pager2 = findViewById(R.id.pager2);
+        FrameLayout frameLayout = viewBinding.fragmentContainer;
+        ScrollControlledViewPager pager = viewBinding.pager;
+        ViewPager2 pager2 = viewBinding.pager2;
 
         if (useViewPager2) {
             frameLayout.setVisibility(View.GONE);
@@ -171,6 +189,9 @@ public class MainActivity extends DayNightActivity {
             }
         }
         navigation.setSelectedItemId(tabId);
+
+        Date end = new Date();
+        Log.d("LoadTime", String.valueOf(end.getTime() - start.getTime()));
     }
 
     @Override

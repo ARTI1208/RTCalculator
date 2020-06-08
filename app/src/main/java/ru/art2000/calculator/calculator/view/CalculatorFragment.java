@@ -741,20 +741,22 @@ public class CalculatorFragment extends ReplaceableFragment {
         });
 
         itemTouchHelper.attachToRecyclerView(history_list);
-        adapter = new HistoryListAdapter(mContext, getViewLifecycleOwner(),model.getHistoryItems());
+        adapter = new HistoryListAdapter(mContext, getViewLifecycleOwner(), model.getHistoryItems());
+        history_list.setAdapter(adapter);
+        history_list.addItemDecoration(
+                new DividerItemDecoration(
+                        history_list.getContext(),
+                        DividerItemDecoration.VERTICAL));
+
+        setUpAnimationDecoratorHelper();
+
         model.getHistoryItems().observe(getViewLifecycleOwner(), data -> {
             if (data.isEmpty()) {
                 setEmptyView();
             } else {
                 recycler_container.setVisibility(View.VISIBLE);
                 empty.setVisibility(View.GONE);
-                history_list.addItemDecoration(
-                        new DividerItemDecoration(
-                                history_list.getContext(),
-                                DividerItemDecoration.VERTICAL));
-                history_list.setAdapter(adapter);
                 history_list.scrollToPosition(adapter.getItemCount() - 1);
-                setUpAnimationDecoratorHelper();
             }
         });
     }

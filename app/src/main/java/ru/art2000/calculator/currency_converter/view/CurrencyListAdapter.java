@@ -198,7 +198,16 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                                     data.get(inputItemPos).rate;
                             for (int i = 0; i < getItemCount(); i++) {
                                 if (i != holder.getBindingAdapterPosition()) {
-                                    notifyItemChanged(i);
+
+                                    Holder holder = (Holder) recycler.findViewHolderForAdapterPosition(i);
+
+                                    if (holder != null) {
+                                        CurrencyItem item = data.get(i);
+                                        holder.value.setText(dot2dig.format(inputItemVal * item.rate));
+                                    }
+
+
+//                                    notifyItemChanged(i);
                                 }
                             }
                         }
