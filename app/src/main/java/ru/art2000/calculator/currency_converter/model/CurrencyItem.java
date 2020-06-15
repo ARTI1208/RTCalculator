@@ -6,8 +6,12 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
+import ru.art2000.calculator.model.DiffComparable;
+
 @Entity(tableName = "currency")
-public class CurrencyItem {
+public class CurrencyItem implements DiffComparable<CurrencyItem> {
 
     @Ignore
     public CurrencyItem(@NonNull String code, Double rate) {
@@ -49,5 +53,15 @@ public class CurrencyItem {
     @Override
     public int hashCode() {
         return code.hashCode();
+    }
+
+    @Override
+    public boolean isSameItem(@NotNull CurrencyItem anotherItem) {
+        return code.equals(anotherItem.code);
+    }
+
+    @Override
+    public boolean isContentSame(@NotNull CurrencyItem anotherItem) {
+        return isSameItem(anotherItem);
     }
 }

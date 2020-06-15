@@ -1,4 +1,4 @@
-package ru.art2000.calculator.unit_converter;
+package ru.art2000.calculator.unit_converter.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,7 +20,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.Locale;
-import java.util.Objects;
 
 import ru.art2000.calculator.MainActivity;
 import ru.art2000.calculator.R;
@@ -73,6 +72,7 @@ public class UnitConverterFragment extends ReplaceableFragment {
         UnitPager2Adapter pager2Adapter = new UnitPager2Adapter();
         pager2.setAdapter(pager2Adapter);
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+
             @Override
             public void onPageSelected(int position) {
                 for (int i = 0; i < pager2Adapter.fragments.length; i++) {
@@ -117,7 +117,7 @@ public class UnitConverterFragment extends ReplaceableFragment {
 
     @Override
     protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        ((MainActivity) Objects.requireNonNull(getActivity()))
+        ((MainActivity) requireActivity())
                 .changeStatusBarColor(false);
     }
 

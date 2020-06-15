@@ -38,101 +38,51 @@
         <item>battery</item>
     </array>
     <array name="distance_items">
-        <item>mm</item>
-        <item>cm</item>
-        <item>dm</item>
-        <item>m</item>
-        <item>km</item>
-        <item>in</item>
-        <item>ft</item>
-        <item>yd</item>
-        <item>mi</item>
-        <item>nmi</item>
-        <item>ly</item>
-        <item>аршин</item>
+        <item>@string/distance_mm</item>
+        <item>@string/distance_cm</item>
+        <item>@string/distance_dm</item>
+        <item>@string/distance_m</item>
+        <item>@string/distance_km</item>
+        <item>@string/distance_in</item>
+        <item>@string/distance_ft</item>
+        <item>@string/distance_yd</item>
+        <item>@string/distance_mi</item>
+        <item>@string/distance_nmi</item>
+        <item>@string/distance_ly</item>
+        <item>@string/distance_arshin</item>
     </array>
-    <string-array name="distance_mults">
-        <item>0.001</item>
-        <item>0.01</item>
-        <item>0.1</item>
-        <item>1</item>
-        <item>1000</item>
-        <item>0.025</item>
-        <item>0.3</item>
-        <item>0.91</item>
-        <item>1609.34</item>
-        <item>1852</item>
-        <item>9460000000000000</item>
-        <item>0.71</item>
-    </string-array>
     <array name="velocity_items">
-        <item>m/s</item>
-        <item>m/min</item>
-        <item>km/min</item>
-        <item>km/h</item>
-        <item>ft/s</item>
-        <item>mph</item>
-        <item>mach</item>
-        <item>kn</item>
+        <item>@string/velocity_mpers</item>
+        <item>@string/velocity_mpermin</item>
+        <item>@string/velocity_kmpermin</item>
+        <item>@string/velocity_kmperh</item>
+        <item>@string/velocity_ftpers</item>
+        <item>@string/velocity_miperh</item>
+        <item>@string/velocity_mach</item>
+        <item>@string/velocity_kn</item>
     </array>
-    <string-array name="velocity_mults">
-        <item>1</item>
-        <item>0.0166</item>
-        <item>16.66666666666666666</item>
-        <item>0.28</item>
-        <item>0.305</item>
-        <item>0.45</item>
-        <item>340</item>
-        <item>0.51</item>
-    </string-array>
-
-
     <array name="area_items">
-        <item>mm2</item>
-        <item>cm2</item>
-        <item>m2</item>
+        <item>@string/area_mm2</item>
+        <item>@string/area_cm2</item>
+        <item>@string/area_dm2</item>
+        <item>@string/area_m2</item>
     </array>
-    <string-array name="area_mults">
-        <item>0.0001</item>
-        <item>0.01</item>
-        <item>1</item>
-    </string-array>
     <array name="volume_items">
-        <item>cm3</item>
-        <item>m3</item>
+        <item>@string/volume_cm3</item>
+        <item>@string/volume_m3</item>
     </array>
-    <string-array name="volume_mults">
-        <item>0.001</item>
-        <item>1</item>
-    </string-array>
-
     <array name="mass_items">
-        <item>g</item>
-        <item>kg</item>
+        <item>@string/mass_g</item>
+        <item>@string/mass_kg</item>
     </array>
-    <string-array name="mass_mults">
-        <item>1</item>
-        <item>1000</item>
-    </string-array>
     <array name="pressure_items">
-        <item>atm</item>
-        <item>Pa</item>
+        <item>@string/pressure_atm</item>
+        <item>@string/pressure_pa</item>
     </array>
-    <string-array name="pressure_mults">
-        <item>1</item>
-        <item>101325</item>
-    </string-array>
     <array name="temperature_items">
-        <item>˚C</item>
-        <item>˚F</item>
+        <item>@string/temperature_celsius</item>
+        <item>@string/temperature_fahrenheit</item>
     </array>
-    <string-array name="temperature_mults">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
-
-
     <array name="currency_categories">
         <item>@string/currencies_add</item>
         <item>@string/currencies_edit</item>

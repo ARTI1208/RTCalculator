@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListUpdateCallback;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
@@ -30,8 +27,8 @@ import java.util.List;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.currency_converter.model.CurrencyItem;
 import ru.art2000.calculator.currency_converter.view_model.CurrencyDependencies;
+import ru.art2000.calculator.model.GlobalDependencies;
 import ru.art2000.helpers.AndroidHelper;
-import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.Holder> {
@@ -84,8 +81,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             data = newData;
             notifyItemRangeInserted(0, newData.size());
         } else if (data.size() != newData.size() || !data.containsAll(newData)) {
-            DiffUtil.DiffResult result =
-                    DiffUtil.calculateDiff(CurrencyDependencies.getDiffCallback(data, newData));
+            DiffUtil.DiffResult result = GlobalDependencies.calculateDiff(data, newData);
 
             data = newData;
             result.dispatchUpdatesTo(this);

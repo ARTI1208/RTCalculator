@@ -1,4 +1,4 @@
-package ru.art2000.calculator.unit_converter;
+package ru.art2000.calculator.unit_converter.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.art2000.calculator.R;
+import ru.art2000.calculator.unit_converter.model.UnitConverterItem;
+import ru.art2000.calculator.unit_converter.view_model.UnitConverterDependencies;
 import ru.art2000.helpers.GeneralHelper;
 import ru.art2000.helpers.PrefsHelper;
 
@@ -35,17 +37,18 @@ public class UnitPageFragment extends Fragment {
     public UnitListAdapter adapter;
     boolean isCurrentPage = false;
     private Context mContext;
-    private String category;
+    public String category;
     private String type;
     private boolean dot;
     private int inputSpinnerPosition = 0;
     private int outputSpinnerPosition = 1;
     private TextView input;
     private TextView output;
-    private Formulas formulas = new Formulas();
-    private HorizontalScrollView inputScrollView;
+    UnitConverterItem[] items = new UnitConverterItem[0];
     private Spinner inputSpinner;
     private Spinner outputSpinner;
+    //    private Formulas formulas = new Formulas();
+    private HorizontalScrollView inputScrollView;
 
     static UnitPageFragment newInstance(String category) {
         UnitPageFragment f = new UnitPageFragment();
@@ -55,19 +58,27 @@ public class UnitPageFragment extends Fragment {
         return f;
     }
 
+    private View v;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mContext = getActivity();
-        Bundle arguments = getArguments();
-        if (arguments == null) {
-            Log.e("UnitPageFragment", "No arguments found, so can't determine category!");
-        } else {
-            category = arguments.getString("category", "area");
+        if (v == null) {
+            mContext = getActivity();
+            Bundle arguments = getArguments();
+            if (arguments == null) {
+                Log.e("UnitPageFragment", "No arguments found, so can't determine category!");
+            } else {
+                category = arguments.getString("category", "area");
+                items = UnitConverterDependencies.getCategoryItems(category);
+                Log.d("Newfrag", category);
+            }
+            v = inflateUnitView(inflater, container);
         }
-        return inflateUnitView(inflater, container);
+
+        return v;
     }
 
     @Override
@@ -116,7 +127,8 @@ public class UnitPageFragment extends Fragment {
             case "powerful":
                 value = savedInstanceState.getDouble("value");
                 dimension = savedInstanceState.getInt("dimension");
-                adapter.setValueAndDimension(value, dimension, true);
+                adapter.setValue(dimension, value);
+//                adapter.setValueAndDimension(value, dimension, true);
                 break;
         }
     }
@@ -149,11 +161,7 @@ public class UnitPageFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         rv.setLayoutManager(llm);
         rv.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
-        adapter = new UnitListAdapter(
-                mContext,
-                getDimensionsArray(),
-                Formulas.getCategoryInt(category),
-                true);
+        adapter = new UnitListAdapter(mContext, items, true);
         adapter.fragment = this;
         rv.setAdapter(adapter);
         return root;
@@ -165,8 +173,7 @@ public class UnitPageFragment extends Fragment {
         registerForContextMenu(rv);
         final Spinner spinner = root.findViewById(R.id.hpuv_spinner);
         EditText input = root.findViewById(R.id.hpuv_et);
-        adapter = new UnitListAdapter(mContext,
-                getDimensionsArray(), Formulas.getCategoryInt(category), false);
+        adapter = new UnitListAdapter(mContext, items, false);
         adapter.fragment = this;
         input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -180,9 +187,9 @@ public class UnitPageFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    adapter.setInputValue(s.toString());
+                    adapter.setValue(spinner.getSelectedItemPosition(), s.toString());
                 } else {
-                    adapter.setInputValue("1");
+                    adapter.setValue(spinner.getSelectedItemPosition(), 1);
                 }
             }
         });
@@ -196,7 +203,7 @@ public class UnitPageFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                adapter.setCurDim(position);
+                adapter.setValue(position, 1);
             }
 
             @Override
@@ -219,7 +226,7 @@ public class UnitPageFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                updateResult();
+                updateResult(inputSpinner.getSelectedItemPosition(), charSequence.toString());
             }
 
             @Override
@@ -244,7 +251,7 @@ public class UnitPageFragment extends Fragment {
                 if (selectedItemPosition == outputSpinnerPosition)
                     outputSpinner.setSelection(inputSpinnerPosition);
                 inputSpinnerPosition = selectedItemPosition;
-                updateResult();
+                updateResult(inputSpinner.getSelectedItemPosition(), input.getText().toString());
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -256,23 +263,34 @@ public class UnitPageFragment extends Fragment {
                 if (selectedItemPosition == inputSpinnerPosition)
                     inputSpinner.setSelection(outputSpinnerPosition);
                 outputSpinnerPosition = selectedItemPosition;
-                updateResult();
+                updateResult(inputSpinner.getSelectedItemPosition(), input.getText().toString());
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        if (input.getText().toString().equals("0"))
+            input.setText("1");
+
         return root;
     }
 
-    private void updateResult() {
+    private void updateResult(int position, String value) {
         inputScrollView.postDelayed(() ->
                 inputScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
-        formulas.calc(Formulas.getCategoryInt(category),
-                inputSpinnerPosition,
-                Double.parseDouble(input.getText().toString()));
+
+        UnitConverterItem from = items[position];
+        from.setValue(Double.parseDouble(value));
+
+        for (int i = 0; i < items.length; i++) {
+            if (i != position) {
+                items[i].convert(from);
+            }
+        }
+
         output.setText(GeneralHelper.resultNumberFormat.format(
-                formulas.getResult(Formulas.getCategoryInt(category), outputSpinnerPosition)));
+                items[outputSpinnerPosition].getCurrentValue()));
     }
 
     private void setSimpleViewButtonsClickListener(View v) {
@@ -292,10 +310,8 @@ public class UnitPageFragment extends Fragment {
                             break;
                         case PrefsHelper.SHOW_ALL_DIMENSIONS:
                             Intent intent = new Intent(mContext, AllUnitsActivity.class);
-                            intent.putExtra("value", Double.valueOf(input.getText().toString()));
                             intent.putExtra("pos", inputSpinner.getSelectedItemPosition());
                             intent.putExtra("category", category);
-                            intent.putExtra("dims", getDimensionsArray());
                             mContext.startActivity(intent);
                             break;
                     }

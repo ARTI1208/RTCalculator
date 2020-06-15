@@ -1,7 +1,6 @@
 package ru.art2000.calculator.calculator.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.calculator.model.HistoryItem;
+import ru.art2000.calculator.model.GlobalDependencies;
 
 import static ru.art2000.calculator.calculator.view.CalculatorFragment.COPY_ALL;
 import static ru.art2000.calculator.calculator.view.CalculatorFragment.COPY_EXPR;
@@ -49,32 +49,8 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
             historyList = newData;
             notifyItemRangeInserted(0, newData.size());
         } else {
-            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                @Override
-                public int getOldListSize() {
-                    return historyList.size();
-                }
+            DiffUtil.DiffResult result = GlobalDependencies.calculateDiff(historyList, newData);
 
-                @Override
-                public int getNewListSize() {
-                    return newData.size();
-                }
-
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    return historyList.get(oldItemPosition).getId() == newData.get(newItemPosition).getId();
-                }
-
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-
-                    HistoryItem oldItem = historyList.get(oldItemPosition);
-                    HistoryItem newItem = newData.get(newItemPosition);
-
-                    return oldItem.getExpression().equals(newItem.getExpression())
-                            && oldItem.getResult().equals(newItem.getResult());
-                }
-            });
             historyList = newData;
 //            toggleEmptyView();
             result.dispatchUpdatesTo(this);
