@@ -9,7 +9,7 @@
 
         <intent
             android:action="ru.art2000.calculator.action.CURRENCIES"
-            android:targetClass="ru.art2000.calculator.MainActivity"
+            android:targetClass="ru.art2000.calculator.view.MainActivity"
             android:targetPackage="ru.art2000.calculator" />
     </shortcut>
 
@@ -21,7 +21,7 @@
 
         <intent
             android:action="ru.art2000.calculator.action.CALCULATOR"
-            android:targetClass="ru.art2000.calculator.MainActivity"
+            android:targetClass="ru.art2000.calculator.view.MainActivity"
             android:targetPackage="ru.art2000.calculator" />
     </shortcut>
 
@@ -33,7 +33,7 @@
 
         <intent
             android:action="ru.art2000.calculator.action.CONVERTER"
-            android:targetClass="ru.art2000.calculator.MainActivity"
+            android:targetClass="ru.art2000.calculator.view.MainActivity"
             android:targetPackage="ru.art2000.calculator" />
     </shortcut>
 </shortcurs>

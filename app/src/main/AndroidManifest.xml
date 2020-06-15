@@ -13,7 +13,7 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/RT.AppTheme.Launch"
@@ -29,14 +29,13 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity android:name=".settings.InfoActivity" android:label="@string/info">
+        <activity android:name=".view.settings.InfoActivity" android:label="@string/info">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".currency_converter.view.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
-        <activity android:name=".unit_converter.view.AllUnitsActivity" />
-        <activity android:name=".FirstSetup" />
+        <activity android:name=".view.currency.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
+        <activity android:name=".view.unit.AllUnitsActivity" />
     </application>
 </manifest>

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import ru.art2000.calculator.currency_converter.model.CurrencyItem;
-import ru.art2000.calculator.currency_converter.view_model.CurrencyDependencies;
+import ru.art2000.calculator.model.currency.CurrencyItem;
+import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
 
 public class CurrencyValuesHelper {
 

@@ -72,16 +72,6 @@ public abstract class ReplaceableFragment extends Fragment implements INavigatio
         }
     }
 
-    @DrawableRes
-    public int getIcon() {
-        return -1;
-    }
-
-    @IdRes
-    public int getReplaceableId() {
-        return -1;
-    }
-
     @StringRes
     public abstract int getTitle();
 
