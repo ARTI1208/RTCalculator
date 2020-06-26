@@ -11,13 +11,14 @@
         android:supportsRtl="true"
         android:allowBackup="false"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        android:name=".view.App"
         tools:targetApi="m">
         <activity
             android:name=".view.MainActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/RT.AppTheme.Launch"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="ru.art2000.calculator.action.CALCULATOR" />

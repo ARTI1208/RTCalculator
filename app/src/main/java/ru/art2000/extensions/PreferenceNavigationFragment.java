@@ -12,7 +12,7 @@ import androidx.annotation.StringRes;
 import androidx.preference.PreferenceFragmentCompat;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class ReplaceablePreferenceFragment extends PreferenceFragmentCompat implements INavigationFragment {
+public abstract class PreferenceNavigationFragment extends PreferenceFragmentCompat implements INavigationFragment {
 
     private IReplaceable previousReplaceable;
     private boolean callOnShownOnViewCreated;
@@ -56,6 +56,11 @@ public abstract class ReplaceablePreferenceFragment extends PreferenceFragmentCo
      */
     @Override
     public void onReplaced(@Nullable IReplaceable nextReplaceable) {
+
+    }
+
+    @Override
+    public void onReselected() {
 
     }
 

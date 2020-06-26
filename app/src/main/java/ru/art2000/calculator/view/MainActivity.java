@@ -102,9 +102,6 @@ public class MainActivity extends DayNightActivity {
 
         navigation.setOnNavigationItemReselectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.navigation_currency:
-                    currency_converter.scrollToTop();
-                    break;
                 case R.id.navigation_calc:
                     SlidingUpPanelLayout.PanelState state = SlidingUpPanelLayout.PanelState.EXPANDED;
                     if (calculator.panel.getPanelState() == state)
@@ -120,15 +117,19 @@ public class MainActivity extends DayNightActivity {
             switch (item.getItemId()) {
                 default:
                 case R.id.navigation_calc:
+                    changeStatusBarColor(true);
                     getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
                     break;
                 case R.id.navigation_unit:
+                    changeStatusBarColor(false);
                     getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
                     break;
                 case R.id.navigation_currency:
+                    changeStatusBarColor(false);
                     getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
                     break;
                 case R.id.navigation_settings:
+                    changeStatusBarColor(false);
                     getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
                     break;
             }
@@ -194,13 +195,6 @@ public class MainActivity extends DayNightActivity {
     }
 
     @Override
-    protected void onPause() {
-        if (currency_converter.adapter != null)
-            currency_converter.adapter.removeEditText2();
-        super.onPause();
-    }
-
-    @Override
     public void onBackPressed() {
         if (navigation.getSelectedItemId() == R.id.navigation_calc
                 && (calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
@@ -223,7 +217,7 @@ public class MainActivity extends DayNightActivity {
         unit_converter.regenerateAdapter();
     }
 
-    public void changeStatusBarColor(boolean isCalculatorPage) {
+    private void changeStatusBarColor(boolean isCalculatorPage) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (isCalculatorPage) {
                 getWindow().setStatusBarColor(calculatorStatusBarColor);

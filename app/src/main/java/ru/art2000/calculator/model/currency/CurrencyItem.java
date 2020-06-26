@@ -37,9 +37,6 @@ public class CurrencyItem implements DiffComparable<CurrencyItem> {
     @Ignore
     public int nameResourceId;
 
-    @Ignore
-    public boolean isSelected;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -24,10 +24,11 @@ import java.util.Locale;
 import ru.art2000.calculator.view.MainActivity;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 
-public class UnitConverterFragment extends ReplaceableFragment {
+public class UnitConverterFragment extends NavigationFragment {
 
     private Context mContext;
     private TabLayout tabLayout;
@@ -113,12 +114,6 @@ public class UnitConverterFragment extends ReplaceableFragment {
         });
 
         tabLayout.setupWithViewPager(pager);
-    }
-
-    @Override
-    protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        ((MainActivity) requireActivity())
-                .changeStatusBarColor(false);
     }
 
     @Override

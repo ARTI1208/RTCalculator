@@ -4,17 +4,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 
-public interface INavigationFragment extends IReplaceable {
-
-    int getOrder();
+public interface INavigationFragment extends IReplaceableFragment {
 
     @DrawableRes
     int getIcon();
 
     @IdRes
     int getReplaceableId();
-
-    @StringRes
-    int getTitle();
 
 }

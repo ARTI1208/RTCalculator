@@ -2,7 +2,6 @@ package ru.art2000.extensions;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.transition.Slide;
 import androidx.transition.Transition;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -71,17 +69,16 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
         IReplaceable replaceable = getReplaceable(item.getOrder());
 
         if (replaceable != null) {
+            int position = replaceables.indexOfValue(replaceable);
+
             if (attachedPager != null) {
-                int position = replaceables.indexOfValue(replaceable);
-                if (position == attachedPager.getCurrentItem()) {
-                    sendReplaceCallback(position);
-                } else {
-                    attachedPager.setCurrentItem(position);
-                }
+                sendReplaceCallback(replaceable);
+                attachedPager.setCurrentItem(position);
             }
 
             if (attachedPager2 != null) {
-                attachedPager2.setCurrentItem(replaceables.indexOfValue(replaceable));
+                sendReplaceCallback(replaceable);
+                attachedPager2.setCurrentItem(position);
             }
 
             if (mFragmentManager != null) {
@@ -93,12 +90,17 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     @Override
     public void setOnNavigationItemReselectedListener(@Nullable OnNavigationItemReselectedListener listener) {
         super.setOnNavigationItemReselectedListener(item -> {
-            Log.d("Resel", String.valueOf(item.getOrder()));
             if (!firstReplaceDone) {
                 onNavigationItemSelected(item);
                 firstReplaceDone = true;
-            } else if (listener != null) {
-                listener.onNavigationItemReselected(item);
+            } else {
+                if (currentReplaceable != null) {
+                    currentReplaceable.onReselected();
+                }
+
+                if (listener != null) {
+                    listener.onNavigationItemReselected(item);
+                }
             }
         });
     }
@@ -138,12 +140,6 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
                 return replaceableFragments.length;
             }
         });
-        pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                sendReplaceCallback(position);
-            }
-        });
         attachedPager2 = pager2;
     }
 
@@ -167,23 +163,6 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
             @Override
             public int getCount() {
                 return replaceableFragments.length;
-            }
-        });
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.d("pagerSel", String.valueOf(position));
-                sendReplaceCallback(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
             }
         });
         attachedPager = pager;
@@ -300,13 +279,13 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
         }
     }
 
-    private void sendReplaceCallback(int position) {
-        IReplaceable replaceable = replaceables.valueAt(position);
-
-        if (replaceable == currentReplaceable) {
-            return;
-        }
+    private void sendReplaceCallback(IReplaceable replaceable) {
         if (replaceable != null) {
+            if (replaceable == currentReplaceable) {
+                replaceable.onReselected();
+                return;
+            }
+
             replaceable.onReplace(currentReplaceable);
         }
         if (currentReplaceable != null) {
@@ -314,6 +293,11 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
         }
 
         currentReplaceable = replaceable;
+    }
+
+    private void sendReplaceCallback(int position) {
+        IReplaceable replaceable = replaceables.valueAt(position);
+        sendReplaceCallback(replaceable);
     }
 
     private Transition getEnterTransition(int fromPosition, int toPosition) {

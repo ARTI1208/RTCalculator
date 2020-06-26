@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,176 +17,111 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import ru.art2000.calculator.view.MainActivity;
+import java.util.List;
+
 import ru.art2000.calculator.R;
+import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
+import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.model.currency.LoadingState;
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel;
 import ru.art2000.extensions.IReplaceable;
-import ru.art2000.extensions.ReplaceableFragment;
+import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.helpers.AndroidHelper;
 
-public class CurrencyConverterFragment extends ReplaceableFragment {
+public class CurrencyConverterFragment extends NavigationFragment {
 
-    public Context mContext;
-    public CurrencyListAdapter adapter = null;
-    private TextView emptyView;
-    private RecyclerView recycler;
-    private MainActivity parent;
-    private View v = null;
+    private Context mContext;
 
-    private SwipeRefreshLayout refresher;
-    private boolean isUpdating;
-    private boolean didFirstUpdate;
-    private Toolbar mToolbar;
     private String titleUpdatedString;
 
-
     private CurrencyConverterModel model;
+    private CurrencyLayoutBinding binding;
+    private CurrencyListAdapter adapter;
 
-
-    private void setRefreshStatus(boolean status) {
-        if (refresher != null) {
-            refresher.setRefreshing(status);
-            isUpdating = status;
-        }
-    }
-
-    public void scrollToTop() {
-        if (recycler != null)
-            recycler.smoothScrollToPosition(0);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 666) {
-            if (resultCode == 1) {
-//                adapter.getDataFromDB();
-//                toggleEmptyView();
-            }
-        }
-    }
-
-    @SuppressLint("InflateParams")
+    @SuppressLint({"InflateParams", "RestrictedApi"})
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (v == null) {
-            mContext = getActivity();
-            parent = (MainActivity) requireActivity();
-            model = new CurrencyConverterModel(parent.getApplication());
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        if (binding == null) {
 
-
+            mContext = requireActivity();
             titleUpdatedString = mContext.getString(R.string.updated);
 
-            v = inflater.inflate(R.layout.currency_layout, null);
-            recycler = v.findViewById(R.id.currency_list);
-            emptyView = v.findViewById(R.id.empty_tv);
-            mToolbar = v.findViewById(R.id.toolbar);
-            mToolbar.inflateMenu(R.menu.currencies_converter_menu);
+            model = new ViewModelProvider(this,
+                    new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
+            ).get(CurrencyConverterModel.class);
+
+
+            binding = CurrencyLayoutBinding.inflate(inflater);
+
+
+            binding.toolbar.inflateMenu(R.menu.currencies_converter_menu);
 
             LinearLayoutManager llm = new LinearLayoutManager(mContext);
-            recycler.setLayoutManager(llm);
-            adapter = new CurrencyListAdapter(mContext);
-            recycler.setAdapter(adapter);
+            adapter = new CurrencyListAdapter(mContext, model);
 
-            recycler.setOnFocusChangeListener((v, hasFocus) ->
-                    adapter.removeEditText());
+            binding.currencyList.setLayoutManager(llm);
+            binding.currencyList.setAdapter(adapter);
+
+            binding.currencyList.setEmptyViewGenerator((context, parent, viewType) -> {
+                TextView emptyView = new TextView(mContext);
+                emptyView.setText(R.string.empty_text_no_currencies_added);
+                emptyView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                emptyView.setGravity(Gravity.CENTER);
+                return emptyView;
+            });
 
             int colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
 
-            refresher = v.findViewById(R.id.refresher);
-            refresher.setColorSchemeColors(colorAccent);
-            refresher.setProgressViewEndTarget(true, refresher.getProgressViewEndOffset());
-            refresher.setOnRefreshListener(this::updateData);
+            binding.refresher.setColorSchemeColors(colorAccent);
+            binding.refresher.setProgressViewEndTarget(true,
+                    binding.refresher.getProgressViewEndOffset());
+            binding.refresher.setOnRefreshListener(model::loadData);
 
-            ActionMenuItemView editMenuItem = v.findViewById(R.id.edit_currencies);
+            ActionMenuItemView editMenuItem = binding.getRoot().findViewById(R.id.edit_currencies);
             editMenuItem.getItemData().getIcon().setColorFilter(
                     new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
             editMenuItem.setOnClickListener(v -> {
-                adapter.removeEditText();
                 Intent intent = new Intent(getActivity(), CurrenciesSettingsActivity.class);
-                startActivityForResult(intent, 666);
+                startActivity(intent);
             });
         }
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        model.getLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
-            setRefreshStatus(loadingState == LoadingState.LOADING_STARTED);
-
-            if (loadingState == LoadingState.UNINITIALISED || loadingState == LoadingState.LOADING_ENDED)
-                return;
-
-            int messageId;
-            switch (loadingState) {
-                case LOADING_STARTED:
-                    messageId = R.string.currencies_update_toast;
-                    break;
-                case NETWORK_ERROR:
-                    messageId = R.string.currencies_no_internet;
-                    break;
-                default:
-                    messageId = R.string.currencies_update_failed;
-                    break;
-            }
-
-            Toast.makeText(mContext, messageId, Toast.LENGTH_SHORT).show();
-        });
-
-
+        model.getLoadingState().observe(getViewLifecycleOwner(), this::applyLoadingState);
         model.getUpdateDate().observe(getViewLifecycleOwner(), this::setCurrenciesUpdateDate);
-        model.getVisibleList().observe(getViewLifecycleOwner(), currencyItems -> {
-
-            adapter.setNewData(currencyItems);
-
-            if (currencyItems.isEmpty()) {
-                emptyView.setVisibility(View.VISIBLE);
-                refresher.setVisibility(View.GONE);
-            } else {
-                emptyView.setVisibility(View.GONE);
-                refresher.setVisibility(View.VISIBLE);
-            }
-        });
+        model.getVisibleList().observe(getViewLifecycleOwner(), this::applyData);
     }
 
-    private void setCurrenciesUpdateDate(String date) {
-        mToolbar.setTitle(titleUpdatedString + " " + date);
+    @Override
+    public void onReselected() {
+        binding.currencyList.smoothScrollToPosition(0);
     }
 
     @Override
     public void onPause() {
-        adapter.removeEditText();
         super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setRefreshStatus(isUpdating);
-    }
-
-    private void updateData() {
-        didFirstUpdate = true;
-        new Thread(() -> model.loadData()).start();
+        adapter.removeEditText();
     }
 
     @Override
     protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        if (!didFirstUpdate) {
-            updateData();
+        Log.d("CurShown", String.valueOf(model.isFirstUpdateDone()));
+        if (!model.isFirstUpdateDone()) {
+            model.loadData();
         }
-
-        parent.changeStatusBarColor(false);
     }
 
     @Override
@@ -207,4 +144,41 @@ public class CurrencyConverterFragment extends ReplaceableFragment {
         return R.string.title_currency;
     }
 
+
+    private void applyLoadingState(LoadingState loadingState) {
+        setRefreshStatus(loadingState == LoadingState.LOADING_STARTED);
+
+        if (loadingState == LoadingState.UNINITIALISED || loadingState == LoadingState.LOADING_ENDED)
+            return;
+
+        int messageId;
+        switch (loadingState) {
+            case LOADING_STARTED:
+                messageId = R.string.currencies_update_toast;
+                break;
+            case NETWORK_ERROR:
+                messageId = R.string.currencies_no_internet;
+                break;
+            default:
+                messageId = R.string.currencies_update_failed;
+                break;
+        }
+
+        Toast.makeText(mContext, messageId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void applyData(List<CurrencyItem> currencyItems) {
+        adapter.setNewData(currencyItems);
+    }
+
+    private void setCurrenciesUpdateDate(String date) {
+        binding.toolbar.setTitle(titleUpdatedString + " " + date);
+    }
+
+    private void setRefreshStatus(boolean status) {
+        if (status && binding.refresher.isRefreshing())
+            return;
+
+        binding.refresher.setRefreshing(status);
+    }
 }

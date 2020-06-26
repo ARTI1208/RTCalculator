@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <ru.art2000.extensions.RecyclerWithEmptyView
                 android:id="@+id/currency_list"
                 android:background="?android:windowBackground"
                 style="@style/RT.Widget.ListView.TopIndicator"

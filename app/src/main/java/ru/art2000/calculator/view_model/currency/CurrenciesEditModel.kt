@@ -1,13 +1,22 @@
 package ru.art2000.calculator.view_model.currency
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies
+import androidx.databinding.ObservableList
+import androidx.lifecycle.LiveData
+import ru.art2000.calculator.model.currency.CurrencyItem
+import ru.art2000.extensions.LiveList
+import ru.art2000.extensions.MutableLiveMap
 
-class CurrenciesEditModel(application: Application) : AndroidViewModel(application) {
+interface CurrenciesEditModel {
 
-    private val currencyDao = CurrencyDependencies.getCurrencyDatabase(application).currencyDao()
+    val visibleItems: LiveData<List<CurrencyItem>>
 
-    val visibleItems = currencyDao.getVisibleItems()
+    val selectedVisibleItems: LiveList<CurrencyItem>
 
+    fun isVisibleItemSelected(item: CurrencyItem): Boolean
+
+    fun setVisibleItemSelected(item: CurrencyItem, selected: Boolean)
+
+    val displayedVisibleItems: LiveList<CurrencyItem>
+
+    var isEditSelectionMode: Boolean
 }

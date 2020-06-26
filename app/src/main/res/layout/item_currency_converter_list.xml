@@ -54,6 +54,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:gravity="center"
+            android:visibility="gone"
             android:inputType="numberDecimal"
             android:maxWidth="200dp"
             android:maxLength="15"

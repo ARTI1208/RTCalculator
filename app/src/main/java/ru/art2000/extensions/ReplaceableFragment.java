@@ -1,5 +1,6 @@
 package ru.art2000.extensions;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
-public abstract class ReplaceableFragment extends Fragment implements INavigationFragment {
+public abstract class ReplaceableFragment extends Fragment implements IReplaceableFragment {
 
     private IReplaceable previousReplaceable;
     private boolean callOnShownOnViewCreated;
@@ -61,10 +62,14 @@ public abstract class ReplaceableFragment extends Fragment implements INavigatio
     }
 
     @Override
+    public void onReselected() {
+
+    }
+
+    @Override
     @CallSuper
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("onCreated", String.valueOf(callOnShownOnViewCreated));
         if (callOnShownOnViewCreated) {
             onShown(previousReplaceable);
             previousReplaceable = null;
@@ -72,8 +77,7 @@ public abstract class ReplaceableFragment extends Fragment implements INavigatio
         }
     }
 
-    @StringRes
-    public abstract int getTitle();
-
-    public abstract int getOrder();
+    public CharSequence getTitle(Context context) {
+        return context.getString(getTitle());
+    }
 }

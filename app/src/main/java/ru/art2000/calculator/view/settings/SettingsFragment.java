@@ -12,17 +12,14 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 
-import java.util.Objects;
-
 import ru.art2000.calculator.BuildConfig;
 import ru.art2000.calculator.view.MainActivity;
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.IReplaceable;
-import ru.art2000.extensions.ReplaceablePreferenceFragment;
+import ru.art2000.extensions.PreferenceNavigationFragment;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
-public class SettingsFragment extends ReplaceablePreferenceFragment {
+public class SettingsFragment extends PreferenceNavigationFragment {
 
     private Context mContext;
     private int dev = 0;
@@ -32,12 +29,6 @@ public class SettingsFragment extends ReplaceablePreferenceFragment {
         super.onViewCreated(view, savedInstanceState);
         view.setBackgroundColor(
                 AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground));
-    }
-
-    @Override
-    protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .changeStatusBarColor(false);
     }
 
     @Override

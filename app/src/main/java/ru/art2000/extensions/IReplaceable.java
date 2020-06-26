@@ -14,14 +14,21 @@ public interface IReplaceable {
      *
      * @param previousReplaceable object that was previously shown or whatever
      * @see ReplaceableFragment
-     * @see ReplaceablePreferenceFragment
+     * @see PreferenceNavigationFragment
      */
     void onReplace(@Nullable IReplaceable previousReplaceable);
 
     /**
-     * Called when currebt object becomes secondary in collection
+     * Called when current object becomes secondary in collection
      *
      * @param nextReplaceable object that has replaced current
      */
     void onReplaced(@Nullable IReplaceable nextReplaceable);
+
+
+    /**
+     * Called when current object is reselected as primary
+     *
+     */
+    void onReselected();
 }

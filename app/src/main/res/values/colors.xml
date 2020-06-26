@@ -30,5 +30,5 @@
     <color name="BlackTheme_buttonTextColor">@color/DarkTheme_colorAccent</color>
 
     <!--Other colors-->
-
+    <color name="white">#ffffffff</color>
 </resources>

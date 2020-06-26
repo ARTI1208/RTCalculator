@@ -24,23 +24,22 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.art2000.calculator.R;
+import ru.art2000.calculator.model.common.GlobalDependencies;
 import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
-import ru.art2000.calculator.model.common.GlobalDependencies;
+import ru.art2000.calculator.view_model.currency.CurrencyListAdapterModel;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.Holder> {
 
     private Context mContext;
-    private int inputItemPos = -1;
-    private int highlighted = 0;
-    private double inputItemVal = 1;
     private NumberFormat dot2dig = new DecimalFormat("#.##");
     private RecyclerView recycler;
     private ColorStateList csl = null;
-    private Holder inp;
     @ColorInt
     private int colorAccent;
     private float codeTextSizeNormal;
@@ -48,16 +47,18 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     List<CurrencyItem> data = new ArrayList<>();
 
-    CurrencyListAdapter(Context ctx) {
-        mContext = ctx;
+    CurrencyListAdapterModel adapterModel;
+
+    CurrencyListAdapter(Context context, CurrencyListAdapterModel model) {
+        adapterModel = model;
+        mContext = context;
         colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
         codeTextSizeNormal =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_normal);
         codeTextSizeHighlighted =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_highlight);
         if (PrefsHelper.isShouldSaveCurrencyConversion()) {
-//            highlighted = CurrencyValuesHelper.findByCode(PrefsHelper.getConversionCode());
-            inputItemVal = PrefsHelper.getConversionValue();
+            adapterModel.setLastInputItemValue(PrefsHelper.getConversionValue());
         }
     }
 
@@ -69,11 +70,13 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     public void setNewData(@NonNull List<CurrencyItem> newData) {
 
-        for (int i = 0; i < newData.size(); i++) {
-            CurrencyItem newItem = newData.get(i);
-            if (newItem.code.equals(PrefsHelper.getConversionCode())) {
-                highlighted = i;
-                break;
+        if (adapterModel.getLastInputItemPosition() == -1) {
+            for (int i = 0; i < newData.size(); i++) {
+                CurrencyItem newItem = newData.get(i);
+                if (newItem.code.equals(PrefsHelper.getConversionCode())) {
+                    adapterModel.setLastInputItemPosition(i);
+                    break;
+                }
             }
         }
 
@@ -97,142 +100,80 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
     }
 
     void removeEditText() {
-        int t = inputItemPos;
-        inputItemPos = -1;
-        if (!recycler.isComputingLayout()) {
-            notifyItemChanged(t);
-        }
-        InputMethodManager imm =
-                (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        assert imm != null;
-        imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0);
+        Holder holder = (Holder)
+                recycler.findViewHolderForAdapterPosition(adapterModel.getLastInputItemPosition());
+
+        removeEditText(holder);
     }
 
-    public void removeEditText2() {
-        if (inp == null || inp.getBindingAdapterPosition() < 0)
+    private void removeEditText(Holder holder) {
+        if (holder == null) {
             return;
-        inputItemPos = -1;
-        inp.value.setText(dot2dig.format(inputItemVal *
-                data.get(inp.getBindingAdapterPosition()).rate));
-        inp.input.setEnabled(false);
-        inp.input.setVisibility(View.GONE);
-        inp.value.setTextColor(colorAccent);
+        }
+
+        holder.value.setVisibility(View.VISIBLE);
+        holder.input.setVisibility(View.GONE);
+        holder.input.setEnabled(false);
+        holder.input.getText().clear();
+        holder.input.clearFocus();
+
+        if (holder.getBindingAdapterPosition() != adapterModel.getLastInputItemPosition())
+            return;
+
         InputMethodManager imm =
                 (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        assert imm != null;
-        imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0);
+        if (imm != null) {
+            Flowable.fromRunnable(() ->
+                    imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0)
+            ).subscribeOn(Schedulers.computation())
+                    .subscribe();
+
+        }
+    }
+
+    private void highlightHolderElements(Holder holder) {
+        if (holder == null)
+            return;
+
+        holder.codeView.setTextColor(colorAccent);
+        holder.nameView.setTextColor(colorAccent);
+        holder.value.setTextColor(colorAccent);
+        holder.codeView.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
+        holder.codeView.setTypeface(null, Typeface.BOLD);
+    }
+
+    private void removeHolderElementsHighlighting(Holder holder) {
+        if (holder == null)
+            return;
+
+        holder.codeView.setTextColor(csl);
+        holder.nameView.setTextColor(csl);
+        holder.value.setTextColor(csl);
+        holder.codeView.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeNormal);
+        holder.codeView.setTypeface(null, Typeface.NORMAL);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, final int position) {
-        final ViewGroup item = (ViewGroup) holder.itemView;
         TextView value = holder.value;
-        EditText input = holder.input;
-        input.setText("");
-        input.clearFocus();
-        input.setEnabled(false);
-        input.setVisibility(View.GONE);
         TextView code = holder.codeView;
         TextView name = holder.nameView;
 
         if (csl == null)
             csl = code.getTextColors();
 
-        if (inputItemPos == position) {
-            inputItemPos = -1;
-        }
-
-
-
-        if (highlighted == position) {
-            code.setTextColor(colorAccent);
-            name.setTextColor(colorAccent);
-            value.setTextColor(colorAccent);
-            code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
-            code.setTypeface(null, Typeface.BOLD);
+        if (adapterModel.getLastInputItemPosition() == position) {
+            highlightHolderElements(holder);
         } else {
-            code.setTextColor(csl);
-            name.setTextColor(csl);
-            value.setTextColor(csl);
-            code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeNormal);
-            code.setTypeface(null, Typeface.NORMAL);
+            removeEditText(holder);
+            removeHolderElementsHighlighting(holder);
         }
 
         CurrencyItem currencyItem = data.get(position);
 
-        value.setText(dot2dig.format(inputItemVal * currencyItem.rate));
+        value.setText(dot2dig.format(adapterModel.getLastInputItemValue() * currencyItem.rate));
         code.setText(currencyItem.code);
-
         name.setText(CurrencyDependencies.getNameIdentifierForCode(mContext, currencyItem.code));
-
-        input.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                if (highlighted != holder.getBindingAdapterPosition())
-                    if (!recycler.isComputingLayout()) {
-                        notifyItemChanged(highlighted);
-                    } else {
-                        return;
-                    }
-                value.setText("");
-                inp = holder;
-                code.setTextColor(colorAccent);
-                input.setTextColor(colorAccent);
-                name.setTextColor(colorAccent);
-                code.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
-                code.setTypeface(null, Typeface.BOLD);
-                inputItemPos = holder.getBindingAdapterPosition();
-                highlighted = holder.getBindingAdapterPosition();
-                input.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s.length() > 0) {
-                            inputItemVal = Double.parseDouble(s.toString()) /
-                                    data.get(inputItemPos).rate;
-                            for (int i = 0; i < getItemCount(); i++) {
-                                if (i != holder.getBindingAdapterPosition()) {
-
-                                    Holder holder = (Holder) recycler.findViewHolderForAdapterPosition(i);
-
-                                    if (holder != null) {
-                                        CurrencyItem item = data.get(i);
-                                        holder.value.setText(dot2dig.format(inputItemVal * item.rate));
-                                    }
-
-
-//                                    notifyItemChanged(i);
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if (PrefsHelper.isShouldSaveCurrencyConversion())
-                            PrefsHelper.putConversionValues(code.getText().toString(),
-                                    inputItemVal);
-                    }
-                });
-                InputMethodManager keyboard =
-                        (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (keyboard != null) {
-                    keyboard.showSoftInput(input, 0);
-                }
-            } else {
-                if (!recycler.isComputingLayout()) {
-                    notifyItemChanged(position);
-                }
-            }
-        });
-
-        item.setOnClickListener(v -> {
-            input.setVisibility(View.VISIBLE);
-            input.setEnabled(true);
-            input.requestFocus();
-        });
     }
 
     @Override
@@ -240,7 +181,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         return data.size();
     }
 
-    public static class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder {
 
         TextView codeView, nameView, value;
         EditText input;
@@ -251,6 +192,71 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             nameView = itemView.findViewById(R.id.currency_name);
             value = itemView.findViewById(R.id.currency_value);
             input = itemView.findViewById(R.id.currency_input_value);
+
+            itemView.setOnClickListener(v -> {
+
+                int holderPosition = getBindingAdapterPosition();
+
+                if (holderPosition != adapterModel.getLastInputItemPosition()) {
+                    Holder previousHolder = (Holder)
+                            recycler.findViewHolderForAdapterPosition(adapterModel.getLastInputItemPosition());
+                    removeHolderElementsHighlighting(previousHolder);
+                    adapterModel.setLastInputItemPosition(getBindingAdapterPosition());
+                    highlightHolderElements(this);
+                }
+                value.setVisibility(View.GONE);
+                input.setVisibility(View.VISIBLE);
+                input.setEnabled(true);
+                input.requestFocus();
+
+                InputMethodManager keyboard =
+                        (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                if (keyboard != null) {
+
+                    Flowable.fromRunnable(() ->
+                            keyboard.showSoftInput(input, 0)
+                    ).subscribeOn(Schedulers.computation())
+                            .subscribe();
+                }
+            });
+
+            input.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    removeEditText(this);
+                }
+            });
+
+            input.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() > 0) {
+                        int holderPosition = getBindingAdapterPosition();
+                        adapterModel.setLastInputItemValue(Double.parseDouble(s.toString()) /
+                                data.get(holderPosition).rate);
+
+                        for (int i = 0; i < getItemCount(); i++) {
+                            Holder holder = (Holder) recycler.findViewHolderForAdapterPosition(i);
+                            if (holder != null) {
+                                CurrencyItem item = data.get(i);
+                                holder.value.setText(dot2dig.format(
+                                        adapterModel.getLastInputItemValue() * item.rate));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (PrefsHelper.isShouldSaveCurrencyConversion())
+                        PrefsHelper.putConversionValues(codeView.getText().toString(),
+                                adapterModel.getLastInputItemValue());
+                }
+            });
         }
     }
 }

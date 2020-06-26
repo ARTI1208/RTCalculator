@@ -47,6 +47,7 @@ import ru.art2000.calculator.view_model.calculator.CalculationClass;
 import ru.art2000.calculator.model.calculator.HistoryItem;
 import ru.art2000.calculator.view_model.calculator.CalculatorModel;
 import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
@@ -58,7 +59,7 @@ import static ru.art2000.calculator.view_model.calculator.CalculationClass.memor
 import static ru.art2000.calculator.view_model.calculator.CalculationClass.radians;
 
 
-public class CalculatorFragment extends ReplaceableFragment {
+public class CalculatorFragment extends NavigationFragment {
 
     static final int COPY_ALL = 100;
     static final int COPY_EXPR = 101;
@@ -850,11 +851,6 @@ public class CalculatorFragment extends ReplaceableFragment {
             }
 
         });
-    }
-
-    @Override
-    protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        ((MainActivity) requireActivity()).changeStatusBarColor(true);
     }
 
     @Override
