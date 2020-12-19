@@ -30,7 +30,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     private IReplaceable currentReplaceable;
     private boolean firstReplaceDone;
     private boolean isTransitionRunning;
-    private SparseArray<IReplaceable> replaceables = new SparseArray<>();
+    private final SparseArray<IReplaceable> replaceables = new SparseArray<>();
 
     private ScrollControlledViewPager attachedPager;
     private ViewPager2 attachedPager2;

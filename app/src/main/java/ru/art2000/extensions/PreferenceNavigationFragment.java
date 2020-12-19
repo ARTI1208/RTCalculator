@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.preference.PreferenceFragmentCompat;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"WeakerAccess"})
 public abstract class PreferenceNavigationFragment extends PreferenceFragmentCompat implements INavigationFragment {
 
     private IReplaceable previousReplaceable;

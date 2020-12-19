@@ -6,12 +6,13 @@
         android:key="basic"
         android:layout="@layout/category"
         android:title="@string/basic">
-        <ListPreference
+        <DropDownPreference
             android:defaultValue="calc_tab"
             android:entries="@array/default_tab"
             android:entryValues="@array/default_tab_values"
             android:key="tab_default"
             android:title="@string/tab_default"
+            app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
         <ListPreference
             android:defaultValue="light"
@@ -19,6 +20,7 @@
             android:entryValues="@array/app_theme_values"
             android:key="app_theme"
             android:title="@string/app_theme"
+            app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -45,11 +47,12 @@
     <PreferenceCategory
         android:layout="@layout/category"
         android:title="@string/title_unit">
-        <ListPreference
+        <DropDownPreference
             android:entries="@array/unit_view"
             android:entryValues="@array/unit_view_values"
             android:key="unit_view"
             android:title="@string/unit_view"
+            app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory

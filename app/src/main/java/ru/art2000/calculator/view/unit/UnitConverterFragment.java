@@ -21,11 +21,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.Locale;
 
-import ru.art2000.calculator.view.MainActivity;
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.IReplaceable;
 import ru.art2000.extensions.NavigationFragment;
-import ru.art2000.extensions.ReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 
 public class UnitConverterFragment extends NavigationFragment {
@@ -36,7 +33,11 @@ public class UnitConverterFragment extends NavigationFragment {
     private View v;
     private FragmentManager fm;
     private ViewPager2 pager2;
-    private boolean useViewPager2 = false;
+    private final boolean useViewPager2 = true;
+
+    private ViewPager.OnPageChangeListener pageChangeListener = null;
+    private ViewPager2.OnPageChangeCallback pageChangeCallback2 = null;
+    private TabLayoutMediator pager2Mediator = null;
 
     @SuppressLint("InflateParams")
     @Nullable
@@ -54,6 +55,7 @@ public class UnitConverterFragment extends NavigationFragment {
                 setNewAdapter2();
             } else {
                 pager2.setVisibility(View.GONE);
+                tabLayout.setupWithViewPager(pager);
                 setNewAdapter();
             }
         }
@@ -71,27 +73,41 @@ public class UnitConverterFragment extends NavigationFragment {
 
     private void setNewAdapter2() {
         UnitPager2Adapter pager2Adapter = new UnitPager2Adapter();
-        pager2.setAdapter(pager2Adapter);
-        pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        pager2.unregisterOnPageChangeCallback(pageChangeCallback2);
+
+        boolean isFirstTimeAdapter = pageChangeCallback2 == null;
+
+        pageChangeCallback2 = new ViewPager2.OnPageChangeCallback() {
 
             @Override
             public void onPageSelected(int position) {
                 for (int i = 0; i < pager2Adapter.fragments.length; i++) {
                     pager2Adapter.fragments[i].isCurrentPage = i == position;
                 }
-                if (pager2Adapter.fragments[position].adapter != null) {
+                if (!isFirstTimeAdapter && pager2Adapter.fragments[position].adapter != null) {
                     pager2Adapter.fragments[position].adapter.requestFocusForCurrent();
                 }
             }
-        });
-        new TabLayoutMediator(tabLayout, pager2, (tab, position) ->
-                tab.setText(pager2Adapter.getPageTitle(position))).attach();
+        };
+
+        pager2.registerOnPageChangeCallback(pageChangeCallback2);
+
+        pager2.setAdapter(pager2Adapter);
+
+        if (pager2Mediator != null) {
+            pager2Mediator.detach();
+        }
+
+        pager2Mediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) ->
+                tab.setText(pager2Adapter.getPageTitle(position)));
+
+        pager2Mediator.attach();
     }
 
     private void setNewAdapter() {
         UnitPagerAdapter pagerAdapter = new UnitPagerAdapter();
-        pager.setAdapter(pagerAdapter);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.removeOnPageChangeListener(pageChangeListener);
+        pageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -111,9 +127,10 @@ public class UnitConverterFragment extends NavigationFragment {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        };
+        pager.addOnPageChangeListener(pageChangeListener);
 
-        tabLayout.setupWithViewPager(pager);
+        pager.setAdapter(pagerAdapter);
     }
 
     @Override

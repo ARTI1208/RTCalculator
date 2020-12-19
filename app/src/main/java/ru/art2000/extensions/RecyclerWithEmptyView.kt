@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.R
-import androidx.recyclerview.widget.MergeAdapter
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerWithEmptyView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
@@ -65,7 +65,7 @@ class RecyclerWithEmptyView(context: Context, attrs: AttributeSet?, defStyleAttr
             }
         })
 
-        super.setAdapter(MergeAdapter(emptyAdapter, adapter))
+        super.setAdapter(ConcatAdapter(emptyAdapter, adapter))
     }
 
     public var emptyViewHolderBinder: (EmptyViewHolder) -> Unit = {}

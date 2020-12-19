@@ -2,6 +2,7 @@ package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -460,7 +461,6 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
             int p = holder.getBindingAdapterPosition();
             CurrencyItem item = model.getDisplayedVisibleItems().get(p);
             model.setVisibleItemSelected(item, true);
-            ;
             notifyDataSetChanged();
         }
 

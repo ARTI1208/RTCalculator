@@ -7,9 +7,9 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dip"
+        android:layout_height="wrap_content"
         android:background="?calc_input_bg"
-        android:minHeight="180dip"
+        android:minHeight="@dimen/calc_field_min_height"
         android:paddingTop="4.0dip"
         android:paddingBottom="4.0dip">
 
@@ -26,7 +26,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="start|top"
-                android:text="Deg"
                 android:textSize="18sp" />
 
             <TextView
@@ -34,9 +33,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentBottom="false"
                 android:layout_gravity="start|bottom"
-                android:text="M"
                 android:textSize="18sp"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -44,10 +42,10 @@
         <LinearLayout
             android:id="@+id/io_box"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="14.0dip"
-            android:paddingBottom="14.0dip">
+            android:paddingTop="@dimen/calc_field_vertical_padding"
+            android:paddingBottom="@dimen/calc_field_vertical_padding">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -66,8 +64,7 @@
                     android:gravity="end"
                     android:overScrollMode="always"
                     android:scrollHorizontally="true"
-                    android:text="0"
-                    android:textSize="50sp" />
+                    android:textSize="@dimen/calc_text_size" />
             </HorizontalScrollView>
 
             <HorizontalScrollView
@@ -85,14 +82,16 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="6dp"
                     android:gravity="end|bottom"
-                    android:text="0"
                     android:textColor="?colorAccent"
-                    android:textSize="50sp"
-                    android:visibility="invisible" />
+                    android:textSize="@dimen/calc_text_size"
+                    android:visibility="invisible"
+                    />
             </HorizontalScrollView>
         </LinearLayout>
     </FrameLayout>
 
-    <include layout="@layout/main_calculator_panel" />
+    <include
+        android:id="@+id/calculator_panel"
+        layout="@layout/main_calculator_panel" />
 
 </LinearLayout>

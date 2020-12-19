@@ -14,11 +14,11 @@ public class CalculationClass {
 
     public static double memory = 0;
     public static boolean radians = false;
-    private static HashMap<String, Integer> operationsOrder;
-    private static HashMap<String, Integer> operationsCount = new HashMap<>();
-    private static int priorityLevels;
-    private static ArrayList<String> afterUnaryOperations;
-    private static ArrayList<String> preUnaryOperations;
+    private static final HashMap<String, Integer> operationsOrder;
+    private static final HashMap<String, Integer> operationsCount = new HashMap<>();
+    private static final int priorityLevels;
+    private static final ArrayList<String> afterUnaryOperations;
+    private static final ArrayList<String> preUnaryOperations;
 
     static {
         operationsOrder = new HashMap<>();
@@ -287,7 +287,7 @@ public class CalculationClass {
         return c.equals(".") || c.equals(",");
     }
 
-    private static boolean isDot(char c) {
+    public static boolean isDot(char c) {
         return c == '.' || c == ',';
     }
 
@@ -310,7 +310,7 @@ public class CalculationClass {
     }
 
     private static double stringToDegreesOrRadians(String str) {
-        double val = Double.valueOf(str);
+        double val = Double.parseDouble(str);
         if (!radians) {
             val *= Math.PI / 180;
         }

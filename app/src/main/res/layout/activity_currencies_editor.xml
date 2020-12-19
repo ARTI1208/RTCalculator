@@ -99,6 +99,8 @@
         app:backgroundTint="?colorAccent"
         app:layout_behavior="ru.art2000.extensions.FloatingActionButtonScrollingBehaviour"
         app:srcCompat="@drawable/ic_currencies_done"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        tools:visibility="visible"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

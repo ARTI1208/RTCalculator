@@ -15,15 +15,15 @@
         android:layout_above="@id/navigation"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fragment_container" />
+<!--        <FrameLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:id="@+id/fragment_container" />-->
 
-        <ru.art2000.extensions.ScrollControlledViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+<!--        <ru.art2000.extensions.ScrollControlledViewPager-->
+<!--            android:id="@+id/pager"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager2"

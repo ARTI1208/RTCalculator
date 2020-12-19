@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -20,17 +22,13 @@ import java.util.List;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.model.calculator.HistoryItem;
 import ru.art2000.calculator.model.common.GlobalDependencies;
-
-import static ru.art2000.calculator.view.calculator.CalculatorFragment.COPY_ALL;
-import static ru.art2000.calculator.view.calculator.CalculatorFragment.COPY_EXPR;
-import static ru.art2000.calculator.view.calculator.CalculatorFragment.COPY_RES;
-import static ru.art2000.calculator.view.calculator.CalculatorFragment.DELETE;
+import ru.art2000.calculator.view_model.calculator.HistoryViewModel;
 
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.ViewHolder> {
 
-    private HistoryItem selectedItem;
-    private LayoutInflater mInflater;
-    private Context mContext;
+    private final LayoutInflater mInflater;
+    private final Context mContext;
+    private final HistoryViewModel mModel;
 
     private List<HistoryItem> historyList = new ArrayList<>();
 
@@ -38,13 +36,14 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         return historyList;
     }
 
-    HistoryListAdapter(Context context, LifecycleOwner lifecycleOwner, LiveData<List<HistoryItem>> items) {
+    HistoryListAdapter(Context context, LifecycleOwner lifecycleOwner, HistoryViewModel model, LiveData<List<HistoryItem>> items) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
+        mModel = model;
         items.observe(lifecycleOwner, this::setNewData);
     }
 
-    public void setNewData(@NonNull List<HistoryItem> newData) {
+    private void setNewData(@NonNull List<HistoryItem> newData) {
         if (historyList == null || historyList.isEmpty()) {
             historyList = newData;
             notifyItemRangeInserted(0, newData.size());
@@ -52,17 +51,8 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
             DiffUtil.DiffResult result = GlobalDependencies.calculateDiff(historyList, newData);
 
             historyList = newData;
-//            toggleEmptyView();
             result.dispatchUpdatesTo(this);
         }
-    }
-
-    public HistoryItem getSelectedItem() {
-        return selectedItem;
-    }
-
-    public void setSelectedItem(HistoryItem selectedItem) {
-        this.selectedItem = selectedItem;
     }
 
     @NonNull
@@ -74,24 +64,9 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-//        SQLiteDatabase db = hdb.getReadableDatabase();
-//        Cursor cc = db.query(
-//                "history",
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null);
         HistoryItem item = historyList.get(position);
         holder.expr.setText(item.getExpression());
         holder.res.setText(item.getResult());
-//        cc.close();
-        holder.itemView.setOnLongClickListener(v -> {
-            selectedItem = historyList.get(holder.getBindingAdapterPosition());
-            return false;
-        });
-
     }
 
     @Override
@@ -119,12 +94,37 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo) {
+
             menu.setHeaderTitle(mContext.getString(R.string.you_can));
-            menu.add(Menu.NONE, COPY_ALL, Menu.NONE, mContext.getString(R.string.context_menu_copy_all));
-            menu.add(Menu.NONE, COPY_EXPR, Menu.NONE, mContext.getString(R.string.context_menu_copy_expr));
-            menu.add(Menu.NONE, COPY_RES, Menu.NONE, mContext.getString(R.string.context_menu_copy_res));
-            menu.add(Menu.NONE, DELETE, Menu.NONE, mContext.getString(R.string.delete_record));
-            menu.removeItem(DELETE);
+
+            menu.add(Menu.NONE, HistoryViewModel.COPY_ALL, Menu.NONE, mContext.getString(R.string.context_menu_copy_all)).setOnMenuItemClickListener(this::onContextItemSelected);
+            menu.add(Menu.NONE, HistoryViewModel.COPY_EXPR, Menu.NONE, mContext.getString(R.string.context_menu_copy_expr)).setOnMenuItemClickListener(this::onContextItemSelected);
+            menu.add(Menu.NONE, HistoryViewModel.COPY_RES, Menu.NONE, mContext.getString(R.string.context_menu_copy_res)).setOnMenuItemClickListener(this::onContextItemSelected);
+            menu.add(Menu.NONE, HistoryViewModel.DELETE, Menu.NONE, mContext.getString(R.string.delete_record)).setOnMenuItemClickListener(this::onContextItemSelected);
+            menu.removeItem(HistoryViewModel.DELETE);
+        }
+
+        private boolean onContextItemSelected(@NonNull MenuItem menuItem) {
+
+            int id = menuItem.getItemId();
+
+            String toastText;
+            if (id >= HistoryViewModel.COPY_ALL && id <= HistoryViewModel.COPY_RES) {
+
+                HistoryItem selectedItem = historyList.get(getBindingAdapterPosition());
+                toastText = mModel.copyHistoryItemToClipboard(selectedItem, id);
+
+            } else if (id == HistoryViewModel.DELETE) {
+
+                HistoryItem selectedItem = historyList.get(getBindingAdapterPosition());
+                mModel.removeHistoryItem(selectedItem.getId());
+                toastText = mContext.getString(R.string.deleted) + " " + selectedItem.getFullExpression();
+
+            } else return true;
+
+            Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
+
+            return true;
         }
 
     }

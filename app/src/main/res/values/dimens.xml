@@ -1,7 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="calc_field">0dp</dimen>
+    <dimen name="calc_field_min_height">0dp</dimen>
+    <dimen name="calc_field_vertical_padding">4dp</dimen>
+
     <dimen name="calc_text_size">40sp</dimen>
     <dimen name="calc_vertical_padding">6.0dip</dimen>
     <dimen name="sliding_panel_collapsed_height">30dp</dimen>

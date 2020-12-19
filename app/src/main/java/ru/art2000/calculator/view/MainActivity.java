@@ -5,15 +5,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Date;
 import java.util.List;
@@ -27,22 +23,19 @@ import ru.art2000.calculator.view.settings.SettingsFragment;
 import ru.art2000.calculator.view.unit.UnitConverterFragment;
 import ru.art2000.extensions.DayNightActivity;
 import ru.art2000.extensions.ReplaceableBottomNavigation;
-import ru.art2000.extensions.ScrollControlledViewPager;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class MainActivity extends DayNightActivity {
 
-    boolean useViewPager = true;
-    boolean useViewPager2 = true;
     private boolean doubleBackToExitPressedOnce = false;
     private ReplaceableBottomNavigation navigation;
     private Context mContext;
-    private CurrencyConverterFragment currency_converter;
-    private CalculatorFragment calculator;
-    private UnitConverterFragment unit_converter;
-    private SettingsFragment settings;
+    private CurrencyConverterFragment currencyConverterFragment;
+    private CalculatorFragment calculatorFragment;
+    private UnitConverterFragment unitConverterFragment;
+    private SettingsFragment settingsFragment;
     @ColorInt
     private int normalStatusBarColor;
     @ColorInt
@@ -71,26 +64,26 @@ public class MainActivity extends DayNightActivity {
         List<Fragment> list = getSupportFragmentManager().getFragments();
         for (Fragment fragment : list) {
             if (fragment instanceof CurrencyConverterFragment) {
-                currency_converter = (CurrencyConverterFragment) fragment;
+                currencyConverterFragment = (CurrencyConverterFragment) fragment;
             } else if (fragment instanceof CalculatorFragment) {
-                calculator = (CalculatorFragment) fragment;
+                calculatorFragment = (CalculatorFragment) fragment;
             } else if (fragment instanceof UnitConverterFragment) {
-                unit_converter = (UnitConverterFragment) fragment;
+                unitConverterFragment = (UnitConverterFragment) fragment;
             } else if (fragment instanceof SettingsFragment) {
-                settings = (SettingsFragment) fragment;
+                settingsFragment = (SettingsFragment) fragment;
             }
         }
-        if (currency_converter == null) {
-            currency_converter = new CurrencyConverterFragment();
+        if (currencyConverterFragment == null) {
+            currencyConverterFragment = new CurrencyConverterFragment();
         }
-        if (calculator == null) {
-            calculator = new CalculatorFragment();
+        if (calculatorFragment == null) {
+            calculatorFragment = new CalculatorFragment();
         }
-        if (unit_converter == null) {
-            unit_converter = new UnitConverterFragment();
+        if (unitConverterFragment == null) {
+            unitConverterFragment = new UnitConverterFragment();
         }
-        if (settings == null) {
-            settings = new SettingsFragment();
+        if (settingsFragment == null) {
+            settingsFragment = new SettingsFragment();
         }
 
         normalStatusBarColor = AndroidHelper.getColorAttribute(this, R.attr.colorPrimaryDark);
@@ -101,72 +94,35 @@ public class MainActivity extends DayNightActivity {
         navigation = viewBinding.navigation;
 
         navigation.setOnNavigationItemReselectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.navigation_calc:
-                    SlidingUpPanelLayout.PanelState state = SlidingUpPanelLayout.PanelState.EXPANDED;
-                    if (calculator.panel.getPanelState() == state)
-                        state = SlidingUpPanelLayout.PanelState.COLLAPSED;
-                    calculator.panel.setPanelState(state);
-                    break;
+            if (item.getItemId() == R.id.navigation_calc) {
+                calculatorFragment.ensureHistoryPanelClosed();
             }
         });
 
         navigation.setOnNavigationItemSelectedListener(item -> {
             PrefsHelper.setDefaultTab(this, item.getOrder());
 
-            switch (item.getItemId()) {
-                default:
-                case R.id.navigation_calc:
-                    changeStatusBarColor(true);
-                    getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
-                    break;
-                case R.id.navigation_unit:
-                    changeStatusBarColor(false);
-                    getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
-                    break;
-                case R.id.navigation_currency:
-                    changeStatusBarColor(false);
-                    getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
-                    break;
-                case R.id.navigation_settings:
-                    changeStatusBarColor(false);
-                    getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
-                    break;
+            if (item.getItemId() == R.id.navigation_unit) {
+                changeStatusBarColor(false);
+                getIntent().setAction("ru.art2000.calculator.action.CONVERTER");
+            } else if (item.getItemId() == R.id.navigation_currency) {
+                changeStatusBarColor(false);
+                getIntent().setAction("ru.art2000.calculator.action.CURRENCIES");
+            } else if (item.getItemId() == R.id.navigation_settings) {
+                changeStatusBarColor(false);
+                getIntent().setAction("ru.art2000.calculator.action.SETTINGS");
+            } else {
+                changeStatusBarColor(true);
+                getIntent().setAction("ru.art2000.calculator.action.CALCULATOR");
             }
+
             return true;
         });
 
-        FrameLayout frameLayout = viewBinding.fragmentContainer;
-        ScrollControlledViewPager pager = viewBinding.pager;
-        ViewPager2 pager2 = viewBinding.pager2;
-
-        if (useViewPager2) {
-            frameLayout.setVisibility(View.GONE);
-            pager.setVisibility(View.GONE);
-
-            navigation.setupWithViewPager2(
-                    this,
-                    pager2,
-                    unit_converter, currency_converter, calculator, settings);
-
-        } else if (useViewPager) {
-            frameLayout.setVisibility(View.GONE);
-            pager2.setVisibility(View.GONE);
-
-            navigation.setupWithViewPager(
-                    this,
-                    pager,
-                    unit_converter, currency_converter, calculator, settings);
-
-        } else {
-            pager.setVisibility(View.GONE);
-            pager2.setVisibility(View.GONE);
-
-            navigation.setupWithFragments(this,
-                    R.id.fragment_container,
-                    currency_converter, calculator, unit_converter, settings);
-
-        }
+        navigation.setupWithViewPager2(
+                this,
+                viewBinding.pager2,
+                unitConverterFragment, currencyConverterFragment, calculatorFragment, settingsFragment);
 
         int tabId;
         if (Objects.requireNonNull(getIntent().getAction()).equals("android.intent.action.MAIN")) {
@@ -196,25 +152,20 @@ public class MainActivity extends DayNightActivity {
 
     @Override
     public void onBackPressed() {
-        if (navigation.getSelectedItemId() == R.id.navigation_calc
-                && (calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
-                calculator.panel.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
-
-            calculator.panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        } else {
+        if (navigation.getSelectedItemId() == R.id.navigation_calc && calculatorFragment.ensureHistoryPanelClosed()) {
             if (doubleBackToExitPressedOnce) {
                 finish();
                 return;
             }
             doubleBackToExitPressedOnce = true;
             Toast.makeText(mContext, R.string.twice_tap_exit, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(() ->
+            new Handler(getMainLooper()).postDelayed(() ->
                     doubleBackToExitPressedOnce = false, 2000);
         }
     }
 
     public void updateUnitView() {
-        unit_converter.regenerateAdapter();
+        unitConverterFragment.regenerateAdapter();
     }
 
     private void changeStatusBarColor(boolean isCalculatorPage) {

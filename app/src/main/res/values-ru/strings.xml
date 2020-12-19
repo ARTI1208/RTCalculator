@@ -104,4 +104,7 @@
     <string name="action_undo">Отмена</string>
     <string name="message_item_shown">Добавлен элемент \"%s\"</string>
     <string name="message_item_hidden">Скрыт элемент \"%s\"</string>
+
+    <string name="history_clear_confirm">Вы уверены, что хотите удалить историю?</string>
+    <string name="cancel">Отмена</string>
 </resources>

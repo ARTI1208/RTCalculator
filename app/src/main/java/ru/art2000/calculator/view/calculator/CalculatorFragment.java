@@ -1,29 +1,17 @@
 package ru.art2000.calculator.view.calculator;
 
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,228 +19,115 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import ru.art2000.calculator.view.MainActivity;
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.view_model.calculator.CalculationClass;
-import ru.art2000.calculator.model.calculator.HistoryItem;
+import ru.art2000.calculator.databinding.CalculatorLayoutBinding;
 import ru.art2000.calculator.view_model.calculator.CalculatorModel;
-import ru.art2000.extensions.IReplaceable;
 import ru.art2000.extensions.NavigationFragment;
-import ru.art2000.extensions.ReplaceableFragment;
-import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.extensions.SimpleTextWatcher;
 import ru.art2000.helpers.GeneralHelper;
-import ru.art2000.helpers.PrefsHelper;
-
-import static ru.art2000.calculator.view_model.calculator.CalculationClass.isNumber;
-import static ru.art2000.calculator.view_model.calculator.CalculationClass.isSign;
-import static ru.art2000.calculator.view_model.calculator.CalculationClass.memory;
-import static ru.art2000.calculator.view_model.calculator.CalculationClass.radians;
 
 
 public class CalculatorFragment extends NavigationFragment {
 
-    static final int COPY_ALL = 100;
-    static final int COPY_EXPR = 101;
-    static final int COPY_RES = 102;
-
     private static final int PASTE = 200;
     private static final int PASTE_AFTER = 201;
 
-    static final int DELETE = 300;
-
-    private static final String EXTRA_STATE_SAVED = "state_saved";
-    private static final String EXTRA_INPUT = "input";
-    private static final String EXTRA_RESULT = "result";
-    private static final String EXTRA_MEMORY = "memory";
-    private static final String EXTRA_USE_RADIANS = "angle_type";
-
-    public SlidingUpPanelLayout panel;
-    private Context mContext;
-    private TextView InputTV;
-    private TextView ResultTV;
-    private TextView memoryTextView;
-    private TextView degRadTextView;
     private HorizontalScrollView hsv;
-    private ViewPager horizontal;
-    private View v;
-    private RecyclerView history_list;
     private HistoryListAdapter adapter;
-    private TextView empty;
-    private ViewGroup recycler_container;
-    private RelativeLayout handle;
-    private boolean isNumberResult;
 
     private CalculatorModel model;
+    private CalculatorLayoutBinding binding = null;
 
-    @SuppressLint("InflateParams")
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (v == null) {
-            mContext = getActivity();
-            if (AndroidHelper.isLongScreen(mContext))
-                v = inflater.inflate(R.layout.calc_layout_long, null);
-            else
-                v = inflater.inflate(R.layout.calc_layout, null);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        if (binding == null) {
 
-
+            binding = CalculatorLayoutBinding.inflate(inflater, container, false);
             model = new CalculatorModel(requireActivity().getApplication());
 
-            horizontal = v.findViewById(R.id.button_pager);
-            horizontal.setAdapter(new CalculatorPagesAdapter(getActivity()));
-            InputTV = v.findViewById(R.id.tv_input);
-            memoryTextView = v.findViewById(R.id.memory);
-            degRadTextView = v.findViewById(R.id.degRadTv);
-            hsv = (HorizontalScrollView) InputTV.getParent();
-            registerForContextMenu(InputTV);
+            hsv = (HorizontalScrollView) getInputTv().getParent();
             hsv.setOnLongClickListener(view -> {
                 hsv.showContextMenu();
                 return true;
             });
-            InputTV.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+
+            getButtonsPager().setAdapter(new CalculatorButtonsPagerAdapter(requireContext(), model));
+
+            registerForContextMenu(getInputTv());
+            getInputTv().addTextChangedListener(new SimpleTextWatcher() {
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
+                public void afterTextChanged(@NonNull Editable s) {
                     hsv.postDelayed(() ->
-                            hsv.smoothScrollTo(InputTV.getWidth(), 0), 100L);
+                            hsv.smoothScrollTo(getInputTv().getWidth(), 0), 100L);
+
+                    model.getCurrentExpression().setValue(s.toString());
                 }
             });
-            ResultTV = v.findViewById(R.id.tv_result);
+
+            model.getCurrentExpression().observe(getViewLifecycleOwner(), (expression) -> {
+
+                if (expression.equals(getInputTv().getText().toString())) return;
+
+                getInputTv().setText(expression);
+            });
+
+            model.getCurrentResult().observe(getViewLifecycleOwner(), (expression) -> {
+
+                if (expression == null) {
+                    getResultTV().setVisibility(View.INVISIBLE);
+                    getResultTV().setText(null);
+                    return;
+                }
+
+                getResultTV().setText(expression);
+                getResultTV().setVisibility(View.VISIBLE);
+            });
+
+            model.getCurrentMemory().observe(getViewLifecycleOwner(), (memoryValue) -> {
+
+                if (Math.abs(memoryValue) < 1e-5) {
+                    binding.memory.setVisibility(View.INVISIBLE);
+                    return;
+                }
+
+                String newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue);
+                binding.memory.setText(newMemoryText);
+                binding.memory.setVisibility(View.VISIBLE);
+            });
+
+            model.getCurrentAngleType().observe(getViewLifecycleOwner(), angleType ->
+                    binding.degRadTv.setText(angleType.toString()));
+
             setupHistoryPart();
         }
-        return v;
-    }
-
-    private void buttonClick(View v) {
-        Button button_pressed = (Button) v;
-        String buttonText = button_pressed.getText().toString();
-        if (isCButton(button_pressed))
-            OnCBtnClick(button_pressed);
-        else if (buttonText.equals("("))
-            onOBCClick();
-        else if (buttonText.equals(")"))
-            onCBCClick();
-        else if (CalculationClass.isSign(buttonText) || buttonText.equalsIgnoreCase("div") ||
-                buttonText.equalsIgnoreCase("mod"))
-            onSignBtnClick(button_pressed);
-        else if (buttonText.equals("="))
-            onResult();
-        else if (CalculationClass.isPreUnarySign(buttonText))
-            onPreUnarySignClick(buttonText);
-        else if (CalculationClass.isAfterUnarySign(buttonText))
-            onAfterUnarySignClick(buttonText);
-        else if (buttonText.startsWith("M"))
-            onMemoryBtnClick(buttonText);
-        else if (isConstant(buttonText))
-            onConstantBtnClick(buttonText);
-        else if (button_pressed.getId() == R.id.buttonDEGRAD)
-            onAngleTypeChange(button_pressed, true);
-        else
-            onBtnClick(button_pressed);
-    }
-
-    private void onAngleTypeChange(Button button, boolean updateState) {
-        if (updateState) {
-            CalculationClass.radians ^= true;
-        }
-        button.setText(!radians ? "RAD" : "DEG");
-        degRadTextView.setText(radians ? "Rad" : "Deg");
-    }
-
-    private void onConstantBtnClick(String text) {
-        String ex = InputTV.getText().toString();
-        String last = ex.substring(ex.length() - 1);
-        String append;
-        if (CalculationClass.isNumber(last)) {
-            append = "×" + text;
-        } else if (CalculationClass.isDot(last)) {
-            append = "0×" + text;
-        } else
-            append = text;
-        InputTV.append(append);
-    }
-
-    private boolean isConstant(String string) {
-        return "eπφ".contains(string);
-    }
-
-    private void onMemoryBtnClick(String text) {
-        switch (text.substring(text.length() - 1)) {
-            default:
-            case "+":
-                onResult();
-                try {
-                    CalculationClass.memory += Integer.parseInt(ResultTV.getText().toString());
-                } catch (Exception ignored) {
-                }
-                break;
-            case "-":
-                onResult();
-                try {
-                    CalculationClass.memory -= Integer.parseInt(ResultTV.getText().toString());
-                } catch (Exception ignored) {
-                }
-                break;
-            case "R":
-                if (CalculationClass.memory != 0) {
-                    if (ResultTV.getVisibility() == View.VISIBLE) {
-                        ResultTV.setVisibility(View.INVISIBLE);
-                    }
-                    InputTV.setText(GeneralHelper.resultNumberFormat.format(CalculationClass.memory));
-                }
-                break;
-            case "C":
-                CalculationClass.memory = 0;
-                break;
-        }
-
-        updateMemoryView();
-    }
-
-    private void updateMemoryView() {
-        if (memory == 0) memoryTextView.setVisibility(View.GONE);
-        else {
-            memoryTextView.setText("M" + GeneralHelper.resultNumberFormat.format(memory));
-            memoryTextView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void onAfterUnarySignClick(String buttonText) {
-        String ex = InputTV.getText().toString();
-        String last = ex.substring(ex.length() - 1);
-        String append = "";
-        if (CalculationClass.isDot(last))
-            append += "0";
-        else if (CalculationClass.isSign(last))
-            append += "1";
-        append += buttonText;
-        InputTV.append(append);
+        return binding.getRoot();
     }
 
     @Override
     public void onCreateContextMenu(@NonNull ContextMenu menu,
                                     @NonNull View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(Menu.NONE, PASTE, Menu.NONE, mContext.getString(R.string.paste_replace));
-        menu.add(Menu.NONE, PASTE_AFTER, Menu.NONE, mContext.getString(R.string.paste_after));
-        ClipboardManager cmg = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        menu.add(Menu.NONE, PASTE, Menu.NONE, requireContext().getString(R.string.paste_replace));
+        menu.add(Menu.NONE, PASTE_AFTER, Menu.NONE, requireContext().getString(R.string.paste_after));
+
+        ClipboardManager cmg =
+                (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
         if (cmg == null || !cmg.hasPrimaryClip()) {
             menu.getItem(0).setEnabled(false);
             menu.getItem(1).setEnabled(false);
@@ -262,595 +137,184 @@ public class CalculatorFragment extends NavigationFragment {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem menuItem) {
-        ClipboardManager cmg = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        ClipboardManager cmg = (
+                ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
         int id = menuItem.getItemId();
 
         boolean isPasteItem = id >= PASTE && id <= PASTE_AFTER;
-        boolean isDeleteItem = id >= DELETE && id <= DELETE;
 
-        if (!isDeleteItem && (cmg == null || (isPasteItem && cmg.getPrimaryClip() == null))) {
+        if (isPasteItem && cmg.getPrimaryClip() == null) {
             Toast.makeText(
-                    mContext,
-                    "Error getting access to clipboard",
-                    Toast.LENGTH_SHORT).show();
+                    requireContext(), "Error getting access to clipboard", Toast.LENGTH_SHORT
+            ).show();
             return false;
         }
 
-        ClipData clip;
-        boolean shouldShowToast = true;
-        String toastText = getString(R.string.error);
-        HistoryItem selectedItem = adapter.getSelectedItem();
-
-        String expr = selectedItem.getExpression();
-        String res = selectedItem.getResult();
         switch (id) {
             case PASTE:
                 ClipData.Item clipItem = cmg.getPrimaryClip().getItemAt(0);
-                InputTV.setText(clipItem.getText().toString());
-                shouldShowToast = false;
+                getInputTv().setText(clipItem.getText().toString());
                 break;
             case PASTE_AFTER:
                 clipItem = cmg.getPrimaryClip().getItemAt(0);
-                InputTV.append(clipItem.getText().toString());
-                shouldShowToast = false;
-                break;
-            case COPY_EXPR:
-                toastText = getResources().getString(R.string.copied) + " " + expr;
-                clip = ClipData.newPlainText("Expression", expr);
-                cmg.setPrimaryClip(clip);
-                break;
-            case COPY_RES:
-                toastText = getResources().getString(R.string.copied) + " " + res;
-                clip = ClipData.newPlainText("Result", res);
-                cmg.setPrimaryClip(clip);
-                break;
-            case COPY_ALL:
-                String toCopy = expr + "=" + res;
-                toastText = getResources().getString(R.string.copied) + " " + toCopy;
-                clip = ClipData.newPlainText("AllInOne", toCopy);
-                cmg.setPrimaryClip(clip);
-                break;
-            case DELETE:
-                toastText = getResources().getString(R.string.deleted) + " " + expr + "=" + res;
-                model.removeHistoryItem(selectedItem.getId());
+                getInputTv().append(clipItem.getText().toString());
                 break;
         }
 
-        adapter.setSelectedItem(null);
-
-        if (shouldShowToast)
-            Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
-//        cc.close();
         return true;
     }
 
-    private void onPreUnarySignClick(String buttonText) {
-        String ex = InputTV.getText().toString();
-        String last = ex.substring(ex.length() - 1);
-        String append = "";
-        if (CalculationClass.isDot(last))
-            append += "0×";
-        else if (CalculationClass.isNumber(last) && !ex.equals("0"))
-            append += "×";
-        else if (ex.equals("0")) {
-            InputTV.setText(buttonText);
-            return;
+    public boolean ensureHistoryPanelClosed() {
+        if (getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
+                getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED) {
+            getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            return false;
         }
-        append += buttonText;
-        InputTV.append(append);
+
+        return true;
     }
 
-    private void onOBCClick() {
-        String ex = InputTV.getText().toString();
-        String last = ex.substring(ex.length() - 1);
-        if (ResultTV.getVisibility() == View.VISIBLE) {
-            ResultTV.setVisibility(View.INVISIBLE);
-            InputTV.setText("(");
-            return;
-        }
-        if (ex.equals("0"))
-            InputTV.setText("(");
-        else if (CalculationClass.isNumber(last) || last.equals(")"))
-            InputTV.append("×(");
-        else if (CalculationClass.isDot(last))
-            InputTV.append("0×(");
-        else
-            InputTV.append("(");
+
+    // Private methods
+    //=========================================
+
+    private RelativeLayout getHistoryPanelHandle() {
+        return binding.calculatorPanel.historyPart.historyHandle;
     }
 
-    private void onCBCClick() {
-        String ex = InputTV.getText().toString();
-        char[] ar = ex.toCharArray();
-        int o = 0;
-        int c = 0;
-        int lastOpenBr = -1;
-        for (int i = 0, exLength = ar.length; i < exLength; i++) {
-            char anEx = ar[i];
-            if (anEx == '(') {
-                o++;
-                lastOpenBr = i;
-            }
-            if (anEx == ')')
-                c++;
-        }
-
-        if (o - c > 0) {
-            String exInBrs = ex.substring(lastOpenBr + 1);
-            char[] newAr = exInBrs.toCharArray();
-            if (CalculationClass.signsInExpr(exInBrs) > 0 && (String.valueOf(newAr[0]).equals("-")
-                    || CalculationClass.isNumber(newAr[0])) && !CalculationClass.isSign(newAr[newAr.length - 1]))
-                InputTV.append(")");
-        }
+    private RelativeLayout getHistoryPanelHeader() {
+        return binding.calculatorPanel.historyPart.header;
     }
 
-    private void onSignBtnClick(Button v) {
-        String ToAdd;
-        int InpLen = InputTV.length();
-        String InputText = InputTV.getText().toString();
-        String last = InputText.substring(InpLen - 1, InpLen);
-        String prelast = "";
-        if (InpLen > 1)
-            prelast = InputText.substring(InpLen - 2, InpLen - 1);
-        switch (v.getId()) {
-            case R.id.buttonRDiv:
-                ToAdd = "/";
-                break;
-            case R.id.buttonMod:
-                ToAdd = ":";
-                break;
-            default:
-                ToAdd = v.getText().toString();
-                break;
-        }
-
-        if (ResultTV.getVisibility() == View.VISIBLE) {
-            ResultTV.setVisibility(View.INVISIBLE);
-            if (isNumberResult) {
-                ToAdd = ResultTV.getText() + ToAdd;
-                InputTV.setText(ToAdd);
-                isNumberResult = false;
-                return;
-            }
-        }
-
-        if (!(InputText.equals("0") || InputText.equals("-"))) {
-            if (CalculationClass.isSign(last) && !ToAdd.equals("-")) {
-                String Copied = InputText.substring(0, InpLen - 1) + ToAdd;
-                InputTV.setText(Copied);
-            } else if (last.equals(".") || last.equals(",")) {
-                ToAdd = "0" + ToAdd;
-                InputTV.append(ToAdd);
-            } else if (ToAdd.equals("-") && last.equals("-")) {
-                if (CalculationClass.isSign(prelast))
-                    InputTV.setText(InputText.substring(0, InpLen - 1));
-            } else if (ToAdd.equals("-") && CalculationClass.isSign(last)) {
-                InputTV.append("(-");
-            } else {
-                InputTV.append(ToAdd);
-            }
-        } else if (ToAdd.equals("-"))
-            InputTV.setText(ToAdd);
-        hsv.postDelayed(() ->
-                hsv.smoothScrollTo(InputTV.getWidth(), 0), 100L);
+    private TextView getInputTv() {
+        return binding.tvInput;
     }
 
-    private void onBtnClick(View v) {
-        String ToAdd;
-        int lastSign = 0;
-        String buttonText = ((Button) v).getText().toString();
-        int InpLen = InputTV.length();
-        String InputText = InputTV.getText().toString();
-        String last = InputText.substring(InpLen - 1, InpLen);
-        String ZeroStr = "0";
-        if (buttonText.equals("."))
-            ToAdd = ",";
-        else
-            ToAdd = buttonText;
-        if (ResultTV.getVisibility() == View.VISIBLE) {
-            ResultTV.setVisibility(View.INVISIBLE);
-            if (buttonText.equals(".") || buttonText.equals(","))
-                ToAdd = "0,";
-            InputTV.setText(ToAdd);
-            return;
-        }
-        switch (buttonText) {
-            case ",":
-
-            case ".":
-                int i;
-                for (i = InpLen - 1; i > 0; i--) {
-                    if (CalculationClass.isSign(String.valueOf(InputText.toCharArray()[i]))) {
-                        lastSign = i;
-                        break;
-                    }
-                }
-                String lNum = InputText.substring(lastSign, InpLen);
-                if (lNum.contains(".") || lNum.contains(","))
-                    return;
-                else if (CalculationClass.isSign(last) && !InputText.equals(ZeroStr))
-                    ToAdd = "0,";
-                break;
-            case "0":
-                if (CalculationClass.isSign(last))
-                    ToAdd = "0,";
-                break;
-        }
-        if (InputTV.getText().toString().equals(ZeroStr) && v.getId() != R.id.buttonDot)
-            InputTV.setText("");
-        InputTV.append(ToAdd);
+    private TextView getResultTV() {
+        return binding.tvResult;
     }
 
-    private void onResult() {
-        String CountStr = InputTV.getText().toString();
-        boolean err = false;
-        int CountLen = CountStr.length();
-        String last = CountStr.substring(CountLen - 1, CountLen);
-        if (last.equals(".") || last.equals(",") || CalculationClass.isSign(last) ||
-                ResultTV.getVisibility() == View.VISIBLE)
-            return;
-        String expression = CalculationClass.addRemoveBrackets(CountStr);
-        if (expression.length() == 0) {
-            expression = mContext.getString(R.string.error);
-        }
-        InputTV.setText(expression);
-
-        CountStr = CalculationClass.calculateStr(expression);
-        isNumberResult = false;
-        switch (CountStr) {
-            case "zero":
-                CountStr = getString(PrefsHelper.getZeroDivResult());
-                break;
-            case "error":
-                CountStr = getString(R.string.error);
-                err = true;
-                break;
-            default:
-                isNumberResult = true;
-                break;
-        }
-        if (!err) {
-            model.saveCalculationResult(expression, CountStr);
-        }
-        ResultTV.setText(CountStr);
-        ResultTV.setVisibility(View.VISIBLE);
+    private TextView getEmptyHistoryTextView() {
+        return binding.calculatorPanel.historyPart.emptyTv;
     }
 
-    private boolean isCButton(View v) {
-        return v.getId() == R.id.buttonClear || v.getId() == R.id.buttonDel;
+    private ViewGroup getHistoryRecyclerContainer() {
+        return binding.calculatorPanel.historyPart.recyclerLayout;
     }
 
-    private void clearInput() {
-        ResultTV.setVisibility(View.INVISIBLE);
-        InputTV.setText("0");
+    private RecyclerView getHistoryRecyclerView() {
+        return binding.calculatorPanel.historyPart.historyList;
     }
 
-    private void OnCBtnClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonClear:
-                clearInput();
-                break;
-            case R.id.buttonDel:
-                int InpLen = InputTV.length();
-                String InputText = InputTV.getText().toString();
-                String last = InputText.substring(InpLen - 1, InpLen);
-                String prelast = "-1";
-                if (InpLen > 1)
-                    prelast = InputText.substring(InpLen - 2, InpLen - 1);
-                if ((last.equals(".") || last.equals(",")) && prelast.equals("0")) {
-                    String NewText = InputText.substring(0, InpLen - 2);
-                    InputTV.setText(NewText);
-                } else {
-                    String NewText = InputText.substring(0, InpLen - 1);
-                    InputTV.setText(NewText);
-                }
-                if (InpLen == 1)
-                    InputTV.setText("0");
-                if (ResultTV.getVisibility() == View.VISIBLE) {
-                    InputTV.setText("0");
-                    ResultTV.setVisibility(View.INVISIBLE);
-                }
-                break;
-        }
+    private SlidingUpPanelLayout getSlidingPanel() {
+        return binding.calculatorPanel.slidingPanel;
     }
 
-    private void setButtonsClickListener(View v) {
-        for (int i = 0; i < ((ViewGroup) v).getChildCount(); i++) {
-            View child = ((ViewGroup) v).getChildAt(i);
-            if (child instanceof ViewGroup) {
-                setButtonsClickListener(child);
-            }
-            if (child instanceof Button) {
-                child.setOnClickListener(this::buttonClick);
-            }
-        }
+    private ViewPager getButtonsPager() {
+        return binding.calculatorPanel.buttonPager;
     }
 
     private void clearHistory() {
-        model.clearDatabase();
-        setEmptyView();
-        Toast.makeText(mContext, getString(R.string.history_cleared), Toast.LENGTH_SHORT).show();
+        model.clearHistoryDatabase();
+        showEmptyView();
+        Toast.makeText(requireContext(), getString(R.string.history_cleared), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (panel != null && panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            handle.setVisibility(View.GONE);
-            panel.setDragView(R.id.header);
-        }
-    }
+    private void setupHistoryPanel() {
+        getHistoryPanelHandle().setOnClickListener(view ->
+                getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED));
+        getHistoryPanelHeader().setOnClickListener(view ->
+                getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED));
 
-    private void setupHistoryPart() {
-        panel = v.findViewById(R.id.sliding_panel);
-        handle = v.findViewById(R.id.history_handle);
-        handle.setOnClickListener(view -> {
-            panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        });
-        v.findViewById(R.id.header).setOnClickListener(view -> {
-            panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        });
-        panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+        getSlidingPanel().addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 if (slideOffset > 0)
-                    handle.setVisibility(View.GONE);
+                    getHistoryPanelHandle().setVisibility(View.GONE);
                 else
-                    handle.setVisibility(View.VISIBLE);
+                    getHistoryPanelHandle().setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPanelStateChanged(View panelView, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 if (newState == SlidingUpPanelLayout.PanelState.DRAGGING &&
                         previousState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    history_list.scrollToPosition(adapter.getItemCount() - 1);
+                    getHistoryRecyclerView().scrollToPosition(adapter.getItemCount() - 1);
                 }
                 if (newState == SlidingUpPanelLayout.PanelState.ANCHORED) {
-                    panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
                 if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    panel.setDragView(handle);
+                    getSlidingPanel().setDragView(getHistoryPanelHandle());
                 }
             }
         });
-        LinearLayout history = v.findViewById(R.id.history_part);
-        ViewTreeObserver observer = horizontal.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int h = horizontal.getHeight();
-                if (h > 0) {
-                    ViewGroup.LayoutParams params = history.getLayoutParams();
-                    params.height = h;
-                    history.setLayoutParams(params);
-                    horizontal.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
+    }
+
+    private void setupHistoryHeader() {
+        binding.calculatorPanel.historyPart.clearHistory.setOnClickListener(clearBtn -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+
+            builder.setTitle(R.string.history_clear)
+                    .setMessage(R.string.history_clear_confirm)
+                    .setCancelable(true)
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    })
+                    .setPositiveButton(R.string.history_clear, (dialog, which) -> clearHistory())
+                    .create()
+                    .show();
         });
 
-        recycler_container = v.findViewById(R.id.recycler_layout);
-        empty = v.findViewById(R.id.empty_tv);
-        history_list = v.findViewById(R.id.history_list);
+        binding.calculatorPanel.historyPart.scrollUp.setOnClickListener(scrollUp ->
+                getHistoryRecyclerView().smoothScrollToPosition(0));
+        binding.calculatorPanel.historyPart.scrollBottom.setOnClickListener(scrollDown ->
+                getHistoryRecyclerView().smoothScrollToPosition(adapter.getItemCount()));
+    }
 
-        v.findViewById(R.id.clear_history).setOnClickListener(clearBtn -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Стереть историю").setMessage("Вы уверены, что хотите удалить историю?")
-                    .setCancelable(true).setNegativeButton("Отмена", (dialog, which) ->
-                    dialog.cancel())
-                    .setPositiveButton("Удалить", (dialog, which) ->
-                            clearHistory());
-            builder.create().show();
-        });
-        v.findViewById(R.id.scroll_up).setOnClickListener(scrollUp ->
-                history_list.smoothScrollToPosition(0));
-        v.findViewById(R.id.scroll_bottom).setOnClickListener(scrollDown ->
-                history_list.smoothScrollToPosition(adapter.getItemCount()));
-        history_list.setLayoutManager(new LinearLayoutManager(mContext));
+    private void setupHistoryRecyclerView() {
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        adapter = new HistoryListAdapter(requireContext(), getViewLifecycleOwner(), model, model.getHistoryItems());
+        getHistoryRecyclerView().setAdapter(adapter);
+        getHistoryRecyclerView().setLayoutManager(new LinearLayoutManager(requireContext()));
 
-            Drawable background;
-            Drawable xMark;
-            int xMarkMargin;
-            boolean initiated;
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new HistoryItemTouchHelperCallback(requireContext(), (position) ->
+                        model.removeHistoryItem(adapter.getHistoryList().get(position).getId())
+                )
+        );
 
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                xMark = ContextCompat.getDrawable(mContext, R.drawable.ic_clear_history);
-                ColorFilter whiteColorFilter =
-                        new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMark.setColorFilter(whiteColorFilter);
-                xMarkMargin = (int) mContext.getResources().getDimension(R.dimen.activity_horizontal_margin);
-                initiated = true;
-            }
-
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c,
-                                    @NonNull RecyclerView recyclerView,
-                                    @NonNull RecyclerView.ViewHolder viewHolder,
-                                    float dX, float dY,
-                                    int actionState,
-                                    boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
-
-                // not sure why, but this method get's called for viewholder that are already swiped away
-                if (viewHolder.getBindingAdapterPosition() == -1) {
-                    // not interested in those
-                    return;
-                }
-
-                if (!initiated) {
-                    init();
-                }
-
-                int windowBackgroundColor = AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground);
-                itemView.setBackgroundColor(windowBackgroundColor);
-
-                int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicWidth();
-                int xMarkLeft;
-                int xMarkRight;
-                int xMarkTop;
-                int xMarkBottom;
-                if (dX > 0) {
-                    background.setBounds(itemView.getLeft(), itemView.getTop(),
-                            itemView.getLeft() + (int) dX, itemView.getBottom());
-                    xMarkLeft = itemView.getLeft() + xMarkMargin;
-                    xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
-                } else {
-                    background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(),
-                            itemView.getRight(), itemView.getBottom());
-                    xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                    xMarkRight = itemView.getRight() - xMarkMargin;
-                }
-                xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                xMarkBottom = xMarkTop + intrinsicHeight;
-                background.draw(c);
-
-                // draw x mark
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-                xMark.draw(c);
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder,
-                                  @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                model.removeHistoryItem(
-                        adapter
-                                .getHistoryList()
-                                .get(viewHolder.getBindingAdapterPosition())
-                                .getId()
-                );
-            }
-        });
-
-        itemTouchHelper.attachToRecyclerView(history_list);
-        adapter = new HistoryListAdapter(mContext, getViewLifecycleOwner(), model.getHistoryItems());
-        history_list.setAdapter(adapter);
-        history_list.addItemDecoration(
-                new DividerItemDecoration(
-                        history_list.getContext(),
-                        DividerItemDecoration.VERTICAL));
-
-        setUpAnimationDecoratorHelper();
+        itemTouchHelper.attachToRecyclerView(getHistoryRecyclerView());
+        getHistoryRecyclerView().addItemDecoration(new HistoryItemDecoration());
+        getHistoryRecyclerView().addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        );
 
         model.getHistoryItems().observe(getViewLifecycleOwner(), data -> {
             if (data.isEmpty()) {
-                setEmptyView();
+                showEmptyView();
             } else {
-                recycler_container.setVisibility(View.VISIBLE);
-                empty.setVisibility(View.GONE);
-                history_list.scrollToPosition(adapter.getItemCount() - 1);
+                showRecyclerView();
+                getHistoryRecyclerView().scrollToPosition(adapter.getItemCount() - 1);
             }
         });
     }
 
-    private void writeResult() {
-        if (empty.getVisibility() == View.VISIBLE) {
-            setupHistoryPart();
-        }
-//        adapter.setNewData();
+    private void setupHistoryPart() {
+        setupHistoryPanel();
+        setupHistoryHeader();
+        setupHistoryRecyclerView();
     }
 
-    private void setEmptyView() {
-        recycler_container.setVisibility(View.INVISIBLE);
-        empty.setVisibility(View.VISIBLE);
+    private void showRecyclerView() {
+        getHistoryRecyclerContainer().setVisibility(View.VISIBLE);
+        getEmptyHistoryTextView().setVisibility(View.GONE);
     }
 
-    private void setUpAnimationDecoratorHelper() {
-        history_list.addItemDecoration(new RecyclerView.ItemDecoration() {
-
-            // we want to cache this and not allocate anything repeatedly in the onDraw method
-            Drawable background;
-            boolean initiated;
-
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                initiated = true;
-            }
-
-            @Override
-            public void onDraw(@NonNull Canvas c,
-                               @NonNull RecyclerView parent,
-                               @NonNull RecyclerView.State state) {
-
-                if (!initiated) {
-                    init();
-                }
-
-                // only if animation is in progress
-                if (parent.getItemAnimator() != null && parent.getItemAnimator().isRunning() && parent.getLayoutManager() != null) {
-
-                    // some items might be animating down and some items might be animating up to close the gap left by the removed item
-                    // this is not exclusive, both movement can be happening at the same time
-                    // to reproduce this leave just enough items so the first one and the last one would be just a little off screen
-                    // then remove one from the middle
-
-                    // find first child with translationY > 0
-                    // and last one with translationY < 0
-                    // we're after a rect that is not covered in recycler-view views at this point in time
-                    View lastViewComingDown = null;
-                    View firstViewComingUp = null;
-
-                    // this is fixed
-                    int left = 0;
-                    int right = parent.getWidth();
-
-                    // this we need to find out
-                    int top = 0;
-                    int bottom = 0;
-
-                    // find relevant translating views
-                    int childCount = parent.getLayoutManager().getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        View child = parent.getLayoutManager().getChildAt(i);
-
-                        if (child == null)
-                            continue;
-
-                        if (child.getTranslationY() < 0) {
-                            // view is coming down
-                            lastViewComingDown = child;
-                        } else if (child.getTranslationY() > 0) {
-                            // view is coming up
-                            if (firstViewComingUp == null) {
-                                firstViewComingUp = child;
-                            }
-                        }
-                    }
-
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        // views are coming down AND going up to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    } else if (lastViewComingDown != null) {
-                        // views are going down to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = lastViewComingDown.getBottom();
-                    } else if (firstViewComingUp != null) {
-                        // views are coming up to fill the void
-                        top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    }
-
-                    background.setBounds(left, top, right, bottom);
-                    background.draw(c);
-
-                }
-                super.onDraw(c, parent, state);
-            }
-
-        });
+    private void showEmptyView() {
+        getHistoryRecyclerContainer().setVisibility(View.INVISIBLE);
+        getEmptyHistoryTextView().setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -871,42 +335,6 @@ public class CalculatorFragment extends NavigationFragment {
     @Override
     public int getTitle() {
         return R.string.title_calc;
-    }
-
-    class CalculatorPagesAdapter extends PagerAdapter {
-
-        Context ctx;
-        int[] pages = {R.layout.calculator_page1, R.layout.calculator_page2};
-
-        CalculatorPagesAdapter(Context context) {
-            ctx = context;
-        }
-
-        @Override
-        public int getCount() {
-            return pages.length;
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            View view = LayoutInflater.from(ctx).inflate(pages[position], container, false);
-            setButtonsClickListener(view);
-            Button del = view.findViewById(R.id.buttonDel);
-            if (del != null) {
-                del.setOnLongClickListener(v -> {
-                    clearInput();
-                    return false;
-                });
-            }
-            container.addView(view);
-            return view;
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
     }
 
 }
