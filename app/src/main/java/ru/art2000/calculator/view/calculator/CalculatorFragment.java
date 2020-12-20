@@ -74,18 +74,18 @@ public class CalculatorFragment extends NavigationFragment {
                     hsv.postDelayed(() ->
                             hsv.smoothScrollTo(getInputTv().getWidth(), 0), 100L);
 
-                    model.getCurrentExpression().setValue(s.toString());
+                    model.getLiveExpression().setValue(s.toString());
                 }
             });
 
-            model.getCurrentExpression().observe(getViewLifecycleOwner(), (expression) -> {
+            model.getLiveExpression().observe(getViewLifecycleOwner(), (expression) -> {
 
                 if (expression.equals(getInputTv().getText().toString())) return;
 
                 getInputTv().setText(expression);
             });
 
-            model.getCurrentResult().observe(getViewLifecycleOwner(), (expression) -> {
+            model.getLiveResult().observe(getViewLifecycleOwner(), (expression) -> {
 
                 if (expression == null) {
                     getResultTV().setVisibility(View.INVISIBLE);
@@ -97,7 +97,7 @@ public class CalculatorFragment extends NavigationFragment {
                 getResultTV().setVisibility(View.VISIBLE);
             });
 
-            model.getCurrentMemory().observe(getViewLifecycleOwner(), (memoryValue) -> {
+            model.getLiveMemory().observe(getViewLifecycleOwner(), (memoryValue) -> {
 
                 if (Math.abs(memoryValue) < 1e-5) {
                     binding.memory.setVisibility(View.INVISIBLE);
@@ -109,7 +109,7 @@ public class CalculatorFragment extends NavigationFragment {
                 binding.memory.setVisibility(View.VISIBLE);
             });
 
-            model.getCurrentAngleType().observe(getViewLifecycleOwner(), angleType ->
+            model.getLiveAngleType().observe(getViewLifecycleOwner(), angleType ->
                     binding.degRadTv.setText(angleType.toString()));
 
             setupHistoryPart();
