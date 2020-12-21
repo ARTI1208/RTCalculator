@@ -9,5 +9,5 @@ class InfoItem(
         public var size: Int? = 0
 ) {
         @PrimaryKey(autoGenerate = true)
-        public var key: Int = 0
+        public var key: Int? = 0
 }
