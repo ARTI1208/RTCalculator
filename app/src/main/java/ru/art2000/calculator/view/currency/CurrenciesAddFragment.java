@@ -1,6 +1,7 @@
 package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,7 +50,7 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
             model.getRecyclerViewBottomPadding().observe(getViewLifecycleOwner(), bottomPadding ->
                     viewBinding.modifyCurrenciesList.setPadding(0, 0, 0, bottomPadding));
 
-            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
+            LinearLayoutManager llm = new LinearLayoutManagerWrapper(requireContext());
             llm.setOrientation(RecyclerView.VERTICAL);
             viewBinding.modifyCurrenciesList.setLayoutManager(llm);
             adapter = new AddCurrenciesAdapter();
@@ -97,18 +97,32 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
         return R.string.currencies_add;
     }
 
+    private static class LinearLayoutManagerWrapper extends LinearLayoutManager {
+
+        public LinearLayoutManagerWrapper(Context context) {
+            super(context);
+        }
+
+        /*
+         * TODO investigate why app crashes when deleting query characters and how this prevents it
+         * Thanks to https://stackoverflow.com/a/40177879
+         */
+        @Override
+        public boolean supportsPredictiveItemAnimations() {
+            return false;
+        }
+    }
+
     private class AddCurrenciesAdapter extends RecyclerView.Adapter<AddCurrenciesAdapter.Holder> {
 
         AddCurrenciesAdapter() {
 
-            dispatchListUpdate(new ArrayList<>(), model.getDisplayedHiddenItems());
-
-//            model.getDisplayedHiddenItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
-//                @Override
-//                public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
-//                    dispatchListUpdate(previousList, model.getDisplayedHiddenItems());
-//                }
-//            });
+            model.getDisplayedHiddenItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
+                @Override
+                public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
+                    dispatchListUpdate(previousList, model.getDisplayedHiddenItems());
+                }
+            });
 
             model.getSelectedHiddenItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
 
