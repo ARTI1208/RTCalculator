@@ -32,7 +32,7 @@ class CurrenciesSettingsModel(application: Application)
 
     var selectedTab: Int
         get() = mSelectedTab.value ?: -1
-        set(value) = mSelectedTab.postValue(value)
+        set(value) { mSelectedTab.value = value }
 
 
     val removedItems: MutableLiveData<List<CurrencyItem>> = MutableLiveData(emptyList())

@@ -129,7 +129,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
         binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                when (model.selectedTab) {
+                when (tab.position) {
                     1 -> {
                         edit.onReplaced(add)
                         add.onReplace(edit)
@@ -215,6 +215,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             R.id.deselect_all -> if (model.selectedTab == 0) {
                 model.selectedHiddenItems.clear()
             } else {
+                model.isEditSelectionMode = false
                 model.selectedVisibleItems.clear()
             }
             R.id.select_all -> if (model.selectedTab == 0) {
