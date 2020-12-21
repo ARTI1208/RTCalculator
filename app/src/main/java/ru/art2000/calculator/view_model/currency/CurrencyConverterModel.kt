@@ -2,6 +2,7 @@ package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.core.content.SharedPreferencesCompat
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel

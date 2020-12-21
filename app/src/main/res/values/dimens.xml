@@ -18,4 +18,6 @@
     <dimen name="bottom_view_vertical_margin">2.3dp</dimen>
     <dimen name="bottom_view_stroke_width">1dp</dimen>
     <dimen name="bottom_view_elevation">2dp</dimen>
+
+    <dimen name="bottom_view_min_height">40dp</dimen>
 </resources>

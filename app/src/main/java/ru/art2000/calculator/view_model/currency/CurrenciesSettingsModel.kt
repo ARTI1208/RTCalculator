@@ -6,12 +6,18 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.model.currency.CurrencyItem
+import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getCurrencyDatabase
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
-import ru.art2000.extensions.*
+import ru.art2000.extensions.ArrayLiveList
+import ru.art2000.extensions.LiveList
+import ru.art2000.extensions.context
 import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
 import java.util.*
@@ -22,14 +28,16 @@ class CurrenciesSettingsModel(application: Application)
 
     private val mSelectedTab = MutableLiveData(0)
 
-    var isFirstTimeTooltipShown = !PrefsHelper.isDeleteTooltipShown()
+    val liveIsFirstTimeTooltipShown: MutableLiveData<Boolean> = MutableLiveData(!PrefsHelper.isDeleteTooltipShown())
 
     var selectedTab: Int
         get() = mSelectedTab.value ?: -1
         set(value) = mSelectedTab.postValue(value)
 
 
-    private val currencyDao = CurrencyDependencies.getCurrencyDatabase(application).currencyDao()
+    val removedItems: MutableLiveData<List<CurrencyItem>> = MutableLiveData(emptyList())
+
+    private val currencyDao = getCurrencyDatabase(application).currencyDao()
 
     fun makeItemsVisible(items: List<CurrencyItem>) {
         currencyDao.makeItemsVisible(items)
@@ -61,51 +69,32 @@ class CurrenciesSettingsModel(application: Application)
                 newList = hiddenItems.value ?: listOf()
             } else {
                 newList = ArrayList()
-                val lowerQuery = query.toLowerCase()
 
                 val mainLocale = Locale.getDefault()
+
+                val lowerQuery = query.toLowerCase(mainLocale)
 
                 val allItems = hiddenItems.value ?: listOf()
 
                 val context: Context = getApplication()
 
                 for (item in allItems) {
-                    val lowerCode = item.code.toLowerCase()
+                    val lowerCode = item.code.toLowerCase(mainLocale)
                     val itemNameResourceId = getNameIdentifierForCode(context, item.code)
-                    val lowerName: String = context.getString(itemNameResourceId).toLowerCase()
+                    val lowerName: String = context.getString(itemNameResourceId).toLowerCase(mainLocale)
                     if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
                             || (mainLocale != Locale.ENGLISH
                                     && AndroidHelper.getLocalizedString(context, Locale.ENGLISH, itemNameResourceId)
-                                    .toLowerCase().contains(lowerQuery))) {
+                                    .toLowerCase(Locale.ENGLISH).contains(lowerQuery))) {
                         newList.add(item)
                     }
                 }
             }
 
             viewModelScope.launch(Dispatchers.Main) {
+                Log.e("onFilter", newList.joinToString { it.code })
                 displayedHiddenItems.setAll(newList)
             }
-
-//            val diff = calculateDiff(displayedHiddenItems, newList)
-//            diff.dispatchUpdatesTo(object : ListUpdateCallback {
-//                override fun onChanged(position: Int, count: Int, payload: Any?) {
-//
-//                }
-//
-//                override fun onMoved(fromPosition: Int, toPosition: Int) {
-//
-//                }
-//
-//                override fun onInserted(position: Int, count: Int) {
-//                    displayedHiddenItems.addAll(position, newList.subList(position, position + count))
-//                }
-//
-//                override fun onRemoved(position: Int, count: Int) {
-//                    displayedHiddenItems.removeAll(position, count)
-//                }
-//
-//            })
-
         }
     }
 
@@ -143,9 +132,33 @@ class CurrenciesSettingsModel(application: Application)
         }
     }
 
+    override fun databaseMarkHidden(item: CurrencyItem) {
+        Maybe
+                .fromRunnable<Any> {
+                    currencyDao.removeFromVisible(item.code)
+                }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete {
+                    removedItems.value = listOf(item)
+                }
+                .subscribe()
+    }
+
+    override fun dismissFirstTimeTooltip() {
+        liveIsFirstTimeTooltipShown.value = false
+    }
+
     override val displayedVisibleItems: LiveList<CurrencyItem> = ArrayLiveList()
 
     override var isEditSelectionMode: Boolean = false
+
+
+    val liveQuery: MutableLiveData<String> = MutableLiveData("")
+
+    override val currentQuery: String
+        get() = liveQuery.value!!
+
+    override val recyclerViewBottomPadding: MutableLiveData<Int> = MutableLiveData(0)
 
     init {
         hiddenItems.observeForever {

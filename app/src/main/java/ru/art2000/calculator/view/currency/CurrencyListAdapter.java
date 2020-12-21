@@ -36,18 +36,16 @@ import ru.art2000.helpers.PrefsHelper;
 
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.Holder> {
 
-    private Context mContext;
-    private NumberFormat dot2dig = new DecimalFormat("#.##");
+    private final Context mContext;
+    private final NumberFormat dot2dig = new DecimalFormat("#.##");
+    @ColorInt
+    private final int colorAccent;
+    private final float codeTextSizeNormal;
+    private final float codeTextSizeHighlighted;
+    List<CurrencyItem> data = new ArrayList<>();
+    CurrencyListAdapterModel adapterModel;
     private RecyclerView recycler;
     private ColorStateList csl = null;
-    @ColorInt
-    private int colorAccent;
-    private float codeTextSizeNormal;
-    private float codeTextSizeHighlighted;
-
-    List<CurrencyItem> data = new ArrayList<>();
-
-    CurrencyListAdapterModel adapterModel;
 
     CurrencyListAdapter(Context context, CurrencyListAdapterModel model) {
         adapterModel = model;
@@ -83,7 +81,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         if (data == null || data.isEmpty()) {
             data = newData;
             notifyItemRangeInserted(0, newData.size());
-        } else if (data.size() != newData.size() || !data.containsAll(newData)) {
+        } else {
             DiffUtil.DiffResult result = GlobalDependencies.calculateDiff(data, newData);
 
             data = newData;

@@ -36,11 +36,6 @@
             android:layout_height="0.5dp"
             android:background="?android:listDivider" />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager2"
             android:layout_width="match_parent"
@@ -66,8 +61,8 @@
             android:layout_marginBottom="@dimen/bottom_view_vertical_margin"
             app:cardBackgroundColor="?floatingBottomBarBackground"
             app:cardCornerRadius="@dimen/bottom_view_corner_radius"
-            app:cardUseCompatPadding="true"
             app:cardElevation="@dimen/bottom_view_elevation"
+            app:cardUseCompatPadding="true"
             app:elevation="@dimen/bottom_view_elevation"
             app:strokeColor="?strokeColor"
             app:strokeWidth="@dimen/bottom_view_stroke_width"
@@ -78,6 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?floatingBottomBarBackground"
+                android:minHeight="@dimen/bottom_view_min_height"
                 app:iconifiedByDefault="false"
                 app:queryHint="@string/hint_currency_search"
                 app:searchHintIcon="@null"
@@ -95,12 +91,11 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="20dp"
         android:visibility="invisible"
-        app:layout_dodgeInsetEdges="top"
         app:backgroundTint="?colorAccent"
         app:layout_behavior="ru.art2000.extensions.FloatingActionButtonScrollingBehaviour"
+        app:layout_dodgeInsetEdges="top"
         app:srcCompat="@drawable/ic_currencies_done"
         app:tint="@color/white"
-        tools:visibility="visible"
-        />
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,5 +1,7 @@
 package ru.art2000.calculator.model.currency;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -59,6 +61,6 @@ public class CurrencyItem implements DiffComparable<CurrencyItem> {
 
     @Override
     public boolean isContentSame(@NotNull CurrencyItem anotherItem) {
-        return isSameItem(anotherItem);
+        return position == anotherItem.position;
     }
 }

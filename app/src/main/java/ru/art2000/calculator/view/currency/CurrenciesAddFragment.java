@@ -1,8 +1,8 @@
 package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Px;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ru.art2000.calculator.R;
+import ru.art2000.calculator.databinding.ItemAddCurrenciesListBinding;
+import ru.art2000.calculator.databinding.ModifyCurrenciesLayoutBinding;
 import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrenciesAddModel;
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel;
@@ -31,51 +34,48 @@ import ru.art2000.extensions.ReplaceableFragment;
 
 public class CurrenciesAddFragment extends ReplaceableFragment {
 
-    AddCurrenciesAdapter adapter;
-    @Px
-    int recyclerViewBottomPadding;
-    private View v = null;
-    private RecyclerView recycler;
-    private TextView emptyView;
-    private Context mContext;
-    private CurrenciesSettingsActivity parent;
+    private AddCurrenciesAdapter adapter;
+
+    private ModifyCurrenciesLayoutBinding viewBinding;
     private CurrenciesAddModel model;
 
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (v == null) {
-            mContext = getActivity();
-            parent = (CurrenciesSettingsActivity) requireActivity();
-            model = new ViewModelProvider(parent).get(CurrenciesSettingsModel.class);
-            v = inflater.inflate(R.layout.modify_currencies_layout, null);
-            emptyView = v.findViewById(R.id.empty_tv);
-            recycler = v.findViewById(R.id.modify_currencies_list);
-            recycler.setPadding(0, 0, 0, recyclerViewBottomPadding);
-            LinearLayoutManager llm = new LinearLayoutManager(mContext);
+        if (viewBinding == null) {
+            viewBinding = ModifyCurrenciesLayoutBinding.inflate(inflater);
+            model = new ViewModelProvider(requireActivity()).get(CurrenciesSettingsModel.class);
+
+            model.getRecyclerViewBottomPadding().observe(getViewLifecycleOwner(), bottomPadding ->
+                    viewBinding.modifyCurrenciesList.setPadding(0, 0, 0, bottomPadding));
+
+            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
             llm.setOrientation(RecyclerView.VERTICAL);
-            recycler.setLayoutManager(llm);
+            viewBinding.modifyCurrenciesList.setLayoutManager(llm);
             adapter = new AddCurrenciesAdapter();
-            recycler.setAdapter(adapter);
+            viewBinding.modifyCurrenciesList.setAdapter(adapter);
         }
-        return v;
+
+        return viewBinding.getRoot();
     }
 
     private void toggleEmptyView() {
         if (adapter == null || adapter.getItemCount() == 0) {
-            emptyView.setText(getEmptyText());
-            emptyView.setVisibility(View.VISIBLE);
-            recycler.setVisibility(View.GONE);
 
+            viewBinding.emptyTv.setText(getEmptyText());
+            viewBinding.emptyTv.setVisibility(View.VISIBLE);
+            viewBinding.modifyCurrenciesList.setVisibility(View.GONE);
         } else {
-            emptyView.setVisibility(View.GONE);
-            recycler.setVisibility(View.VISIBLE);
+
+            viewBinding.emptyTv.setVisibility(View.GONE);
+            viewBinding.modifyCurrenciesList.setVisibility(View.VISIBLE);
         }
     }
 
     private String getEmptyText() {
-        if (parent.barSearchView.getQuery().length() > 0 && model.getHiddenItems().getValue().size() > 0) {
+        if (model.getCurrentQuery().length() > 0
+                && Objects.requireNonNull(model.getHiddenItems().getValue()).size() > 0) {
             return getString(R.string.empty_text_no_currencies_found);
         } else {
             return getString(R.string.empty_text_all_currencies_added);
@@ -84,7 +84,7 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
 
     @Override
     public void onReselected() {
-        recycler.smoothScrollToPosition(0);
+        viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
     }
 
     @Override
@@ -97,15 +97,18 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
         return R.string.currencies_add;
     }
 
-    class AddCurrenciesAdapter extends RecyclerView.Adapter<AddCurrenciesAdapter.Holder> {
+    private class AddCurrenciesAdapter extends RecyclerView.Adapter<AddCurrenciesAdapter.Holder> {
 
         AddCurrenciesAdapter() {
-            model.getDisplayedHiddenItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
-                @Override
-                public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
-                    dispatchListUpdate(previousList, model.getDisplayedHiddenItems());
-                }
-            });
+
+            dispatchListUpdate(new ArrayList<>(), model.getDisplayedHiddenItems());
+
+//            model.getDisplayedHiddenItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
+//                @Override
+//                public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
+//                    dispatchListUpdate(previousList, model.getDisplayedHiddenItems());
+//                }
+//            });
 
             model.getSelectedHiddenItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
 
@@ -117,7 +120,8 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
 
                     for (CurrencyItem item : insertedItems) {
                         Holder holder = (Holder)
-                                recycler.findViewHolderForAdapterPosition(model.getDisplayedHiddenItems().indexOf(item));
+                                viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
+                                        model.getDisplayedHiddenItems().indexOf(item));
 
                         if (holder == null || holder.checkBox == null)
                             continue;
@@ -133,7 +137,7 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
 
                     for (int i : removedItems) {
                         Holder holder = (Holder)
-                                recycler.findViewHolderForAdapterPosition(
+                                viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
                                         model.getDisplayedHiddenItems().indexOf(previousList.get(i)));
 
                         if (holder == null || holder.checkBox == null)
@@ -148,34 +152,21 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
         @NonNull
         @Override
         @SuppressLint("InflateParams")
-        public AddCurrenciesAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                              int viewType) {
-            View item = LayoutInflater
-                    .from(mContext)
-                    .inflate(R.layout.item_add_currencies_list, null);
-            return new Holder(item);
+        public AddCurrenciesAdapter.Holder onCreateViewHolder(
+                @NonNull ViewGroup parent, int viewType
+        ) {
+
+            ItemAddCurrenciesListBinding binding = ItemAddCurrenciesListBinding.inflate(
+                    LayoutInflater.from(requireContext())
+            );
+
+            return new Holder(binding);
         }
 
         @Override
         public void onBindViewHolder(@NonNull AddCurrenciesAdapter.Holder holder, int position) {
             CurrencyItem currencyItem = model.getDisplayedHiddenItems().get(position);
-            holder.code.setText(currencyItem.code);
-            holder.name.setText(CurrencyDependencies.getNameIdentifierForCode(mContext, currencyItem.code));
-
-            holder.checkBox.setOnCheckedChangeListener(null);
-            holder.checkBox.setChecked(model.isHiddenItemSelected(currencyItem));
-
-            holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                int pos = holder.getBindingAdapterPosition();
-                CurrencyItem item = model.getDisplayedHiddenItems().get(pos);
-
-                if (isChecked != model.isHiddenItemSelected(item)) {
-                    model.setHiddenItemSelected(item, isChecked);
-                }
-            });
-
-            holder.itemView.setOnClickListener(v ->
-                    holder.checkBox.performClick());
+            holder.bind(currencyItem);
         }
 
         @Override
@@ -183,25 +174,48 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
             return model.getDisplayedHiddenItems().size();
         }
 
-        void dispatchListUpdate(List<? extends CurrencyItem> oldData, List<? extends CurrencyItem> newData) {
+        private void dispatchListUpdate(List<? extends CurrencyItem> oldData, List<? extends CurrencyItem> newData) {
+            Log.e("hhhhh", "1");
             toggleEmptyView();
+            Log.e("hhhhh", "2");
             DiffUtil.DiffResult result = CollectionsKt.calculateDiff(oldData, newData);
+            Log.e("hhhhh", "3");
             result.dispatchUpdatesTo(this);
+            Log.e("hhhhh", "4");
         }
 
-        class Holder extends RecyclerView.ViewHolder {
+        private class Holder extends RecyclerView.ViewHolder {
 
             TextView code;
             TextView name;
             CheckBox checkBox;
 
-            Holder(final View itemView) {
-                super(itemView);
-                code = itemView.findViewById(R.id.currency_code);
-                checkBox = itemView.findViewById(R.id.checkbox_add);
-                name = itemView.findViewById(R.id.currency_name);
+            Holder(final ItemAddCurrenciesListBinding viewBinding) {
+                super(viewBinding.getRoot());
+
+                code = viewBinding.currencyCode;
+                name = viewBinding.currencyName;
+                checkBox = viewBinding.checkboxAdd;
             }
 
+            void bind(CurrencyItem currencyItem) {
+                code.setText(currencyItem.code);
+                name.setText(CurrencyDependencies.getNameIdentifierForCode(name.getContext(), currencyItem.code));
+
+                checkBox.setOnCheckedChangeListener(null);
+                checkBox.setChecked(model.isHiddenItemSelected(currencyItem));
+
+                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    int pos = getBindingAdapterPosition();
+                    CurrencyItem item = model.getDisplayedHiddenItems().get(pos);
+
+                    if (isChecked != model.isHiddenItemSelected(item)) {
+                        model.setHiddenItemSelected(item, isChecked);
+                    }
+                });
+
+                itemView.setOnClickListener(v -> checkBox.performClick());
+            }
         }
     }
 

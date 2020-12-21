@@ -127,8 +127,10 @@
 
     <style name="RT.Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="actionTextColorAlpha">1.0</item>
-        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">8dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
         <item name="android:textColor">?colorAccent</item>
     </style>
 

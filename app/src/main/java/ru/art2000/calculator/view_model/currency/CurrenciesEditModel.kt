@@ -1,10 +1,8 @@
 package ru.art2000.calculator.view_model.currency
 
-import androidx.databinding.ObservableList
 import androidx.lifecycle.LiveData
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.extensions.LiveList
-import ru.art2000.extensions.MutableLiveMap
 
 interface CurrenciesEditModel {
 
@@ -12,11 +10,15 @@ interface CurrenciesEditModel {
 
     val selectedVisibleItems: LiveList<CurrencyItem>
 
+    val displayedVisibleItems: LiveList<CurrencyItem>
+
+    var isEditSelectionMode: Boolean
+
     fun isVisibleItemSelected(item: CurrencyItem): Boolean
 
     fun setVisibleItemSelected(item: CurrencyItem, selected: Boolean)
 
-    val displayedVisibleItems: LiveList<CurrencyItem>
+    fun databaseMarkHidden(item: CurrencyItem)
 
-    var isEditSelectionMode: Boolean
+    fun dismissFirstTimeTooltip()
 }
