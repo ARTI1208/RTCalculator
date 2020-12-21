@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -37,6 +39,7 @@ import ru.art2000.extensions.ReplaceableFragment
 import ru.art2000.extensions.createThemedSnackbar
 import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.SnackbarThemeHelper
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -74,7 +77,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
 
         model.removedItems.observe(this) {
-            generateUndoSnackbar(it, false)
+            generateUndoSnackBar(it, false)
         }
 
         model.liveIsFirstTimeTooltipShown.observe(this) {
@@ -244,7 +247,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
         deleteTooltip = binding.coordinator.createThemedSnackbar(
                 R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE
-        ).apply {
+        ).fixedSizes.apply {
 
             addCallback(object : Snackbar.Callback() {
                 override fun onShown(sb: Snackbar) {
@@ -313,7 +316,31 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         binding.floatingActionButton.hide()
     }
 
-    private fun generateUndoSnackbar(editedItems: List<CurrencyItem>, added: Boolean) {
+    private val Snackbar.fixedSizes: Snackbar
+        get() {
+            val cardView = findViewById<MaterialCardView>(R.id.card_wrapper)
+            val cardLayoutParams = cardView.layoutParams as MarginLayoutParams
+            var leftMargin = cardLayoutParams.leftMargin + cardView.paddingLeft
+            var rightMargin = cardLayoutParams.rightMargin + cardView.paddingRight
+            var height = cardView.getChildAt(0).measuredHeight
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                height += (cardView.paddingBottom
+                        + cardView.strokeWidth
+                        - cardView.cardElevation.toInt())
+                leftMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
+                rightMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
+            } else {
+                view.elevation = 0f
+            }
+            view.minimumHeight = height
+            view.translationY = (cardView.paddingTop - cardView.strokeWidth).toFloat()
+
+            SnackbarThemeHelper.fixSnackBarHorizontalMargin(this, leftMargin, rightMargin)
+
+            return this
+        }
+
+    private fun generateUndoSnackBar(editedItems: List<CurrencyItem>, added: Boolean) {
         if (editedItems.isEmpty()) return
 
         val message = if (editedItems.size == 1) {
@@ -326,8 +353,10 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                     editedItems.size,
                     editedItems.size)
         }
-        val undoSnackbar = binding.coordinator.createThemedSnackbar(message, Snackbar.LENGTH_LONG)
-        undoSnackbar.setAction(R.string.action_undo) {
+
+        val undoSnackBar = binding.coordinator.createThemedSnackbar(message, Snackbar.LENGTH_LONG).fixedSizes
+
+        undoSnackBar.setAction(R.string.action_undo) {
             Completable
                     .fromRunnable {
                         if (added) {
@@ -337,9 +366,9 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                         }
                     }.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete { generateUndoSnackbar(editedItems, !added) }.subscribe()
+                    .doOnComplete { generateUndoSnackBar(editedItems, !added) }.subscribe()
         }
-        undoSnackbar.show()
+        undoSnackBar.show()
     }
 
     fun modifyVisualElements(tabPos: Int) {
@@ -352,7 +381,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                             model.makeItemsVisible(selectedItems)
                         }.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete { generateUndoSnackbar(selectedItems, true) }
+                        .doOnComplete { generateUndoSnackBar(selectedItems, true) }
                         .subscribe()
             }
         } else {
@@ -364,7 +393,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                             model.makeItemsHidden(selectedItems)
                         }.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete { generateUndoSnackbar(selectedItems, false) }
+                        .doOnComplete { generateUndoSnackBar(selectedItems, false) }
                         .subscribe()
             }
         }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
@@ -15,6 +16,9 @@ import androidx.annotation.StringRes;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.snackbar.SnackbarContentLayout;
+
+import java.lang.reflect.Field;
+import java.util.Objects;
 
 import ru.art2000.calculator.R;
 
@@ -48,6 +52,8 @@ public class SnackbarThemeHelper {
         params.setMargins(horizontalMargin, 0, horizontalMargin, bottomMargin);
         snackbarLayout.setLayoutParams(params);
 
+        fixSnackBarHorizontalMargin(snackbar, horizontalMargin);
+
         //Content layout params
         SnackbarContentLayout contentLayout =
                 (SnackbarContentLayout) snackbarLayout.getChildAt(0);
@@ -76,5 +82,28 @@ public class SnackbarThemeHelper {
         snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
 
         return snackbar;
+    }
+
+    public static void fixSnackBarHorizontalMargin(Snackbar snackBar, int horizontalMargin) {
+        fixSnackBarHorizontalMargin(snackBar, horizontalMargin, horizontalMargin);
+    }
+
+    /*
+     * TODO remove this when https://github.com/material-components/material-components-android/issues/1076 is fixed
+     *
+     * This hack is based on https://github.com/material-components/material-components-android/issues/1076#issuecomment-670274203
+     */
+    public static void fixSnackBarHorizontalMargin(Snackbar snackBar, int leftMargin, int rightMargin) {
+        try {
+            Class<?> snackbarClass = Class.forName("com.google.android.material.snackbar.Snackbar");
+            Field originalMarginsField = snackbarClass.getSuperclass().getDeclaredField("originalMargins");
+            originalMarginsField.setAccessible(true);
+            Rect fixedOriginalMargins = (Rect) Objects.requireNonNull(originalMarginsField.get(snackBar));
+            fixedOriginalMargins.left = leftMargin;
+            fixedOriginalMargins.right = rightMargin;
+            originalMarginsField.set(snackBar, fixedOriginalMargins);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
