@@ -235,7 +235,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         return true
     }
 
-    fun showDeleteTip() {
+    private fun showDeleteTip() {
         if (!model.liveIsFirstTimeTooltipShown.value!!) {
             return
         }
@@ -285,7 +285,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                 PorterDuff.Mode.SRC_ATOP)
     }
 
-    fun toggleElementsVisibility() {
+    private fun toggleElementsVisibility() {
         if (model.selectedTab == 0) {
             val selectedCount = model.selectedHiddenItems.size
             val totalCount = model.displayedHiddenItems.size
@@ -371,7 +371,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         undoSnackBar.show()
     }
 
-    fun modifyVisualElements(tabPos: Int) {
+    private fun modifyVisualElements(tabPos: Int) {
         if (tabPos == 0) {
             setNewFabImage(checkDrawable)
             binding.floatingActionButton.setOnClickListener {
@@ -399,7 +399,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         }
     }
 
-    internal inner class CurrencyEditorPager2Adapter : FragmentStateAdapter(this@CurrenciesSettingsActivity) {
+    private inner class CurrencyEditorPager2Adapter : FragmentStateAdapter(this@CurrenciesSettingsActivity) {
 
         private val fragments: Array<ReplaceableFragment> = arrayOf(add, edit)
 

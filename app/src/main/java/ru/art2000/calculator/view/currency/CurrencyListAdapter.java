@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,19 +30,22 @@ import ru.art2000.calculator.model.common.GlobalDependencies;
 import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
 import ru.art2000.calculator.view_model.currency.CurrencyListAdapterModel;
+import ru.art2000.extensions.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.Holder> {
 
+    private final static NumberFormat dot2dig = new DecimalFormat("#.##");
+
     private final Context mContext;
-    private final NumberFormat dot2dig = new DecimalFormat("#.##");
+    private final CurrencyListAdapterModel adapterModel;
+
     @ColorInt
     private final int colorAccent;
-    private final float codeTextSizeNormal;
-    private final float codeTextSizeHighlighted;
-    List<CurrencyItem> data = new ArrayList<>();
-    CurrencyListAdapterModel adapterModel;
+    private final float codeTextSizeNormal, codeTextSizeHighlighted;
+
+    private List<CurrencyItem> data = new ArrayList<>();
     private RecyclerView recycler;
     private ColorStateList csl = null;
 
@@ -66,7 +68,38 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         recycler = recyclerView;
     }
 
-    public void setNewData(@NonNull List<CurrencyItem> newData) {
+    @NonNull
+    @Override
+    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View viewGroup = LayoutInflater.from(mContext).
+                inflate(R.layout.item_currency_converter_list, parent, false);
+        return new Holder(viewGroup);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final Holder holder, final int position) {
+        TextView code = holder.codeView;
+
+        if (csl == null)
+            csl = code.getTextColors();
+
+        if (adapterModel.getLastInputItemPosition() == position) {
+            highlightHolderElements(holder);
+        } else {
+            removeEditText(holder);
+            removeHolderElementsHighlighting(holder);
+        }
+
+        CurrencyItem currencyItem = data.get(position);
+        holder.bind(currencyItem);
+    }
+
+    @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+    void setNewData(@NonNull List<CurrencyItem> newData) {
 
         if (adapterModel.getLastInputItemPosition() == -1) {
             for (int i = 0; i < newData.size(); i++) {
@@ -87,14 +120,6 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             data = newData;
             result.dispatchUpdatesTo(this);
         }
-    }
-
-    @NonNull
-    @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View viewGroup = LayoutInflater.from(mContext).
-                inflate(R.layout.item_currency_converter_list, parent, false);
-        return new Holder(viewGroup);
     }
 
     void removeEditText() {
@@ -151,34 +176,6 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         holder.codeView.setTypeface(null, Typeface.NORMAL);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull final Holder holder, final int position) {
-        TextView value = holder.value;
-        TextView code = holder.codeView;
-        TextView name = holder.nameView;
-
-        if (csl == null)
-            csl = code.getTextColors();
-
-        if (adapterModel.getLastInputItemPosition() == position) {
-            highlightHolderElements(holder);
-        } else {
-            removeEditText(holder);
-            removeHolderElementsHighlighting(holder);
-        }
-
-        CurrencyItem currencyItem = data.get(position);
-
-        value.setText(dot2dig.format(adapterModel.getLastInputItemValue() * currencyItem.rate));
-        code.setText(currencyItem.code);
-        name.setText(CurrencyDependencies.getNameIdentifierForCode(mContext, currencyItem.code));
-    }
-
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
-
     public class Holder extends RecyclerView.ViewHolder {
 
         TextView codeView, nameView, value;
@@ -225,13 +222,10 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                 }
             });
 
-            input.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+            input.addTextChangedListener(new SimpleTextWatcher() {
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
                     if (s.length() > 0) {
                         int holderPosition = getBindingAdapterPosition();
                         adapterModel.setLastInputItemValue(Double.parseDouble(s.toString()) /
@@ -249,12 +243,18 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
+                public void afterTextChanged(@NonNull Editable s) {
                     if (PrefsHelper.isShouldSaveCurrencyConversion())
                         PrefsHelper.putConversionValues(codeView.getText().toString(),
                                 adapterModel.getLastInputItemValue());
                 }
             });
+        }
+
+        void bind(CurrencyItem currencyItem) {
+            value.setText(dot2dig.format(adapterModel.getLastInputItemValue() * currencyItem.rate));
+            codeView.setText(currencyItem.code);
+            nameView.setText(CurrencyDependencies.getNameIdentifierForCode(mContext, currencyItem.code));
         }
     }
 }

@@ -3,7 +3,6 @@ package ru.art2000.calculator.view.currency;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +59,21 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
         return viewBinding.getRoot();
     }
 
+    @Override
+    public void onReselected() {
+        viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.currencies_add;
+    }
+
     private void toggleEmptyView() {
         if (adapter == null || adapter.getItemCount() == 0) {
 
@@ -80,21 +94,6 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
         } else {
             return getString(R.string.empty_text_all_currencies_added);
         }
-    }
-
-    @Override
-    public void onReselected() {
-        viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;
-    }
-
-    @Override
-    public int getTitle() {
-        return R.string.currencies_add;
     }
 
     private static class LinearLayoutManagerWrapper extends LinearLayoutManager {
@@ -133,14 +132,7 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
                     super.onItemsInserted(previousList, insertedItems, position);
 
                     for (CurrencyItem item : insertedItems) {
-                        Holder holder = (Holder)
-                                viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
-                                        model.getDisplayedHiddenItems().indexOf(item));
-
-                        if (holder == null || holder.checkBox == null)
-                            continue;
-
-                        holder.checkBox.setChecked(true);
+                        markItem(item, true);
                     }
                 }
 
@@ -150,14 +142,7 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
                     super.onItemsRemoved(previousList, removedItems);
 
                     for (int i : removedItems) {
-                        Holder holder = (Holder)
-                                viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
-                                        model.getDisplayedHiddenItems().indexOf(previousList.get(i)));
-
-                        if (holder == null || holder.checkBox == null)
-                            continue;
-
-                        holder.checkBox.setChecked(false);
+                        markItem(previousList.get(i), false);
                     }
                 }
             });
@@ -188,14 +173,21 @@ public class CurrenciesAddFragment extends ReplaceableFragment {
             return model.getDisplayedHiddenItems().size();
         }
 
+        private void markItem(CurrencyItem currencyItem, boolean selected) {
+            Holder holder = (Holder)
+                    viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
+                            model.getDisplayedHiddenItems().indexOf(currencyItem));
+
+            if (holder == null || holder.checkBox == null)
+                return;
+
+            holder.checkBox.setChecked(selected);
+        }
+
         private void dispatchListUpdate(List<? extends CurrencyItem> oldData, List<? extends CurrencyItem> newData) {
-            Log.e("hhhhh", "1");
             toggleEmptyView();
-            Log.e("hhhhh", "2");
             DiffUtil.DiffResult result = CollectionsKt.calculateDiff(oldData, newData);
-            Log.e("hhhhh", "3");
             result.dispatchUpdatesTo(this);
-            Log.e("hhhhh", "4");
         }
 
         private class Holder extends RecyclerView.ViewHolder {

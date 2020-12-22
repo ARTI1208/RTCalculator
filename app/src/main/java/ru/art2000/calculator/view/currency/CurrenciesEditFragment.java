@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -46,8 +45,6 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
     private ModifyCurrenciesLayoutBinding viewBinding;
     private CurrenciesEditModel model;
 
-
-    @SuppressLint("InflateParams")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,15 +56,11 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
 
             viewBinding.modifyCurrenciesList.setPadding(0, 0, 0, AndroidHelper.dip2px(requireContext(), 20));
 
-            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
-            llm.setOrientation(RecyclerView.VERTICAL);
-
             itemTouchHelper = new ItemTouchHelper(new CurrenciesEditRecyclerTouchCallback(
                     requireContext(),
                     position -> {
-                        CurrencyItem removedItem = model.getDisplayedVisibleItems().get(position);
 
-//                        model.getDisplayedVisibleItems().remove(position.intValue());
+                        CurrencyItem removedItem = model.getDisplayedVisibleItems().get(position);
                         model.databaseMarkHidden(removedItem);
 
                         return Unit.INSTANCE;
@@ -77,66 +70,19 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
                         return Unit.INSTANCE;
                     }
             ));
+            itemTouchHelper.attachToRecyclerView(viewBinding.modifyCurrenciesList);
 
             adapter = new EditCurrenciesAdapter();
-            itemTouchHelper.attachToRecyclerView(viewBinding.modifyCurrenciesList);
-            viewBinding.modifyCurrenciesList.setLayoutManager(llm);
             viewBinding.modifyCurrenciesList.setAdapter(adapter);
+
+            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
+            llm.setOrientation(RecyclerView.VERTICAL);
+            viewBinding.modifyCurrenciesList.setLayoutManager(llm);
+
             toggleEmptyView();
         }
+
         return viewBinding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-        model.getDisplayedVisibleItems().observe(getViewLifecycleOwner(),
-                new LiveList.LiveListObserver<CurrencyItem>() {
-
-                    @Override
-                    public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
-                        toggleEmptyView();
-                    }
-                });
-
-        model.getSelectedVisibleItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
-
-            @Override
-            public void onItemsInserted(@NotNull List<? extends CurrencyItem> previousList,
-                                        @NotNull List<? extends CurrencyItem> insertedItems,
-                                        int position) {
-                super.onItemsInserted(previousList, insertedItems, position);
-
-                for (CurrencyItem item : insertedItems) {
-                    EditCurrenciesAdapter.Holder holder = (EditCurrenciesAdapter.Holder)
-                            viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(model.getDisplayedVisibleItems().indexOf(item));
-
-                    if (holder == null || holder.checkBox == null)
-                        continue;
-
-                    holder.checkBox.setChecked(true);
-                }
-            }
-
-            @Override
-            public void onItemsRemoved(@NotNull List<? extends CurrencyItem> previousList,
-                                       @NotNull List<Integer> removedItems) {
-                super.onItemsRemoved(previousList, removedItems);
-
-                for (int i : removedItems) {
-                    EditCurrenciesAdapter.Holder holder = (EditCurrenciesAdapter.Holder)
-                            viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
-                                    model.getDisplayedVisibleItems().indexOf(previousList.get(i)));
-
-                    if (holder == null || holder.checkBox == null)
-                        continue;
-
-                    holder.checkBox.setChecked(false);
-                }
-            }
-        });
     }
 
     @Override
@@ -170,20 +116,30 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
         return R.string.currencies_edit;
     }
 
-    class EditCurrenciesAdapter extends RecyclerView.Adapter<EditCurrenciesAdapter.Holder> {
+    private class EditCurrenciesAdapter extends RecyclerView.Adapter<EditCurrenciesAdapter.Holder> {
 
-        final int REORDER_MODE = 0;
-        final int SELECTION_MODE = 1;
-
-        int curMode = REORDER_MODE;
+        private final int REORDER_MODE = 0;
+        private final int SELECTION_MODE = 1;
 
         @LayoutRes
-        int selectionItem = R.layout.item_add_currencies_list;
+        private final int selectionItem = R.layout.item_add_currencies_list;
         @LayoutRes
-        int reorderItem = R.layout.item_edit_currencies_list;
+        private final int reorderItem = R.layout.item_edit_currencies_list;
+        private int curMode = REORDER_MODE;
 
         EditCurrenciesAdapter() {
             model.getSelectedVisibleItems().observe(getViewLifecycleOwner(), new LiveList.LiveListObserver<CurrencyItem>() {
+
+                @Override
+                public void onItemsInserted(@NotNull List<? extends CurrencyItem> previousList,
+                                            @NotNull List<? extends CurrencyItem> insertedItems,
+                                            int position) {
+                    super.onItemsInserted(previousList, insertedItems, position);
+
+                    for (CurrencyItem item : insertedItems) {
+                        markItem(item, true);
+                    }
+                }
 
                 @Override
                 public void onItemsRemoved(@NotNull List<? extends CurrencyItem> previousList,
@@ -192,6 +148,10 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
                     if (model.getSelectedVisibleItems().isEmpty()) {
                         setReorderMode();
                     }
+
+                    for (int i : removedItems) {
+                        markItem(previousList.get(i), false);
+                    }
                 }
             });
 
@@ -199,11 +159,39 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
                 @Override
                 public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
                     dispatchListUpdate(previousList, model.getDisplayedVisibleItems());
+                    toggleEmptyView();
                 }
             });
         }
 
-        public void swap(int position, int anotherPosition) {
+        @Override
+        public int getItemViewType(int position) {
+            return curMode;
+        }
+
+        @NonNull
+        @Override
+        public EditCurrenciesAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View item;
+            if (viewType == SELECTION_MODE)
+                item = LayoutInflater.from(requireContext()).inflate(selectionItem, null);
+            else
+                item = LayoutInflater.from(requireContext()).inflate(reorderItem, null);
+            return new Holder(item);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull EditCurrenciesAdapter.Holder holder, int position) {
+            CurrencyItem currencyItem = model.getDisplayedVisibleItems().get(position);
+            holder.bind(currencyItem);
+        }
+
+        @Override
+        public int getItemCount() {
+            return model.getDisplayedVisibleItems().size();
+        }
+
+        void swap(int position, int anotherPosition) {
             if (position < 0
                     || anotherPosition < 0
                     || position >= getItemCount()
@@ -230,60 +218,7 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
             result.dispatchUpdatesTo(this);
         }
 
-        @Override
-        public int getItemViewType(int position) {
-            return curMode;
-        }
-
-        @NonNull
-        @Override
-        public EditCurrenciesAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View item;
-            if (viewType == SELECTION_MODE)
-                item = LayoutInflater.from(requireContext()).inflate(selectionItem, null);
-            else
-                item = LayoutInflater.from(requireContext()).inflate(reorderItem, null);
-            return new Holder(item);
-        }
-
-        @SuppressLint("ClickableViewAccessibility")
-        @Override
-        public void onBindViewHolder(@NonNull EditCurrenciesAdapter.Holder holder, int position) {
-            CurrencyItem currencyItem = model.getDisplayedVisibleItems().get(position);
-            holder.code.setText(currencyItem.code);
-
-            holder.name.setText(CurrencyDependencies.getNameIdentifierForCode(requireContext(), currencyItem.code));
-
-            if (holder.handle != null) {
-                holder.handle.setOnTouchListener((v, event) -> {
-                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        itemTouchHelper.startDrag(holder);
-                    }
-                    return false;
-                });
-                holder.itemView.setOnLongClickListener(v -> {
-                    setSelectionMode(holder);
-                    return false;
-                });
-            } else {
-                holder.checkBox.setOnCheckedChangeListener(null);
-                holder.checkBox.setChecked(model.isVisibleItemSelected(currencyItem));
-                holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    CurrencyItem item = model.getDisplayedVisibleItems().get(holder.getBindingAdapterPosition());
-                    if (isChecked != model.isVisibleItemSelected(item)) {
-                        model.setVisibleItemSelected(item, isChecked);
-                    }
-                });
-                holder.itemView.setOnClickListener(v -> holder.checkBox.performClick());
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return model.getDisplayedVisibleItems().size();
-        }
-
-        void setReorderMode() {
+        private void setReorderMode() {
             if (curMode == REORDER_MODE)
                 return;
 
@@ -294,7 +229,7 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
             model.getSelectedVisibleItems().clear();
         }
 
-        void setSelectionMode(RecyclerView.ViewHolder holder) {
+        private void setSelectionMode(RecyclerView.ViewHolder holder) {
             curMode = SELECTION_MODE;
             model.setEditSelectionMode(true);
 
@@ -305,6 +240,17 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
             CurrencyItem item = model.getDisplayedVisibleItems().get(p);
             model.setVisibleItemSelected(item, true);
             notifyDataSetChanged();
+        }
+
+        private void markItem(CurrencyItem currencyItem, boolean selected) {
+            Holder holder = (Holder)
+                    viewBinding.modifyCurrenciesList.findViewHolderForAdapterPosition(
+                            model.getDisplayedVisibleItems().indexOf(currencyItem));
+
+            if (holder == null || holder.checkBox == null)
+                return;
+
+            holder.checkBox.setChecked(selected);
         }
 
         class Holder extends RecyclerView.ViewHolder {
@@ -320,6 +266,36 @@ public class CurrenciesEditFragment extends ReplaceableFragment {
                 name = itemView.findViewById(R.id.currency_name);
                 handle = itemView.findViewById(R.id.handle);
                 checkBox = itemView.findViewById(R.id.checkbox_add);
+            }
+
+            @SuppressLint("ClickableViewAccessibility")
+            void bind(CurrencyItem currencyItem) {
+                code.setText(currencyItem.code);
+
+                name.setText(CurrencyDependencies.getNameIdentifierForCode(requireContext(), currencyItem.code));
+
+                if (handle != null) {
+                    handle.setOnTouchListener((v, event) -> {
+                        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                            itemTouchHelper.startDrag(this);
+                        }
+                        return false;
+                    });
+                    itemView.setOnLongClickListener(v -> {
+                        setSelectionMode(this);
+                        return false;
+                    });
+                } else {
+                    checkBox.setOnCheckedChangeListener(null);
+                    checkBox.setChecked(model.isVisibleItemSelected(currencyItem));
+                    checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        CurrencyItem item = model.getDisplayedVisibleItems().get(getBindingAdapterPosition());
+                        if (isChecked != model.isVisibleItemSelected(item)) {
+                            model.setVisibleItemSelected(item, isChecked);
+                        }
+                    });
+                    itemView.setOnClickListener(v -> checkBox.performClick());
+                }
             }
         }
     }

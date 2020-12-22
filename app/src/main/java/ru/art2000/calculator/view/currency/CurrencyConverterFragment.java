@@ -1,12 +1,10 @@
 package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +18,8 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.util.List;
-
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
-import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.model.currency.LoadingState;
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel;
 import ru.art2000.extensions.IReplaceable;
@@ -32,8 +27,6 @@ import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.helpers.AndroidHelper;
 
 public class CurrencyConverterFragment extends NavigationFragment {
-
-    private Context mContext;
 
     private String titleUpdatedString;
 
@@ -49,8 +42,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
                              @Nullable Bundle savedInstanceState) {
         if (binding == null) {
 
-            mContext = requireActivity();
-            titleUpdatedString = mContext.getString(R.string.updated);
+            titleUpdatedString = requireContext().getString(R.string.updated);
 
             model = new ViewModelProvider(this,
                     new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
@@ -62,14 +54,14 @@ public class CurrencyConverterFragment extends NavigationFragment {
 
             binding.toolbar.inflateMenu(R.menu.currencies_converter_menu);
 
-            LinearLayoutManager llm = new LinearLayoutManager(mContext);
-            adapter = new CurrencyListAdapter(mContext, model);
+            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
+            adapter = new CurrencyListAdapter(requireContext(), model);
 
             binding.currencyList.setLayoutManager(llm);
             binding.currencyList.setAdapter(adapter);
 
             binding.currencyList.setEmptyViewGenerator((context, parent, viewType) -> {
-                TextView emptyView = new TextView(mContext);
+                TextView emptyView = new TextView(requireContext());
                 emptyView.setText(R.string.empty_text_no_currencies_added);
                 emptyView.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -77,7 +69,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
                 return emptyView;
             });
 
-            int colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
+            int colorAccent = AndroidHelper.getColorAttribute(requireContext(), R.attr.colorAccent);
 
             binding.refresher.setColorSchemeColors(colorAccent);
             binding.refresher.setProgressViewEndTarget(true,
@@ -102,7 +94,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
 
         model.getLoadingState().observe(getViewLifecycleOwner(), this::applyLoadingState);
         model.getUpdateDate().observe(getViewLifecycleOwner(), this::setCurrenciesUpdateDate);
-        model.getVisibleList().observe(getViewLifecycleOwner(), this::applyData);
+        model.getVisibleList().observe(getViewLifecycleOwner(), adapter::setNewData);
     }
 
     @Override
@@ -118,7 +110,6 @@ public class CurrencyConverterFragment extends NavigationFragment {
 
     @Override
     protected void onShown(@Nullable IReplaceable previousReplaceable) {
-        Log.d("CurShown", String.valueOf(model.isFirstUpdateDone()));
         if (!model.isFirstUpdateDone()) {
             model.loadData();
         }
@@ -164,11 +155,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
                 break;
         }
 
-        Toast.makeText(mContext, messageId, Toast.LENGTH_SHORT).show();
-    }
-
-    private void applyData(List<CurrencyItem> currencyItems) {
-        adapter.setNewData(currencyItems);
+        Toast.makeText(requireContext(), messageId, Toast.LENGTH_SHORT).show();
     }
 
     private void setCurrenciesUpdateDate(String date) {
