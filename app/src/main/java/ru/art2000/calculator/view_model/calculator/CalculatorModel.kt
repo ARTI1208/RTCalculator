@@ -9,17 +9,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.AngleType
+import ru.art2000.calculator.model.calculator.BinaryOperation
 import ru.art2000.calculator.model.calculator.HistoryItem
+import ru.art2000.calculator.model.calculator.PostfixOperation
+import ru.art2000.calculator.view_model.ExpressionInputViewModel
+import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.floatingPointZero
+import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol
+import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
 import ru.art2000.extensions.context
 import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
 import kotlin.concurrent.thread
 
-class CalculatorModel(application: Application) : AndroidViewModel(application), HistoryViewModel {
+class CalculatorModel(
+        application: Application
+) : AndroidViewModel(application), HistoryViewModel, ExpressionInputViewModel {
 
     private val historyDao = CalculatorDependencies.getHistoryDatabase(application).historyDao()
 
-    val liveExpression: MutableLiveData<String> = MutableLiveData("0")
+    override val liveExpression: MutableLiveData<String> = createExpressionLiveData()
+
+    override val liveInputSelection: MutableLiveData<Pair<Int, Int>> = createInputLiveData()
 
     private val mLiveResult: MutableLiveData<String?> = MutableLiveData(null)
     val liveResult: LiveData<String?> get() = mLiveResult
@@ -29,12 +39,6 @@ class CalculatorModel(application: Application) : AndroidViewModel(application),
 
     private val mLiveAngleType: MutableLiveData<AngleType> = MutableLiveData(AngleType.DEGREES)
     val liveAngleType: LiveData<AngleType> = mLiveAngleType
-
-    private var expression: String
-        get() = liveExpression.value!!
-        set(value) {
-            liveExpression.value = value
-        }
 
     private var result: String?
         get() = mLiveResult.value
@@ -94,52 +98,58 @@ class CalculatorModel(application: Application) : AndroidViewModel(application),
 
     fun handlePrefixUnaryOperationSign(sign: CharSequence) {
         val currentExpression = expression
-        if (currentExpression.isEmpty() || currentExpression == "0") {
-            expression = sign.toString()
+        if (currentExpression.isEmpty() || currentExpression == zero) {
+            setExpression(sign)
             return
         }
 
-        val last: String = currentExpression.substring(currentExpression.lastIndex)
+        val last = expressionLastChar
+
         val extraAppend = when {
-            CalculationClass.isDot(last) -> "0×"
-            CalculationClass.isNumber(last) -> "×"
+            last == null -> ""
+            CalculationClass.isFloatingPointSymbol(last) -> "0×"
+            CalculationClass.isNumberPart(last) -> "×"
             else -> ""
         }
 
-        expression += extraAppend + sign
+        insertInExpression(extraAppend + sign)
     }
 
     fun handlePostfixUnaryOperationSign(sign: CharSequence) {
 
-        val currentExpression: String = expression
-        val last = currentExpression.last()
+        val last = expressionLastChar ?: return
 
         val extraAppend = when {
-            CalculationClass.isDot(last) -> "0"
-            CalculationClass.isNumber(last) -> "1"
+            CalculationClass.isFloatingPointSymbol(last) -> zero
             else -> ""
         }
 
-        expression += extraAppend + sign
+        insertInExpression(extraAppend + sign)
     }
 
     fun handleOpeningBracket() {
         if (result != null) {
             result = null
-            expression = "("
+            setExpression("(")
             return
         }
         val currentExpression: String = expression
+
+        val last = expressionLastChar ?: kotlin.run {
+            setExpression("(")
+            return
+        }
+
         val append: String = when {
             currentExpression.isEmpty() -> ""
-            CalculationClass.isNumber(currentExpression.last()) || currentExpression.last() == ')' -> "×"
-            CalculationClass.isDot(currentExpression.last()) -> "0×"
+            CalculationClass.isNumberPart(last) || last == ')' -> "×"
+            last.isFloatingPointSymbol -> "0×"
             else -> ""
         }
-        if (currentExpression.isEmpty() || currentExpression == "0")
-            expression = "$append("
+        if (currentExpression.isEmpty() || currentExpression == zero)
+            setExpression("$append(")
         else
-            expression += "$append("
+            insertInExpression("$append(")
     }
 
     fun handleClosingBracket() {
@@ -162,91 +172,94 @@ class CalculatorModel(application: Application) : AndroidViewModel(application),
         if (o - c > 0) {
             val exInBrs = currentExpression.substring(lastOpenBr + 1)
             val newAr = exInBrs.toCharArray()
-            if (CalculationClass.signsInExpr(exInBrs) > 0
-                    && (newAr[0].toString() == "-" || CalculationClass.isNumber(newAr[0]))
-                    && !CalculationClass.isSign(newAr[newAr.size - 1]))
-                expression += ")"
+            if (CalculationClass.hasSignsInExpression(exInBrs)
+                    && (newAr[0].toString() == "-" || CalculationClass.isNumberPart(newAr[0]))
+                    && !CalculationClass.isBinaryOperationSymbol(newAr[newAr.size - 1]))
+                insertInExpression(")")
         }
     }
 
-    fun clear() {
-        expression = "0"
+    override fun clear() {
+        super<ExpressionInputViewModel>.clear()
         result = null
     }
 
-    fun deleteLastCharacter() {
-        var inputText: String = expression
-        val inpLen: Int = inputText.length
-        val last = inputText.last()
-
-        val preLast = if (inpLen > 1) inputText[inputText.lastIndex] else '!'
-
-        inputText = if ((last == '.' || last == ',') && preLast == '0') {
-            inputText.substring(0, inpLen - 2)
-        } else {
-            inputText.substring(0, inpLen - 1)
+    override fun deleteLastCharacter() {
+        if (result != null) {
+            clear()
+            return
         }
 
-        when {
-            result != null -> {
-                expression = "0"
-                result = null
-            }
-            inpLen == 1 -> expression = "0"
-            else -> expression = inputText
-        }
+        super.deleteLastCharacter()
     }
 
     fun appendBinaryOperationSign(sign: CharSequence) {
+
+        val last = expressionLastChar ?: return
+
         var toAdd: String = sign.toString()
 
-        val inputText: String = expression
-        val inpLen: Int = inputText.length
+        val textBefore = expression.substring(0, inputSelection.first)
+        val textAfter = expression.substring(inputSelection.second)
 
-        val last = inputText.substring(inpLen - 1, inpLen)
-        var prelast = ""
-        if (inpLen > 1) prelast = inputText.substring(inpLen - 2, inpLen - 1)
-        if (result != null) {
-            if (result?.toDoubleOrNull() != null) {
-                toAdd = result + toAdd
-                expression = toAdd
+        if (result != null) { // append sign and remove result
+            if (result?.toDoubleOrNull() != null) { // expression = result + sign, remove result
+                setExpression(result + toAdd)
                 result = null
                 return
             }
             result = null
         }
-        if (!(inputText == "0" || inputText == "-")) {
-            if (CalculationClass.isSign(last) && toAdd != "-") {
-                val copied = inputText.substring(0, inpLen - 1) + toAdd
-                expression = copied
-            } else if (last == "." || last == ",") {
-                toAdd = "0$toAdd"
-                expression += toAdd
-            } else if (toAdd == "-" && last == "-") {
-                if (CalculationClass.isSign(prelast)) expression = inputText.substring(0, inpLen - 1)
-            } else if (toAdd == "-" && CalculationClass.isSign(last)) {
-                expression += "(-"
+
+        if (textAfter.firstOrNull()?.isFloatingPointSymbol == true) {
+            toAdd += zero
+        }
+
+        if (CalculationClass.startsWithOperation<BinaryOperation<Double>>(textAfter) ||
+                CalculationClass.startsWithOperation<PostfixOperation<Double>>(textAfter)) {
+            toAdd += "1"
+        }
+
+        if (textBefore.isEmpty() || textBefore == zero || textBefore == "-") {
+            if (toAdd == "-") insertInExpression(toAdd)
+            return
+        }
+
+        if (CalculationClass.isBinaryOperationSymbol(last)) {
+            if (toAdd == "-") {
+                if (last == '-') return
+
+                insertInExpression("(-")
             } else {
-                expression += toAdd
+                val result = textBefore.dropLast(1) + toAdd
+                replaceExpressionPart(result, 0, textBefore.length)
             }
-        } else if (toAdd == "-") expression = toAdd
+        } else if (last.isFloatingPointSymbol) {
+            toAdd = "$zero$toAdd"
+            insertInExpression(toAdd)
+        } else {
+            insertInExpression(toAdd)
+        }
     }
 
     fun onResult() {
         var countStr: String = expression
+        if (countStr.isEmpty()) return
+
         var err = false
-        val countLen = countStr.length
-        val last = countStr.substring(countLen - 1, countLen)
-        if (last == "." || last == "," || CalculationClass.isSign(last) || result != null) return
+        val last = countStr.last()
+        if (last.isFloatingPointSymbol || CalculationClass.isBinaryOperationSymbol(last) || result != null) return
         var expr = CalculationClass.addRemoveBrackets(countStr)
         if (expr.isEmpty()) {
             expr = context.getString(R.string.error)
         }
-        expression = expr
-        countStr = CalculationClass.calculateStr(expr)
+        setExpression(expr)
+
+        countStr = CalculationClass.calculateForDisplay(expr, liveAngleType.value!!)
+
         when (countStr) {
-            "zero" -> countStr = context.getString(PrefsHelper.getZeroDivResult())
-            "error" -> {
+            CalculationClass.calculationDivideByZero -> countStr = context.getString(PrefsHelper.getZeroDivResult())
+            CalculationClass.calculationError -> {
                 countStr = context.getString(R.string.error)
                 err = true
             }
@@ -258,90 +271,68 @@ class CalculatorModel(application: Application) : AndroidViewModel(application),
     }
 
     fun handleMemoryOperation(operation: CharSequence) {
+        var memory = mLiveMemory.value ?: 0.0
         when (operation.last()) {
             '+' -> {
                 onResult()
-                CalculationClass.memory += result?.toDoubleOrNull() ?: 0.0
+                memory += result?.toDoubleOrNull() ?: 0.0
             }
             '-' -> {
                 onResult()
-                CalculationClass.memory -= result?.toDoubleOrNull() ?: 0.0
+                memory -= result?.toDoubleOrNull() ?: 0.0
             }
-            'R' -> if (CalculationClass.memory != 0.0) {
-                if (result != null) {
-                    result = null
-                }
-                expression = GeneralHelper.resultNumberFormat.format(CalculationClass.memory)
+            'R' -> if (memory != 0.0) {
+                if (result != null) result = null
+                val memoryValue = GeneralHelper.resultNumberFormat.format(memory)
+                insertInExpression(memoryValue)
             }
-            'C' -> CalculationClass.memory = 0.0
+            'C' -> memory = 0.0
         }
 
-        mLiveMemory.value = CalculationClass.memory
+        mLiveMemory.value = memory
     }
 
     fun handleConstant(constant: CharSequence) {
-        val last = expression.last()
+        val last = expressionLastChar
         val append = when {
-            CalculationClass.isNumber(last) -> "×$constant"
-            CalculationClass.isDot(last) -> "0×$constant"
+            last == null -> constant
+            CalculationClass.isNumberPart(last) -> "×$constant"
+            last.isFloatingPointSymbol -> "0×$constant"
             else -> constant
         }
-        expression += append
+        insertInExpression(append)
     }
 
-    fun handleNumber(number: CharSequence) {
-        var toAdd: String = number.toString()
-
-        val inputText: String = expression
-
-        val last = inputText.last()
+    override fun handleNumber(number: CharSequence) {
         if (result != null) {
             result = null
-            expression = toAdd
+            setExpression(number.toString())
             return
         }
 
-        val zeroStr = "0"
-        if (toAdd == zeroStr && CalculationClass.isSign(last)) {
-            toAdd = "0,"
-        }
-        if (inputText == zeroStr)
-            expression = toAdd
-        else
-            expression += toAdd
+        super.handleNumber(number)
     }
 
-    fun handleDot() {
-        var toAdd = ","
-        var lastSign = 0
-
-        val inputText: String = expression
-        val inpLen: Int = inputText.length
-
-        val last = inputText.last()
-        val zeroStr = "0"
+    override fun handleFloatingPointSymbol() {
         if (result != null) {
             result = null
-            expression = "0,"
+            setExpression(floatingPointZero)
             return
         }
-        var i: Int = inpLen - 1
-        while (i > 0) {
-            if (CalculationClass.isSign(inputText.toCharArray()[i].toString())) {
-                lastSign = i
-                break
-            }
-            i--
-        }
-        val lNum = inputText.substring(lastSign, inpLen)
-        if (lNum.contains(".") || lNum.contains(",")) return else if (CalculationClass.isSign(last) && inputText != zeroStr) toAdd = "0,"
 
-        expression += toAdd
+        super.handleFloatingPointSymbol()
+    }
+
+    private val AngleType?.reversed: AngleType get() = when (this) {
+        AngleType.DEGREES -> AngleType.RADIANS
+        AngleType.RADIANS -> AngleType.DEGREES
+        null -> AngleType.DEGREES
     }
 
     fun changeAngleType(): String {
-        CalculationClass.radians = CalculationClass.radians xor true
-        mLiveAngleType.value = if (CalculationClass.radians) AngleType.RADIANS else AngleType.DEGREES
-        return (if (CalculationClass.radians) AngleType.DEGREES else AngleType.RADIANS).toString()
+
+        mLiveAngleType.value = mLiveAngleType.value.reversed
+
+        return mLiveAngleType.value.reversed.toString()
     }
 }

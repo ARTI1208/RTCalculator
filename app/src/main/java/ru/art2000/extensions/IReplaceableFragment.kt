@@ -1,12 +1,12 @@
 package ru.art2000.extensions
 
-import androidx.annotation.StringRes
+interface IReplaceableFragment : IReplaceable<IReplaceableFragment> {
 
-interface IReplaceableFragment : IReplaceable {
-
-    fun getOrder(): Int
-
-    @StringRes
-    fun getTitle(): Int
+    /**
+     * Called when current fragment becomes primary in the collection and shown
+     *
+     * @param previousReplaceable fragment that was previously shown or null
+     */
+    fun onShown(previousReplaceable: IReplaceableFragment?)
 
 }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -13,7 +12,6 @@ import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
 import ru.art2000.calculator.view.MainActivity
 import ru.art2000.extensions.PreferenceNavigationFragment
-import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
 
 class SettingsFragment : PreferenceNavigationFragment() {
@@ -22,12 +20,6 @@ class SettingsFragment : PreferenceNavigationFragment() {
 
     companion object {
         private val CLICKS_TO_OPEN_HIDDEN_INFO = if (BuildConfig.DEBUG) 1 else 7
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(
-                AndroidHelper.getColorAttribute(requireContext(), android.R.attr.windowBackground))
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

@@ -35,7 +35,7 @@ import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.AutoThemeActivity
 import ru.art2000.extensions.LiveList.LiveListObserver
-import ru.art2000.extensions.ReplaceableFragment
+import ru.art2000.extensions.UniqueReplaceableFragment
 import ru.art2000.extensions.createThemedSnackbar
 import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
@@ -113,7 +113,9 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             offscreenPageLimit = 2
 
             registerOnPageChangeCallback(object : OnPageChangeCallback() {
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                override fun onPageScrolled(
+                        position: Int, positionOffset: Float, positionOffsetPixels: Int
+                ) {
 
                     val maxScroll = measuredWidth
                     val currentScroll = maxScroll * position + positionOffsetPixels
@@ -200,7 +202,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             }
         })
 
-        val liveListObserver: LiveListObserver<CurrencyItem> = object : LiveListObserver<CurrencyItem>() {
+        val liveListObserver = object : LiveListObserver<CurrencyItem>() {
             override fun onAnyChanged(previousList: List<CurrencyItem>) {
                 toggleElementsVisibility()
             }
@@ -354,7 +356,8 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                     editedItems.size)
         }
 
-        val undoSnackBar = binding.coordinator.createThemedSnackbar(message, Snackbar.LENGTH_LONG).fixedSizes
+        val undoSnackBar = binding.coordinator
+                .createThemedSnackbar(message, Snackbar.LENGTH_LONG).fixedSizes
 
         undoSnackBar.setAction(R.string.action_undo) {
             Completable
@@ -399,20 +402,17 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         }
     }
 
-    private inner class CurrencyEditorPager2Adapter : FragmentStateAdapter(this@CurrenciesSettingsActivity) {
+    private inner class CurrencyEditorPager2Adapter :
+            FragmentStateAdapter(this@CurrenciesSettingsActivity) {
 
-        private val fragments: Array<ReplaceableFragment> = arrayOf(add, edit)
+        private val fragments: Array<UniqueReplaceableFragment> = arrayOf(add, edit)
 
-        override fun getItemCount(): Int {
-            return fragments.size
-        }
+        override fun getItemCount(): Int = fragments.size
 
-        fun getPageTitle(position: Int): CharSequence? {
+        fun getPageTitle(position: Int): CharSequence {
             return fragments[position].getTitle(this@CurrenciesSettingsActivity)
         }
 
-        override fun createFragment(position: Int): Fragment {
-            return fragments[position]
-        }
+        override fun createFragment(position: Int): Fragment = fragments[position]
     }
 }

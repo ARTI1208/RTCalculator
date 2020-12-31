@@ -33,10 +33,10 @@ import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
 import ru.art2000.extensions.CollectionsKt;
 import ru.art2000.extensions.LiveList;
-import ru.art2000.extensions.ReplaceableFragment;
+import ru.art2000.extensions.UniqueReplaceableFragment;
 import ru.art2000.helpers.AndroidHelper;
 
-public class CurrenciesEditFragment extends ReplaceableFragment {
+public class CurrenciesEditFragment extends UniqueReplaceableFragment {
 
     private EditCurrenciesAdapter adapter;
 

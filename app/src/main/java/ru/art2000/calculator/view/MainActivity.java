@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.Date;
 import java.util.List;
@@ -152,7 +151,8 @@ public class MainActivity extends DayNightActivity {
 
     @Override
     public void onBackPressed() {
-        if (navigation.getSelectedItemId() == R.id.navigation_calc && calculatorFragment.ensureHistoryPanelClosed()) {
+        if (navigation.getSelectedItemId() != R.id.navigation_calc
+                || calculatorFragment.ensureHistoryPanelClosed()) {
             if (doubleBackToExitPressedOnce) {
                 finish();
                 return;
@@ -165,7 +165,7 @@ public class MainActivity extends DayNightActivity {
     }
 
     public void updateUnitView() {
-        unitConverterFragment.regenerateAdapter();
+        unitConverterFragment.updateAdapter();
     }
 
     private void changeStatusBarColor(boolean isCalculatorPage) {

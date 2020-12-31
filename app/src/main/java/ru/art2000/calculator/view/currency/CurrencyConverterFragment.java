@@ -23,6 +23,7 @@ import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
 import ru.art2000.calculator.model.currency.LoadingState;
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel;
 import ru.art2000.extensions.IReplaceable;
+import ru.art2000.extensions.IReplaceableFragment;
 import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.helpers.AndroidHelper;
 
@@ -109,7 +110,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
     }
 
     @Override
-    protected void onShown(@Nullable IReplaceable previousReplaceable) {
+    public void onShown(@Nullable IReplaceableFragment previousReplaceable) {
         if (!model.isFirstUpdateDone()) {
             model.loadData();
         }

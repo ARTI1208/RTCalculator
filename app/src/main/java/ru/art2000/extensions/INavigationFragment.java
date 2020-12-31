@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 
-public interface INavigationFragment extends IReplaceableFragment {
+public interface INavigationFragment extends IUniqueReplaceableFragment {
 
     @DrawableRes
     int getIcon();

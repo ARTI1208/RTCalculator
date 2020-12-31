@@ -8,13 +8,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.preference.PreferenceFragmentCompat;
 
 @SuppressWarnings({"WeakerAccess"})
 public abstract class PreferenceNavigationFragment extends PreferenceFragmentCompat implements INavigationFragment {
 
-    private IReplaceable previousReplaceable;
+    private IReplaceableFragment previousReplaceable;
     private boolean callOnShownOnViewCreated;
 
     private boolean canBeShown() {
@@ -26,21 +25,22 @@ public abstract class PreferenceNavigationFragment extends PreferenceFragmentCom
      *
      * @param previousReplaceable object that was previously shown or whatever
      */
-    protected void onShown(@Nullable IReplaceable previousReplaceable) {
+    @Override
+    public void onShown(@Nullable IReplaceableFragment previousReplaceable) {
 
     }
 
     /**
      * Called when current fragment becomes primary in the collection. Fragment may not be fully
      * initialized by this time, so override this only if you don't bother that view may not be created,
-     * otherwise use {@link ReplaceableFragment#onShown(IReplaceable)}
+     * otherwise use {@link CommonReplaceableFragment#onShown(IReplaceableFragment)}
      * to be sure fragment view was already created
      *
      * @param previousReplaceable object that was previously shown or whatever
      */
     @Override
     @CallSuper
-    public void onReplace(@Nullable IReplaceable previousReplaceable) {
+    public void onReplace(@Nullable IReplaceableFragment previousReplaceable) {
         if (canBeShown()) {
             onShown(previousReplaceable);
         } else {
@@ -55,7 +55,7 @@ public abstract class PreferenceNavigationFragment extends PreferenceFragmentCom
      * @param nextReplaceable object that has replaced current
      */
     @Override
-    public void onReplaced(@Nullable IReplaceable nextReplaceable) {
+    public void onReplaced(@Nullable IReplaceableFragment nextReplaceable) {
 
     }
 
@@ -75,18 +75,15 @@ public abstract class PreferenceNavigationFragment extends PreferenceFragmentCom
         }
     }
 
+    @Override
     @DrawableRes
     public int getIcon() {
         return -1;
     }
 
+    @Override
     @IdRes
     public int getReplaceableId() {
         return -1;
     }
-
-    @StringRes
-    public abstract int getTitle();
-
-    public abstract int getOrder();
 }

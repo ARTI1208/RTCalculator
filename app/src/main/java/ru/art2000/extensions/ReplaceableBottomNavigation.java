@@ -24,13 +24,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Arrays;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class ReplaceableBottomNavigation extends BottomNavigationView {
 
-    private IReplaceable currentReplaceable;
+    private IReplaceableFragment currentReplaceable;
     private boolean firstReplaceDone;
     private boolean isTransitionRunning;
-    private final SparseArray<IReplaceable> replaceables = new SparseArray<>();
+    private final SparseArray<IReplaceableFragment> replaceables = new SparseArray<>();
 
     private ScrollControlledViewPager attachedPager;
     private ViewPager2 attachedPager2;
@@ -52,7 +52,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     }
 
     @Nullable
-    private IReplaceable getReplaceable(int position) {
+    private IReplaceableFragment getReplaceable(int position) {
         return replaceables.get(position, null);
     }
 
@@ -66,7 +66,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
 
     private void onNavigationItemSelected(MenuItem item) {
 
-        IReplaceable replaceable = getReplaceable(item.getOrder());
+        IReplaceableFragment replaceable = getReplaceable(item.getOrder());
 
         if (replaceable != null) {
             int position = replaceables.indexOfValue(replaceable);
@@ -194,8 +194,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
         fragmentTransaction.commitNow();
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void beginFragmentReplace(IReplaceable replaceable) {
+    private void beginFragmentReplace(IReplaceableFragment replaceable) {
 
         if (isTransitionRunning) {
             return;
@@ -279,7 +278,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
         }
     }
 
-    private void sendReplaceCallback(IReplaceable replaceable) {
+    private void sendReplaceCallback(IReplaceableFragment replaceable) {
         if (replaceable != null) {
             if (replaceable == currentReplaceable) {
                 replaceable.onReselected();
@@ -296,7 +295,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     }
 
     private void sendReplaceCallback(int position) {
-        IReplaceable replaceable = replaceables.valueAt(position);
+        IReplaceableFragment replaceable = replaceables.valueAt(position);
         sendReplaceCallback(replaceable);
     }
 

@@ -1,58 +1,65 @@
 package ru.art2000.calculator.view.unit;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
-import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 import ru.art2000.calculator.R;
+import ru.art2000.calculator.databinding.ItemUnitConverterListBinding;
+import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding;
 import ru.art2000.calculator.model.unit.UnitConverterItem;
+import ru.art2000.calculator.view_model.calculator.CalculationClass;
+import ru.art2000.extensions.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
 
 public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitItemHolder> {
 
-    double inp = 1;
-    int curDim = 0;
-
-    MutableLiveData<Pair<Integer, Integer>> selectedPosition = new MutableLiveData<>(new Pair<>(0, 0));
-
-    UnitPageFragment fragment;
+    private final MutableLiveData<Pair<Integer, Integer>> selectedPosition =
+            new MutableLiveData<>(new Pair<>(0, 0));
+    private final Context mContext;
+    private final UnitConverterItem[] data;
+    private final LifecycleOwner lifecycleOwner;
     private int colorAccent;
     private int colorDefault;
-    private Context mContext;
     private RecyclerView recycler;
-    private boolean powerfulConverter;
-    private UnitConverterItem[] data;
+    private boolean powerfulConverter = false;
 
-    UnitListAdapter(Context ctx, UnitConverterItem[] items, boolean isPowerfulConverter) {
+    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem[] items, boolean isPowerfulConverter) {
         data = items;
         mContext = ctx;
         powerfulConverter = isPowerfulConverter;
-        if (data[0].getCurrentValue() == 0.0)
+        this.lifecycleOwner = lifecycleOwner;
+
+        if (data != null && data.length > 0 && data[0].getCurrentValue() == 0.0)
             setValue(0, 1);
+
         init();
     }
 
-    UnitListAdapter(Context ctx, UnitConverterItem[] items, int pos) {
+    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem[] items, int pos) {
         data = items;
-        curDim = pos;
         mContext = ctx;
+        this.lifecycleOwner = lifecycleOwner;
+
+        setCurrentDimension(pos);
+
         init();
     }
 
@@ -62,13 +69,15 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     void setValue(int position, double value) {
-        curDim = position;
+
+        setCurrentDimension(position);
+
         UnitConverterItem from = data[position];
         from.setValue(value);
 
         for (int i = 0; i < getItemCount(); i++) {
 
-            if (i == position)
+            if (powerfulConverter && i == position)
                 continue;
 
             double convertedValue = data[i].convert(from);
@@ -85,7 +94,8 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     void setValue(int position, String value) {
-        double doubleValue = Double.parseDouble(value.replace(',', '.'));
+        Double result = CalculationClass.calculate(value);
+        double doubleValue = result == null ? 1 : result;
         setValue(position, doubleValue);
     }
 
@@ -93,7 +103,9 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         recycler = recyclerView;
-        selectedPosition.observeForever(pair -> {
+        selectedPosition.observe(lifecycleOwner, pair -> {
+            if (pair.first.equals(pair.second)) return;
+
             setTextColors((UnitItemHolder) recycler.findViewHolderForAdapterPosition(pair.first), false);
             setTextColors((UnitItemHolder) recycler.findViewHolderForAdapterPosition(pair.second), true);
         });
@@ -102,24 +114,15 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     @NonNull
     @Override
     public UnitItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(mContext).
-                inflate(R.layout.item_unit_converter_list, parent, false);
-        if (!powerfulConverter) {
-            TextView value = new TextView(mContext);
-            value.setId(R.id.value);
-            value.setTextSize(25);
-            value.setGravity(Gravity.START);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    0, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            params.weight = 1;
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
-            value.setLayoutParams(params);
-
-            viewGroup.removeViewAt(0);
-            viewGroup.addView(value, 0);
+        if (powerfulConverter) {
+            return new UnitItemHolder(
+                    ItemUnitConverterListPowerfulBinding.inflate(inflater, parent, false));
         }
-        return new UnitItemHolder(viewGroup);
+
+        return new UnitItemHolder(ItemUnitConverterListBinding.inflate(inflater, parent, false));
     }
 
     private void setTextColors(UnitItemHolder holder, boolean isSelected) {
@@ -136,14 +139,22 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     void requestFocusForCurrent() {
-        if (!powerfulConverter) {
-            return;
-        }
+        if (!powerfulConverter) return;
 
-        UnitItemHolder previousHolder = (UnitItemHolder) recycler.findViewHolderForLayoutPosition(curDim);
+        UnitItemHolder previousHolder = (UnitItemHolder) recycler.findViewHolderForLayoutPosition(getCurrentDimension());
         if (previousHolder != null) {
             previousHolder.dimensionValueView.requestFocus();
+            previousHolder.dimensionValueView.postDelayed(previousHolder.dimensionValueView::requestFocus, 150L);
         }
+    }
+
+    private int getCurrentDimension() {
+        return selectedPosition.getValue().second;
+    }
+
+    private void setCurrentDimension(int dimension) {
+        Pair<Integer, Integer> newPair = new Pair<>(selectedPosition.getValue().second, dimension);
+        selectedPosition.setValue(newPair);
     }
 
     private String doubleToString(double d) {
@@ -152,51 +163,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
     @Override
     public void onBindViewHolder(@NonNull final UnitItemHolder holder, final int position) {
-        TextView dimensionNameView = holder.dimensionNameView;
-        TextView dimensionValueView = holder.dimensionValueView;
-
-        dimensionNameView.setText(data[position].getNameResourceId());
-        dimensionValueView.setText(doubleToString(data[position].getCurrentValue()));
-
-        if (powerfulConverter) {
-            EditText editValueView = (EditText) dimensionValueView;
-
-            editValueView.setOnFocusChangeListener((view, isFocused) -> {
-                if (isFocused) {
-                    editValueView.setSelection(editValueView.getText().length());
-                    if (fragment != null && fragment.isCurrentPage) {
-                        selectedPosition.setValue(new Pair<>(
-                                Objects.requireNonNull(selectedPosition.getValue()).second,
-                                holder.getBindingAdapterPosition()));
-                    }
-                }
-            });
-
-            editValueView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (editValueView.hasFocus()) {
-                        String stringValue = s.toString();
-
-                        if (stringValue.length() == 0)
-                            stringValue = "1";
-
-                        setValue(holder.getBindingAdapterPosition(), stringValue);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-        }
-        setTextColors(holder, position == curDim);
+        holder.bind(data[position], position == getCurrentDimension());
     }
 
     @Override
@@ -206,20 +173,71 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
     public class UnitItemHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
-        TextView dimensionNameView;
-        TextView dimensionValueView;
+        final TextView dimensionValueView;
+        final TextView dimensionNameView;
 
-        UnitItemHolder(final View itemView) {
-            super(itemView);
-            itemView.setOnCreateContextMenuListener(this);
-            dimensionNameView = itemView.findViewById(R.id.type);
-            dimensionValueView = itemView.findViewById(R.id.value);
+        UnitItemHolder(final ItemUnitConverterListBinding binding) {
+            super(binding.getRoot());
+
+            dimensionValueView = binding.value;
+            dimensionNameView = binding.type;
+
+            init();
+        }
+
+        UnitItemHolder(final ItemUnitConverterListPowerfulBinding binding) {
+            super(binding.getRoot());
+
+            dimensionValueView = binding.value;
+            dimensionNameView = binding.type;
+
+            TextWatcher textWatcher = new SimpleTextWatcher() {
+                @Override
+                public void onTextChanged(@NotNull CharSequence s, int start, int before, int count) {
+                    if (!binding.value.hasFocus()) return;
+
+                    if (s.length() == 0) {
+                        setValue(getBindingAdapterPosition(), 1);
+                    } else {
+                        setValue(getBindingAdapterPosition(), s.toString());
+                    }
+                }
+            };
+            binding.value.addTextChangedListener(textWatcher);
+
+            init();
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle(mContext.getString(R.string.you_can));
-            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.context_menu_copy));
+            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.context_menu_copy)).setOnMenuItemClickListener(item -> {
+                ClipboardManager cmg =
+                        (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+
+                if (cmg == null) return true;
+
+                CharSequence copiedText = dimensionValueView.getText() + " " + dimensionNameView.getText();
+                ClipData clipData = ClipData.newPlainText("unitConvertResult", copiedText);
+                cmg.setPrimaryClip(clipData);
+
+                CharSequence toastText = mContext.getString(R.string.copied) + " " + copiedText;
+                Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
+
+                return true;
+            });
+        }
+
+        void bind(UnitConverterItem item, boolean isSelected) {
+
+            dimensionNameView.setText(item.getNameResourceId());
+            dimensionValueView.setText(doubleToString(item.getCurrentValue()));
+
+            setTextColors(this, isSelected);
+        }
+
+        private void init() {
+            itemView.setOnCreateContextMenuListener(this);
         }
     }
 }

@@ -18,7 +18,7 @@
             android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/RT.AppTheme.Launch"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="ru.art2000.calculator.action.CALCULATOR" />

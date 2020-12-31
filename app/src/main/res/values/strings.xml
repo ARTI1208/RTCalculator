@@ -27,6 +27,7 @@
     <string name="history_clear_confirm">Are you sure you want wipe calculation history?</string>
     <string name="paste_replace">Replace</string>
     <string name="paste_after">Paste after</string>
+    <string name="calculator_input_hint" translatable="false">2+2</string>
 
     <!-- Currencies -->
     <string name="updated">Updated: </string>
@@ -98,6 +99,9 @@
     <string name="unit_view_simple">Simple</string>
     <string name="unit_view_powerful">Powerful</string>
     <string name="unit_view_half_powerful">Half-Powerful</string>
+    <string name="unit_view_simple_extra_action_title">Select button action</string>
+    <string name="unit_view_simple_swap">Swap dimensions</string>
+    <string name="unit_view_simple_list_all">List all</string>
     <string name="distance_mm">mm</string>
     <string name="distance_cm">cm</string>
     <string name="distance_dm">dm</string>

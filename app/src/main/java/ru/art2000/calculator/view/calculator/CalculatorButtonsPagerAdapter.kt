@@ -10,6 +10,7 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.CalculatorPage1Binding
 import ru.art2000.calculator.databinding.CalculatorPage2Binding
 import ru.art2000.calculator.view_model.calculator.CalculatorModel
+import java.util.*
 
 class CalculatorButtonsPagerAdapter(
         private val mContext: Context,
@@ -91,7 +92,7 @@ class CalculatorButtonsPagerAdapter(
     }
 
     private fun setDotButtonClickListener(page1Binding: CalculatorPage1Binding) {
-        page1Binding.buttonDot.setOnClickListener { model.handleDot() }
+        page1Binding.buttonDot.setOnClickListener { model.handleFloatingPointSymbol() }
     }
 
     private fun setEqualsButtonClickListener(page1Binding: CalculatorPage1Binding) {
@@ -137,7 +138,7 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setAngleTypeButtonClickListener(page2Binding: CalculatorPage2Binding) {
         page2Binding.buttonDEGRAD.setOnClickListener {
-            page2Binding.buttonDEGRAD.text = model.changeAngleType()
+            page2Binding.buttonDEGRAD.text = model.changeAngleType().toUpperCase(Locale.getDefault())
         }
     }
 

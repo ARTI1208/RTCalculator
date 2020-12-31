@@ -29,9 +29,9 @@ import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
 import ru.art2000.extensions.CollectionsKt;
 import ru.art2000.extensions.LiveList;
-import ru.art2000.extensions.ReplaceableFragment;
+import ru.art2000.extensions.UniqueReplaceableFragment;
 
-public class CurrenciesAddFragment extends ReplaceableFragment {
+public class CurrenciesAddFragment extends UniqueReplaceableFragment {
 
     private AddCurrenciesAdapter adapter;
 

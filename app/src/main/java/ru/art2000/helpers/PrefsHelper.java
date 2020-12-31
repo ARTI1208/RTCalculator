@@ -9,27 +9,13 @@ import ru.art2000.calculator.R;
 
 public class PrefsHelper {
 
-    public static final int SWAP_DIMENSIONS = 0;
-    public static final int SHOW_ALL_DIMENSIONS = 1;
     private static SharedPreferences sSharedPreferences;
     private static int sAppTheme;
     private static int sDefaultTab;
-    private static int sUnitViewExtraButtonAction;
-    private static boolean sIsUnitViewChanged = false;
     private static boolean sShouldSaveCurrencyConversion = false;
     private static String sUnitViewType;
     private static String sConversionCode;
     private static double sConversionValue;
-
-
-    public static int getExtraButtonAction() {
-        return sUnitViewExtraButtonAction;
-    }
-
-    public static void setExtraButtonAction(int action) {
-        sUnitViewExtraButtonAction = action;
-        sSharedPreferences.edit().putInt("unit_view_extra_button_action", action).apply();
-    }
 
     public static boolean isShouldSaveCurrencyConversion() {
         return sShouldSaveCurrencyConversion;
@@ -72,14 +58,6 @@ public class PrefsHelper {
         return sConversionValue;
     }
 
-    public static boolean isUnitViewChanged() {
-        if (sIsUnitViewChanged) {
-            sIsUnitViewChanged = false;
-            return true;
-        }
-        return false;
-    }
-
     public static void initialSetup(Context mContext) {
         sSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (sSharedPreferences.getBoolean("is_first_run", true))
@@ -110,15 +88,6 @@ public class PrefsHelper {
         sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value", false);
         sConversionCode = sSharedPreferences.getString("last_conversion_code", "USD");
         sConversionValue = getDouble("last_conversion_double", 1);
-        switch (sSharedPreferences.getInt("unit_view_extra_button_action", SWAP_DIMENSIONS)) {
-            default:
-            case SWAP_DIMENSIONS:
-                sUnitViewExtraButtonAction = SWAP_DIMENSIONS;
-                break;
-            case SHOW_ALL_DIMENSIONS:
-                sUnitViewExtraButtonAction = SHOW_ALL_DIMENSIONS;
-                break;
-        }
         switch (sSharedPreferences.getString("default_opened_tab", "calc_tab")) {
             default:
             case "calc_tab":
@@ -143,7 +112,6 @@ public class PrefsHelper {
 
     public static void setUnitViewType(String view) {
         sUnitViewType = view;
-        sIsUnitViewChanged = true;
         sSharedPreferences.edit().putString("unit_view", view).apply();
     }
 

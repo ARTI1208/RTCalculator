@@ -1,4 +1,4 @@
-package ru.art2000.calculator.view_model.calculator;
+package ru.art2000.calculator.tests;
 
 import org.apache.commons.math3.special.Gamma;
 
@@ -8,17 +8,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import kotlin.system.TimingKt;
 import ru.art2000.helpers.GeneralHelper;
 
-public class CalculationClass {
+public class OldCalculationClass {
 
     public static double memory = 0;
     public static boolean radians = false;
-    private static final HashMap<String, Integer> operationsOrder;
-    private static final HashMap<String, Integer> operationsCount = new HashMap<>();
-    private static final int priorityLevels;
-    private static final ArrayList<String> afterUnaryOperations;
-    private static final ArrayList<String> preUnaryOperations;
+    private static HashMap<String, Integer> operationsOrder;
+    private static HashMap<String, Integer> operationsCount = new HashMap<>();
+    private static int priorityLevels;
+    private static ArrayList<String> afterUnaryOperations;
+    private static ArrayList<String> preUnaryOperations;
 
     static {
         operationsOrder = new HashMap<>();
@@ -287,7 +288,7 @@ public class CalculationClass {
         return c.equals(".") || c.equals(",");
     }
 
-    public static boolean isDot(char c) {
+    private static boolean isDot(char c) {
         return c == '.' || c == ',';
     }
 
@@ -306,11 +307,17 @@ public class CalculationClass {
     }
 
     private static double factorial(double x) {
-        return Gamma.gamma(x + 1);
+        long start = System.nanoTime();
+        double result = Gamma.gamma(x + 1);
+        long end = System.nanoTime();
+
+        System.out.println("OldFactorial: " + (end - start));
+
+        return result;
     }
 
     private static double stringToDegreesOrRadians(String str) {
-        double val = Double.parseDouble(str);
+        double val = Double.valueOf(str);
         if (!radians) {
             val *= Math.PI / 180;
         }
@@ -612,7 +619,7 @@ public class CalculationClass {
             }
             expression = expression.replace(",", ".");
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             expression = "error";
         }
         return expression;

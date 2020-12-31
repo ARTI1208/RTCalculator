@@ -1,17 +1,10 @@
 package ru.art2000.calculator.view.calculator;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,20 +20,19 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import kotlin.Pair;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding;
 import ru.art2000.calculator.view_model.calculator.CalculatorModel;
+import ru.art2000.extensions.CalculatorEditText;
 import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.extensions.SimpleTextWatcher;
+import ru.art2000.extensions.ViewsKt;
 import ru.art2000.helpers.GeneralHelper;
 
 
 public class CalculatorFragment extends NavigationFragment {
 
-    private static final int PASTE = 200;
-    private static final int PASTE_AFTER = 201;
-
-    private HorizontalScrollView hsv;
     private HistoryListAdapter adapter;
 
     private CalculatorModel model;
@@ -58,25 +50,18 @@ public class CalculatorFragment extends NavigationFragment {
             binding = CalculatorLayoutBinding.inflate(inflater, container, false);
             model = new CalculatorModel(requireActivity().getApplication());
 
-            hsv = (HorizontalScrollView) getInputTv().getParent();
-            hsv.setOnLongClickListener(view -> {
-                hsv.showContextMenu();
-                return true;
-            });
-
             getButtonsPager().setAdapter(new CalculatorButtonsPagerAdapter(requireContext(), model));
 
-            registerForContextMenu(getInputTv());
             getInputTv().addTextChangedListener(new SimpleTextWatcher() {
 
                 @Override
                 public void afterTextChanged(@NonNull Editable s) {
-                    hsv.postDelayed(() ->
-                            hsv.smoothScrollTo(getInputTv().getWidth(), 0), 100L);
-
                     model.getLiveExpression().setValue(s.toString());
                 }
             });
+
+            getInputTv().setOnSelectionChangedListener((selStart, selEnd) ->
+                    model.setInputSelection(new Pair<>(selStart, selEnd)));
 
             model.getLiveExpression().observe(getViewLifecycleOwner(), (expression) -> {
 
@@ -85,15 +70,18 @@ public class CalculatorFragment extends NavigationFragment {
                 getInputTv().setText(expression);
             });
 
-            model.getLiveResult().observe(getViewLifecycleOwner(), (expression) -> {
+            model.getLiveInputSelection().observe(getViewLifecycleOwner(), (selection) ->
+                    getInputTv().setSelection(selection.getFirst(), selection.getSecond()));
 
-                if (expression == null) {
+            model.getLiveResult().observe(getViewLifecycleOwner(), (result) -> {
+
+                if (result == null) {
                     getResultTV().setVisibility(View.INVISIBLE);
                     getResultTV().setText(null);
                     return;
                 }
 
-                getResultTV().setText(expression);
+                getResultTV().setText(result);
                 getResultTV().setVisibility(View.VISIBLE);
             });
 
@@ -103,67 +91,17 @@ public class CalculatorFragment extends NavigationFragment {
                     binding.memory.setVisibility(View.INVISIBLE);
                     return;
                 }
-
                 String newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue);
                 binding.memory.setText(newMemoryText);
                 binding.memory.setVisibility(View.VISIBLE);
             });
 
             model.getLiveAngleType().observe(getViewLifecycleOwner(), angleType ->
-                    binding.degRadTv.setText(angleType.toString()));
+                    binding.degRadTv.setText(angleType.toString().toUpperCase()));
 
             setupHistoryPart();
         }
         return binding.getRoot();
-    }
-
-    @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu,
-                                    @NonNull View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-
-        menu.add(Menu.NONE, PASTE, Menu.NONE, requireContext().getString(R.string.paste_replace));
-        menu.add(Menu.NONE, PASTE_AFTER, Menu.NONE, requireContext().getString(R.string.paste_after));
-
-        ClipboardManager cmg =
-                (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
-
-        if (cmg == null || !cmg.hasPrimaryClip()) {
-            menu.getItem(0).setEnabled(false);
-            menu.getItem(1).setEnabled(false);
-        }
-
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem menuItem) {
-
-        ClipboardManager cmg = (
-                ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
-
-        int id = menuItem.getItemId();
-
-        boolean isPasteItem = id >= PASTE && id <= PASTE_AFTER;
-
-        if (isPasteItem && cmg.getPrimaryClip() == null) {
-            Toast.makeText(
-                    requireContext(), "Error getting access to clipboard", Toast.LENGTH_SHORT
-            ).show();
-            return false;
-        }
-
-        switch (id) {
-            case PASTE:
-                ClipData.Item clipItem = cmg.getPrimaryClip().getItemAt(0);
-                getInputTv().setText(clipItem.getText().toString());
-                break;
-            case PASTE_AFTER:
-                clipItem = cmg.getPrimaryClip().getItemAt(0);
-                getInputTv().append(clipItem.getText().toString());
-                break;
-        }
-
-        return true;
     }
 
     public boolean ensureHistoryPanelClosed() {
@@ -188,7 +126,7 @@ public class CalculatorFragment extends NavigationFragment {
         return binding.calculatorPanel.historyPart.header;
     }
 
-    private TextView getInputTv() {
+    private CalculatorEditText getInputTv() {
         return binding.tvInput;
     }
 

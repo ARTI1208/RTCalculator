@@ -97,4 +97,8 @@
         <item>half</item>
         <item>powerful</item>
     </array>
+    <array name="unit_view_simple_extra_action">
+        <item>@string/unit_view_simple_swap</item>
+        <item>@string/unit_view_simple_list_all</item>
+    </array>
 </resources>

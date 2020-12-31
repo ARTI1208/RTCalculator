@@ -87,8 +87,8 @@ object UnitConverterDependencies {
     )
 
     private val pressureItems = arrayOf<UnitConverterItem>(
-            RatioConverterItem(R.string.pressure_atm, 101325.0),
-            RatioConverterItem(R.string.pressure_pa, 1.0)
+            RatioConverterItem(R.string.pressure_atm, 1.0),
+            RatioConverterItem(R.string.pressure_pa, 101325.0)
     )
 
     private val temperatureItems = arrayOf<UnitConverterItem>(
