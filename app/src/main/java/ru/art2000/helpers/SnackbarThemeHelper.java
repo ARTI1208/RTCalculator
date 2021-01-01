@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.snackbar.SnackbarContentLayout;
 
@@ -22,7 +23,6 @@ import java.util.Objects;
 
 import ru.art2000.calculator.R;
 
-@SuppressWarnings("unused")
 public class SnackbarThemeHelper {
 
     public static Snackbar createThemedSnackbar(@NonNull View v,
@@ -95,8 +95,8 @@ public class SnackbarThemeHelper {
      */
     public static void fixSnackBarHorizontalMargin(Snackbar snackBar, int leftMargin, int rightMargin) {
         try {
-            Class<?> snackbarClass = Class.forName("com.google.android.material.snackbar.Snackbar");
-            Field originalMarginsField = snackbarClass.getSuperclass().getDeclaredField("originalMargins");
+            Class<?> snackbarClass = BaseTransientBottomBar.class;
+            Field originalMarginsField = snackbarClass.getDeclaredField("originalMargins");
             originalMarginsField.setAccessible(true);
             Rect fixedOriginalMargins = (Rect) Objects.requireNonNull(originalMarginsField.get(snackBar));
             fixedOriginalMargins.left = leftMargin;

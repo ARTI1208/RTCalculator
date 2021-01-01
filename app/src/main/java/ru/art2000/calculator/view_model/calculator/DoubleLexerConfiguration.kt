@@ -4,7 +4,7 @@ import ru.art2000.calculator.model.calculator.Constant
 import ru.art2000.calculator.model.calculator.LexerConfiguration
 import ru.art2000.calculator.model.calculator.Operation
 import ru.art2000.calculator.model.calculator.PrefixOperation
-import ru.art2000.extensions.safeToDouble
+import ru.art2000.extensions.language.safeToDouble
 
 class DoubleLexerConfiguration(
         override val operations: List<Operation<Double>>,

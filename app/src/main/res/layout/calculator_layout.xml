@@ -68,7 +68,7 @@
                 android:paddingEnd="6dp"
                 android:scrollbars="none">
 
-                <ru.art2000.extensions.CalculatorEditText
+                <ru.art2000.extensions.views.CalculatorEditText
                     android:id="@+id/tv_input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

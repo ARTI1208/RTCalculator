@@ -16,7 +16,7 @@ import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.floatingPointZero
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
-import ru.art2000.extensions.context
+import ru.art2000.extensions.arch.context
 import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
 import kotlin.concurrent.thread
@@ -195,21 +195,20 @@ class CalculatorModel(
 
     fun appendBinaryOperationSign(sign: CharSequence) {
 
-        val last = expressionLastChar ?: return
-
         var toAdd: String = sign.toString()
 
-        val textBefore = expression.substring(0, inputSelection.first)
-        val textAfter = expression.substring(inputSelection.second)
-
-        if (result != null) { // append sign and remove result
-            if (result?.toDoubleOrNull() != null) { // expression = result + sign, remove result
-                setExpression(result + toAdd)
-                result = null
-                return
-            }
+        val previousResult = result
+        if (previousResult?.toDoubleOrNull() != null) { // expression = result + sign, remove result
+            setExpression(previousResult + toAdd)
+            result = null
+            return
+        } else {
             result = null
         }
+
+        val last = expressionLastChar ?: return
+        val textBefore = expression.substring(0, inputSelection.first)
+        val textAfter = expression.substring(inputSelection.second)
 
         if (textAfter.firstOrNull()?.isFloatingPointSymbol == true) {
             toAdd += zero
@@ -323,11 +322,12 @@ class CalculatorModel(
         super.handleFloatingPointSymbol()
     }
 
-    private val AngleType?.reversed: AngleType get() = when (this) {
-        AngleType.DEGREES -> AngleType.RADIANS
-        AngleType.RADIANS -> AngleType.DEGREES
-        null -> AngleType.DEGREES
-    }
+    private val AngleType?.reversed: AngleType
+        get() = when (this) {
+            AngleType.DEGREES -> AngleType.RADIANS
+            AngleType.RADIANS -> AngleType.DEGREES
+            null -> AngleType.DEGREES
+        }
 
     fun changeAngleType(): String {
 

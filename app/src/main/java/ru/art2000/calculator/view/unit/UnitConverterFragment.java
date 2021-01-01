@@ -16,8 +16,8 @@ import java.util.Locale;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.UnitLayoutBinding;
-import ru.art2000.extensions.IReplaceableFragment;
-import ru.art2000.extensions.NavigationFragment;
+import ru.art2000.extensions.fragments.IReplaceableFragment;
+import ru.art2000.extensions.fragments.NavigationFragment;
 import ru.art2000.helpers.AndroidHelper;
 
 public class UnitConverterFragment extends NavigationFragment {
@@ -94,6 +94,7 @@ public class UnitConverterFragment extends NavigationFragment {
     @Override
     public void onShown(@Nullable IReplaceableFragment previousReplaceable) {
         UnitPager2AdapterNew adapter = (UnitPager2AdapterNew) binding.pager2.getAdapter();
+        if (adapter == null) return;
         adapter.fragments[binding.pager2.getCurrentItem()].onShown(null);
     }
 

@@ -15,9 +15,8 @@ import kotlinx.coroutines.launch
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getCurrencyDatabase
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
-import ru.art2000.extensions.ArrayLiveList
-import ru.art2000.extensions.LiveList
-import ru.art2000.extensions.context
+import ru.art2000.extensions.collections.ArrayLiveList
+import ru.art2000.extensions.collections.LiveList
 import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
 import java.util.*
@@ -32,7 +31,9 @@ class CurrenciesSettingsModel(application: Application)
 
     var selectedTab: Int
         get() = mSelectedTab.value ?: -1
-        set(value) { mSelectedTab.value = value }
+        set(value) {
+            mSelectedTab.value = value
+        }
 
 
     val removedItems: MutableLiveData<List<CurrencyItem>> = MutableLiveData(emptyList())

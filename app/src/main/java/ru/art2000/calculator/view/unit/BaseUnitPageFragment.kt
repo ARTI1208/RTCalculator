@@ -12,7 +12,7 @@ import androidx.viewbinding.ViewBinding
 import ru.art2000.calculator.model.unit.UnitConverterItem
 import ru.art2000.calculator.view_model.unit.UnitConverterDependencies
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
-import ru.art2000.extensions.CommonReplaceableFragment
+import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.helpers.PrefsHelper
 
 abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment() {

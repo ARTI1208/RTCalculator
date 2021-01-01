@@ -21,8 +21,8 @@ import java.util.List;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.model.calculator.HistoryItem;
-import ru.art2000.calculator.model.common.GlobalDependencies;
 import ru.art2000.calculator.view_model.calculator.HistoryViewModel;
+import ru.art2000.extensions.collections.CollectionsKt;
 
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.ViewHolder> {
 
@@ -32,10 +32,6 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     private List<HistoryItem> historyList = new ArrayList<>();
 
-    public List<HistoryItem> getHistoryList() {
-        return historyList;
-    }
-
     HistoryListAdapter(Context context, LifecycleOwner lifecycleOwner, HistoryViewModel model, LiveData<List<HistoryItem>> items) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
@@ -43,12 +39,16 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         items.observe(lifecycleOwner, this::setNewData);
     }
 
+    public List<HistoryItem> getHistoryList() {
+        return historyList;
+    }
+
     private void setNewData(@NonNull List<HistoryItem> newData) {
         if (historyList == null || historyList.isEmpty()) {
             historyList = newData;
             notifyItemRangeInserted(0, newData.size());
         } else {
-            DiffUtil.DiffResult result = GlobalDependencies.calculateDiff(historyList, newData);
+            DiffUtil.DiffResult result = CollectionsKt.calculateDiff(historyList, newData);
 
             historyList = newData;
             result.dispatchUpdatesTo(this);

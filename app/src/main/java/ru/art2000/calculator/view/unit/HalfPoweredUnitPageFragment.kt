@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.art2000.calculator.databinding.UnitFragHalfBinding
 import ru.art2000.calculator.view_model.calculator.CalculationClass
-import ru.art2000.extensions.IReplaceableFragment
-import ru.art2000.extensions.SimpleTextWatcher
+import ru.art2000.extensions.fragments.IReplaceableFragment
+import ru.art2000.extensions.views.SimpleTextWatcher
 
 class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() {
 

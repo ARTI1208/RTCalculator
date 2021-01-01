@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.AngleType
+import ru.art2000.calculator.utils.OldCalculationClass
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 
 @RunWith(Parameterized::class)

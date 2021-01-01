@@ -15,7 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -26,18 +25,18 @@ import kotlin.Pair;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding;
 import ru.art2000.calculator.view_model.calculator.CalculatorModel;
-import ru.art2000.extensions.CalculatorEditText;
-import ru.art2000.extensions.NavigationFragment;
-import ru.art2000.extensions.SimpleTextWatcher;
+import ru.art2000.extensions.fragments.NavigationFragment;
+import ru.art2000.extensions.views.CalculatorEditText;
+import ru.art2000.extensions.views.RecyclerWithEmptyView;
+import ru.art2000.extensions.views.SimpleTextWatcher;
+import ru.art2000.extensions.views.ViewsKt;
 import ru.art2000.helpers.GeneralHelper;
 
 
 public class CalculatorFragment extends NavigationFragment {
 
-    private HistoryListAdapter adapter;
-
     private CalculatorModel model;
-    private CalculatorLayoutBinding binding = null;
+    private CalculatorLayoutBinding binding;
 
     @Nullable
     @Override
@@ -140,15 +139,7 @@ public class CalculatorFragment extends NavigationFragment {
         return binding.tvResult;
     }
 
-    private TextView getEmptyHistoryTextView() {
-        return binding.calculatorPanel.historyPart.emptyTv;
-    }
-
-    private ViewGroup getHistoryRecyclerContainer() {
-        return binding.calculatorPanel.historyPart.recyclerLayout;
-    }
-
-    private RecyclerView getHistoryRecyclerView() {
+    private RecyclerWithEmptyView getHistoryRecyclerView() {
         return binding.calculatorPanel.historyPart.historyList;
     }
 
@@ -162,11 +153,10 @@ public class CalculatorFragment extends NavigationFragment {
 
     private void clearHistory() {
         model.clearHistoryDatabase();
-        showEmptyView();
         Toast.makeText(requireContext(), getString(R.string.history_cleared), Toast.LENGTH_SHORT).show();
     }
 
-    private void setupHistoryPanel() {
+    private void setupHistoryPanel(HistoryListAdapter adapter) {
         getHistoryPanelHandle().setOnClickListener(view ->
                 getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED));
         getHistoryPanelHeader().setOnClickListener(view ->
@@ -197,7 +187,7 @@ public class CalculatorFragment extends NavigationFragment {
         });
     }
 
-    private void setupHistoryHeader() {
+    private void setupHistoryHeader(HistoryListAdapter adapter) {
         binding.calculatorPanel.historyPart.clearHistory.setOnClickListener(clearBtn -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
@@ -217,9 +207,12 @@ public class CalculatorFragment extends NavigationFragment {
                 getHistoryRecyclerView().smoothScrollToPosition(adapter.getItemCount()));
     }
 
-    private void setupHistoryRecyclerView() {
+    private HistoryListAdapter setupHistoryRecyclerView() {
 
-        adapter = new HistoryListAdapter(requireContext(), getViewLifecycleOwner(), model, model.getHistoryItems());
+        getHistoryRecyclerView().setEmptyViewGenerator((context, viewGroup, integer) ->
+                ViewsKt.createTextEmptyView(context, R.string.no_history));
+
+        HistoryListAdapter adapter = new HistoryListAdapter(requireContext(), getViewLifecycleOwner(), model, model.getHistoryItems());
         getHistoryRecyclerView().setAdapter(adapter);
         getHistoryRecyclerView().setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -236,29 +229,18 @@ public class CalculatorFragment extends NavigationFragment {
         );
 
         model.getHistoryItems().observe(getViewLifecycleOwner(), data -> {
-            if (data.isEmpty()) {
-                showEmptyView();
-            } else {
-                showRecyclerView();
+            if (!data.isEmpty()) {
                 getHistoryRecyclerView().scrollToPosition(adapter.getItemCount() - 1);
             }
         });
+
+        return adapter;
     }
 
     private void setupHistoryPart() {
-        setupHistoryPanel();
-        setupHistoryHeader();
-        setupHistoryRecyclerView();
-    }
-
-    private void showRecyclerView() {
-        getHistoryRecyclerContainer().setVisibility(View.VISIBLE);
-        getEmptyHistoryTextView().setVisibility(View.GONE);
-    }
-
-    private void showEmptyView() {
-        getHistoryRecyclerContainer().setVisibility(View.INVISIBLE);
-        getEmptyHistoryTextView().setVisibility(View.VISIBLE);
+        HistoryListAdapter adapter = setupHistoryRecyclerView();
+        setupHistoryPanel(adapter);
+        setupHistoryHeader(adapter);
     }
 
     @Override

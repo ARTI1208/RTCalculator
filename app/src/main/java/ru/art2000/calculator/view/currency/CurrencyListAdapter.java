@@ -26,11 +26,11 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.art2000.calculator.R;
-import ru.art2000.calculator.model.common.GlobalDependencies;
 import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
 import ru.art2000.calculator.view_model.currency.CurrencyListAdapterModel;
-import ru.art2000.extensions.SimpleTextWatcher;
+import ru.art2000.extensions.collections.CollectionsKt;
+import ru.art2000.extensions.views.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.PrefsHelper;
 
@@ -119,7 +119,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             data = newData;
             notifyItemRangeInserted(0, newData.size());
         } else {
-            DiffUtil.DiffResult result = GlobalDependencies.calculateDiff(data, newData);
+            DiffUtil.DiffResult result = CollectionsKt.calculateDiff(data, newData);
 
             data = newData;
             result.dispatchUpdatesTo(this);

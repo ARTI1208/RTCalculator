@@ -142,7 +142,7 @@ object CalculationClass {
     }
 
     private fun calculateWithStack(expression: String, angleType: AngleType = AngleType.RADIANS): Double? {
-        return parser.calculate(expression, angleType, lexer)
+        return parser.parse(expression, angleType, lexer).compute()
     }
 
     fun hasSignsInExpression(expr: String): Boolean {

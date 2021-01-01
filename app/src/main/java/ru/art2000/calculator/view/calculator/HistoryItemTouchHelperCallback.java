@@ -12,11 +12,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Consumer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.Consumer;
 import ru.art2000.helpers.AndroidHelper;
 
 class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
@@ -35,22 +35,6 @@ class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
         this.onItemSwiped = onItemSwiped;
     }
 
-    /**
-     * Creates a Callback for the given drag and swipe allowance. These values serve as
-     * defaults
-     * and if you want to customize behavior per ViewHolder, you can override
-     * {@link #getSwipeDirs(RecyclerView, ViewHolder)}
-     * and / or {@link #getDragDirs(RecyclerView, ViewHolder)}.
-     *
-     * @param dragDirs  Binary OR of direction flags in which the Views can be dragged. Must be
-     *                  composed of {@link #LEFT}, {@link #RIGHT}, {@link #START}, {@link
-     *                  #END},
-     *                  {@link #UP} and {@link #DOWN}.
-     * @param swipeDirs Binary OR of direction flags in which the Views can be swiped. Must be
-     *                  composed of {@link #LEFT}, {@link #RIGHT}, {@link #START}, {@link
-     *                  #END},
-     *                  {@link #UP} and {@link #DOWN}.
-     */
     private HistoryItemTouchHelperCallback(int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
     }
@@ -126,6 +110,6 @@ class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
-        onItemSwiped.consume(viewHolder.getBindingAdapterPosition());
+        onItemSwiped.accept(viewHolder.getBindingAdapterPosition());
     }
 }

@@ -33,10 +33,10 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
-import ru.art2000.extensions.AutoThemeActivity
-import ru.art2000.extensions.LiveList.LiveListObserver
-import ru.art2000.extensions.UniqueReplaceableFragment
-import ru.art2000.extensions.createThemedSnackbar
+import ru.art2000.extensions.activities.AutoThemeActivity
+import ru.art2000.extensions.collections.LiveList.LiveListObserver
+import ru.art2000.extensions.fragments.UniqueReplaceableFragment
+import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.SnackbarThemeHelper
@@ -290,14 +290,16 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
     private fun toggleElementsVisibility() {
         if (model.selectedTab == 0) {
             val selectedCount = model.selectedHiddenItems.size
-            val totalCount = model.displayedHiddenItems.size
+            val displayedCount = model.displayedHiddenItems.size
             if (selectedCount > 0) {
                 binding.floatingActionButton.show()
             } else {
                 binding.floatingActionButton.hide()
             }
-            select?.isVisible = selectedCount < totalCount
+            select?.isVisible = selectedCount < displayedCount
             deselect?.isVisible = selectedCount > 0
+
+            val totalCount = model.hiddenItems.value?.size ?: 0
             binding.searchViewLayout.visibility = if (totalCount > 0) View.VISIBLE else View.GONE
         } else {
             val selectedCount = model.selectedVisibleItems.size

@@ -20,12 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.ItemUnitConverterListBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding;
 import ru.art2000.calculator.model.unit.UnitConverterItem;
 import ru.art2000.calculator.view_model.calculator.CalculationClass;
-import ru.art2000.extensions.SimpleTextWatcher;
+import ru.art2000.extensions.views.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
 
@@ -149,11 +151,12 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     private int getCurrentDimension() {
-        return selectedPosition.getValue().second;
+        return Objects.requireNonNull(selectedPosition.getValue()).second;
     }
 
     private void setCurrentDimension(int dimension) {
-        Pair<Integer, Integer> newPair = new Pair<>(selectedPosition.getValue().second, dimension);
+        Integer oldValue = Objects.requireNonNull(selectedPosition.getValue()).second;
+        Pair<Integer, Integer> newPair = new Pair<>(oldValue, dimension);
         selectedPosition.setValue(newPair);
     }
 

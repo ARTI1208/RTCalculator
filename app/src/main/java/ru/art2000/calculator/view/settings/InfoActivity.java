@@ -17,7 +17,7 @@ import ru.art2000.calculator.databinding.ActivityAppInfoBinding;
 import ru.art2000.calculator.databinding.AuthorLinkItemBinding;
 import ru.art2000.calculator.model.settings.AuthorLink;
 import ru.art2000.calculator.view_model.settings.InfoViewModel;
-import ru.art2000.extensions.AutoThemeActivity;
+import ru.art2000.extensions.activities.AutoThemeActivity;
 
 public class InfoActivity extends AutoThemeActivity {
 

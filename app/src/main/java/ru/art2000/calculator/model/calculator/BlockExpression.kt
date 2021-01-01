@@ -1,29 +1,19 @@
 package ru.art2000.calculator.model.calculator
 
 class BlockOpenExpression<O> : ExpressionPart<O> {
-    override fun toString(): String {
-        return "("
-    }
 
-    override fun equals(other: Any?): Boolean {
-        return other is BlockOpenExpression<*>
-    }
+    override fun toString() = "("
 
-    override fun hashCode(): Int {
-        return 123
-    }
+    override fun equals(other: Any?) = other is BlockOpenExpression<*>
+
+    override fun hashCode() = 123
 }
 
 class BlockCloseExpression<O> : ExpressionPart<O> {
-    override fun toString(): String {
-        return ")"
-    }
 
-    override fun equals(other: Any?): Boolean {
-        return other is BlockCloseExpression<*>
-    }
+    override fun toString() = ")"
 
-    override fun hashCode(): Int {
-        return 321
-    }
+    override fun equals(other: Any?) = other is BlockCloseExpression<*>
+
+    override fun hashCode() = 321
 }

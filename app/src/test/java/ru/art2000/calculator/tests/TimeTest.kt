@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.AngleType
+import ru.art2000.calculator.utils.OldCalculationClass
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 import kotlin.system.measureNanoTime
 
@@ -51,7 +52,7 @@ class TimeTest {
 
             println("OldRes: $oldResult\nNew res: $newResult")
 
-            val oldImplementationError = oldResult == "error" && newResult != "error" || oldResult != newResult
+            val oldImplementationError = oldResult == "error" || oldResult != newResult
 
             val times = """ 
                 Expression: $expression

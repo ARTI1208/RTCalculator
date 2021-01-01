@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentInsetEnd="6dp"
-            app:contentInsetStart="6dp"/>
+            app:contentInsetStart="6dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -28,20 +28,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ru.art2000.extensions.RecyclerWithEmptyView
+            <ru.art2000.extensions.views.RecyclerWithEmptyView
                 android:id="@+id/currency_list"
-                android:background="?android:windowBackground"
                 style="@style/RT.Widget.ListView.TopIndicator"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="?android:windowBackground" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <TextView
-            android:id="@+id/empty_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|center"
-            android:text="@string/empty_text_no_currencies_added"
-            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

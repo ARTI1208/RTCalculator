@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.settings.AuthorLink
-import ru.art2000.extensions.context
+import ru.art2000.extensions.arch.context
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

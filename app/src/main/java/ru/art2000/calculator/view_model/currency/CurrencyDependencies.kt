@@ -1,14 +1,10 @@
 package ru.art2000.calculator.view_model.currency
 
 import android.content.Context
-import android.util.Log
-import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.model.currency.CurrencyRoomDB
-import kotlin.system.measureTimeMillis
 
 
 object CurrencyDependencies {

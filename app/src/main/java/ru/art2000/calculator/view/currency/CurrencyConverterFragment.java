@@ -22,9 +22,9 @@ import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
 import ru.art2000.calculator.model.currency.LoadingState;
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel;
-import ru.art2000.extensions.IReplaceable;
-import ru.art2000.extensions.IReplaceableFragment;
-import ru.art2000.extensions.NavigationFragment;
+import ru.art2000.extensions.fragments.IReplaceableFragment;
+import ru.art2000.extensions.fragments.NavigationFragment;
+import ru.art2000.extensions.views.ViewsKt;
 import ru.art2000.helpers.AndroidHelper;
 
 public class CurrencyConverterFragment extends NavigationFragment {
@@ -49,9 +49,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
                     new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
             ).get(CurrencyConverterModel.class);
 
-
             binding = CurrencyLayoutBinding.inflate(inflater);
-
 
             binding.toolbar.inflateMenu(R.menu.currencies_converter_menu);
 
@@ -61,14 +59,8 @@ public class CurrencyConverterFragment extends NavigationFragment {
             binding.currencyList.setLayoutManager(llm);
             binding.currencyList.setAdapter(adapter);
 
-            binding.currencyList.setEmptyViewGenerator((context, parent, viewType) -> {
-                TextView emptyView = new TextView(requireContext());
-                emptyView.setText(R.string.empty_text_no_currencies_added);
-                emptyView.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                emptyView.setGravity(Gravity.CENTER);
-                return emptyView;
-            });
+            binding.currencyList.setEmptyViewGenerator((context, viewGroup, integer) ->
+                    ViewsKt.createTextEmptyView(context, R.string.empty_text_no_currencies_added));
 
             int colorAccent = AndroidHelper.getColorAttribute(requireContext(), R.attr.colorAccent);
 
@@ -135,7 +127,6 @@ public class CurrencyConverterFragment extends NavigationFragment {
     public int getTitle() {
         return R.string.title_currency;
     }
-
 
     private void applyLoadingState(LoadingState loadingState) {
         setRefreshStatus(loadingState == LoadingState.LOADING_STARTED);

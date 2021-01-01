@@ -31,7 +31,7 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <ru.art2000.extensions.ReplaceableBottomNavigation
+    <ru.art2000.extensions.views.ReplaceableBottomNavigation
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

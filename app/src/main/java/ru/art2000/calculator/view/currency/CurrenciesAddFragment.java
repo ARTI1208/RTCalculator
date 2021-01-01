@@ -3,6 +3,7 @@ package ru.art2000.calculator.view.currency;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,13 +29,12 @@ import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrenciesAddModel;
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
-import ru.art2000.extensions.CollectionsKt;
-import ru.art2000.extensions.LiveList;
-import ru.art2000.extensions.UniqueReplaceableFragment;
+import ru.art2000.extensions.collections.CollectionsKt;
+import ru.art2000.extensions.collections.LiveList;
+import ru.art2000.extensions.fragments.UniqueReplaceableFragment;
+import ru.art2000.extensions.views.ViewsKt;
 
 public class CurrenciesAddFragment extends UniqueReplaceableFragment {
-
-    private AddCurrenciesAdapter adapter;
 
     private ModifyCurrenciesLayoutBinding viewBinding;
     private CurrenciesAddModel model;
@@ -52,7 +53,16 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
             LinearLayoutManager llm = new LinearLayoutManagerWrapper(requireContext());
             llm.setOrientation(RecyclerView.VERTICAL);
             viewBinding.modifyCurrenciesList.setLayoutManager(llm);
-            adapter = new AddCurrenciesAdapter();
+
+            viewBinding.modifyCurrenciesList.setEmptyViewGenerator((context, viewGroup, integer) ->
+                    ViewsKt.createTextEmptyView(context, getEmptyTextRes()));
+
+            viewBinding.modifyCurrenciesList.setEmptyViewHolderBinder(view -> {
+                TextView emptyView = (TextView) view;
+                emptyView.setText(getEmptyTextRes());
+            });
+
+            AddCurrenciesAdapter adapter = new AddCurrenciesAdapter();
             viewBinding.modifyCurrenciesList.setAdapter(adapter);
         }
 
@@ -74,25 +84,13 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
         return R.string.currencies_add;
     }
 
-    private void toggleEmptyView() {
-        if (adapter == null || adapter.getItemCount() == 0) {
-
-            viewBinding.emptyTv.setText(getEmptyText());
-            viewBinding.emptyTv.setVisibility(View.VISIBLE);
-            viewBinding.modifyCurrenciesList.setVisibility(View.GONE);
-        } else {
-
-            viewBinding.emptyTv.setVisibility(View.GONE);
-            viewBinding.modifyCurrenciesList.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private String getEmptyText() {
+    @StringRes
+    private int getEmptyTextRes() {
         if (model.getCurrentQuery().length() > 0
                 && Objects.requireNonNull(model.getHiddenItems().getValue()).size() > 0) {
-            return getString(R.string.empty_text_no_currencies_found);
+            return R.string.empty_text_no_currencies_found;
         } else {
-            return getString(R.string.empty_text_all_currencies_added);
+            return R.string.empty_text_all_currencies_added;
         }
     }
 
@@ -185,7 +183,6 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
         }
 
         private void dispatchListUpdate(List<? extends CurrencyItem> oldData, List<? extends CurrencyItem> newData) {
-            toggleEmptyView();
             DiffUtil.DiffResult result = CollectionsKt.calculateDiff(oldData, newData);
             result.dispatchUpdatesTo(this);
         }

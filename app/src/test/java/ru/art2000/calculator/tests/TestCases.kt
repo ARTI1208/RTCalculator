@@ -1,6 +1,10 @@
 package ru.art2000.calculator.tests
 
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.utils.expr
+import ru.art2000.calculator.utils.findConstant
+import ru.art2000.calculator.utils.findOperation
+import ru.art2000.calculator.utils.toDisplayFormat
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 
 @Suppress("unused")

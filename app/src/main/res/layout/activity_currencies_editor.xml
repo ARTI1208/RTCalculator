@@ -92,7 +92,7 @@
         android:layout_marginEnd="20dp"
         android:visibility="invisible"
         app:backgroundTint="?colorAccent"
-        app:layout_behavior="ru.art2000.extensions.FloatingActionButtonScrollingBehaviour"
+        app:layout_behavior="ru.art2000.extensions.views.FloatingActionButtonScrollingBehaviour"
         app:layout_dodgeInsetEdges="top"
         app:srcCompat="@drawable/ic_currencies_done"
         app:tint="@color/white"

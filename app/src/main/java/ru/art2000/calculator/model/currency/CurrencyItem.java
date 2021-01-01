@@ -1,7 +1,5 @@
 package ru.art2000.calculator.model.currency;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -15,6 +13,13 @@ import ru.art2000.calculator.model.common.DiffComparable;
 @Entity(tableName = "currency")
 public class CurrencyItem implements DiffComparable<CurrencyItem> {
 
+    @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "codeLetter")
+    public String code;
+    public int position = -1;
+    public Double rate;
+
     @Ignore
     public CurrencyItem(@NonNull String code, Double rate) {
         this.code = code;
@@ -26,18 +31,6 @@ public class CurrencyItem implements DiffComparable<CurrencyItem> {
         this.rate = rate;
         this.position = position;
     }
-
-    @NonNull
-    @PrimaryKey
-    @ColumnInfo(name = "codeLetter")
-    public String code;
-
-    public int position = -1;
-
-    public Double rate;
-
-    @Ignore
-    public int nameResourceId;
 
     @Override
     public boolean equals(Object o) {

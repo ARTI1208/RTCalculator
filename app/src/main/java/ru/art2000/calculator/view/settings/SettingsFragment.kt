@@ -11,7 +11,7 @@ import androidx.preference.SwitchPreferenceCompat
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
 import ru.art2000.calculator.view.MainActivity
-import ru.art2000.extensions.PreferenceNavigationFragment
+import ru.art2000.extensions.fragments.PreferenceNavigationFragment
 import ru.art2000.helpers.PrefsHelper
 
 class SettingsFragment : PreferenceNavigationFragment() {

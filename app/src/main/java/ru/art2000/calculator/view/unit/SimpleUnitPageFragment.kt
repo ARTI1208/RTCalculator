@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.text.Editable
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -14,7 +13,10 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.UnitConverterItem
 import ru.art2000.calculator.view_model.calculator.CalculationClass
-import ru.art2000.extensions.*
+import ru.art2000.extensions.views.CalculatorEditText
+import ru.art2000.extensions.views.SimpleTextWatcher
+import ru.art2000.extensions.views.postFullScrollRight
+import ru.art2000.extensions.views.textValue
 import ru.art2000.helpers.GeneralHelper
 
 class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.view_model.unit.UnitConverterDependencies;
-import ru.art2000.extensions.AutoThemeActivity;
+import ru.art2000.extensions.activities.AutoThemeActivity;
 
 public class AllUnitsActivity extends AutoThemeActivity {
 

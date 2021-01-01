@@ -2,6 +2,7 @@ package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -31,14 +33,13 @@ import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrenciesEditModel;
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
-import ru.art2000.extensions.CollectionsKt;
-import ru.art2000.extensions.LiveList;
-import ru.art2000.extensions.UniqueReplaceableFragment;
+import ru.art2000.extensions.collections.CollectionsKt;
+import ru.art2000.extensions.collections.LiveList;
+import ru.art2000.extensions.fragments.UniqueReplaceableFragment;
+import ru.art2000.extensions.views.ViewsKt;
 import ru.art2000.helpers.AndroidHelper;
 
 public class CurrenciesEditFragment extends UniqueReplaceableFragment {
-
-    private EditCurrenciesAdapter adapter;
 
     private ItemTouchHelper itemTouchHelper;
 
@@ -56,6 +57,16 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
 
             viewBinding.modifyCurrenciesList.setPadding(0, 0, 0, AndroidHelper.dip2px(requireContext(), 20));
 
+            viewBinding.modifyCurrenciesList.setEmptyViewGenerator((context, viewGroup, integer) ->
+                    ViewsKt.createTextEmptyView(context, getEmptyTextRes()));
+
+            EditCurrenciesAdapter adapter = new EditCurrenciesAdapter();
+            viewBinding.modifyCurrenciesList.setAdapter(adapter);
+
+            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
+            llm.setOrientation(RecyclerView.VERTICAL);
+            viewBinding.modifyCurrenciesList.setLayoutManager(llm);
+
             itemTouchHelper = new ItemTouchHelper(new CurrenciesEditRecyclerTouchCallback(
                     requireContext(),
                     position -> {
@@ -71,15 +82,6 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
                     }
             ));
             itemTouchHelper.attachToRecyclerView(viewBinding.modifyCurrenciesList);
-
-            adapter = new EditCurrenciesAdapter();
-            viewBinding.modifyCurrenciesList.setAdapter(adapter);
-
-            LinearLayoutManager llm = new LinearLayoutManager(requireContext());
-            llm.setOrientation(RecyclerView.VERTICAL);
-            viewBinding.modifyCurrenciesList.setLayoutManager(llm);
-
-            toggleEmptyView();
         }
 
         return viewBinding.getRoot();
@@ -90,20 +92,9 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
         viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
     }
 
-    private void toggleEmptyView() {
-        if (adapter == null)
-            return;
-
-        if (adapter.getItemCount() == 0) {
-            viewBinding.emptyTv.setText(getEmptyText());
-            viewBinding.emptyTv.setVisibility(View.VISIBLE);
-        } else {
-            viewBinding.emptyTv.setVisibility(View.GONE);
-        }
-    }
-
-    private String getEmptyText() {
-        return getString(R.string.empty_text_no_currencies_added);
+    @StringRes
+    private int getEmptyTextRes() {
+        return R.string.empty_text_no_currencies_added;
     }
 
     @Override
@@ -159,7 +150,6 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
                 @Override
                 public void onAnyChanged(@NotNull List<? extends CurrencyItem> previousList) {
                     dispatchListUpdate(previousList, model.getDisplayedVisibleItems());
-                    toggleEmptyView();
                 }
             });
         }

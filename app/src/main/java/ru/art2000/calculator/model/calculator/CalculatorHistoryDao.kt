@@ -1,8 +1,10 @@
 package ru.art2000.calculator.model.calculator
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
-import ru.art2000.calculator.model.calculator.HistoryItem
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface CalculatorHistoryDao {
