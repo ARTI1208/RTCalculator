@@ -1,38 +1,20 @@
 <resources>
+
+    <!-- Common -->
     <string name="app_name">Calculator</string>
     <string name="title_calc">Calculator</string>
     <string name="title_unit">Unit Converter</string>
     <string name="title_currency">Currency</string>
     <string name="title_settings">Settings</string>
+    <string name="twice_tap_exit">Click BACK again to exit</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Calculator -->
     <string name="error">Error</string>
     <string name="infinity" translatable="false">∞</string>
-    <string name="basic">Basic</string>
-    <string name="tab_default">Default tab</string>
-    <string name="zero_div">Divide by zero</string>
-    <string name="app_theme">Theme</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
-    <string name="theme_daynight">Time-based Day/Night</string>
-    <string name="theme_daynight_system">Follow System</string>
-    <string name="theme_daynight_battery">Follow Battery Saver</string>
-    <string name="unit_category_velocity">Velocity</string>
-    <string name="unit_category_distance">Distance</string>
-    <string name="unit_category_area">Area</string>
-    <string name="unit_category_volume">Volume</string>
-    <string name="unit_category_mass">Mass</string>
-    <string name="unit_category_pressure">Pressure</string>
-    <string name="unit_category_temperature">Temperature</string>
-    <string name="unit_view">Unit view</string>
-    <string name="unit_view_simple">Simple</string>
-    <string name="unit_view_powerful">Powerful</string>
-    <string name="unit_view_half_powerful">Half-Powerful</string>
-    <string name="twice_tap_exit">Click BACK again to exit</string>
     <string name="copied">Copied:</string>
     <string name="deleted">Deleted:</string>
     <string name="history">History</string>
-    <string name="info">Info</string>
-    <string name="changelog">Changelog</string>
-    <string name="dev">Dev</string>
     <string name="history_cleared">History cleared!</string>
     <string name="no_history">No history yet</string>
     <string name="you_can">You can…</string>
@@ -41,9 +23,13 @@
     <string name="context_menu_copy_expr">Copy expression</string>
     <string name="context_menu_copy_res">Copy result</string>
     <string name="delete_record">Delete record</string>
-    <string name="about">About</string>
-    <string name="app_version">App version</string>
     <string name="history_clear">Clear</string>
+    <string name="history_clear_confirm">Are you sure you want wipe calculation history?</string>
+    <string name="paste_replace">Replace</string>
+    <string name="paste_after">Paste after</string>
+    <string name="calculator_input_hint" translatable="false">2+2</string>
+
+    <!-- Currencies -->
     <string name="updated">Updated: </string>
     <string name="currencies_add">Add</string>
     <string name="currencies_edit">Edit</string>
@@ -83,15 +69,11 @@
     <string name="currency_ZAR">South African rand</string>
     <string name="currency_JPY">Japanese yen</string>
     <string name="currency_RUB">Russian ruble</string>
-    <string name="paste_replace">Replace</string>
-    <string name="paste_after">Paste at the end</string>
     <string name="save_currency_value">Save last conversion</string>
     <string name="empty_text_no_currencies_added">No currency items added</string>
     <string name="empty_text_no_currencies_found">No matching currencies found</string>
     <string name="empty_text_all_currencies_added">All available items already added</string>
     <string name="currencies_no_internet">Update failed: connection unavailable</string>
-    <string name="tab_last_opened">Last opened</string>
-    <string name="daynight_support_message">If the system doesn\'t support Day/Night switch, this option won\'t work either</string>
     <string name="action_edit">Edit</string>
     <string name="action_select_all">Select all</string>
     <string name="action_deselect_all">Deselect all</string>
@@ -104,6 +86,22 @@
     <string name="action_undo">Undo</string>
     <string name="message_item_shown">Item \"%s\" made shown</string>
     <string name="message_item_hidden">Item \"%s\" made hidden</string>
+
+    <!-- Unit Converter -->
+    <string name="unit_category_velocity">Velocity</string>
+    <string name="unit_category_distance">Distance</string>
+    <string name="unit_category_area">Area</string>
+    <string name="unit_category_volume">Volume</string>
+    <string name="unit_category_mass">Mass</string>
+    <string name="unit_category_pressure">Pressure</string>
+    <string name="unit_category_temperature">Temperature</string>
+    <string name="unit_view">Unit view</string>
+    <string name="unit_view_simple">Simple</string>
+    <string name="unit_view_powerful">Powerful</string>
+    <string name="unit_view_half_powerful">Half-Powerful</string>
+    <string name="unit_view_simple_extra_action_title">Select button action</string>
+    <string name="unit_view_simple_swap">Swap dimensions</string>
+    <string name="unit_view_simple_list_all">List all</string>
     <string name="distance_mm">mm</string>
     <string name="distance_cm">cm</string>
     <string name="distance_dm">dm</string>
@@ -136,4 +134,28 @@
     <string name="pressure_pa">Pa</string>
     <string name="temperature_celsius">˚C</string>
     <string name="temperature_fahrenheit">˚F</string>
+
+    <!-- Settings -->
+    <string name="basic">Basic</string>
+    <string name="tab_default">Default tab</string>
+    <string name="zero_div">Divide by zero</string>
+    <string name="app_theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_daynight">Time-based Day/Night</string>
+    <string name="theme_daynight_system">Follow System</string>
+    <string name="theme_daynight_battery">Follow Battery Saver</string>
+    <string name="info">Info</string>
+    <string name="changelog">Changelog</string>
+    <string name="dev">Dev</string>
+    <string name="about">About</string>
+    <string name="app_version">App version</string>
+    <string name="tab_last_opened">Last opened</string>
+    <string name="daynight_support_message">If the system doesn\'t support Day/Night switch, this option won\'t work either</string>
+    <string name="author_nick" translatable="false">ARTI1208</string>
+    <string name="link_url_github" translatable="false">https://github.com/ARTI1208</string>
+    <string name="link_url_gitlab" translatable="false">https://gitlab.com/ARTI1208</string>
+    <string name="link_url_kde" translatable="false">https://invent.kde.org/artpinch</string>
+    <string name="changelog_load_failed">Error loading changelog</string>
+
 </resources>

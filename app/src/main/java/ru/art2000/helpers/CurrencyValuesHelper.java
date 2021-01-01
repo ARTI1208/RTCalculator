@@ -6,13 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
-
-import ru.art2000.calculator.model.currency.CurrencyItem;
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
 
 public class CurrencyValuesHelper {
 
@@ -36,32 +30,6 @@ public class CurrencyValuesHelper {
         } catch (Exception ignored) {
         }
 
-    }
-
-    public static List<CurrencyItem> findAllItems(Context context,
-                                                  List<CurrencyItem> list,
-                                                  String query) {
-        if (query == null || query.length() == 0)
-            return list;
-        ArrayList<CurrencyItem> newList = new ArrayList<>();
-        String lowerQuery = query.toLowerCase();
-
-        Locale mainLocale = Locale.getDefault();
-
-        for (CurrencyItem item : list) {
-
-            String lowerCode = item.code.toLowerCase();
-            int itemNameResourceId = CurrencyDependencies.getNameIdentifierForCode(context, item.code);
-            String lowerName = context.getString(itemNameResourceId).toLowerCase();
-
-            if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
-                    || (!mainLocale.equals(Locale.ENGLISH)
-                    && AndroidHelper.getLocalizedString(context, Locale.ENGLISH, itemNameResourceId)
-                    .toLowerCase().contains(lowerQuery))) {
-                newList.add(item);
-            }
-        }
-        return newList;
     }
 
 }

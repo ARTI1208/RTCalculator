@@ -6,14 +6,13 @@ import ru.art2000.calculator.model.calculator.CalculatorHistoryDB
 
 object CalculatorDependencies {
 
-    @Volatile private var INSTANCE: CalculatorHistoryDB? = null
+    @Volatile
+    private var INSTANCE: CalculatorHistoryDB? = null
 
     @JvmStatic
     fun getHistoryDatabase(context: Context): CalculatorHistoryDB =
-            INSTANCE
-                    ?: synchronized(this) {
-                INSTANCE
-                        ?: buildDatabase(context).also { INSTANCE = it }
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
 
     private fun buildDatabase(context: Context) =
@@ -21,6 +20,5 @@ object CalculatorDependencies {
                     CalculatorHistoryDB::class.java, "CalculationHistory.db")
                     .fallbackToDestructiveMigration()
                     .build()
-
 
 }

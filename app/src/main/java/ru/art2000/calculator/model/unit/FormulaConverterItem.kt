@@ -19,13 +19,13 @@ class FormulaConverterItem(@StringRes override val nameResourceId: Int,
 
     override fun setValue(value: Double) {
         mCurrentValue = value
-        mAbsoluteValue = CalculationClass.calculateDbl(toAbsolute.replace("X", value.toString()))
+        mAbsoluteValue = CalculationClass.calculateForceNumber(toAbsolute.replace("X", value.toString()))
     }
 
     override fun convert(from: UnitConverterItem): Double {
         if (from !== this) {
             mAbsoluteValue = from.absoluteValue
-            mCurrentValue = CalculationClass.calculateDbl(fromAbsolute.replace("X", from.absoluteValue.toString()))
+            mCurrentValue = CalculationClass.calculateForceNumber(fromAbsolute.replace("X", from.absoluteValue.toString()))
         }
 
         return mCurrentValue

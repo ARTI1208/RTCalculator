@@ -1,12 +1,10 @@
 package ru.art2000.calculator.view_model.currency
 
 import android.content.Context
-import android.util.Log
-import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Room
-import ru.art2000.calculator.model.currency.CurrencyItem
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.art2000.calculator.model.currency.CurrencyRoomDB
-import kotlin.system.measureTimeMillis
 
 
 object CurrencyDependencies {
@@ -16,27 +14,23 @@ object CurrencyDependencies {
 
     @JvmStatic
     fun getCurrencyDatabase(context: Context): CurrencyRoomDB {
-
-        var res: CurrencyRoomDB? = null
-        val loadTime = measureTimeMillis {
-            res = INSTANCE
-                    ?: synchronized(this) {
-                INSTANCE
-                        ?: buildDatabase(context).also { INSTANCE = it }
-            }
+        return INSTANCE ?: synchronized(this) {
+            INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
         }
-
-        Log.d("DBLOAD", loadTime.toString())
-
-        return res!!
     }
 
     private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext,
                     CurrencyRoomDB::class.java, "currency.db")
-                    .fallbackToDestructiveMigration()
+                    .addMigrations(RoomMigration())
                     .build()
 
+    private class RoomMigration : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Schema is not changed, but we show Room that we switched from android low-level
+            // database APIs to Room
+        }
+    }
 
     private val codeToIdentifier = hashMapOf<String, Int>()
 
@@ -48,27 +42,5 @@ object CurrencyDependencies {
                 "string",
                 context.packageName
         ).also { codeToIdentifier[code] = it }
-    }
-
-
-    @JvmStatic
-    fun getDiffCallback(oldData: List<CurrencyItem>, newData: List<CurrencyItem>): DiffUtil.Callback {
-        return object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int {
-                return oldData.size
-            }
-
-            override fun getNewListSize(): Int {
-                return newData.size
-            }
-
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldData[oldItemPosition].code == newData[newItemPosition].code
-            }
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return areItemsTheSame(oldItemPosition, newItemPosition)
-            }
-        }
     }
 }

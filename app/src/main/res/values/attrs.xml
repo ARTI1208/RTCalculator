@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="calc_input_bg">color|reference</attr>
-    <attr name="btn_text_color">color|reference</attr>
+    <attr name="calculatorInputBackground">color|reference</attr>
+    <attr name="buttonTextColor">color|reference</attr>
     <attr name="colorAccentTransparent">color|reference</attr>
     <attr name="floatingBottomBarBackground">color|reference</attr>
+    <attr name="authorAvatar">drawable|reference</attr>
 </resources>

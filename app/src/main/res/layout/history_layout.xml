@@ -7,88 +7,72 @@
     android:background="?android:windowBackground"
     android:orientation="vertical">
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/recycler_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.0">
+        android:layout_weight="1.0"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/recycler_layout"
+        <ru.art2000.extensions.views.RecyclerWithEmptyView
+            android:id="@+id/history_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            style="@style/RT.Widget.ListView.VerticalIndicators"
+            tools:ignore="NestedWeights" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/history_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.0"
-                style="@style/RT.Widget.ListView.VerticalIndicators"
-                tools:ignore="NestedWeights" />
-
-            <RelativeLayout
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/historyTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_margin="10dp"
-                    android:text="@string/history"
-                    android:textColor="?colorAccent"
-                    android:textSize="24sp" />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/scroll_up"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="5dp"
-                    android:layout_toEndOf="@+id/historyTitle"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:scaleType="center"
-                    android:tint="?colorAccent"
-                    app:srcCompat="@drawable/ic_scroll_up" />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/scroll_bottom"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/scroll_up"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:tint="?colorAccent"
-                    app:srcCompat="@drawable/ic_scroll_bottom" />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/clear_history"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="5dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:scaleType="center"
-                    android:tint="?colorAccent"
-                    app:srcCompat="@drawable/ic_clear_history" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/empty_tv"
+        <RelativeLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/no_history"
-            android:textSize="40sp"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/historyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_margin="10dp"
+                android:text="@string/history"
+                android:textColor="?colorAccent"
+                android:textSize="24sp" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/scroll_up"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
+                android:layout_toEndOf="@+id/historyTitle"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="center"
+                android:tint="?colorAccent"
+                app:srcCompat="@drawable/ic_scroll_up" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/scroll_bottom"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/scroll_up"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:tint="?colorAccent"
+                app:srcCompat="@drawable/ic_scroll_bottom" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/clear_history"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="center"
+                android:tint="?colorAccent"
+                app:srcCompat="@drawable/ic_clear_history" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/history_handle"

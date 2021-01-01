@@ -1,6 +1,5 @@
 package ru.art2000.calculator.model.currency
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
@@ -74,10 +73,6 @@ interface CurrencyDao {
         if (alreadyVisibleItems?.isNotEmpty() == true) {
             val nextItems = getItemsWithPositionBiggerOrEqual(alreadyVisibleItems.first().position)
 
-
-            Log.d("Afterr", nextItems.joinToString { it.code + "|" + it.position })
-            Log.d("Add", alreadyVisibleItems.joinToString { it.code + "|" + it.position })
-
             var visPos = 0
             var nextPos = 0
             var newPos = alreadyVisibleItems.first().position
@@ -110,8 +105,6 @@ interface CurrencyDao {
                 addAll(nextItems)
             }
 
-            Log.d("Res", allItems.joinToString { it.code + "|" + it.position })
-
             updateAll(allItems)
         }
 
@@ -127,18 +120,11 @@ interface CurrencyDao {
     @Transaction
     fun makeItemsHidden(items: List<CurrencyItem>) {
 
-
-        Log.d("hidThe", "aaa")
-
-        val itemsToUpdate =
-                items
+        val itemsToUpdate = items
                 .filter { it.position >= 0 }
-                .sortedBy { it.position
+                .sortedBy {
+                    it.position
                 }.map { CurrencyItem(it.code, it.rate, it.position) }
-
-
-        Log.d("HideItemsCount", itemsToUpdate.size.toString())
-        Log.d("HideItems", itemsToUpdate.joinToString { it.code + "||" + it.position })
 
         val firstVisibleItem = itemsToUpdate.firstOrNull()
 
@@ -182,20 +168,4 @@ interface CurrencyDao {
 
     @Delete
     fun delete(item: CurrencyItem)
-
-    @Query("SELECT date FROM info LIMIT 1")
-    fun getRefreshDate(): LiveData<String?>
-
-    @Query("UPDATE info SET date = :date WHERE rowid = 0")
-    fun updateRefreshDate(date: String?): Int
-
-    @Insert
-    fun insertInfo(infoItem: InfoItem): Long
-
-    @Transaction
-    public fun putRefreshDate(date: String?) {
-        if (updateRefreshDate(date) < 1) {
-            insertInfo(InfoItem(date))
-        }
-    }
 }

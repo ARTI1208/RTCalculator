@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1.0"
         android:layout_height="wrap_content"
+        android:layout_weight="1.0"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonRDiv"
-            android:text="DIV"
-            android:onClick="CalcBtnClick"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button" />
+            android:text="DIV" />
 
         <Button
             android:id="@+id/buttonMod"
-            android:text="MOD"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:onClick="CalcBtnClick"
-            style="@style/RT.Widget.Button" />
+            android:text="MOD" />
 
         <Button
             android:id="@+id/buttonSqrt"
-            android:text="√"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button"/>
+            android:text="√" />
 
         <Button
             android:id="@+id/buttonPow"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:text="^"
-            style="@style/RT.Widget.Button" />
+            android:text="^" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,29 +45,27 @@
 
         <Button
             android:id="@+id/buttonSin"
-            android:text="sin"
-            android:onClick="CalcBtnClick"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button" />
+            android:text="sin" />
 
         <Button
             android:id="@+id/buttonCos"
-            android:text="cos"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:onClick="CalcBtnClick"
-            style="@style/RT.Widget.Button" />
+            android:text="cos" />
 
         <Button
             android:id="@+id/buttonLg"
-            android:text="lg"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button"/>
+            android:text="lg" />
 
         <Button
             android:id="@+id/buttonLn"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:text="ln"
-            style="@style/RT.Widget.Button" />
+            android:text="ln" />
     </LinearLayout>
 
     <LinearLayout
@@ -79,94 +76,90 @@
 
         <Button
             android:id="@+id/buttonTg"
-            android:text="tan"
-            android:onClick="CalcBtnClick"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button" />
+            android:text="tan" />
 
         <Button
             android:id="@+id/buttonCtg"
-            android:text="ctg"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:onClick="CalcBtnClick"
-            style="@style/RT.Widget.Button" />
+            android:text="ctg" />
 
         <Button
             android:id="@+id/buttonPercent"
-            android:text="%"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button"/>
+            android:text="%" />
 
         <Button
             android:id="@+id/buttonFactorial"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:text="!"
-            style="@style/RT.Widget.Button" />
+            android:text="!" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1.0"
         android:layout_height="wrap_content"
+        android:layout_weight="1.0"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonMPlus"
-            android:text="M+"
-            android:onClick="CalcBtnClick"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button" />
+            android:text="M+" />
 
         <Button
             android:id="@+id/buttonMMinus"
-            android:text="M-"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:onClick="CalcBtnClick"
-            style="@style/RT.Widget.Button" />
+            android:text="M-" />
 
         <Button
             android:id="@+id/buttonMClear"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:text="MC"
-            style="@style/RT.Widget.Button" />
+            android:text="MC" />
 
         <Button
             android:id="@+id/buttonMResult"
-            android:text="MR"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button"/>
+            android:text="MR" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1.0"
         android:layout_height="wrap_content"
+        android:layout_weight="1.0"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonPi"
-            android:text="π"
-            android:onClick="CalcBtnClick"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button" />
+            android:text="π" />
 
         <Button
             android:id="@+id/buttonEulerNumber"
-            android:text="e"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:onClick="CalcBtnClick"
-            style="@style/RT.Widget.Button" />
+            android:text="e" />
 
         <Button
             android:id="@+id/buttonGoldenRatio"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            android:text="φ"
-            style="@style/RT.Widget.Button" />
+            android:text="φ" />
 
         <Button
             android:id="@+id/buttonDEGRAD"
-            android:text="RAD"
+            style="@style/RT.Widget.Button"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.Button"/>
+            android:text="RAD" />
 
     </LinearLayout>
 </LinearLayout>

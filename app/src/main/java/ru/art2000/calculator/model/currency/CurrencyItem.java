@@ -13,6 +13,13 @@ import ru.art2000.calculator.model.common.DiffComparable;
 @Entity(tableName = "currency")
 public class CurrencyItem implements DiffComparable<CurrencyItem> {
 
+    @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "codeLetter")
+    public String code;
+    public int position = -1;
+    public Double rate;
+
     @Ignore
     public CurrencyItem(@NonNull String code, Double rate) {
         this.code = code;
@@ -24,21 +31,6 @@ public class CurrencyItem implements DiffComparable<CurrencyItem> {
         this.rate = rate;
         this.position = position;
     }
-
-    @NonNull
-    @PrimaryKey
-    @ColumnInfo(name = "codeLetter")
-    public String code;
-
-    public int position = -1;
-
-    public Double rate;
-
-    @Ignore
-    public int nameResourceId;
-
-    @Ignore
-    public boolean isSelected;
 
     @Override
     public boolean equals(Object o) {
@@ -62,6 +54,6 @@ public class CurrencyItem implements DiffComparable<CurrencyItem> {
 
     @Override
     public boolean isContentSame(@NotNull CurrencyItem anotherItem) {
-        return isSameItem(anotherItem);
+        return position == anotherItem.position;
     }
 }

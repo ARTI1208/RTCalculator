@@ -9,27 +9,20 @@ import ru.art2000.calculator.R;
 
 public class PrefsHelper {
 
-    public static final int SWAP_DIMENSIONS = 0;
-    public static final int SHOW_ALL_DIMENSIONS = 1;
+    private final static String DEFAULT_THEME = "system";
+    private final static String DEFAULT_TAB = "calc_tab";
+    private final static String DEFAULT_UNIT_VIEW = "powerful";
+    private final static String DEFAULT_CONVERSION_CODE = "USD";
+    private final static double DEFAULT_CONVERSION_VALUE = 1;
+    private final static boolean DEFAULT_SHOULD_SAVE_CONVERSION_VALUE = false;
+
     private static SharedPreferences sSharedPreferences;
     private static int sAppTheme;
     private static int sDefaultTab;
-    private static int sUnitViewExtraButtonAction;
-    private static boolean sIsUnitViewChanged = false;
     private static boolean sShouldSaveCurrencyConversion = false;
     private static String sUnitViewType;
     private static String sConversionCode;
     private static double sConversionValue;
-
-
-    public static int getExtraButtonAction() {
-        return sUnitViewExtraButtonAction;
-    }
-
-    public static void setExtraButtonAction(int action) {
-        sUnitViewExtraButtonAction = action;
-        sSharedPreferences.edit().putInt("unit_view_extra_button_action", action).apply();
-    }
 
     public static boolean isShouldSaveCurrencyConversion() {
         return sShouldSaveCurrencyConversion;
@@ -61,7 +54,8 @@ public class PrefsHelper {
 
     @SuppressWarnings("SameParameterValue")
     private static double getDouble(final String key, final double defaultValue) {
-        return Double.longBitsToDouble(sSharedPreferences.getLong(key, Double.doubleToLongBits(defaultValue)));
+        return Double.longBitsToDouble(
+                sSharedPreferences.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
     public static String getConversionCode() {
@@ -72,24 +66,9 @@ public class PrefsHelper {
         return sConversionValue;
     }
 
-    public static boolean isUnitViewChanged() {
-        if (sIsUnitViewChanged) {
-            sIsUnitViewChanged = false;
-            return true;
-        }
-        return false;
-    }
-
     public static void initialSetup(Context mContext) {
         sSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (sSharedPreferences.getBoolean("is_first_run", true))
-            sSharedPreferences
-                    .edit()
-                    .putString("app_theme", "light")
-                    .putString("unit_view", "simple")
-                    .putBoolean("is_first_run", false)
-                    .apply();
-        switch (sSharedPreferences.getString("app_theme", "light")) {
+        switch (sSharedPreferences.getString("app_theme", DEFAULT_THEME)) {
             default:
             case "light":
                 sAppTheme = R.style.RT_AppTheme_Light;
@@ -107,19 +86,12 @@ public class PrefsHelper {
                 sAppTheme = R.style.RT_AppTheme_Battery;
                 break;
         }
-        sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value", false);
-        sConversionCode = sSharedPreferences.getString("last_conversion_code", "USD");
-        sConversionValue = getDouble("last_conversion_double", 1);
-        switch (sSharedPreferences.getInt("unit_view_extra_button_action", SWAP_DIMENSIONS)) {
-            default:
-            case SWAP_DIMENSIONS:
-                sUnitViewExtraButtonAction = SWAP_DIMENSIONS;
-                break;
-            case SHOW_ALL_DIMENSIONS:
-                sUnitViewExtraButtonAction = SHOW_ALL_DIMENSIONS;
-                break;
-        }
-        switch (sSharedPreferences.getString("default_opened_tab", "calc_tab")) {
+        sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value",
+                DEFAULT_SHOULD_SAVE_CONVERSION_VALUE);
+        sConversionCode =
+                sSharedPreferences.getString("last_conversion_code", DEFAULT_CONVERSION_CODE);
+        sConversionValue = getDouble("last_conversion_double", DEFAULT_CONVERSION_VALUE);
+        switch (sSharedPreferences.getString("default_opened_tab", DEFAULT_TAB)) {
             default:
             case "calc_tab":
                 sDefaultTab = R.id.navigation_calc;
@@ -134,7 +106,7 @@ public class PrefsHelper {
                 sDefaultTab = R.id.navigation_settings;
                 break;
         }
-        sUnitViewType = sSharedPreferences.getString("unit_view", "powerful");
+        sUnitViewType = sSharedPreferences.getString("unit_view", DEFAULT_UNIT_VIEW);
     }
 
     public static String getUnitViewType() {
@@ -143,12 +115,12 @@ public class PrefsHelper {
 
     public static void setUnitViewType(String view) {
         sUnitViewType = view;
-        sIsUnitViewChanged = true;
         sSharedPreferences.edit().putString("unit_view", view).apply();
     }
 
     public static void setDefaultTab(Context context, int pos) {
-        if (PrefsHelper.isSaveLastEnabled() && (pos != 3 || context.getResources().getBoolean(R.bool.show_settings_as_default_tab))) {
+        if (PrefsHelper.isSaveLastEnabled() && (pos != 3
+                || context.getResources().getBoolean(R.bool.show_settings_as_default_tab))) {
             String tab;
             switch (pos) {
                 case 0:

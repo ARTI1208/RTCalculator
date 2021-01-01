@@ -9,7 +9,7 @@ public class GeneralHelper {
     public static NumberFormat resultNumberFormat = new DecimalFormat("#.#######");
 
     @SuppressWarnings("SameParameterValue")
-    public static String joinToString(List list, String separator, String prefix, String postfix) {
+    public static String joinToString(List<?> list, String separator, String prefix, String postfix) {
         StringBuilder builder = new StringBuilder(prefix);
         int count = 0;
         for (Object obj : list) {

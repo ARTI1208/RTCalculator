@@ -1,15 +1,18 @@
 package ru.art2000.calculator.view_model.currency
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies
+import androidx.lifecycle.LiveData
+import ru.art2000.calculator.model.currency.CurrencyItem
+import ru.art2000.extensions.collections.LiveList
 
-class CurrenciesAddModel(application: Application) : AndroidViewModel(application) {
+interface CurrenciesAddModel : CurrencyModificationModel {
 
+    val hiddenItems: LiveData<List<CurrencyItem>>
 
-    private val currencyDao = CurrencyDependencies.getCurrencyDatabase(application).currencyDao()
+    val selectedHiddenItems: LiveList<CurrencyItem>
 
+    val displayedHiddenItems: LiveList<CurrencyItem>
 
-    val hiddenItems = currencyDao.getHiddenItems()
+    fun isHiddenItemSelected(item: CurrencyItem): Boolean
 
+    fun setHiddenItemSelected(item: CurrencyItem, selected: Boolean)
 }

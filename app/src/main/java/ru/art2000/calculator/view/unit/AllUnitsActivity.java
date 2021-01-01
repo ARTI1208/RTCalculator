@@ -1,6 +1,5 @@
 package ru.art2000.calculator.view.unit;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,41 +11,38 @@ import java.util.Objects;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.view_model.unit.UnitConverterDependencies;
-import ru.art2000.extensions.DayNightActivity;
-import ru.art2000.helpers.PrefsHelper;
+import ru.art2000.extensions.activities.AutoThemeActivity;
 
-public class AllUnitsActivity extends DayNightActivity {
+public class AllUnitsActivity extends AutoThemeActivity {
 
-    int pos;
-    String category;
-    Context mContext;
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_all_units);
+
+        String category = getIntent().getStringExtra("category");
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        String title = getResources().getStringArray(R.array.unit_converter_categories)
+                [UnitConverterDependencies.getCategoryInt(category)];
+        getSupportActionBar().setTitle(title);
+
+        int pos = getIntent().getIntExtra("highlightPosition", 0);
+
+        RecyclerView list = findViewById(R.id.all_units_list);
+        list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(RecyclerView.VERTICAL);
+        list.setLayoutManager(llm);
+        UnitListAdapter adapter = new UnitListAdapter(this, this,
+                UnitConverterDependencies.getCategoryItems(category), pos);
+        list.setAdapter(adapter);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(PrefsHelper.getAppTheme());
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_units);
-        mContext = this;
-        setSupportActionBar(findViewById(R.id.toolbar));
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        pos = getIntent().getIntExtra("pos", 0);
-        category = getIntent().getStringExtra("category");
-        String title = getResources().getStringArray(R.array.unit_converter_categories)
-                [UnitConverterDependencies.getCategoryInt(category)];
-        getSupportActionBar().setTitle(title);
-        RecyclerView list = findViewById(R.id.all_units_list);
-        list.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
-        LinearLayoutManager llm = new LinearLayoutManager(mContext);
-        llm.setOrientation(RecyclerView.VERTICAL);
-        list.setLayoutManager(llm);
-        UnitListAdapter adapter = new UnitListAdapter(mContext,
-                UnitConverterDependencies.getCategoryItems(category), pos);
-        list.setAdapter(adapter);
     }
 }

@@ -1,69 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:paddingStart="6dp"
-        android:background="#ffdadada"
-        android:orientation="horizontal">
-
-        <Spinner
-            android:id="@+id/spinner_from"
-            android:layout_width="100dp"
-            android:layout_height="match_parent" />
+        android:layout_height="@dimen/unit_view_simple_row_height">
 
         <HorizontalScrollView
             android:id="@+id/or_hsv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/unit_view_simple_row_height"
+            android:background="?attr/calculatorInputBackground"
             android:layout_gravity="end|center"
-            android:layout_weight="1"
             android:scrollbars="none">
 
-            <TextView
+            <ru.art2000.extensions.views.CalculatorEditText
                 android:id="@+id/value_original"
                 android:layout_width="wrap_content"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
+                android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
+                android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
                 android:maxLines="1"
-                android:overScrollMode="always"
-                android:scrollHorizontally="true"
-                android:scrollbars="horizontal"
-                android:text="0"
+                tools:text="0"
                 android:textSize="40sp" />
         </HorizontalScrollView>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/original_dimension_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
+            android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+            android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
+            tools:text="m/s"/>
+    </FrameLayout>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="6dp"
-        android:background="#ff00bdbd"
-        android:orientation="horizontal">
-        <Spinner
-            android:id="@+id/spinner_to"
-            android:layout_width="100dp"
-            android:layout_height="match_parent" />
+        android:layout_height="1px"
+        android:background="#888888"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/unit_view_simple_row_height">
+
+        <HorizontalScrollView
+            android:id="@+id/converted_hsv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/unit_view_simple_row_height"
+            android:layout_gravity="end|center"
+            android:background="?attr/calculatorInputBackground"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/value_converted"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+                android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
+                android:textSize="40sp"
+                android:layout_gravity="end|center"
+                android:gravity="end|center"
+                tools:text="0" />
+        </HorizontalScrollView>
 
         <TextView
-            android:id="@+id/value_converted"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="40sp"
-            android:gravity="end|center"
-            android:text="0" />
-    </LinearLayout>
+            android:id="@+id/converted_dimension_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
+            android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+            android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
+            tools:text="km/h"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/buttons_unit"
@@ -195,9 +212,36 @@
                 android:id="@+id/buttonN"
                 style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
-                android:tint="?btn_text_color"
-                android:rotation="90.0"
-                app:srcCompat="@drawable/ic_swap" />
+                android:tint="?attr/buttonTextColor"
+                app:srcCompat="@drawable/ic_list_all" />
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
+        android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_from"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            style="@style/RT.Widget.Button"
+            app:srcCompat="@drawable/ic_horizontal_swap"
+            android:id="@+id/swap_button"
+            android:tint="?attr/buttonTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <Spinner
+            android:id="@+id/spinner_to"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 </LinearLayout>
