@@ -43,7 +43,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     @ColorInt
     private final int colorAccent;
-    private final float codeTextSizeNormal, codeTextSizeHighlighted;
+    private final float codeTextSizeNormal, codeTextSizeHighlighted, valueTextSizeNormal;
 
     private List<CurrencyItem> data = new ArrayList<>();
     private RecyclerView recycler;
@@ -53,10 +53,14 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         adapterModel = model;
         mContext = context;
         colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
+
         codeTextSizeNormal =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_normal);
         codeTextSizeHighlighted =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_highlight);
+        valueTextSizeNormal =
+                mContext.getResources().getDimension(R.dimen.currency_list_item_value_normal);
+
         if (PrefsHelper.isShouldSaveCurrencyConversion()) {
             adapterModel.setLastInputItemValue(PrefsHelper.getConversionValue());
         }
@@ -163,6 +167,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         holder.value.setTextColor(colorAccent);
         holder.codeView.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
         holder.codeView.setTypeface(null, Typeface.BOLD);
+        holder.value.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeHighlighted);
+        holder.value.setTypeface(null, Typeface.BOLD);
     }
 
     private void removeHolderElementsHighlighting(Holder holder) {
@@ -174,6 +180,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         holder.value.setTextColor(csl);
         holder.codeView.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeNormal);
         holder.codeView.setTypeface(null, Typeface.NORMAL);
+        holder.value.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueTextSizeNormal);
+        holder.value.setTypeface(null, Typeface.NORMAL);
     }
 
     public class Holder extends RecyclerView.ViewHolder {

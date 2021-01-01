@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        buildConfigField "String", "BUILD_DATE", '"' + getBuildDate() +'"'
     }
 
     buildFeatures {
@@ -35,6 +36,11 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+}
+
+static def getBuildDate() {
+    def date = new Date()
+    return date.dateTimeString
 }
 
 dependencies {

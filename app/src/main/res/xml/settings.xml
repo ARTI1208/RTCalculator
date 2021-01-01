@@ -15,7 +15,7 @@
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
         <ListPreference
-            android:defaultValue="light"
+            android:defaultValue="system"
             android:entries="@array/app_theme"
             android:entryValues="@array/app_theme_values"
             android:key="app_theme"

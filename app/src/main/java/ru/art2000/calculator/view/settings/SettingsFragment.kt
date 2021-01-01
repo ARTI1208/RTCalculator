@@ -30,27 +30,21 @@ class SettingsFragment : PreferenceNavigationFragment() {
 
         tabList?.apply {
             if (!resources.getBoolean(R.bool.show_settings_as_default_tab)) {
-                val tabEntries = entries
-                val tabValues = entryValues
-                val newTabEntries = arrayOfNulls<CharSequence>(tabEntries.size - 1)
-                val newTabValues = arrayOfNulls<CharSequence>(tabValues.size - 1)
-                var found: Short = 0
-                for (i in tabValues.indices) {
-                    val sequence = tabValues[i]
-                    if (sequence == "settings_tab") {
-                        found = 1
-                    } else {
-                        newTabEntries[i - found] = tabEntries[i]
-                        newTabValues[i - found] = tabValues[i]
-                    }
-                }
-                entries = newTabEntries
-                entryValues = newTabValues
+
+                val settingsTabIndex = entryValues.indexOf("settings_tab")
+                if (settingsTabIndex < 0) return@apply
+
+                entries = entries.filterIndexed { index, _ ->
+                    index != settingsTabIndex
+                }.toTypedArray()
+
+                entryValues = entryValues.filterIndexed { index, _ ->
+                    index != settingsTabIndex
+                }.toTypedArray()
             }
             onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue: Any ->
                 value = newValue.toString()
-                val stringValue = newValue.toString()
-                PrefsHelper.setDefaultTab(stringValue)
+                PrefsHelper.setDefaultTab(value)
                 true
             }
         }
@@ -65,14 +59,18 @@ class SettingsFragment : PreferenceNavigationFragment() {
                 }
                 appTheme.value = newValue.toString()
                 when (newValue.toString()) {
-                    "system", "battery" -> Toast.makeText(requireContext(), R.string.daynight_support_message, Toast.LENGTH_LONG).show()
+                    "system", "battery" ->
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.daynight_support_message,
+                                Toast.LENGTH_LONG
+                        ).show()
                 }
                 PrefsHelper.setAppTheme(newValue.toString())
-                val parent = activity as MainActivity
-                val intent = parent.intent
-                intent.action = "ru.art2000.calculator.action.SETTINGS"
-                parent.finish()
-                parent.startActivity(intent)
+                requireActivity().apply {
+                    finish()
+                    startActivity(intent)
+                }
                 true
             }
         }
@@ -112,7 +110,7 @@ class SettingsFragment : PreferenceNavigationFragment() {
 
         /* appVersion preference */
         val appVersion = findPreference<Preference>("app_version")
-        appVersion?.summary = BuildConfig.VERSION_NAME
+        appVersion?.summary = BuildConfig.VERSION_NAME + " (" + BuildConfig.BUILD_DATE + ")"
         appVersion?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dev++
             if (dev == CLICKS_TO_OPEN_HIDDEN_INFO) {

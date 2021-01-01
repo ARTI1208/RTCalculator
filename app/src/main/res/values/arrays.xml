@@ -24,18 +24,18 @@
         <item>last_tab</item>
     </array>
     <array name="app_theme">
-        <item>@string/theme_light</item>
-        <item>@string/theme_dark</item>
-        <item>@string/theme_daynight</item>
         <item>@string/theme_daynight_system</item>
         <item>@string/theme_daynight_battery</item>
+        <item>@string/theme_daynight</item>
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
     </array>
     <array name="app_theme_values">
-        <item>light</item>
-        <item>dark</item>
-        <item>day_night</item>
         <item>system</item>
         <item>battery</item>
+        <item>day_night</item>
+        <item>light</item>
+        <item>dark</item>
     </array>
     <array name="distance_items">
         <item>@string/distance_mm</item>

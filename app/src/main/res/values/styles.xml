@@ -9,8 +9,8 @@
         <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/LightTheme_colorAccent</item>
         <item name="colorAccentTransparent">@color/LightTheme_colorAccentTransparent</item>
-        <item name="calc_input_bg">@color/LightTheme_inputBackground</item>
-        <item name="btn_text_color">@color/LightTheme_buttonTextColor</item>
+        <item name="calculatorInputBackground">@color/LightTheme_inputBackground</item>
+        <item name="buttonTextColor">@color/LightTheme_buttonTextColor</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
         <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
         <item name="tabStyle">@style/RT.Widget.TabLayout</item>
@@ -26,6 +26,7 @@
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
+        <item name="authorAvatar">@drawable/dev_avatar_darker</item>
     </style>
 
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light" />
@@ -39,8 +40,8 @@
         <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/DarkTheme_colorAccent</item>
         <item name="colorAccentTransparent">@color/DarkTheme_colorAccentTransparent</item>
-        <item name="calc_input_bg">@color/DarkTheme_inputBackground</item>
-        <item name="btn_text_color">@color/DarkTheme_buttonTextColor</item>
+        <item name="calculatorInputBackground">@color/DarkTheme_inputBackground</item>
+        <item name="buttonTextColor">@color/DarkTheme_buttonTextColor</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
         <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
         <item name="tabStyle">@style/RT.Widget.TabLayout</item>
@@ -56,6 +57,7 @@
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
+        <item name="authorAvatar">@drawable/dev_avatar_lighter</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark" />
@@ -71,7 +73,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center|center</item>
         <item name="android:layout_gravity">center|center</item>
-        <item name="android:textColor">?btn_text_color</item>
+        <item name="android:textColor">?attr/buttonTextColor</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="elevation">0dp</item>
@@ -159,6 +161,19 @@
         <item name="titleTextColor">?colorAccent</item>
         <item name="colorControlNormal">?colorAccent</item>
         <item name="android:background">?colorPrimary</item>
+    </style>
+
+    <style name="RT.View.LinkImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:layout_height">@dimen/author_info_link_image_size</item>
+        <item name="android:layout_width">@dimen/author_info_link_image_size</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="RT.View.Changelog" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">?colorOnSurface</item>
+        <item name="android:background">@drawable/changelog_background</item>
+        <item name="android:padding">@dimen/changelog_padding</item>
     </style>
 
 </resources>

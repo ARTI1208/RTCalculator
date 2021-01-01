@@ -152,5 +152,10 @@
     <string name="app_version">App version</string>
     <string name="tab_last_opened">Last opened</string>
     <string name="daynight_support_message">If the system doesn\'t support Day/Night switch, this option won\'t work either</string>
+    <string name="author_nick" translatable="false">ARTI1208</string>
+    <string name="link_url_github" translatable="false">https://github.com/ARTI1208</string>
+    <string name="link_url_gitlab" translatable="false">https://gitlab.com/ARTI1208</string>
+    <string name="link_url_kde" translatable="false">https://invent.kde.org/artpinch</string>
+    <string name="changelog_load_failed">Error loading changelog</string>
 
 </resources>

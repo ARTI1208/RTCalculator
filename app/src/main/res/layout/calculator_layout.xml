@@ -8,7 +8,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?calc_input_bg"
+        android:background="?attr/calculatorInputBackground"
         android:minHeight="@dimen/calc_field_min_height"
         android:paddingTop="4.0dip"
         android:paddingBottom="4.0dip">

@@ -1,17 +1,12 @@
 package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
-import android.content.Context
-import android.util.Log
-import androidx.core.content.SharedPreferencesCompat
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -131,7 +126,7 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
                     if (db.currencyDao().updateRate(letterCode, valuesPerUnit) < 1) {
                         val currencyItem = CurrencyItem(letterCode, valuesPerUnit)
-                        val ins = db.currencyDao().insert(currencyItem)
+                        db.currencyDao().insert(currencyItem)
                     }
                 }
 

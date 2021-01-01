@@ -3,7 +3,7 @@
 
     <!--LightTheme colors-->
     <color name="LightTheme_colorPrimary">#fafafa</color>
-    <color name="LightTheme_colorPrimaryDark">@color/LightTheme_inputBackground</color>
+    <color name="LightTheme_colorPrimaryDark">#C0C0C0</color>
     <color name="LightTheme_colorAccent">#3F51B5</color>
     <color name="LightTheme_colorAccentTransparent">#203F51B5</color>
     <color name="LightTheme_inputBackground">#dedede</color>

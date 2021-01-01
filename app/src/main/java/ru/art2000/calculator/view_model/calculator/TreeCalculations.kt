@@ -8,7 +8,8 @@ import java.text.NumberFormat
 @Suppress("unused")
 object TreeCalculations {
 
-    val binaryOperations : List<BinaryOperation<Double>> =
+    @Suppress("UNCHECKED_CAST")
+    private val binaryOperations : List<BinaryOperation<Double>> =
             (CalculationClass.operations.filterIsInstance(BinaryOperation::class.java) as List<BinaryOperation<Double>>)
                     .sortedByDescending { it.priority }
 
@@ -27,10 +28,10 @@ object TreeCalculations {
     private val String.isInBrackets: Boolean
         get() = startsWith("(") && endsWith(")")
 
-    val Char.isNumberPart: Boolean
+    private val Char.isNumberPart: Boolean
         get() = this in '0'..'9' || this == '.' || this == ','
 
-    fun String.isInBrackets(toLeftOf: Int, toRightOf: Int): Boolean {
+    private fun String.isInBrackets(toLeftOf: Int, toRightOf: Int): Boolean {
         if (toLeftOf < 0 || toRightOf > lastIndex) return false
 
         var currentCheckPosition = toLeftOf
@@ -74,8 +75,8 @@ object TreeCalculations {
             expression
 
         var operationFound: BinaryOperation<Double>? = null
-        var operationSign: String = ""
-        var index: Int = 0
+        var operationSign = ""
+        var index = 0
 
         for (operation in binaryOperations) {
             for (sign in operation.textRepresentations) {

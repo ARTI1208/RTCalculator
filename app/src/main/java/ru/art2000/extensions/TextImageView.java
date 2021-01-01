@@ -3,6 +3,7 @@ package ru.art2000.extensions;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageView;

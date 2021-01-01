@@ -9,6 +9,13 @@ import ru.art2000.calculator.R;
 
 public class PrefsHelper {
 
+    private final static String DEFAULT_THEME = "system";
+    private final static String DEFAULT_TAB = "calc_tab";
+    private final static String DEFAULT_UNIT_VIEW = "powerful";
+    private final static String DEFAULT_CONVERSION_CODE = "USD";
+    private final static double DEFAULT_CONVERSION_VALUE = 1;
+    private final static boolean DEFAULT_SHOULD_SAVE_CONVERSION_VALUE = false;
+
     private static SharedPreferences sSharedPreferences;
     private static int sAppTheme;
     private static int sDefaultTab;
@@ -47,7 +54,8 @@ public class PrefsHelper {
 
     @SuppressWarnings("SameParameterValue")
     private static double getDouble(final String key, final double defaultValue) {
-        return Double.longBitsToDouble(sSharedPreferences.getLong(key, Double.doubleToLongBits(defaultValue)));
+        return Double.longBitsToDouble(
+                sSharedPreferences.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
     public static String getConversionCode() {
@@ -60,14 +68,7 @@ public class PrefsHelper {
 
     public static void initialSetup(Context mContext) {
         sSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (sSharedPreferences.getBoolean("is_first_run", true))
-            sSharedPreferences
-                    .edit()
-                    .putString("app_theme", "light")
-                    .putString("unit_view", "simple")
-                    .putBoolean("is_first_run", false)
-                    .apply();
-        switch (sSharedPreferences.getString("app_theme", "light")) {
+        switch (sSharedPreferences.getString("app_theme", DEFAULT_THEME)) {
             default:
             case "light":
                 sAppTheme = R.style.RT_AppTheme_Light;
@@ -85,10 +86,12 @@ public class PrefsHelper {
                 sAppTheme = R.style.RT_AppTheme_Battery;
                 break;
         }
-        sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value", false);
-        sConversionCode = sSharedPreferences.getString("last_conversion_code", "USD");
-        sConversionValue = getDouble("last_conversion_double", 1);
-        switch (sSharedPreferences.getString("default_opened_tab", "calc_tab")) {
+        sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value",
+                DEFAULT_SHOULD_SAVE_CONVERSION_VALUE);
+        sConversionCode =
+                sSharedPreferences.getString("last_conversion_code", DEFAULT_CONVERSION_CODE);
+        sConversionValue = getDouble("last_conversion_double", DEFAULT_CONVERSION_VALUE);
+        switch (sSharedPreferences.getString("default_opened_tab", DEFAULT_TAB)) {
             default:
             case "calc_tab":
                 sDefaultTab = R.id.navigation_calc;
@@ -103,7 +106,7 @@ public class PrefsHelper {
                 sDefaultTab = R.id.navigation_settings;
                 break;
         }
-        sUnitViewType = sSharedPreferences.getString("unit_view", "powerful");
+        sUnitViewType = sSharedPreferences.getString("unit_view", DEFAULT_UNIT_VIEW);
     }
 
     public static String getUnitViewType() {
@@ -116,7 +119,8 @@ public class PrefsHelper {
     }
 
     public static void setDefaultTab(Context context, int pos) {
-        if (PrefsHelper.isSaveLastEnabled() && (pos != 3 || context.getResources().getBoolean(R.bool.show_settings_as_default_tab))) {
+        if (PrefsHelper.isSaveLastEnabled() && (pos != 3
+                || context.getResources().getBoolean(R.bool.show_settings_as_default_tab))) {
             String tab;
             switch (pos) {
                 case 0:

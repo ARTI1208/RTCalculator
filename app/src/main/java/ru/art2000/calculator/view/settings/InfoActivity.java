@@ -1,88 +1,83 @@
 package ru.art2000.calculator.view.settings;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.util.DisplayMetrics;
+import android.widget.ImageButton;
+import android.widget.Space;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import androidx.lifecycle.ViewModelProvider;
+
+import java.util.Objects;
 
 import ru.art2000.calculator.R;
-import ru.art2000.extensions.DayNightActivity;
-import ru.art2000.extensions.TextImageView;
-import ru.art2000.helpers.AndroidHelper;
-import ru.art2000.helpers.PrefsHelper;
+import ru.art2000.calculator.databinding.ActivityAppInfoBinding;
+import ru.art2000.calculator.databinding.AuthorLinkItemBinding;
+import ru.art2000.calculator.model.settings.AuthorLink;
+import ru.art2000.calculator.view_model.settings.InfoViewModel;
+import ru.art2000.extensions.AutoThemeActivity;
 
-public class InfoActivity extends DayNightActivity {
-
-    Context mContext;
+public class InfoActivity extends AutoThemeActivity {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        mContext = this;
-        setTheme(PrefsHelper.getAppTheme());
         super.onCreate(savedInstance);
-        setContentView(R.layout.activity_app_info);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        GradientDrawable changelogBackgroundDrawable = new GradientDrawable();
-        changelogBackgroundDrawable.setShape(GradientDrawable.RECTANGLE);
-        int changelogBackgroundColor =
-                AndroidHelper.getColorAttribute(mContext, R.attr.calc_input_bg);
-        changelogBackgroundDrawable.setColor(changelogBackgroundColor);
-        changelogBackgroundDrawable.setCornerRadius(AndroidHelper.dip2px(this, 8));
-        findViewById(R.id.chng_back).setBackground(changelogBackgroundDrawable);
-        TextView changelog = findViewById(R.id.changelog);
-        changelog.setText(getChangeLogText());
 
-        TextImageView devAvatar = findViewById(R.id.dev_avatar);
-        devAvatar.getImageView().setImageResource(R.drawable.dev_avatar);
-        TextView devName = devAvatar.getTextView();
-        devName.setText("ARTI1208");
-        devName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        GradientDrawable devBackground = new GradientDrawable();
-        devBackground.setStroke(AndroidHelper.dip2px(this, 1), changelogBackgroundColor);
-        devBackground.setCornerRadius(AndroidHelper.dip2px(this, 10));
-        devAvatar.setBackground(devBackground);
+        ActivityAppInfoBinding binding = ActivityAppInfoBinding.inflate(getLayoutInflater());
 
-        TextImageView githubButton = findViewById(R.id.github_button);
-        githubButton.getImageView().setImageResource(R.drawable.github);
-        githubButton.getTextView().setText("GitHub");
-        githubButton.setOnClickListener(view -> {
-            Intent githubIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ARTI1208"));
-            startActivity(githubIntent);
-        });
+        setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        InfoViewModel model = new ViewModelProvider(this).get(InfoViewModel.class);
+
+        String changelogText = model.getChangeLogText();
+        if (changelogText == null) changelogText = getString(R.string.changelog_load_failed);
+
+        binding.changelog.setText(changelogText);
+
+        int width;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            width = getWindowManager().getCurrentWindowMetrics().getBounds().width();
+        } else {
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            width = dm.widthPixels;
+        }
+
+        int imageSize = getResources().getDimensionPixelSize(R.dimen.author_info_link_image_size);
+
+        int linksCount = model.getAuthorLinks().size();
+        int gapSize = width / linksCount - imageSize;
+
+        for (int i = 0; i < linksCount; ++i) {
+            AuthorLink link = model.getAuthorLinks().get(i);
+
+            ImageButton linkButton = AuthorLinkItemBinding.inflate(getLayoutInflater()).getRoot();
+
+            linkButton.setImageResource(link.getImage());
+            linkButton.setOnClickListener(v -> {
+                String url = getString(link.getLink());
+                Intent githubIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(githubIntent);
+            });
+
+            binding.linksBlock.addView(linkButton, imageSize, imageSize);
+
+            if (i < linksCount - 1) {
+                Space space = new Space(this);
+                binding.linksBlock.addView(space, gapSize, 0);
+            }
+
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    String getChangeLogText() {
-        StringBuilder sb = new StringBuilder();
-        InputStream stream = getResources().openRawResource(R.raw.changelog);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            String mLine;
-            int i = 0;
-            while ((mLine = reader.readLine()) != null) {
-                if (i == 0)
-                    sb.append(mLine);
-                else
-                    sb.append("\n").append(mLine);
-                i++;
-            }
-        } catch (IOException e) {
-            Toast.makeText(getBaseContext(), "Error loading changelog", Toast.LENGTH_SHORT).show();
-        }
-        return sb.toString();
     }
 }

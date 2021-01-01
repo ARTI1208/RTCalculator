@@ -1,6 +1,8 @@
 package ru.art2000.extensions;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -47,32 +49,28 @@ public class DayNightActivity extends AppCompatActivity {
 
     @Override
     public void setTheme(int resId) {
+        int newMode;
         if (resId == R.style.RT_AppTheme_DayNight && isSetThemeNightModeChangeEnabled()) {
-            int newMode;
-
             if (nightModeCondition()) {
                 newMode = AppCompatDelegate.MODE_NIGHT_YES;
             } else {
                 newMode = AppCompatDelegate.MODE_NIGHT_NO;
             }
-
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onSetThemeNightModeChanged(newMode);
-                AppCompatDelegate.setDefaultNightMode(newMode);
-            }
         } else if (resId == R.style.RT_AppTheme_System) {
-            int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onSetThemeNightModeChanged(newMode);
-                AppCompatDelegate.setDefaultNightMode(newMode);
-            }
+            newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
         } else if (resId == R.style.RT_AppTheme_Battery) {
-            int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onSetThemeNightModeChanged(newMode);
-                AppCompatDelegate.setDefaultNightMode(newMode);
-            }
+            newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
+        } else if (resId == R.style.RT_AppTheme_Dark) {
+            newMode = AppCompatDelegate.MODE_NIGHT_YES;
+        } else {
+            newMode = AppCompatDelegate.MODE_NIGHT_NO;
         }
+
+        if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+            onSetThemeNightModeChanged(newMode);
+            AppCompatDelegate.setDefaultNightMode(newMode);
+        }
+
         super.setTheme(resId);
     }
 
@@ -97,4 +95,12 @@ public class DayNightActivity extends AppCompatActivity {
         return hour <= 7 || hour >= 22;
     }
 
+    public boolean isDarkThemeApplied() {
+        int nightModeFlags =
+                getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        Log.e("nightMode", String.valueOf(nightModeFlags));
+
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
 }

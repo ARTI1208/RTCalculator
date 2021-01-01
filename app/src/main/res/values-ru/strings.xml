@@ -144,4 +144,5 @@
     <string name="pressure_pa">Паскаль</string>
     <string name="temperature_celsius">˚C</string>
     <string name="temperature_fahrenheit">˚F</string>
+    <string name="changelog_load_failed">Ошибка загрузки списка изменений</string>
 </resources>
