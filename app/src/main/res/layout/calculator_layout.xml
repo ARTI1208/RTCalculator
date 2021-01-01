@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:windowBackground"
@@ -13,9 +14,10 @@
         android:paddingTop="4.0dip"
         android:paddingBottom="4.0dip">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:paddingStart="6dp"
             android:paddingEnd="6dp">
 
@@ -23,21 +25,30 @@
                 android:id="@+id/degRadTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_gravity="start|top"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text="DEG" />
+
+            <View
+                android:id="@+id/info_divider"
+                android:layout_width="@dimen/calculator_info_divider_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="#888888"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/memory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="false"
                 android:layout_gravity="start|bottom"
                 android:textSize="18sp"
-                android:visibility="gone" />
-        </RelativeLayout>
+                android:visibility="gone"
+                tools:text="M10"
+                tools:visibility="visible" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/io_box"
@@ -63,9 +74,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:gravity="end"
+                    android:hint="@string/calculator_input_hint"
                     android:overScrollMode="always"
                     android:scrollHorizontally="true"
-                    android:hint="@string/calculator_input_hint"
                     android:textSize="@dimen/calc_text_size" />
             </HorizontalScrollView>
 
@@ -86,8 +97,7 @@
                     android:gravity="end|bottom"
                     android:textColor="?colorAccent"
                     android:textSize="@dimen/calc_text_size"
-                    android:visibility="invisible"
-                    />
+                    android:visibility="invisible" />
             </HorizontalScrollView>
         </LinearLayout>
     </FrameLayout>

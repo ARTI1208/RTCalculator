@@ -20,6 +20,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.Objects;
+
 import kotlin.Pair;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding;
@@ -27,7 +29,6 @@ import ru.art2000.calculator.view_model.calculator.CalculatorModel;
 import ru.art2000.extensions.CalculatorEditText;
 import ru.art2000.extensions.NavigationFragment;
 import ru.art2000.extensions.SimpleTextWatcher;
-import ru.art2000.extensions.ViewsKt;
 import ru.art2000.helpers.GeneralHelper;
 
 
@@ -65,7 +66,8 @@ public class CalculatorFragment extends NavigationFragment {
 
             model.getLiveExpression().observe(getViewLifecycleOwner(), (expression) -> {
 
-                if (expression.equals(getInputTv().getText().toString())) return;
+                if (expression.equals(Objects.requireNonNull(getInputTv().getText()).toString()))
+                    return;
 
                 getInputTv().setText(expression);
             });
@@ -89,8 +91,12 @@ public class CalculatorFragment extends NavigationFragment {
 
                 if (Math.abs(memoryValue) < 1e-5) {
                     binding.memory.setVisibility(View.INVISIBLE);
+                    binding.infoDivider.setVisibility(View.INVISIBLE);
                     return;
                 }
+
+                binding.infoDivider.setVisibility(View.VISIBLE);
+
                 String newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue);
                 binding.memory.setText(newMemoryText);
                 binding.memory.setVisibility(View.VISIBLE);
