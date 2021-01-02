@@ -161,5 +161,6 @@
     <string name="link_url_gitlab" translatable="false">https://gitlab.com/ARTI1208</string>
     <string name="link_url_kde" translatable="false">https://invent.kde.org/artpinch</string>
     <string name="changelog_load_failed">Error loading changelog</string>
+    <string name="preloaded_currencies_date" translatable="false">01.01.2021</string>
 
 </resources>

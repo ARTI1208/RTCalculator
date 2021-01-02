@@ -20,7 +20,6 @@ import ru.art2000.calculator.view.settings.SettingsFragment;
 import ru.art2000.calculator.view.unit.UnitConverterFragment;
 import ru.art2000.extensions.activities.AutoThemeActivity;
 import ru.art2000.helpers.AndroidHelper;
-import ru.art2000.helpers.CurrencyValuesHelper;
 import ru.art2000.helpers.PrefsHelper;
 
 public class MainActivity extends AutoThemeActivity {
@@ -42,7 +41,6 @@ public class MainActivity extends AutoThemeActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         PrefsHelper.initialSetup(this);
-        new Thread(() -> CurrencyValuesHelper.checkCurrencyDBExists(this)).start();
         super.onCreate(savedInstanceState);
 
         viewBinding = ActivityMainBinding.inflate(getLayoutInflater());

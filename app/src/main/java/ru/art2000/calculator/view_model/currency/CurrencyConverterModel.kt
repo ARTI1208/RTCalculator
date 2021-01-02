@@ -1,6 +1,7 @@
 package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
+import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -13,8 +14,10 @@ import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import ru.art2000.calculator.R
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.model.currency.LoadingState
+import ru.art2000.extensions.arch.context
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.regex.Pattern
@@ -31,7 +34,8 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     private val updateDateKey = "currency_update_date"
 
-    private val mUpdateDate = MutableLiveData<String?>(preferences.getString(updateDateKey, "Unknown"))
+    private val mUpdateDate by lazy { MutableLiveData<String?>(preferences.getString(
+            updateDateKey, context.getString(R.string.preloaded_currencies_date))) }
 
     val updateDate: LiveData<String?> = mUpdateDate
 
@@ -42,6 +46,8 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
     override var lastInputItemPosition: Int = -1
 
     override var lastInputItemValue: Double = 1.0
+
+    val titleUpdatedString: String by lazy { context.getString(R.string.updated) }
 
     init {
         mLoadingState.observeForever {

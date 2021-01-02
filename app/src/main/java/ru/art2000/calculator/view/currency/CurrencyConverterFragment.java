@@ -27,8 +27,6 @@ import ru.art2000.helpers.AndroidHelper;
 
 public class CurrencyConverterFragment extends NavigationFragment {
 
-    private String titleUpdatedString;
-
     private CurrencyConverterModel model;
     private CurrencyLayoutBinding binding;
     private CurrencyListAdapter adapter;
@@ -40,8 +38,6 @@ public class CurrencyConverterFragment extends NavigationFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         if (binding == null) {
-
-            titleUpdatedString = requireContext().getString(R.string.updated);
 
             model = new ViewModelProvider(this,
                     new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
@@ -151,7 +147,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
     }
 
     private void setCurrenciesUpdateDate(String date) {
-        binding.toolbar.setTitle(titleUpdatedString + " " + date);
+        binding.toolbar.setTitle(model.getTitleUpdatedString() + " " + date);
     }
 
     private void setRefreshStatus(boolean status) {

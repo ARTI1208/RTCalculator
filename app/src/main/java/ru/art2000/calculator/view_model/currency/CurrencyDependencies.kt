@@ -22,13 +22,13 @@ object CurrencyDependencies {
     private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext,
                     CurrencyRoomDB::class.java, "currency.db")
+                    .createFromAsset("currency.db")
                     .addMigrations(RoomMigration())
                     .build()
 
     private class RoomMigration : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
-            // Schema is not changed, but we show Room that we switched from android low-level
-            // database APIs to Room
+            database.execSQL("drop table info")
         }
     }
 
