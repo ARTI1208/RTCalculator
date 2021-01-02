@@ -154,7 +154,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         binding.buttonMinus.setOnClickListener { model.onMinusClick() }
 
-        binding.buttonClear.setOnClickListener { model.clear() }
+        binding.buttonClear.setOnClickListener { model.clearInput() }
         binding.buttonDel.setOnClickListener { model.deleteLastCharacter() }
 
         binding.buttonDot.setOnClickListener { model.handleFloatingPointSymbol() }

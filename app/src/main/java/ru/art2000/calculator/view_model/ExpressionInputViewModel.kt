@@ -36,7 +36,7 @@ interface ExpressionInputViewModel {
             liveInputSelection.value = value
         }
 
-    fun clear() {
+    fun clearInput() {
         setExpression("")
     }
 
@@ -48,7 +48,7 @@ interface ExpressionInputViewModel {
         }
 
         if (expression.length == 1 && inputSelection.second > 0) {
-            clear()
+            clearInput()
             return
         }
 

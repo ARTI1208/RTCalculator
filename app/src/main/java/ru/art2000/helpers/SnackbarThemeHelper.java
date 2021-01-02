@@ -68,7 +68,7 @@ public class SnackbarThemeHelper {
                 AndroidHelper.getColorAttribute(context, R.attr.strokeColor));
         backgroundDrawable.setCornerSize(cornerRadius);
         backgroundDrawable.setFillColor(ColorStateList.valueOf(
-                AndroidHelper.getColorAttribute(context, R.attr.floatingBottomBarBackground)));
+                AndroidHelper.getColorAttribute(context, R.attr.floatingViewBackground)));
         snackbarLayout.setBackground(backgroundDrawable);
 
         //MessageView

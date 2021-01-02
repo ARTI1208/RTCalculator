@@ -2,7 +2,6 @@ package ru.art2000.extensions.activities;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -19,32 +18,8 @@ public class DayNightActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        int theme = PrefsHelper.getAppTheme();
-        if (theme == R.style.RT_AppTheme_DayNight && isResumeNightModeChangeEnabled()) {
-            int newMode;
-
-            if (nightModeCondition()) {
-                newMode = AppCompatDelegate.MODE_NIGHT_YES;
-            } else {
-                newMode = AppCompatDelegate.MODE_NIGHT_NO;
-            }
-
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onResumeNightModeChanged(newMode);
-                AppCompatDelegate.setDefaultNightMode(newMode);
-            }
-        } else if (theme == R.style.RT_AppTheme_System) {
-            int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onResumeNightModeChanged(newMode);
-                AppCompatDelegate.setDefaultNightMode(newMode);
-            }
-        } else if (theme == R.style.RT_AppTheme_Battery) {
-            int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
-            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-                onResumeNightModeChanged(newMode);
-                AppCompatDelegate.setDefaultNightMode(newMode);
-            }
+        if (isResumeNightModeChangeEnabled()) {
+            requestThemeCheck();
         }
     }
 
@@ -57,11 +32,17 @@ public class DayNightActivity extends AppCompatActivity {
             } else {
                 newMode = AppCompatDelegate.MODE_NIGHT_NO;
             }
+            if (PrefsHelper.isAppAutoDarkThemeBlack())
+                resId = R.style.RT_AppTheme_DayNightBlack;
         } else if (resId == R.style.RT_AppTheme_System) {
             newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            if (PrefsHelper.isAppAutoDarkThemeBlack())
+                resId = R.style.RT_AppTheme_SystemBlack;
         } else if (resId == R.style.RT_AppTheme_Battery) {
             newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
-        } else if (resId == R.style.RT_AppTheme_Dark) {
+            if (PrefsHelper.isAppAutoDarkThemeBlack())
+                resId = R.style.RT_AppTheme_BatteryBlack;
+        } else if (resId == R.style.RT_AppTheme_Dark || resId == R.style.RT_AppTheme_Black) {
             newMode = AppCompatDelegate.MODE_NIGHT_YES;
         } else {
             newMode = AppCompatDelegate.MODE_NIGHT_NO;
@@ -93,17 +74,57 @@ public class DayNightActivity extends AppCompatActivity {
         return true;
     }
 
-    protected boolean nightModeCondition() {
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        return hour <= 7 || hour >= 22;
+    public boolean nightModeCondition() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        int seconds = (hour * 60 + minute) * 60 + second;
+        int startSeconds = PrefsHelper.getDarkThemeActivationTime();
+        int endSeconds = PrefsHelper.getDarkThemeDeactivationTime();
+
+        if (startSeconds < endSeconds) {
+            return seconds >= startSeconds && seconds < endSeconds;
+        } else {
+            return seconds >= startSeconds || seconds < endSeconds;
+        }
     }
 
     public boolean isDarkThemeApplied() {
         int nightModeFlags =
                 getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-        Log.e("nightMode", String.valueOf(nightModeFlags));
-
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    public void requestThemeCheck() {
+        int theme = PrefsHelper.getAppTheme();
+        if (theme == R.style.RT_AppTheme_DayNight) {
+            int newMode;
+
+            if (nightModeCondition()) {
+                newMode = AppCompatDelegate.MODE_NIGHT_YES;
+            } else {
+                newMode = AppCompatDelegate.MODE_NIGHT_NO;
+            }
+
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onResumeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        } else if (theme == R.style.RT_AppTheme_System) {
+            int newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onResumeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        } else if (theme == R.style.RT_AppTheme_Battery) {
+            int newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
+            if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                onResumeNightModeChanged(newMode);
+                AppCompatDelegate.setDefaultNightMode(newMode);
+            }
+        }
     }
 }

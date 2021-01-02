@@ -22,6 +22,26 @@
             android:title="@string/app_theme"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="app_auto_dark_theme"
+            android:title="@string/app_auto_dark_theme"
+            android:summaryOff="@string/theme_dark"
+            android:summaryOn="@string/theme_black"
+            app:iconSpaceReserved="false" />
+
+        <ru.art2000.extensions.preferences.TimePickerPreference
+            android:key="app_auto_dark_theme_time_start"
+            android:title="@string/theme_daynight_start"
+            android:defaultValue="23:00"
+            app:iconSpaceReserved="false" />
+
+        <ru.art2000.extensions.preferences.TimePickerPreference
+            android:key="app_auto_dark_theme_time_end"
+            android:title="@string/theme_daynight_end"
+            android:defaultValue="07:00"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:key="currency"

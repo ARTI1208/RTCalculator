@@ -84,7 +84,7 @@ public class MainActivity extends AutoThemeActivity {
         });
 
         viewBinding.navigation.setOnNavigationItemSelectedListener(item -> {
-            PrefsHelper.setDefaultTab(this, item.getOrder());
+            PrefsHelper.setDefaultTab(item.getOrder());
 
             if (item.getItemId() == R.id.navigation_unit) {
                 changeStatusBarColor(false);

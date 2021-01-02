@@ -3,6 +3,8 @@
     <attr name="calculatorInputBackground">color|reference</attr>
     <attr name="buttonTextColor">color|reference</attr>
     <attr name="colorAccentTransparent">color|reference</attr>
-    <attr name="floatingBottomBarBackground">color|reference</attr>
+    <attr name="floatingViewBackground">color|reference</attr>
     <attr name="authorAvatar">drawable|reference</attr>
+    <attr name="changelogBackground">drawable|reference</attr>
+    <attr name="authorAvatarBackground">drawable|reference</attr>
 </resources>

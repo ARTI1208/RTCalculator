@@ -140,11 +140,15 @@
     <string name="tab_default">Default tab</string>
     <string name="zero_div">Divide by zero</string>
     <string name="app_theme">Theme</string>
+    <string name="app_auto_dark_theme">Auto dark theme</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="theme_black">Black</string>
     <string name="theme_daynight">Time-based Day/Night</string>
     <string name="theme_daynight_system">Follow System</string>
     <string name="theme_daynight_battery">Follow Battery Saver</string>
+    <string name="theme_daynight_start">Enable dark theme at</string>
+    <string name="theme_daynight_end">Disable dark theme at</string>
     <string name="info">Info</string>
     <string name="changelog">Changelog</string>
     <string name="dev">Dev</string>

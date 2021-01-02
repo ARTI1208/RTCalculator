@@ -19,7 +19,7 @@
     <color name="DarkTheme_inputBackground">#000000</color>
     <color name="DarkTheme_buttonTextColor">@color/DarkTheme_colorAccent</color>
     <color name="DarkTheme_floatingBottomBarBackground">#1e1e1e</color>
-    <color name="DarkTheme_strokeColor">#000000</color>
+    <color name="DarkTheme_strokeColor">#8a8a8a</color>
 
     <!--BlackTheme colors-->
     <color name="BlackTheme_colorPrimary">#000000</color>
@@ -28,6 +28,8 @@
     <color name="BlackTheme_colorAccentTransparent">@color/DarkTheme_colorAccentTransparent</color>
     <color name="BlackTheme_inputBackground">@color/BlackTheme_colorPrimary</color>
     <color name="BlackTheme_buttonTextColor">@color/DarkTheme_colorAccent</color>
+    <color name="BlackTheme_floatingBottomBarBackground">#1e1e1e</color>
+    <color name="BlackTheme_strokeColor">#a7a7a7</color>
 
     <!--Other colors-->
     <color name="white">#ffffffff</color>

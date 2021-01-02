@@ -3,7 +3,7 @@
 
     <stroke
         android:width="@dimen/author_avatar_background_stroke_width"
-        android:color="?attr/calculatorInputBackground" />
+        android:color="@color/BlackTheme_strokeColor" />
 
     <corners
         android:radius="@dimen/author_avatar_background_corner_radius" />

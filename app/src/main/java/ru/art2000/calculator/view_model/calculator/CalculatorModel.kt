@@ -179,14 +179,14 @@ class CalculatorModel(
         }
     }
 
-    override fun clear() {
-        super<ExpressionInputViewModel>.clear()
+    override fun clearInput() {
+        super.clearInput()
         result = null
     }
 
     override fun deleteLastCharacter() {
         if (result != null) {
-            clear()
+            clearInput()
             return
         }
 

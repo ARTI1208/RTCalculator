@@ -7,4 +7,10 @@
 
     <style name="RT.AppTheme.System" parent="RT.AppTheme.Dark" />
 
+    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Black" />
+
+    <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Black" />
+
+    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Black" />
+
 </resources>

@@ -8,10 +8,9 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.preference.PreferenceFragmentCompat;
 
 @SuppressWarnings({"WeakerAccess"})
-public abstract class PreferenceNavigationFragment extends PreferenceFragmentCompat implements INavigationFragment {
+public abstract class PreferenceNavigationFragment extends ExtendedPreferenceFragment implements INavigationFragment {
 
     private IReplaceableFragment previousReplaceable;
     private boolean callOnShownOnViewCreated;

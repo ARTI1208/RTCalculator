@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
+import kotlin.Pair;
 import ru.art2000.calculator.R;
+import ru.art2000.extensions.preferences.TimePickerPreference;
 
 public class PrefsHelper {
 
@@ -13,16 +15,22 @@ public class PrefsHelper {
     private final static String DEFAULT_TAB = "calc_tab";
     private final static String DEFAULT_UNIT_VIEW = "powerful";
     private final static String DEFAULT_CONVERSION_CODE = "USD";
+    private final static String DEFAULT_AUTO_DARK_ACTIVATION_TIME = "23:00";
+    private final static String DEFAULT_AUTO_DARK_DEACTIVATION_TIME = "07:00";
+    private final static boolean DEFAULT_DARK_THEME_IS_BLACK = true;
     private final static double DEFAULT_CONVERSION_VALUE = 1;
     private final static boolean DEFAULT_SHOULD_SAVE_CONVERSION_VALUE = false;
 
     private static SharedPreferences sSharedPreferences;
     private static int sAppTheme;
+    private static boolean sAppAutoDarkThemeIsBlack;
     private static int sDefaultTab;
     private static boolean sShouldSaveCurrencyConversion = false;
     private static String sUnitViewType;
     private static String sConversionCode;
     private static double sConversionValue;
+    private static int autoDarkThemeActivationTime;
+    private static int autoDarkThemeDeactivationTime;
 
     public static boolean isShouldSaveCurrencyConversion() {
         return sShouldSaveCurrencyConversion;
@@ -76,6 +84,9 @@ public class PrefsHelper {
             case "dark":
                 sAppTheme = R.style.RT_AppTheme_Dark;
                 break;
+            case "black":
+                sAppTheme = R.style.RT_AppTheme_Black;
+                break;
             case "day_night":
                 sAppTheme = R.style.RT_AppTheme_DayNight;
                 break;
@@ -86,6 +97,8 @@ public class PrefsHelper {
                 sAppTheme = R.style.RT_AppTheme_Battery;
                 break;
         }
+        sAppAutoDarkThemeIsBlack =
+                sSharedPreferences.getBoolean("app_auto_dark_theme", DEFAULT_DARK_THEME_IS_BLACK);
         sShouldSaveCurrencyConversion = sSharedPreferences.getBoolean("save_currency_value",
                 DEFAULT_SHOULD_SAVE_CONVERSION_VALUE);
         sConversionCode =
@@ -107,6 +120,19 @@ public class PrefsHelper {
                 break;
         }
         sUnitViewType = sSharedPreferences.getString("unit_view", DEFAULT_UNIT_VIEW);
+
+        String activationTimeString = sSharedPreferences.getString(
+                "app_auto_dark_theme_time_start", DEFAULT_AUTO_DARK_ACTIVATION_TIME);
+        String deactivationTimeString = sSharedPreferences.getString(
+                "app_auto_dark_theme_time_end", DEFAULT_AUTO_DARK_DEACTIVATION_TIME);
+
+        autoDarkThemeActivationTime = timeStringToSeconds(activationTimeString);
+        autoDarkThemeDeactivationTime = timeStringToSeconds(deactivationTimeString);
+    }
+
+    private static int timeStringToSeconds(String time) {
+        Pair<Integer, Integer> timePair = TimePickerPreference.parseStringTime(time);
+        return (timePair.getFirst() * 60 + timePair.getSecond()) * 60;
     }
 
     public static String getUnitViewType() {
@@ -118,9 +144,8 @@ public class PrefsHelper {
         sSharedPreferences.edit().putString("unit_view", view).apply();
     }
 
-    public static void setDefaultTab(Context context, int pos) {
-        if (PrefsHelper.isSaveLastEnabled() && (pos != 3
-                || context.getResources().getBoolean(R.bool.show_settings_as_default_tab))) {
+    public static void setDefaultTab(int pos) {
+        if (PrefsHelper.isSaveLastEnabled() && pos != 3) {
             String tab;
             switch (pos) {
                 case 0:
@@ -152,6 +177,30 @@ public class PrefsHelper {
 
     public static void setAppTheme(String theme) {
         sSharedPreferences.edit().putString("app_theme", theme).apply();
+    }
+
+    public static boolean isAppAutoDarkThemeBlack() {
+        return sAppAutoDarkThemeIsBlack;
+    }
+
+    public static void setAppAutoDarkThemeIsBlack(boolean isBlack) {
+        sSharedPreferences.edit().putBoolean("app_auto_dark_theme", isBlack).apply();
+    }
+
+    public static int getDarkThemeActivationTime() {
+        return autoDarkThemeActivationTime;
+    }
+
+    public static int getDarkThemeDeactivationTime() {
+        return autoDarkThemeDeactivationTime;
+    }
+
+    public static void setDarkThemeActivationTime(String time) {
+        autoDarkThemeActivationTime = timeStringToSeconds(time);
+    }
+
+    public static void setDarkThemeDeactivationTime(String time) {
+        autoDarkThemeDeactivationTime = timeStringToSeconds(time);
     }
 
     public static int getZeroDivResult() {

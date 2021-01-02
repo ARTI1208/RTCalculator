@@ -10,8 +10,10 @@
     <string name="tab_default">Вкладка по умолчанию</string>
     <string name="zero_div">Деление на ноль</string>
     <string name="app_theme">Тема</string>
+    <string name="app_auto_dark_theme">Автоматическая тёмная тема</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Тёмная</string>
+    <string name="theme_black">Чёрная</string>
     <string name="theme_daynight">День/Ночь по времени</string>
     <string name="theme_daynight_system">Как в системе</string>
     <string name="theme_daynight_battery">По сбережению батареи</string>
@@ -145,4 +147,6 @@
     <string name="temperature_celsius">˚C</string>
     <string name="temperature_fahrenheit">˚F</string>
     <string name="changelog_load_failed">Ошибка загрузки списка изменений</string>
+    <string name="theme_daynight_start">Активация тёмной темы в</string>
+    <string name="theme_daynight_end">Деактивация тёмной темы в</string>
 </resources>

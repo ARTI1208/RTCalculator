@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/author_avatar_padding"
-            android:background="@drawable/author_avatar_background"
+            android:background="?authorAvatarBackground"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/author_avatar_padding">

@@ -162,7 +162,7 @@ class CalculatorButtonsPagerAdapter(
 
     private fun onClearButtonClick(v: View) {
         if (v.id == R.id.buttonClear) {
-            model.clear()
+            model.clearInput()
         } else if (v.id == R.id.buttonDel) {
             model.deleteLastCharacter()
         }

@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,7 +61,9 @@ public class CurrencyConverterFragment extends NavigationFragment {
                     ViewsKt.createTextEmptyView(context, R.string.empty_text_no_currencies_added));
 
             int colorAccent = AndroidHelper.getColorAttribute(requireContext(), R.attr.colorAccent);
+            int circleBackground = AndroidHelper.getColorAttribute(requireContext(), R.attr.floatingViewBackground);
 
+            binding.refresher.setProgressBackgroundColorSchemeColor(circleBackground);
             binding.refresher.setColorSchemeColors(colorAccent);
             binding.refresher.setProgressViewEndTarget(true,
                     binding.refresher.getProgressViewEndOffset());

@@ -21,12 +21,14 @@
         <item name="buttonBarNeutralButtonStyle">@style/RT.Widget.ButtonBar.TextButton.Neutral</item>
         <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
         <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
-        <item name="floatingBottomBarBackground">@color/LightTheme_floatingBottomBarBackground</item>
+        <item name="floatingViewBackground">@color/LightTheme_floatingBottomBarBackground</item>
         <item name="strokeColor">@color/LightTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
         <item name="authorAvatar">@drawable/dev_avatar_darker</item>
+        <item name="changelogBackground">@drawable/changelog_background_light</item>
+        <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
     </style>
 
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light" />
@@ -52,15 +54,36 @@
         <item name="buttonBarNeutralButtonStyle">@style/RT.Widget.ButtonBar.TextButton.Neutral</item>
         <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
         <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
-        <item name="floatingBottomBarBackground">@color/DarkTheme_floatingBottomBarBackground</item>
+        <item name="floatingViewBackground">@color/DarkTheme_floatingBottomBarBackground</item>
         <item name="strokeColor">@color/DarkTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
         <item name="authorAvatar">@drawable/dev_avatar_lighter</item>
+        <item name="changelogBackground">@drawable/changelog_background_dark</item>
+        <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark" />
+
+    <style name="Base.RT.v18.AppTheme.Black" parent="Base.RT.v18.AppTheme.Dark">
+        <item name="background">@color/BlackTheme_colorPrimary</item>
+        <item name="android:windowBackground">@color/BlackTheme_colorPrimary</item>
+        <item name="colorPrimary">@color/BlackTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/BlackTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/BlackTheme_colorAccent</item>
+        <item name="colorAccentTransparent">@color/BlackTheme_colorAccentTransparent</item>
+        <item name="calculatorInputBackground">@color/BlackTheme_inputBackground</item>
+        <item name="buttonTextColor">@color/BlackTheme_buttonTextColor</item>
+        <item name="floatingViewBackground">@color/BlackTheme_floatingBottomBarBackground</item>
+        <item name="strokeColor">@color/BlackTheme_strokeColor</item>
+        <item name="changelogBackground">@drawable/changelog_background_black</item>
+        <item name="authorAvatarBackground">@drawable/author_avatar_background_black</item>
+        <item name="alertDialogTheme">@style/RT.Dialog.Black</item>
+        <item name="colorSurface">@color/LightTheme_colorPrimary</item>
+    </style>
+
+    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v18.AppTheme.Black" />
 
     <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">
         <item name="android:textColor">@color/tab_icon_text_color_selector</item>
@@ -81,9 +104,11 @@
         <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
     </style>
 
-    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Light" />
+    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Dark" />
 
     <style name="RT.AppTheme.Dark" parent="Base.RT.AppTheme.Dark" />
+
+    <style name="RT.AppTheme.Black" parent="Base.RT.AppTheme.Black" />
 
     <style name="RT.AppTheme.DayNight" parent="RT.AppTheme.Light" />
 
@@ -91,7 +116,13 @@
 
     <style name="RT.AppTheme.Light" parent="Base.RT.AppTheme.Light" />
 
-    <style name="RT.AppTheme.System" parent="RT.AppTheme.Light" />
+    <style name="RT.AppTheme.System" parent="RT.AppTheme.Dark" />
+
+    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Black" />
+
+    <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Light" />
+
+    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Black" />
 
     <style name="RT.PreferenceTheme" parent="PreferenceThemeOverlay.v14" />
 
@@ -172,8 +203,12 @@
 
     <style name="RT.View.Changelog" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">?colorOnSurface</item>
-        <item name="android:background">@drawable/changelog_background</item>
+        <item name="android:background">?changelogBackground</item>
         <item name="android:padding">@dimen/changelog_padding</item>
+    </style>
+
+    <style name="RT.Dialog.Black" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="colorSecondary">@color/BlackTheme_colorAccent</item>
     </style>
 
 </resources>
