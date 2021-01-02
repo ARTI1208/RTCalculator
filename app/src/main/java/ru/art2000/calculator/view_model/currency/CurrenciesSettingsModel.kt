@@ -93,7 +93,6 @@ class CurrenciesSettingsModel(application: Application)
             }
 
             viewModelScope.launch(Dispatchers.Main) {
-                Log.e("onFilter", newList.joinToString { it.code })
                 displayedHiddenItems.setAll(newList)
             }
         }

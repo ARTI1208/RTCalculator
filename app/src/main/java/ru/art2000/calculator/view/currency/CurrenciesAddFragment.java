@@ -3,6 +3,7 @@ package ru.art2000.calculator.view.currency;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,10 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
             });
 
             AddCurrenciesAdapter adapter = new AddCurrenciesAdapter();
-            viewBinding.modifyCurrenciesList.setAdapter(adapter);
+
+            // TODO investigate bug with disappear
+            viewBinding.modifyCurrenciesList.setAdapter(adapter, false);
+
         }
 
         return viewBinding.getRoot();
@@ -91,6 +95,17 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
             return R.string.empty_text_no_currencies_found;
         } else {
             return R.string.empty_text_all_currencies_added;
+        }
+    }
+
+    private void onListUpdate(boolean isEmpty) {
+        if (isEmpty) {
+            viewBinding.emptyView.setText(getEmptyTextRes());
+            viewBinding.emptyView.setVisibility(View.VISIBLE);
+            viewBinding.modifyCurrenciesList.setVisibility(View.GONE);
+        } else {
+            viewBinding.emptyView.setVisibility(View.GONE);
+            viewBinding.modifyCurrenciesList.setVisibility(View.VISIBLE);
         }
     }
 
@@ -183,6 +198,7 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
         }
 
         private void dispatchListUpdate(List<? extends CurrencyItem> oldData, List<? extends CurrencyItem> newData) {
+            onListUpdate(newData.isEmpty());
             DiffUtil.DiffResult result = CollectionsKt.calculateDiff(oldData, newData);
             result.dispatchUpdatesTo(this);
         }

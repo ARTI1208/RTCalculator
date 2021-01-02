@@ -2,11 +2,13 @@ package ru.art2000.extensions.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.util.Consumer
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.R
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -32,8 +34,7 @@ class RecyclerWithEmptyView @JvmOverloads constructor(
         }
 
         override fun getItemCount(): Int {
-            return if ((actualAdapter == null || actualAdapter?.itemCount == 0)
-                    && emptyViewGenerator != null) 1 else 0
+            return if (emptyViewGenerator != null && actualAdapter?.itemCount in listOf(0, null)) 1 else 0
         }
 
         override fun onBindViewHolder(holder: EmptyViewHolder, position: Int) {
@@ -45,23 +46,31 @@ class RecyclerWithEmptyView @JvmOverloads constructor(
     var actualAdapter: Adapter<*>? = null
 
     override fun setAdapter(adapter: Adapter<*>?) {
+        setAdapter(adapter, true)
+    }
+
+    fun setAdapter(adapter: Adapter<*>?, useEmptyView: Boolean) {
         actualAdapter = adapter
 
-        adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                emptyAdapter.notifyDataSetChanged()
-            }
+        if (useEmptyView) {
+            adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onChanged() {
+                    emptyAdapter.notifyDataSetChanged()
+                }
 
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                emptyAdapter.notifyDataSetChanged()
-            }
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    emptyAdapter.notifyDataSetChanged()
+                }
 
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                emptyAdapter.notifyDataSetChanged()
-            }
-        })
+                override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                    emptyAdapter.notifyDataSetChanged()
+                }
+            })
 
-        super.setAdapter(ConcatAdapter(emptyAdapter, adapter))
+            super.setAdapter(ConcatAdapter(adapter, emptyAdapter))
+        } else {
+            super.setAdapter(adapter)
+        }
     }
 
     var emptyViewHolderBinder: Consumer<View?>? = null

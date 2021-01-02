@@ -102,8 +102,6 @@ class ArrayLiveList<E> : LiveList<E> {
                     map[i] = get(i)
                 }
 
-                Log.d("LiveList", "Replaced " + map.entries.joinToString { "(${it.key}=${it.value})" })
-
                 forEachObserver {
                     it.onItemsReplaced(prev, map)
                 }
@@ -114,13 +112,9 @@ class ArrayLiveList<E> : LiveList<E> {
                 forEachObserver {
                     it.onItemsReplaced(prev, mapOf(fromPosition to prev[toPosition]))
                 }
-
-                Log.d("Moveee", "Yeah, Guy")
-//                TODO("Not yet implemented")
             }
 
             override fun onInserted(position: Int, count: Int) {
-                Log.d("LiveList", "Inserted " + subList(position, position + count).joinToString { "(${it}" })
                 forEachObserver {
                     it.onItemsInserted(prev, subList(position, position + count), position)
                 }
@@ -131,7 +125,6 @@ class ArrayLiveList<E> : LiveList<E> {
                 for (i in position until position + count) {
                     list.add(i)
                 }
-                Log.d("LiveList", "Removed " + list.joinToString { "(${it}" })
                 forEachObserver {
                     it.onItemsRemoved(prev, list)
                 }
