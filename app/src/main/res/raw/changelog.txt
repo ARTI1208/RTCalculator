@@ -1,3 +1,7 @@
+v1.1.1
+ - Fixed crash in currency converter caused by proguard rules
+ - Fixed crash in currency converter caused by new versions of OkHttp
+
 v1.1.0
  - Updated preloaded currencies database
  - Get currencies by api calls instead of html parsing
