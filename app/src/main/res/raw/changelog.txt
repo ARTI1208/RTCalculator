@@ -1,2 +1,6 @@
+v1.1.0
+ - Updated preloaded currencies database
+ - Get currencies by api calls instead of html parsing
+
 v1.0
  - Initial Release

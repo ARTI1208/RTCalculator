@@ -8,8 +8,14 @@ android {
         applicationId "ru.art2000.calculator"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+
+        def major = 1
+        def minor = 1
+        def patch = 0
+
+        versionName "$major.$minor.$patch"
+        
         multiDexEnabled true
         buildConfigField "String", "BUILD_DATE", '"' + getBuildDate() +'"'
 
