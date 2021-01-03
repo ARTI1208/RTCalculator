@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:tint="?colorAccent"
-        app:srcCompat="@drawable/ic_drag_handle" />
+        app:srcCompat="@drawable/ic_drag_handle"
+        app:tint="?colorAccent" />
 
 </RelativeLayout>
