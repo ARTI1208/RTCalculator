@@ -1,7 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
-import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -9,18 +10,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
+import okhttp3.OkHttpClient
+import org.simpleframework.xml.convert.AnnotationStrategy
+import org.simpleframework.xml.core.Persister
+import retrofit2.Retrofit
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.art2000.calculator.R
-import ru.art2000.calculator.model.currency.CurrencyItem
+import ru.art2000.calculator.model.currency.CurrencyRate
 import ru.art2000.calculator.model.currency.LoadingState
+import ru.art2000.calculator.model.currency.Valute
 import ru.art2000.extensions.arch.context
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.regex.Pattern
+import java.io.IOException
+import java.util.concurrent.TimeUnit
+
 
 class CurrencyConverterModel(application: Application) : AndroidViewModel(application), CurrencyListAdapterModel {
 
@@ -34,8 +37,10 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     private val updateDateKey = "currency_update_date"
 
-    private val mUpdateDate by lazy { MutableLiveData<String?>(preferences.getString(
-            updateDateKey, context.getString(R.string.preloaded_currencies_date))) }
+    private val mUpdateDate by lazy {
+        MutableLiveData<String?>(preferences.getString(
+                updateDateKey, context.getString(R.string.preloaded_currencies_date)))
+    }
 
     val updateDate: LiveData<String?> = mUpdateDate
 
@@ -57,94 +62,62 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     fun loadData() {
-
         if (mLoadingState.value == LoadingState.LOADING_STARTED)
             return
 
-        viewModelScope.launch(Job() + Dispatchers.Default) {
-            isFirstUpdateDone = true
-            mLoadingState.postValue(LoadingState.LOADING_STARTED)
-            val webpage: Document?
+        mLoadingState.postValue(LoadingState.LOADING_STARTED)
 
+        val strategy = AnnotationStrategy()
+        val serializer = Persister(strategy)
+
+        val okHttpClient = OkHttpClient.Builder()
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .writeTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .build()
+
+        val retrofit = Retrofit.Builder()
+                .addConverterFactory(SimpleXmlConverterFactory.create(serializer))
+                .baseUrl("http://www.cbr.ru")
+                .client(okHttpClient)
+                .build()
+
+        val cbrService = retrofit.create(CbrAPI::class.java)
+
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                webpage = Jsoup.connect("http://www.cbr.ru/currency_base/daily/").get()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                mLoadingState.postValue(LoadingState.NETWORK_ERROR)
-                return@launch
-            }
+                val currencies = cbrService.getDailyCurrencies()
 
-            webpage ?: kotlin.run {
-                mLoadingState.postValue(LoadingState.NETWORK_ERROR)
-                return@launch
-            }
-
-
-            try {
-                val dateFormat = "[0-9]{2}.[0-9]{2}.[0-9]{4}"
-                val datePattern = Pattern.compile(dateFormat)
-                val dateBlock = webpage.select("h2").first().text()
-                val matcher = datePattern.matcher(dateBlock)
-                var date = ""
-
-                if (matcher.find()) date = dateBlock.substring(matcher.start(), matcher.end())
-
-                if (mUpdateDate.value == date) {
+                if (currencies.date == mUpdateDate.value) {
                     mLoadingState.postValue(LoadingState.LOADING_ENDED)
                     return@launch
                 }
 
+                mUpdateDate.postValue(currencies.date)
+                preferences.edit { putString(updateDateKey, currencies.date) }
 
-                var table: Elements? = null
-                for (el in webpage.select("table")) {
-                    if (el.hasClass("data")) {
-                        table = el.children().first().children()
-                    }
-                }
-
-                if (table == null) {
-                    mLoadingState.postValue(LoadingState.UNKNOWN_ERROR)
-                    return@launch
-                }
-
-                val ruVal = table.select("tr:contains(USD)").first().child(4).text().replace(',', '.').toDouble()
-                val dot2dig: NumberFormat = DecimalFormat("#.##")
-                table.removeAt(0)
-
-                mUpdateDate.postValue(date)
-                preferences.edit {
-                    putString(updateDateKey, date)
-                }
-
-
-                for (row in table) {
-//                                Log.d("Цифр. код", row.child(0).text());
-//                                Log.d("Букв. код", row.child(1).text());
-//                                Log.d("Единиц", row.child(2).text());
-//                                Log.d("Валюта", row.child(3).text());
-//                                Log.d("Курс", row.child(4).text());
-                    val values = row.child(4).text().replace(',', '.').toDouble()
-                    val units = row.child(2).text().replace(',', '.').toDouble()
-                    val valuesPerUnit = dot2dig.format(ruVal / (values / units)).replace(',', '.').toDouble()
-                    val letterCode = row.child(1).text()
-
-                    if (db.currencyDao().updateRate(letterCode, valuesPerUnit) < 1) {
-                        val currencyItem = CurrencyItem(letterCode, valuesPerUnit)
-                        db.currencyDao().insert(currencyItem)
-                    }
-                }
-
-                if (db.currencyDao().updateRate("RUB", ruVal) < 1) {
-                    db.currencyDao().insert(CurrencyItem("RUB", ruVal))
-                }
+                val currencyRates = convertToCurrencyRates(currencies.valutes)
+                db.currencyDao().update(currencyRates)
 
                 mLoadingState.postValue(LoadingState.LOADING_ENDED)
-            } catch (e: Exception) {
+            } catch (ioException: IOException) {
+                ioException.printStackTrace()
+                mLoadingState.postValue(LoadingState.NETWORK_ERROR)
+            } catch (e: java.lang.Exception) {
                 e.printStackTrace()
                 mLoadingState.postValue(LoadingState.UNKNOWN_ERROR)
             }
         }
     }
+
+    private fun convertToCurrencyRates(valutes: List<Valute>): List<CurrencyRate> {
+        val usdValute = valutes.first { it.charCode == "USD" }
+        val usdValuteValue = usdValute.value
+
+        return valutes.map {
+            CurrencyRate(it.charCode, (usdValuteValue * it.quantity) / it.value)
+        } + CurrencyRate("RUB", usdValuteValue)
+    }
+
 }

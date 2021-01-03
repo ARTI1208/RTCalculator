@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
+import kotlin.Suppress;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.ActivityAppInfoBinding;
 import ru.art2000.calculator.databinding.AuthorLinkItemBinding;
@@ -21,6 +22,7 @@ import ru.art2000.extensions.activities.AutoThemeActivity;
 
 public class InfoActivity extends AutoThemeActivity {
 
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);

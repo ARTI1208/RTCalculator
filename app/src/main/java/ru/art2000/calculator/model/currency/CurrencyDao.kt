@@ -39,6 +39,9 @@ interface CurrencyDao {
     @Query("SELECT * FROM currency WHERE position >= :position ORDER BY position")
     fun getItemsWithPositionBiggerOrEqual(position: Int): List<CurrencyItem>
 
+    @Update(entity = CurrencyItem::class, onConflict = OnConflictStrategy.REPLACE)
+    fun update(items: List<CurrencyRate>): Int
+
     @Transaction
     fun removeFromVisible(code: String) {
         val item = getByCode(code) ?: return
