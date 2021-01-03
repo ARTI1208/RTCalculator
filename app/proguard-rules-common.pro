@@ -20,9 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn com.sothree.**
--keep class com.sothree.**
--keep interface com.sothree.**
--dontwarn org.apache.**
--keep class org.apache.**
--keep interface org.apache.**
+-keepclassmembers class
+    org.simpleframework.xml.core.AttributeLabel,
+    org.simpleframework.xml.core.ElementListLabel,
+    org.simpleframework.xml.core.ElementLabel {
+
+    <init>(...);
+}
