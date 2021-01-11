@@ -88,7 +88,7 @@ dependencies {
     //noinspection GradleDependency
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp_version"
 
-    def retrofit_version = "2.6.0"
+    def retrofit_version = "2.9.0"
     //noinspection GradleDependency
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     //noinspection GradleDependency
