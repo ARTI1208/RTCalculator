@@ -98,7 +98,7 @@ dependencies {
         exclude group: 'xpp3', module: 'xpp3'
     }
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
 }
 repositories {
     mavenCentral()
