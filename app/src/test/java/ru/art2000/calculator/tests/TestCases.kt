@@ -16,8 +16,10 @@ object TestCases {
     private val unaryPlus = findOperation<UnaryOperation<Double>>("+")
     private val unaryMinus = findOperation<UnaryOperation<Double>>("-")
     private val cos = findOperation<UnaryOperation<Double>>("cos")
-    private val div = findOperation<BinaryOperation<Double>>("/")
+    private val integerDiv = findOperation<BinaryOperation<Double>>("/")
+    private val div = findOperation<BinaryOperation<Double>>("÷")
     private val mod = findOperation<BinaryOperation<Double>>(":")
+    private val times = findOperation<BinaryOperation<Double>>("*")
     private val binaryMinus = findOperation<BinaryOperation<Double>>("-")
     private val sqrt = findOperation<UnaryOperation<Double>>("sqrt")
     private val factorial = findOperation<UnaryOperation<Double>>("!")
@@ -173,7 +175,7 @@ object TestCases {
         val expectedLexemes = listOf(
                 cos, openingBracket, e90, closingBracket,
                 binaryPlus,
-                openingBracket, e43, div, e42, closingBracket,
+                openingBracket, e43, integerDiv, e42, closingBracket,
                 binaryMinus,
                 openingBracket,
                 openingBracket, sqrt, e144, closingBracket,
@@ -282,7 +284,7 @@ object TestCases {
         )
 
         val expectedLexemes = listOf(
-                (-6.4).expr(), div, 2.expr()
+                (-6.4).expr(), integerDiv, 2.expr()
         )
 
         val answer = (-3).toDisplayFormat()
@@ -296,7 +298,7 @@ object TestCases {
         )
 
         val expectedLexemes = listOf(
-                (-6).expr(), div, 2.expr()
+                (-6).expr(), integerDiv, 2.expr()
         )
 
         val answer = (-3).toDisplayFormat()
@@ -312,6 +314,25 @@ object TestCases {
         val expectedLexemes = null
 
         val answer = CalculationClass.calculationError
+
+        return TestCase(expressions, expectedLexemes, answer)
+    }
+
+    // TODO fix it!
+    fun testUnaryMinus(): TestCase<Double> {
+        val expressions = listOf(
+                "1÷(1÷30+1÷40)-2×(4-3)"
+        )
+
+        val expectedLexemes = listOf(
+                1.expr(), div,
+                openingBracket, 1.expr(), div, 30.expr(), binaryPlus, 1.expr(), div, 40.expr(),
+                closingBracket,
+                binaryMinus, 2.expr(), times,
+                openingBracket, 4.expr(), binaryMinus, 3.expr(), closingBracket
+        )
+
+        val answer = ((1.0 / ((1.0 / 30) + (1.0 / 40))) - 2 * (4 - 3)).toDisplayFormat()
 
         return TestCase(expressions, expectedLexemes, answer)
     }
