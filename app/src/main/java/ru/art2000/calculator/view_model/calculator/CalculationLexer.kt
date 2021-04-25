@@ -69,9 +69,15 @@ class CalculationLexer<CalculationNumber>(
                     }
 
                     if (startingIndex == -1) {
-                        startingIndex = index
-                        isReadingNumber = true
-                        isSignRead = c.isNumberSign
+                        if (c.isNumberSign && lexemes.isNotEmpty()) {
+                            val cStr = c.toString()
+                            val signOperation = operations.first { it is BinaryOperation<*> && it.textRepresentations.contains(cStr) }
+                            lexemes += signOperation
+                        } else {
+                            startingIndex = index
+                            isReadingNumber = true
+                            isSignRead = c.isNumberSign
+                        }
                     } else if (!isReadingNumber) {
                         val part = expression.substring(startingIndex, index)
 
