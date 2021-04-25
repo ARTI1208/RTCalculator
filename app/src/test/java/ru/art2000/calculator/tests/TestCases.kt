@@ -318,7 +318,6 @@ object TestCases {
         return TestCase(expressions, expectedLexemes, answer)
     }
 
-    // TODO fix it!
     fun testUnaryMinus(): TestCase<Double> {
         val expressions = listOf(
                 "1÷(1÷30+1÷40)-2×(4-3)"
