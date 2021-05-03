@@ -69,7 +69,7 @@ class CalculationLexer<CalculationNumber>(
                     }
 
                     if (startingIndex == -1) {
-                        if (c.isNumberSign && lexemes.isNotEmpty()) {
+                        if (c.isNumberSign && lexemes.isNotEmpty() && (lexemes.lastOrNull() !is BlockOpenExpression)) {
                             val cStr = c.toString()
                             val signOperation = operations.first { it is BinaryOperation<*> && it.textRepresentations.contains(cStr) }
                             lexemes += signOperation

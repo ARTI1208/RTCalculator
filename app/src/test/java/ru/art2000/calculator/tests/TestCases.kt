@@ -335,4 +335,18 @@ object TestCases {
 
         return TestCase(expressions, expectedLexemes, answer)
     }
+
+    fun testUnaryMinusInBrackets(): TestCase<Double> {
+        val expressions = listOf(
+                "6×(-8)"
+        )
+
+        val expectedLexemes = listOf(
+                6.expr(), times, openingBracket, (-8).expr(), closingBracket
+        )
+
+        val answer = (6 * -8).toDisplayFormat()
+
+        return TestCase(expressions, expectedLexemes, answer)
+    }
 }
