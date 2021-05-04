@@ -7,11 +7,9 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
-import ru.art2000.calculator.model.calculator.AngleType
-import ru.art2000.calculator.model.calculator.BinaryOperation
-import ru.art2000.calculator.model.calculator.HistoryItem
-import ru.art2000.calculator.model.calculator.PostfixOperation
+import ru.art2000.calculator.model.calculator.*
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.floatingPointZero
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol
@@ -20,6 +18,7 @@ import ru.art2000.extensions.arch.context
 import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
 import kotlin.concurrent.thread
+import kotlin.system.measureTimeMillis
 
 class CalculatorModel(
         application: Application
@@ -267,6 +266,66 @@ class CalculatorModel(
             saveCalculationResult(expr, countStr)
         }
         result = countStr
+    }
+
+    fun debugLexemes(expr: String): Pair<List<ExpressionPart<Double>>, Long> {
+        return debug {
+            CalculationClass.lexer.getLexemes(expr.toCharArray()) ?: emptyList()
+        }
+    }
+
+    fun debugParsing(lexemes: List<ExpressionPart<Double>>): Pair<Computable<Double>, Long> {
+        return debug {
+            CalculationClass.parser.fromLexemes(lexemes, liveAngleType.value!!)
+        }
+    }
+
+    fun debugComputation(computable: Computable<Double>): Pair<String, Long> {
+        return debug {
+            val computed = computable.compute()
+            when {
+                computed == null -> context.getString(PrefsHelper.getZeroDivResult())
+                computed.isInfinite() -> context.getString(R.string.error)
+                else -> CalculationClass.numberFormatter.format(computed)
+            }
+        }
+    }
+
+    private fun <T> debug(action: () -> T): Pair<T, Long> {
+        val result: T
+        val timeMillis = measureTimeMillis {
+            result = action()
+        }
+
+        return result to timeMillis
+    }
+
+    fun onExpertiseRequest(): Boolean {
+        if (!BuildConfig.DEBUG) return false
+
+        var countStr: String = expression
+        if (countStr.isEmpty()) return false
+
+        var err = false
+        val last = countStr.last()
+        if (last.isFloatingPointSymbol || CalculationClass.isBinaryOperationSymbol(last) || result != null) return false
+        var expr = CalculationClass.addRemoveBrackets(countStr)
+        if (expr.isEmpty()) {
+            expr = context.getString(R.string.error)
+        }
+        setExpression(expr)
+
+        countStr = CalculationClass.calculateForDisplay(expr, liveAngleType.value!!)
+
+        when (countStr) {
+            CalculationClass.calculationDivideByZero -> countStr = context.getString(PrefsHelper.getZeroDivResult())
+            CalculationClass.calculationError -> {
+                countStr = context.getString(R.string.error)
+                err = true
+            }
+        }
+
+        return true
     }
 
     fun handleMemoryOperation(operation: CharSequence) {

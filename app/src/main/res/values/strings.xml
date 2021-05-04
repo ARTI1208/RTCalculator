@@ -28,6 +28,10 @@
     <string name="paste_replace">Replace</string>
     <string name="paste_after">Paste after</string>
     <string name="calculator_input_hint" translatable="false">2+2</string>
+    <string name="debug_lexeme_list_title">Expression lexemes:</string>
+    <string name="debug_lexer_time">Lexer time: %1$d ms</string>
+    <string name="debug_parser_time">Parser time: %1$d ms</string>
+    <string name="debug_compute_time">Compute time: %1$d ms</string>
 
     <!-- Currencies -->
     <string name="updated">Updated: </string>

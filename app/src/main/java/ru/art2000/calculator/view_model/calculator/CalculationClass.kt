@@ -1,9 +1,11 @@
 package ru.art2000.calculator.view_model.calculator
 
+import android.content.Context
 import org.apache.commons.math3.special.Gamma
+import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.helpers.PrefsHelper
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import kotlin.math.*
 
 object CalculationClass {
@@ -13,7 +15,7 @@ object CalculationClass {
     val constants: List<Constant<Double>>
 
 
-    private val parser: CalculationParser<Double>
+    val parser: CalculationParser<Double>
 
     val lexer: CalculationLexer<Double>
 
@@ -22,6 +24,8 @@ object CalculationClass {
     const val calculationError = "error"
 
     const val calculationDivideByZero = "zero"
+
+    val numberFormatter = DecimalFormat("#.#######")
 
     // Checkers
 
@@ -131,8 +135,16 @@ object CalculationClass {
 
         if (result.isInfinite()) return calculationDivideByZero
 
-        val nf: NumberFormat = DecimalFormat("#.#######")
-        return nf.format(result)
+        return numberFormatter.format(result)
+    }
+
+    fun calculateForDisplay(context: Context, expression: String, angleType: AngleType = AngleType.RADIANS): String {
+
+        return when (val result = calculateForDisplay(expression, angleType)) {
+            calculationDivideByZero -> context.getString(PrefsHelper.getZeroDivResult())
+            calculationError -> context.getString(R.string.error)
+            else -> result
+        }
     }
 
     @JvmStatic
@@ -243,7 +255,7 @@ object CalculationClass {
                 // Binary operations
                 BinaryOperation("+", ::addition, 0),
                 BinaryOperation("-", ::subtraction, 0),
-                BinaryOperation(setOf("*", "×"), ::multiplication, 1),
+                BinaryOperation(setOf("×", "*"), ::multiplication, 1),
                 BinaryOperation("÷", ::division, 1),
                 BinaryOperation(setOf("/", "div"), ::integerDivision, 1),
                 BinaryOperation(setOf(":", "mod"), ::divisionRemainder, 1),

@@ -89,20 +89,20 @@ public class CalculatorFragment extends NavigationFragment {
             model.getLiveMemory().observe(getViewLifecycleOwner(), (memoryValue) -> {
 
                 if (Math.abs(memoryValue) < 1e-5) {
-                    binding.memory.setVisibility(View.INVISIBLE);
-                    binding.infoDivider.setVisibility(View.INVISIBLE);
+                    binding.calculatorIo.memory.setVisibility(View.INVISIBLE);
+                    binding.calculatorIo.infoDivider.setVisibility(View.INVISIBLE);
                     return;
                 }
 
-                binding.infoDivider.setVisibility(View.VISIBLE);
+                binding.calculatorIo.infoDivider.setVisibility(View.VISIBLE);
 
                 String newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue);
-                binding.memory.setText(newMemoryText);
-                binding.memory.setVisibility(View.VISIBLE);
+                binding.calculatorIo.memory.setText(newMemoryText);
+                binding.calculatorIo.memory.setVisibility(View.VISIBLE);
             });
 
             model.getLiveAngleType().observe(getViewLifecycleOwner(), angleType ->
-                    binding.degRadTv.setText(angleType.toString().toUpperCase()));
+                    binding.calculatorIo.degRadTv.setText(angleType.toString().toUpperCase()));
 
             setupHistoryPart();
         }
@@ -132,11 +132,11 @@ public class CalculatorFragment extends NavigationFragment {
     }
 
     private CalculatorEditText getInputTv() {
-        return binding.tvInput;
+        return binding.calculatorIo.tvInput;
     }
 
     private TextView getResultTV() {
-        return binding.tvResult;
+        return binding.calculatorIo.tvResult;
     }
 
     private RecyclerWithEmptyView getHistoryRecyclerView() {

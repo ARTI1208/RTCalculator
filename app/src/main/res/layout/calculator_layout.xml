@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:windowBackground"
@@ -11,95 +10,12 @@
         android:layout_height="wrap_content"
         android:background="?attr/calculatorInputBackground"
         android:minHeight="@dimen/calc_field_min_height"
-        android:paddingTop="4.0dip"
-        android:paddingBottom="4.0dip">
+        android:paddingVertical="4.0dip">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
+        <include
+            android:id="@+id/calculator_io"
+            layout="@layout/calculator_io_layout" />
 
-            <TextView
-                android:id="@+id/degRadTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|top"
-                android:textSize="18sp"
-                tools:text="DEG" />
-
-            <View
-                android:id="@+id/info_divider"
-                android:layout_width="@dimen/calculator_info_divider_width"
-                android:layout_height="match_parent"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:background="#888888"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/memory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|bottom"
-                android:textSize="18sp"
-                android:visibility="gone"
-                tools:text="M10"
-                tools:visibility="visible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/io_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/calc_field_vertical_padding"
-            android:paddingBottom="@dimen/calc_field_vertical_padding">
-
-            <HorizontalScrollView
-                android:id="@+id/input_scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:longClickable="true"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                android:scrollbars="none">
-
-                <ru.art2000.extensions.views.CalculatorEditText
-                    android:id="@+id/tv_input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:gravity="end"
-                    android:hint="@string/calculator_input_hint"
-                    android:overScrollMode="always"
-                    android:scrollHorizontally="true"
-                    android:textSize="@dimen/calc_text_size" />
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                android:scrollbars="none">
-
-                <TextView
-                    android:id="@+id/tv_result"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="6dp"
-                    android:gravity="end|bottom"
-                    android:textColor="?colorAccent"
-                    android:textSize="@dimen/calc_text_size"
-                    android:visibility="invisible" />
-            </HorizontalScrollView>
-        </LinearLayout>
     </FrameLayout>
 
     <include

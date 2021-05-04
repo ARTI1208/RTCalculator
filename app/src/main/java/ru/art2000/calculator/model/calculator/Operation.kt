@@ -15,21 +15,36 @@ class BinaryOperation<O>(
         val priority: Int
 ) : Operation<O>() {
 
+    init {
+        require(textRepresentations.isNotEmpty()) {
+            "Operation should specify at least one text representation"
+        }
+    }
+
     constructor(textRepresentation: String, inv: (O, O) -> O?, priority: Int) :
             this(setOf(textRepresentation), inv, priority)
 
     operator fun invoke(leftOperand: O, rightOperand: O) = inv(leftOperand, rightOperand)
 
+    override fun partAsString(): String = textRepresentations.first()
+
 }
 
 sealed class UnaryOperation<O>(
-        override val textRepresentations: Set<String>,
+        final override val textRepresentations: Set<String>,
         private val inv: (O) -> O?,
         val isTrigonometryOperation: Boolean = false
 ) : Operation<O>() {
 
+    init {
+        require(textRepresentations.isNotEmpty()) {
+            "Operation should specify at least one text representation"
+        }
+    }
+
     operator fun invoke(operand: O) = inv(operand)
 
+    override fun partAsString(): String = textRepresentations.first()
 }
 
 class PrefixOperation<O>(

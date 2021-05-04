@@ -11,9 +11,12 @@ class CalculationParser<CalculationNumber>(
     fun parse(expression: String, angleType: AngleType, lexer: CalculationLexer<CalculationNumber>): Computable<CalculationNumber> {
         val array = expression.toCharArray()
 
-        val lexemes: List<ExpressionPart<CalculationNumber>>
-        lexemes = lexer.getLexemes(array) ?: return ErrorComputable
+        val lexemes = lexer.getLexemes(array) ?: return ErrorComputable
 
+        return fromLexemes(lexemes, angleType)
+    }
+
+    fun fromLexemes(lexemes: List<ExpressionPart<CalculationNumber>>, angleType: AngleType): Computable<CalculationNumber> {
         val lexemesInPolishNotation = toPolishNotation(lexemes) ?: return ErrorComputable
 
         return Computable { calculate(lexemesInPolishNotation, angleType) }

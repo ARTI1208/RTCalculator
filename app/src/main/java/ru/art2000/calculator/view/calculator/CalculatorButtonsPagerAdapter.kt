@@ -1,15 +1,24 @@
 package ru.art2000.calculator.view.calculator
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import ru.art2000.calculator.R
+import ru.art2000.calculator.databinding.CalculatorExpertiseViewBinding
 import ru.art2000.calculator.databinding.CalculatorPage1Binding
 import ru.art2000.calculator.databinding.CalculatorPage2Binding
+import ru.art2000.calculator.view_model.calculator.CalculationClass
 import ru.art2000.calculator.view_model.calculator.CalculatorModel
+import ru.art2000.helpers.AndroidHelper
 import java.util.*
 
 class CalculatorButtonsPagerAdapter(
@@ -99,6 +108,50 @@ class CalculatorButtonsPagerAdapter(
         page1Binding.buttonEQ.setOnClickListener { model.onResult() }
     }
 
+    @SuppressLint("RestrictedApi", "VisibleForTests")
+    private fun setEqualsButtonLongClickListener(page1Binding: CalculatorPage1Binding) {
+        page1Binding.buttonEQ.setOnLongClickListener {
+            if (model.expression.isEmpty()) return@setOnLongClickListener false
+
+            val bottomSheetDialog = BottomSheetDialog(mContext)
+            bottomSheetDialog.behavior.disableShapeAnimations()
+
+            val binding = CalculatorExpertiseViewBinding.inflate(LayoutInflater.from(mContext))
+            bottomSheetDialog.setContentView(binding.root)
+            bottomSheetDialog.show()
+
+            binding.expertiseIo.tvInput.isFocusable = false
+            binding.expertiseIo.tvResult.visibility = View.VISIBLE
+
+            val expr = CalculationClass.addRemoveBrackets(model.expression)
+
+            binding.expertiseIo.tvInput.setText(expr)
+
+            val (lexemes, lexerTime) = model.debugLexemes(expr)
+            val (computable, parserTime) = model.debugParsing(lexemes)
+            val (result, computeTime) = model.debugComputation(computable)
+
+            binding.expertiseIo.tvResult.text = result
+
+            binding.lexemesList.apply {
+                adapter = LexemeListAdapter(mContext, lexemes)
+                layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+            }
+
+            binding.lexerTime.text = mContext.getString(R.string.debug_lexer_time, lexerTime)
+            binding.parserTime.text = mContext.getString(R.string.debug_parser_time, parserTime)
+            binding.computeTime.text = mContext.getString(R.string.debug_compute_time, computeTime)
+
+            val ioBackground = ContextCompat.getDrawable(mContext, R.drawable.calculator_input_bg_debug) as GradientDrawable
+            val inputBackgroundColor = AndroidHelper.getColorAttribute(mContext, R.attr.calculatorInputBackground)
+            ioBackground.setColor(inputBackgroundColor)
+
+            binding.expertiseIoWrapper.background = ioBackground
+
+            return@setOnLongClickListener true
+        }
+    }
+
     private fun setPreUnarySignButtonsClickListener(page2Binding: CalculatorPage2Binding) {
         val buttons = arrayOf(
                 page2Binding.buttonSin, page2Binding.buttonCos,
@@ -149,6 +202,7 @@ class CalculatorButtonsPagerAdapter(
         setNumberButtonsClickListener(page1Binding)
         setDotButtonClickListener(page1Binding)
         setEqualsButtonClickListener(page1Binding)
+        setEqualsButtonLongClickListener(page1Binding)
     }
 
     private fun setButtonsClickListener(page2Binding: CalculatorPage2Binding) {
