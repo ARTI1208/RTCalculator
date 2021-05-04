@@ -19,6 +19,3 @@ updates:
   - dependency-name: com.squareup.retrofit2:retrofit
     versions:
     - "> 2.6.0"
-  - dependency-name: com.google.android.material:material
-    versions:
-    - 1.3.0-rc01
