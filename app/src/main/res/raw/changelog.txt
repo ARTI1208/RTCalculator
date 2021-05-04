@@ -1,3 +1,8 @@
+v1.1.3
+ - Fixed number sign detection regression introduced in previous version
+ - Fixed navigation bar color in black theme on API 21+
+ - Added calculator debug view on equals button long press
+
 v1.1.2
  - Fixed handling binary minus after closing bracket
 
