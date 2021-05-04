@@ -6,6 +6,7 @@
     <style name="Base.RT.v21.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light">
         <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark" />
@@ -14,6 +15,7 @@
         <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
         <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog.Dark</item>
     </style>
 
     <style name="Base.RT.AppTheme.Black" parent="Base.RT.v21.AppTheme.Black" />
@@ -22,6 +24,7 @@
         <item name="android:navigationBarColor">@color/BlackTheme_colorPrimary</item>
         <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog.Black</item>
     </style>
 
     <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Light" />
@@ -42,6 +45,21 @@
         <item name="android:elevation">0dp</item>
         <item name="android:foreground">?selectableItemBackground</item>
         <item name="android:letterSpacing">0.0</item>
+    </style>
+
+    <style name="Base.RT.v21.Design.BottomSheetDialog" parent="Base.RT.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog" parent="Base.RT.v21.Design.BottomSheetDialog" />
+
+    <style name="RT.Design.BottomSheetDialog.Dark" parent="Base.RT.v21.Design.BottomSheetDialog">
+        <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog.Black" parent="Base.RT.v21.Design.BottomSheetDialog">
+        <item name="android:navigationBarColor">@color/BlackTheme_colorPrimary</item>
     </style>
 
 </resources>

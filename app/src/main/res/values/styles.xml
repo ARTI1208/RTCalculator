@@ -29,6 +29,8 @@
         <item name="authorAvatar">@drawable/dev_avatar_darker</item>
         <item name="changelogBackground">@drawable/changelog_background_light</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
+        <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light" />
@@ -62,6 +64,8 @@
         <item name="authorAvatar">@drawable/dev_avatar_lighter</item>
         <item name="changelogBackground">@drawable/changelog_background_dark</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
+        <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark" />
@@ -209,6 +213,24 @@
 
     <style name="RT.Dialog.Black" parent="Theme.MaterialComponents.Dialog.Alert">
         <item name="colorSecondary">@color/BlackTheme_colorAccent</item>
+    </style>
+
+    <style name="Base.RT.Design.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog" >
+
+        <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog" parent="Base.RT.Design.BottomSheetDialog" />
+
+    <style name="Widget.RT.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.RT.BottomSheet</item>
+        <item name="backgroundTint">?background</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.RT.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/bottom_sheet_corner_radius</item>
+        <item name="cornerSizeTopRight">@dimen/bottom_sheet_corner_radius</item>
     </style>
 
 </resources>

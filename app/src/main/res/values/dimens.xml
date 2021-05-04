@@ -3,6 +3,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="calc_field_min_height">0dp</dimen>
     <dimen name="calc_field_vertical_padding">4dp</dimen>
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
 
     <dimen name="calc_text_size">40sp</dimen>
     <dimen name="calc_vertical_padding">6.0dip</dimen>

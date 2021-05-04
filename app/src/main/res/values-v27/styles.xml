@@ -6,6 +6,11 @@
     <style name="Base.RT.v27.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light">
         <item name="android:navigationBarColor">@color/LightTheme_colorPrimary</item>
         <item name="android:windowLightNavigationBar">true</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog" parent="Base.RT.v21.Design.BottomSheetDialog">
+        <item name="android:navigationBarColor">@color/LightTheme_colorPrimary</item>
     </style>
 
 </resources>
