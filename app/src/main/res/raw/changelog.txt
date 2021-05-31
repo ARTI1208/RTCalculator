@@ -1,3 +1,6 @@
+v1.1.5
+ - Fixed wrong lexeme type naming in debug view in release mode
+
 v1.1.4
  - Fixed operation buttons' behaviour when result was present for locales with gamma as floating part separator
  - Fixed: Result of previous calculations was not hidden when change expression not via calculator buttons (e.g. paste or cut)

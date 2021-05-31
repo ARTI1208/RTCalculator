@@ -8,11 +8,11 @@ android {
         applicationId "ru.art2000.calculator"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 2
+        versionCode 7
 
         def major = 1
         def minor = 1
-        def patch = 4
+        def patch = 5
 
         versionName "$major.$minor.$patch"
 
