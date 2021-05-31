@@ -12,7 +12,7 @@ android {
 
         def major = 1
         def minor = 1
-        def patch = 3
+        def patch = 4
 
         versionName "$major.$minor.$patch"
 
