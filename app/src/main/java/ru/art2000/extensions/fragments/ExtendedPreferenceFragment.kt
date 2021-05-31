@@ -20,12 +20,13 @@ abstract class ExtendedPreferenceFragment : PreferenceFragmentCompat() {
         try {
             super.onDisplayPreferenceDialog(preference)
         } catch (_: IllegalArgumentException) {
-            links.forEach { (preferenceClass, dialogConstructor) ->
-                if (preference.javaClass == preferenceClass) {
-                    val dialogFragment = dialogConstructor(preference.key)
-                    dialogFragment.setTargetFragment(this, 0)
-                    dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
-                }
+
+            links[preference.javaClass]?.also { dialogConstructor ->
+                val dialogFragment = dialogConstructor(preference.key)
+
+                // FIXME. Seems like PreferenceDialogFragmentCompat does not yet support proposed replacement
+                dialogFragment.setTargetFragment(this, 0)
+                dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
             }
         }
     }

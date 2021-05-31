@@ -2,7 +2,6 @@ package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,12 +21,13 @@ import ru.art2000.helpers.PrefsHelper
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CurrenciesSettingsModel(application: Application)
-    : AndroidViewModel(application), CurrenciesAddModel, CurrenciesEditModel {
+class CurrenciesSettingsModel(application: Application) : AndroidViewModel(application),
+    CurrenciesAddModel, CurrenciesEditModel {
 
     private val mSelectedTab = MutableLiveData(0)
 
-    val liveIsFirstTimeTooltipShown: MutableLiveData<Boolean> = MutableLiveData(!PrefsHelper.isDeleteTooltipShown())
+    val liveIsFirstTimeTooltipShown: MutableLiveData<Boolean> =
+        MutableLiveData(!PrefsHelper.isDeleteTooltipShown())
 
     var selectedTab: Int
         get() = mSelectedTab.value ?: -1
@@ -73,20 +73,26 @@ class CurrenciesSettingsModel(application: Application)
 
                 val mainLocale = Locale.getDefault()
 
-                val lowerQuery = query.toLowerCase(mainLocale)
+                val lowerQuery = query.lowercase(mainLocale)
 
                 val allItems = hiddenItems.value ?: listOf()
 
                 val context: Context = getApplication()
 
                 for (item in allItems) {
-                    val lowerCode = item.code.toLowerCase(mainLocale)
+                    val lowerCode = item.code.lowercase(mainLocale)
                     val itemNameResourceId = getNameIdentifierForCode(context, item.code)
-                    val lowerName: String = context.getString(itemNameResourceId).toLowerCase(mainLocale)
+                    val lowerName: String = context.getString(itemNameResourceId)
+                        .lowercase(mainLocale)
                     if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
-                            || (mainLocale != Locale.ENGLISH
-                                    && AndroidHelper.getLocalizedString(context, Locale.ENGLISH, itemNameResourceId)
-                                    .toLowerCase(Locale.ENGLISH).contains(lowerQuery))) {
+                        || (mainLocale != Locale.ENGLISH
+                                && AndroidHelper.getLocalizedString(
+                            context,
+                            Locale.ENGLISH,
+                            itemNameResourceId
+                        )
+                            .lowercase(Locale.ENGLISH).contains(lowerQuery))
+                    ) {
                         newList.add(item)
                     }
                 }
@@ -134,14 +140,14 @@ class CurrenciesSettingsModel(application: Application)
 
     override fun databaseMarkHidden(item: CurrencyItem) {
         Maybe
-                .fromRunnable<Any> {
-                    currencyDao.removeFromVisible(item.code)
-                }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete {
-                    removedItems.value = listOf(item)
-                }
-                .subscribe()
+            .fromRunnable<Any> {
+                currencyDao.removeFromVisible(item.code)
+            }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete {
+                removedItems.value = listOf(item)
+            }
+            .subscribe()
     }
 
     override fun dismissFirstTimeTooltip() {

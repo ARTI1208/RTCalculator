@@ -191,7 +191,7 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setAngleTypeButtonClickListener(page2Binding: CalculatorPage2Binding) {
         page2Binding.buttonDEGRAD.setOnClickListener {
-            page2Binding.buttonDEGRAD.text = model.changeAngleType().toUpperCase(Locale.getDefault())
+            page2Binding.buttonDEGRAD.text = model.changeAngleType().uppercase(Locale.getDefault())
         }
     }
 

@@ -7,7 +7,6 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
@@ -298,34 +297,6 @@ class CalculatorModel(
         }
 
         return result to timeMillis
-    }
-
-    fun onExpertiseRequest(): Boolean {
-        if (!BuildConfig.DEBUG) return false
-
-        var countStr: String = expression
-        if (countStr.isEmpty()) return false
-
-        var err = false
-        val last = countStr.last()
-        if (last.isFloatingPointSymbol || CalculationClass.isBinaryOperationSymbol(last) || result != null) return false
-        var expr = CalculationClass.addRemoveBrackets(countStr)
-        if (expr.isEmpty()) {
-            expr = context.getString(R.string.error)
-        }
-        setExpression(expr)
-
-        countStr = CalculationClass.calculateForDisplay(expr, liveAngleType.value!!)
-
-        when (countStr) {
-            CalculationClass.calculationDivideByZero -> countStr = context.getString(PrefsHelper.getZeroDivResult())
-            CalculationClass.calculationError -> {
-                countStr = context.getString(R.string.error)
-                err = true
-            }
-        }
-
-        return true
     }
 
     fun handleMemoryOperation(operation: CharSequence) {
