@@ -56,6 +56,10 @@ public class CalculatorFragment extends NavigationFragment {
 
                 @Override
                 public void afterTextChanged(@NonNull Editable s) {
+                    if (!model.getExpression().equals(s.toString())) {
+                        model.clearResult();
+                    }
+
                     model.getLiveExpression().setValue(s.toString());
                 }
             });

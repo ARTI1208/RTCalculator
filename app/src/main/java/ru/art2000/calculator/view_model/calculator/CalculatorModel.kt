@@ -353,6 +353,10 @@ class CalculatorModel(
         super.handleFloatingPointSymbol()
     }
 
+    fun clearResult() {
+        result = null
+    }
+
     private val AngleType?.reversed: AngleType
         get() = when (this) {
             AngleType.DEGREES -> AngleType.RADIANS
