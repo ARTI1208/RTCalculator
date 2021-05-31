@@ -6,3 +6,5 @@ fun String.safeToDouble(): Double? = try {
 } catch (_: NumberFormatException) {
     null
 }
+
+fun String.dotSafeToDouble(): Double? = replace(',', '.').safeToDouble()

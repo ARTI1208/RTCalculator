@@ -14,6 +14,7 @@ import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.float
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
 import ru.art2000.extensions.arch.context
+import ru.art2000.extensions.language.dotSafeToDouble
 import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
 import kotlin.concurrent.thread
@@ -196,7 +197,7 @@ class CalculatorModel(
         var toAdd: String = sign.toString()
 
         val previousResult = result
-        if (previousResult?.toDoubleOrNull() != null) { // expression = result + sign, remove result
+        if (previousResult?.dotSafeToDouble() != null) { // expression = result + sign, remove result
             setExpression(previousResult + toAdd)
             result = null
             return
@@ -304,11 +305,11 @@ class CalculatorModel(
         when (operation.last()) {
             '+' -> {
                 onResult()
-                memory += result?.toDoubleOrNull() ?: 0.0
+                memory += result?.dotSafeToDouble() ?: 0.0
             }
             '-' -> {
                 onResult()
-                memory -= result?.toDoubleOrNull() ?: 0.0
+                memory -= result?.dotSafeToDouble() ?: 0.0
             }
             'R' -> if (memory != 0.0) {
                 if (result != null) result = null
