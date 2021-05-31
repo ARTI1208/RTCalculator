@@ -1,6 +1,7 @@
 package ru.art2000.calculator.utils
 
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.parts.*
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 import ru.art2000.extensions.language.safeToDouble
 import java.text.DecimalFormat

@@ -1,5 +1,9 @@
 package ru.art2000.calculator.model.calculator
 
+import ru.art2000.calculator.model.calculator.parts.Constant
+import ru.art2000.calculator.model.calculator.parts.Operation
+import ru.art2000.calculator.model.calculator.parts.PrefixOperation
+
 interface LexerConfiguration<CalculationNumber> {
 
     val operations: List<Operation<CalculationNumber>>

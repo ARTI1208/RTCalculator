@@ -1,4 +1,4 @@
-package ru.art2000.calculator.model.calculator
+package ru.art2000.calculator.model.calculator.parts
 
 sealed class Operation<O> : ExpressionPart<O> {
 

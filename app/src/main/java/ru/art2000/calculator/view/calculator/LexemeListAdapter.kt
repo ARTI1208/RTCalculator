@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.databinding.CalculatorLexemeItemBinding
-import ru.art2000.calculator.model.calculator.ExpressionPart
+import ru.art2000.calculator.model.calculator.parts.ExpressionPart
 
 class LexemeListAdapter(
         private val mContext: Context,

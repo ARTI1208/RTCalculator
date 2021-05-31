@@ -1,5 +1,7 @@
 package ru.art2000.calculator.model.calculator
 
+import ru.art2000.calculator.model.calculator.parts.*
+
 sealed class CalculationTree<O> {
 
     abstract operator fun invoke(): O?
@@ -12,9 +14,9 @@ sealed class OperationTree<O> : CalculationTree<O>() {
 }
 
 class BinaryOperationTree<O>(
-        override val operation: BinaryOperation<O>,
-        private val leftTree: CalculationTree<O>,
-        private val rightTree: CalculationTree<O>,
+    override val operation: BinaryOperation<O>,
+    private val leftTree: CalculationTree<O>,
+    private val rightTree: CalculationTree<O>,
 ) : OperationTree<O>() {
 
     override operator fun invoke(): O? {
@@ -49,9 +51,9 @@ class BinaryOperationTree<O>(
 }
 
 sealed class UnaryOperationTree<O>(
-        override val operation: UnaryOperation<O>,
-        protected val subTree: CalculationTree<O>,
-        private val subTreeConverter: (O) -> O
+    override val operation: UnaryOperation<O>,
+    protected val subTree: CalculationTree<O>,
+    private val subTreeConverter: (O) -> O
 ) : OperationTree<O>() {
 
     override operator fun invoke(): O? {
@@ -86,9 +88,9 @@ sealed class UnaryOperationTree<O>(
 }
 
 class PrefixOperationTree<O>(
-        operation: PrefixOperation<O>,
-        subTree: CalculationTree<O>,
-        subTreeConverter: (O) -> O = { it },
+    operation: PrefixOperation<O>,
+    subTree: CalculationTree<O>,
+    subTreeConverter: (O) -> O = { it },
 ) : UnaryOperationTree<O>(operation, subTree, subTreeConverter) {
 
     override fun toString(brackets: Boolean): String {
@@ -109,9 +111,9 @@ class PrefixOperationTree<O>(
 }
 
 class PostfixOperationTree<O>(
-        operation: PostfixOperation<O>,
-        subTree: CalculationTree<O>,
-        subTreeConverter: (O) -> O = { it },
+    operation: PostfixOperation<O>,
+    subTree: CalculationTree<O>,
+    subTreeConverter: (O) -> O = { it },
 ) : UnaryOperationTree<O>(operation, subTree, subTreeConverter) {
 
     override fun toString(brackets: Boolean): String {

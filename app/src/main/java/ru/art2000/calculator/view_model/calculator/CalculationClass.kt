@@ -4,6 +4,7 @@ import android.content.Context
 import org.apache.commons.math3.special.Gamma
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.parts.*
 import ru.art2000.helpers.PrefsHelper
 import java.text.DecimalFormat
 import kotlin.math.*

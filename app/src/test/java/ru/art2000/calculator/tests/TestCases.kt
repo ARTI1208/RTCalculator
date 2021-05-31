@@ -1,6 +1,10 @@
 package ru.art2000.calculator.tests
 
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.parts.BinaryOperation
+import ru.art2000.calculator.model.calculator.parts.BlockCloseExpression
+import ru.art2000.calculator.model.calculator.parts.BlockOpenExpression
+import ru.art2000.calculator.model.calculator.parts.UnaryOperation
 import ru.art2000.calculator.utils.expr
 import ru.art2000.calculator.utils.findConstant
 import ru.art2000.calculator.utils.findOperation

@@ -9,6 +9,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.parts.BinaryOperation
+import ru.art2000.calculator.model.calculator.parts.ExpressionPart
+import ru.art2000.calculator.model.calculator.parts.PostfixOperation
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.floatingPointZero
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol

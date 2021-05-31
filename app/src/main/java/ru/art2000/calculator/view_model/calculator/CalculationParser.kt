@@ -1,6 +1,7 @@
 package ru.art2000.calculator.view_model.calculator
 
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.parts.*
 import java.util.*
 import kotlin.collections.ArrayDeque
 

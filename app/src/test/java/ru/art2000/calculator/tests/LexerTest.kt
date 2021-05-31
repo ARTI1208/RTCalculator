@@ -3,7 +3,7 @@ package ru.art2000.calculator.tests
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import ru.art2000.calculator.model.calculator.ExpressionPart
+import ru.art2000.calculator.model.calculator.parts.ExpressionPart
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 
 @RunWith(Parameterized::class)

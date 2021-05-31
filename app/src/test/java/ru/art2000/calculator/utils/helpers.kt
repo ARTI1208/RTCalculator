@@ -1,8 +1,8 @@
 package ru.art2000.calculator.utils
 
-import ru.art2000.calculator.model.calculator.Constant
-import ru.art2000.calculator.model.calculator.ExpressionValue
-import ru.art2000.calculator.model.calculator.Operation
+import ru.art2000.calculator.model.calculator.parts.Constant
+import ru.art2000.calculator.model.calculator.parts.ExpressionValue
+import ru.art2000.calculator.model.calculator.parts.Operation
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 import java.text.DecimalFormat
 import java.text.NumberFormat
