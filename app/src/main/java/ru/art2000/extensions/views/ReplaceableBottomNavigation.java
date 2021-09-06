@@ -57,11 +57,11 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     }
 
     private void init() {
-        super.setOnNavigationItemSelectedListener(item -> {
+        super.setOnItemSelectedListener(item -> {
             onNavigationItemSelected(item);
             return true;
         });
-        setOnNavigationItemReselectedListener(null);
+        setOnItemReselectedListener(null);
     }
 
     private void onNavigationItemSelected(MenuItem item) {
@@ -83,8 +83,8 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     }
 
     @Override
-    public void setOnNavigationItemReselectedListener(@Nullable OnNavigationItemReselectedListener listener) {
-        super.setOnNavigationItemReselectedListener(item -> {
+    public void setOnItemReselectedListener(@Nullable OnItemReselectedListener listener) {
+        super.setOnItemReselectedListener(item -> {
             if (!firstReplaceDone) {
                 onNavigationItemSelected(item);
                 firstReplaceDone = true;
@@ -101,8 +101,8 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     }
 
     @Override
-    public void setOnNavigationItemSelectedListener(@Nullable OnNavigationItemSelectedListener listener) {
-        super.setOnNavigationItemSelectedListener(item -> {
+    public void setOnItemSelectedListener(@Nullable OnItemSelectedListener listener) {
+        super.setOnItemSelectedListener(item -> {
             if (listener == null) {
                 return false;
             }
@@ -118,6 +118,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     public void setupWithViewPager2(AppCompatActivity parentActivity,
                                     ViewPager2 pager2,
                                     INavigationFragment... replaceableFragments) {
+        //noinspection ComparatorCombinators
         Arrays.sort(replaceableFragments, (fragment1, fragment2) ->
                 Integer.compare(fragment1.getOrder(), fragment2.getOrder()));
         setReplaceableFragments(replaceableFragments);
@@ -142,6 +143,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
                                    int containerId,
                                    INavigationFragment... replaceableFragments) {
 
+        //noinspection ComparatorCombinators
         Arrays.sort(replaceableFragments, (fragment1, fragment2) ->
                 Integer.compare(fragment1.getOrder(), fragment2.getOrder()));
 

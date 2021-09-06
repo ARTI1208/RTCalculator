@@ -75,13 +75,13 @@ public class MainActivity extends AutoThemeActivity {
         calculatorStatusBarColor =
                 AndroidHelper.getColorAttribute(this, R.attr.calculatorInputBackground);
 
-        viewBinding.navigation.setOnNavigationItemReselectedListener(item -> {
+        viewBinding.navigation.setOnItemReselectedListener(item -> {
             if (item.getItemId() == R.id.navigation_calc) {
                 calculatorFragment.ensureHistoryPanelClosed();
             }
         });
 
-        viewBinding.navigation.setOnNavigationItemSelectedListener(item -> {
+        viewBinding.navigation.setOnItemSelectedListener(item -> {
             PrefsHelper.setDefaultTab(item.getOrder());
 
             if (item.getItemId() == R.id.navigation_unit) {
