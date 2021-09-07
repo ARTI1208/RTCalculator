@@ -25,6 +25,7 @@ android {
 
         multiDexEnabled = true
         buildConfigField("String", "BUILD_DATE", '"' + getBuildDate() +'"')
+        buildConfigField("boolean", "USE_COMPOSE", "true")
 
         setProperty("archivesBaseName", "RTCalculator-$versionName")
     }
@@ -60,6 +61,35 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    flavorDimensions += listOf("sdk")
+    productFlavors {
+
+        create("api18") {
+            minSdk = 18
+            dimension = "sdk"
+        }
+
+        create("api21") {
+            minSdk = 21
+            dimension = "sdk"
+        }
+    }
+
+    val flavorsWithCompose = listOf("api21")
+
+    // A bit of a hack. assembleApi21* tasks are generated and not accessible with getByName,
+    // and trying to setup with tasks.whenTaskAdded and doFirst somewhy doesn't work
+    if (gradle.startParameter.taskNames.any { task -> flavorsWithCompose.any { task.contains(it, ignoreCase = true) } }) {
+
+        buildFeatures {
+            compose = true
+        }
+
+        composeOptions {
+            kotlinCompilerExtensionVersion = "1.1.0-alpha03"
+        }
     }
 }
 
@@ -108,6 +138,25 @@ dependencies {
         exclude(group = "stax", module = "stax")
         exclude(group = "xpp3", module = "xpp3")
     }
+
+    val composeVersion = "1.1.0-alpha03"
+    "api21Implementation"("androidx.compose.ui:ui:$composeVersion")
+    // Tooling support (Previews, etc.)
+    "api21Implementation"("androidx.compose.ui:ui-tooling:$composeVersion")
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    "api21Implementation"("androidx.compose.foundation:foundation:$composeVersion")
+    // Material Design
+    "api21Implementation"("androidx.compose.material:material:$composeVersion")
+    // Material design icons
+    "api21Implementation"("androidx.compose.material:material-icons-core:$composeVersion")
+    "api21Implementation"("androidx.compose.material:material-icons-extended:$composeVersion")
+    // Integration with observables
+    "api21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    "api21Implementation"("androidx.compose.compiler:compiler:$composeVersion")
+
+    "api21Implementation"("androidx.activity:activity-compose:1.3.1")
+
+    "api21Implementation"("io.coil-kt:coil-compose:1.3.2")
 
     testImplementation("junit:junit:4.13.2")
 }

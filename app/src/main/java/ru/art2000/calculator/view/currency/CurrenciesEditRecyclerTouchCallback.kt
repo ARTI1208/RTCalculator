@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.R
-import ru.art2000.helpers.AndroidHelper
+import ru.art2000.helpers.getColorAttribute
 
 class CurrenciesEditRecyclerTouchCallback(
         private val mContext: Context,
@@ -47,7 +47,7 @@ class CurrenciesEditRecyclerTouchCallback(
             if (!initiated) {
                 init()
             }
-            val windowBackgroundColor = AndroidHelper.getColorAttribute(mContext, android.R.attr.windowBackground)
+            val windowBackgroundColor = mContext.getColorAttribute(android.R.attr.windowBackground)
             itemView.setBackgroundColor(windowBackgroundColor)
             val itemHeight = itemView.bottom - itemView.top
             val intrinsicWidth = xMark!!.intrinsicWidth

@@ -37,9 +37,9 @@ import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
-import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.SnackbarThemeHelper
+import ru.art2000.helpers.getColorAttribute
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -283,8 +283,8 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
     private fun applyMenuIconTint(icon: Drawable?) {
         icon?.colorFilter = PorterDuffColorFilter(
-                AndroidHelper.getColorAttribute(this, R.attr.colorAccent),
-                PorterDuff.Mode.SRC_ATOP)
+                getColorAttribute(R.attr.colorAccent), PorterDuff.Mode.SRC_ATOP
+        )
     }
 
     private fun toggleElementsVisibility() {

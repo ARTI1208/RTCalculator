@@ -16,8 +16,8 @@ import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getCurrenc
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
 import ru.art2000.extensions.collections.ArrayLiveList
 import ru.art2000.extensions.collections.LiveList
-import ru.art2000.helpers.AndroidHelper
 import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.getLocalizedString
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -86,8 +86,7 @@ class CurrenciesSettingsModel(application: Application) : AndroidViewModel(appli
                         .lowercase(mainLocale)
                     if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
                         || (mainLocale != Locale.ENGLISH
-                                && AndroidHelper.getLocalizedString(
-                            context,
+                                && context.getLocalizedString(
                             Locale.ENGLISH,
                             itemNameResourceId
                         )

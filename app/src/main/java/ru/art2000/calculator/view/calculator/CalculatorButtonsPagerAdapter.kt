@@ -18,7 +18,7 @@ import ru.art2000.calculator.databinding.CalculatorPage1Binding
 import ru.art2000.calculator.databinding.CalculatorPage2Binding
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 import ru.art2000.calculator.view_model.calculator.CalculatorModel
-import ru.art2000.helpers.AndroidHelper
+import ru.art2000.helpers.getColorAttribute
 import java.util.*
 
 class CalculatorButtonsPagerAdapter(
@@ -143,7 +143,7 @@ class CalculatorButtonsPagerAdapter(
             binding.computeTime.text = mContext.getString(R.string.debug_compute_time, computeTime)
 
             val ioBackground = ContextCompat.getDrawable(mContext, R.drawable.calculator_input_bg_debug) as GradientDrawable
-            val inputBackgroundColor = AndroidHelper.getColorAttribute(mContext, R.attr.calculatorInputBackground)
+            val inputBackgroundColor = mContext.getColorAttribute(R.attr.calculatorInputBackground)
             ioBackground.setColor(inputBackgroundColor)
 
             binding.expertiseIoWrapper.background = ioBackground

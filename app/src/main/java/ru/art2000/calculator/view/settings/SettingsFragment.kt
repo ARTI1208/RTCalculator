@@ -7,7 +7,6 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
-import androidx.preference.SwitchPreference
 import androidx.preference.SwitchPreferenceCompat
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
