@@ -9,9 +9,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
-import ru.art2000.calculator.compose.CalculatorAppBar
-import ru.art2000.calculator.compose.attributeDrawablePainter
-import ru.art2000.calculator.compose.getColorFromAttribute
-import ru.art2000.calculator.compose.verticalScrollBar
+import ru.art2000.calculator.compose.*
 import ru.art2000.calculator.model.settings.AuthorLink
 
 class InfoActivity : InfoActivityBase() {
@@ -45,7 +40,11 @@ class InfoActivity : InfoActivityBase() {
     //Compose version
 
     private fun setupCompose() {
-        setContent { InfoScreenRoot() }
+        setContent {
+            AutoThemed {
+                InfoScreenRoot()
+            }
+        }
     }
 
     @Preview
