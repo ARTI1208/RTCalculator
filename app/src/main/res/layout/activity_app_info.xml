@@ -105,7 +105,7 @@
             <ImageView
                 android:layout_width="@dimen/author_avatar_image_size"
                 android:layout_height="@dimen/author_avatar_image_size"
-                android:src="?authorAvatar" />
+                android:src="@drawable/dev_avatar" />
 
             <TextView
                 android:layout_width="wrap_content"

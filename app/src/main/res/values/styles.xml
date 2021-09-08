@@ -26,7 +26,6 @@
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
-        <item name="authorAvatar">@drawable/dev_avatar_darker</item>
         <item name="changelogBackground">@drawable/changelog_background_light</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
         <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
@@ -61,7 +60,6 @@
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
         <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
-        <item name="authorAvatar">@drawable/dev_avatar_lighter</item>
         <item name="changelogBackground">@drawable/changelog_background_dark</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
         <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>

@@ -11,7 +11,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,11 +27,9 @@ fun CalculatorAppBar(
     leadButtonRippleRadius: Dp = 20.dp,
 ) {
 
-    val context = LocalContext.current
-
     TopAppBar(
-        backgroundColor = context.getColorFromAttribute(android.R.attr.windowBackground),
-        elevation = 0.dp,
+        backgroundColor = MaterialTheme.colors.background,
+        elevation = dimensionResource(R.dimen.actionbar_elevation),
     ){
 
         if (onBackPressed != null) {
@@ -39,7 +40,10 @@ fun CalculatorAppBar(
                         enabled = true,
                         role = Role.Button,
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false, radius = leadButtonRippleRadius)
+                        indication = rememberRipple(
+                            bounded = false,
+                            radius = leadButtonRippleRadius
+                        )
                     )
                     .size(48.dp),
                 contentAlignment = Alignment.Center
@@ -47,9 +51,10 @@ fun CalculatorAppBar(
                 val contentAlpha = LocalContentAlpha.current
                 CompositionLocalProvider(LocalContentAlpha provides contentAlpha, content = {
                     Image(
-                        painter = context.attributeDrawablePainter(attrRes = R.attr.homeAsUpIndicator),
+                        painter = painterResource(R.drawable.ic_ab_back),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     )
                 })
             }
@@ -66,7 +71,7 @@ fun CalculatorAppBar(
             ProvideTextStyle(value = MaterialTheme.typography.h6) {
                 CompositionLocalProvider(
                     LocalContentAlpha provides ContentAlpha.high,
-                    content = { Text(text = titleText, color = context.getColorFromAttribute(R.attr.colorAccent)) }
+                    content = { Text(text = titleText, color = MaterialTheme.colors.primary) }
                 )
             }
         }

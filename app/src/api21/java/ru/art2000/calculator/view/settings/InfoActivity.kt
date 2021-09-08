@@ -1,6 +1,5 @@
 package ru.art2000.calculator.view.settings
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,16 +13,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
 import ru.art2000.calculator.compose.*
 import ru.art2000.calculator.model.settings.AuthorLink
+import ru.art2000.calculator.view_model.settings.IInfoViewModel
 
 class InfoActivity : InfoActivityBase() {
 
@@ -42,25 +45,72 @@ class InfoActivity : InfoActivityBase() {
     private fun setupCompose() {
         setContent {
             AutoThemed {
-                InfoScreenRoot()
+                InfoScreenRoot(model)
             }
         }
     }
 
     @Preview
     @Composable
-    private fun InfoScreenRoot() {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    private fun LightThemePreview() {
+        LightTheme {
+            InfoScreenRoot(PreviewInfoViewModel)
+        }
+    }
 
-            val changelogBackgroundColor =
-                getColorFromAttribute(R.attr.calculatorInputBackground)
+    @Preview
+    @Composable
+    private fun DarkThemePreview() {
+        DarkTheme {
+            InfoScreenRoot(PreviewInfoViewModel)
+        }
+    }
 
-            CalculatorAppBar(titleText = getString(R.string.info), onBackPressed = { finish() })
+    @Preview
+    @Composable
+    private fun BlackThemePreview() {
+        BlackTheme {
+            InfoScreenRoot(PreviewInfoViewModel)
+        }
+    }
+
+    private object PreviewInfoViewModel : IInfoViewModel {
+
+        override val authorLinks = listOf(
+            AuthorLink(R.drawable.github, R.string.link_url_github),
+            AuthorLink(R.drawable.gitlab, R.string.link_url_gitlab),
+            AuthorLink(R.drawable.kde, R.string.link_url_kde),
+        )
+
+        private val line = """
+            
+            v1.0
+             - Initial Release
+             
+        """.trimIndent()
+
+        override val changeLogText = line.repeat(20)
+
+    }
+
+    @Composable
+    private fun InfoScreenRoot(
+        model: IInfoViewModel
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.background(MaterialTheme.colors.background),
+        ) {
+
+            CalculatorAppBar(titleText = stringResource(R.string.info),
+                onBackPressed = { finish() }
+            )
 
             SectionHeader(stringRes = R.string.changelog, marginBottom = 8.dp)
             ChangeLogText(
-                text = model.getChangeLogText() ?: getString(R.string.changelog_load_failed),
-                backgroundColor = changelogBackgroundColor,
+                text = model.changeLogText ?: stringResource(R.string.changelog_load_failed),
+                textColor = MaterialTheme.colors.onSurface,
+                backgroundColor = MaterialTheme.calculatorColors.calculatorInputBackground,
             )
 
             SectionHeader(stringRes = R.string.dev)
@@ -70,9 +120,7 @@ class InfoActivity : InfoActivityBase() {
     }
 
     @Composable
-    private fun Context.SectionHeader(@StringRes stringRes: Int, marginBottom: Dp = 0.dp) {
-
-        val accentColor = getColorFromAttribute(R.attr.colorAccent)
+    private fun SectionHeader(@StringRes stringRes: Int, marginBottom: Dp = 0.dp) {
 
         Box(
             contentAlignment = Alignment.Center,
@@ -82,21 +130,21 @@ class InfoActivity : InfoActivityBase() {
                 Modifier
                     .fillMaxWidth()
                     .padding(start = 5.dp, top = 3.dp, end = 5.dp),
-                color = accentColor
+                color = MaterialTheme.colors.primary,
             )
             Text(
-                text = getString(stringRes),
-                color = accentColor,
+                text = stringResource(stringRes),
+                color = MaterialTheme.colors.primary,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .background(getColorFromAttribute(android.R.attr.windowBackground))
+                    .background(MaterialTheme.colors.background)
                     .padding(start = 5.dp, end = 5.dp)
             )
         }
     }
 
     @Composable
-    private fun ColumnScope.ChangeLogText(text: String, backgroundColor: Color) {
+    private fun ColumnScope.ChangeLogText(text: String, textColor: Color, backgroundColor: Color) {
         val scrollState = rememberScrollState()
 
         Box(
@@ -104,7 +152,7 @@ class InfoActivity : InfoActivityBase() {
                 .fillMaxWidth()
                 .height(0.dp)
                 .weight(1.0f)
-                .padding(6.dp)
+                .padding(dimensionResource(R.dimen.changelog_padding))
                 .verticalScroll(scrollState)
                 .verticalScrollBar(scrollState)
                 .background(backgroundColor, shape = RoundedCornerShape(8.dp)),
@@ -115,7 +163,7 @@ class InfoActivity : InfoActivityBase() {
                     .padding(6.dp)
                     .fillMaxSize(),
                 style = TextStyle(
-                    color = getColorFromAttribute(R.attr.colorOnSurface),
+                    color = textColor,
                     fontSize = 14.sp,
                     letterSpacing = 0.15.sp
                 ),
@@ -125,28 +173,27 @@ class InfoActivity : InfoActivityBase() {
 
     @Composable
     private fun DevAvatar() {
+        val avatarPadding = dimensionResource(R.dimen.author_avatar_padding)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                .padding(top = 10.dp) // margin
+                .padding(top = avatarPadding) // margin
                 .border(
                     1.dp,
-                    getColorFromAttribute(R.attr.strokeColor),
+                    MaterialTheme.calculatorColors.strokeColor,
                     RoundedCornerShape(10.dp)
                 )
-                .padding(10.dp) // padding
+                .padding(avatarPadding) // padding
         ) {
+
             Image(
-                painter = attributeDrawablePainter(
-                    attrRes = R.attr.authorAvatar,
-                    defaultId = R.drawable.dev_avatar_darker,
-                ),
-                contentDescription = "dev avatar",
-                modifier = Modifier.size(60.dp),
+                painter = painterResource(R.drawable.dev_avatar),
+                contentDescription = "Dev avatar",
+                modifier = Modifier.size(dimensionResource(R.dimen.author_avatar_image_size)),
             )
             Text(
-                text = getString(R.string.author_nick),
-                fontSize = 20.sp,
-                color = getColorFromAttribute(R.attr.colorOnSurface)
+                text = stringResource(R.string.author_nick),
+                fontSize = textUnitResource(R.dimen.author_nick_text_size, TextUnitType.Sp),
+                color = MaterialTheme.colors.onSurface,
             )
         }
     }
@@ -156,11 +203,12 @@ class InfoActivity : InfoActivityBase() {
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(0.dp, 15.dp), Arrangement.SpaceAround
+                .padding(0.dp, dimensionResource(R.dimen.author_info_link_block_margin)),
+            Arrangement.SpaceAround,
         ) {
             links.forEach {
+                val url = stringResource(it.link)
                 IconButton(onClick = {
-                    val url = getString(it.link)
                     val githubIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(githubIntent)
                 }, modifier = Modifier.size(40.dp)) {

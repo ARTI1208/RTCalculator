@@ -24,9 +24,7 @@ sealed class InfoActivityBase : AutoThemeActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        var changelogText = model.getChangeLogText()
-        if (changelogText == null) changelogText = getString(R.string.changelog_load_failed)
-        binding.changelog.text = changelogText
+        binding.changelog.text = model.changeLogText ?: getString(R.string.changelog_load_failed)
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             windowManager.currentWindowMetrics.bounds.width()
         } else {
@@ -37,7 +35,7 @@ sealed class InfoActivityBase : AutoThemeActivity() {
         val imageSize = resources.getDimensionPixelSize(R.dimen.author_info_link_image_size)
         val linksCount = model.authorLinks.size
         val gapSize = width / linksCount - imageSize
-        for (i in 0 until linksCount) {
+        repeat(linksCount) { i ->
             val link = model.authorLinks[i]
             val linkButton = AuthorLinkItemBinding.inflate(
                 layoutInflater
