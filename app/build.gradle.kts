@@ -77,11 +77,16 @@ android {
         }
     }
 
-    val flavorsWithCompose = listOf("api21")
+    val flavorsWithoutCompose = listOf("api18")
 
     // A bit of a hack. assembleApi21* tasks are generated and not accessible with getByName,
     // and trying to setup with tasks.whenTaskAdded and doFirst somewhy doesn't work
-    if (gradle.startParameter.taskNames.any { task -> flavorsWithCompose.any { task.contains(it, ignoreCase = true) } }) {
+    if (
+        gradle.startParameter.taskNames.isEmpty() ||
+        gradle.startParameter.taskNames.all { task ->
+            !flavorsWithoutCompose.any { task.contains(it, ignoreCase = true) }
+        }
+    ) {
 
         buildFeatures {
             compose = true
