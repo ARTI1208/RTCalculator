@@ -45,52 +45,6 @@
         <item>dark</item>
         <item>black</item>
     </array>
-    <array name="distance_items">
-        <item>@string/distance_mm</item>
-        <item>@string/distance_cm</item>
-        <item>@string/distance_dm</item>
-        <item>@string/distance_m</item>
-        <item>@string/distance_km</item>
-        <item>@string/distance_in</item>
-        <item>@string/distance_ft</item>
-        <item>@string/distance_yd</item>
-        <item>@string/distance_mi</item>
-        <item>@string/distance_nmi</item>
-        <item>@string/distance_ly</item>
-        <item>@string/distance_arshin</item>
-    </array>
-    <array name="velocity_items">
-        <item>@string/velocity_mpers</item>
-        <item>@string/velocity_mpermin</item>
-        <item>@string/velocity_kmpermin</item>
-        <item>@string/velocity_kmperh</item>
-        <item>@string/velocity_ftpers</item>
-        <item>@string/velocity_miperh</item>
-        <item>@string/velocity_mach</item>
-        <item>@string/velocity_kn</item>
-    </array>
-    <array name="area_items">
-        <item>@string/area_mm2</item>
-        <item>@string/area_cm2</item>
-        <item>@string/area_dm2</item>
-        <item>@string/area_m2</item>
-    </array>
-    <array name="volume_items">
-        <item>@string/volume_cm3</item>
-        <item>@string/volume_m3</item>
-    </array>
-    <array name="mass_items">
-        <item>@string/mass_g</item>
-        <item>@string/mass_kg</item>
-    </array>
-    <array name="pressure_items">
-        <item>@string/pressure_atm</item>
-        <item>@string/pressure_pa</item>
-    </array>
-    <array name="temperature_items">
-        <item>@string/temperature_celsius</item>
-        <item>@string/temperature_fahrenheit</item>
-    </array>
     <array name="currency_categories">
         <item>@string/currencies_add</item>
         <item>@string/currencies_edit</item>

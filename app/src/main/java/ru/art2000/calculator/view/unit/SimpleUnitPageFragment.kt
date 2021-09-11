@@ -180,7 +180,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     private fun updateResult(position: Int, value: String) {
-        val from: UnitConverterItem = items[position]
+        val from = items[position]
 
         val inputValue = CalculationClass.calculate(value) ?: 1.0
 
@@ -196,7 +196,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         binding.valueConverted.textValue = items[binding.spinnerTo.selectedItemPosition].displayValue
     }
 
-    private val UnitConverterItem.displayValue
+    private val UnitConverterItem<*>.displayValue
         get() = GeneralHelper.resultNumberFormat.format(this.currentValue)
 
 }

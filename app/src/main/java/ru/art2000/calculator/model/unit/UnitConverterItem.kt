@@ -2,23 +2,23 @@ package ru.art2000.calculator.model.unit
 
 import ru.art2000.calculator.model.common.DiffComparable
 
-interface UnitConverterItem : DiffComparable<UnitConverterItem> {
+interface UnitConverterItem<T> : DiffComparable<UnitConverterItem<T>> {
 
-    val currentValue: Double
+    val currentValue: T
 
-    val absoluteValue: Double
+    val absoluteValue: T
 
     val nameResourceId: Int
 
-    fun setValue(value: Double)
+    fun setValue(value: T)
 
-    fun convert(from: UnitConverterItem): Double
+    fun convert(from: UnitConverterItem<T>): T
 
-    override fun isSameItem(anotherItem: UnitConverterItem): Boolean {
+    override fun isSameItem(anotherItem: UnitConverterItem<T>): Boolean {
         return nameResourceId == anotherItem.nameResourceId
     }
 
-    override fun isContentSame(anotherItem: UnitConverterItem): Boolean {
+    override fun isContentSame(anotherItem: UnitConverterItem<T>): Boolean {
         return isSameItem(anotherItem) && currentValue == anotherItem.currentValue
     }
 }

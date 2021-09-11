@@ -3,35 +3,38 @@ package ru.art2000.calculator.model.unit
 import androidx.annotation.StringRes
 import ru.art2000.calculator.view_model.calculator.CalculationClass
 
-class FormulaConverterItem(@StringRes override val nameResourceId: Int,
-                           val fromAbsolute: String,
-                           val toAbsolute: String) : UnitConverterItem {
+class FormulaConverterItem<T>(
+    @StringRes override val nameResourceId: Int,
+    val fromAbsolute: (T) -> T,
+    val toAbsolute: (T) -> T,
+    zero: T,
+) : UnitConverterItem<T> {
 
-    private var mCurrentValue = 0.0
+    private var mCurrentValue = zero
 
-    private var mAbsoluteValue = 0.0
+    private var mAbsoluteValue = zero
 
-    override val currentValue: Double
+    override val currentValue: T
         get() = mCurrentValue
 
-    override val absoluteValue: Double
+    override val absoluteValue: T
         get() = mAbsoluteValue
 
-    override fun setValue(value: Double) {
+    override fun setValue(value: T) {
         mCurrentValue = value
-        mAbsoluteValue = CalculationClass.calculateForceNumber(toAbsolute.replace("X", value.toString()))
+        mAbsoluteValue = toAbsolute(value)
     }
 
-    override fun convert(from: UnitConverterItem): Double {
+    override fun convert(from: UnitConverterItem<T>): T {
         if (from !== this) {
             mAbsoluteValue = from.absoluteValue
-            mCurrentValue = CalculationClass.calculateForceNumber(fromAbsolute.replace("X", from.absoluteValue.toString()))
+            mCurrentValue = fromAbsolute(from.absoluteValue)
         }
 
         return mCurrentValue
     }
 
-    override fun isSameItem(anotherItem: UnitConverterItem): Boolean {
+    override fun isSameItem(anotherItem: UnitConverterItem<T>): Boolean {
         if (anotherItem !is FormulaConverterItem) {
             return false
         }
@@ -41,3 +44,10 @@ class FormulaConverterItem(@StringRes override val nameResourceId: Int,
                 && toAbsolute == anotherItem.toAbsolute
     }
 }
+
+@Suppress("FunctionName")
+fun DoubleFormulaConverterItem(
+    @StringRes nameResourceId: Int,
+    fromAbsolute: (Double) -> Double,
+    toAbsolute: (Double) -> Double,
+) = FormulaConverterItem(nameResourceId, fromAbsolute, toAbsolute, 0.0)

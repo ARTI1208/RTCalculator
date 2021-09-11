@@ -36,14 +36,14 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     private final MutableLiveData<Pair<Integer, Integer>> selectedPosition =
             new MutableLiveData<>(new Pair<>(0, 0));
     private final Context mContext;
-    private final UnitConverterItem[] data;
+    private final UnitConverterItem<Double>[] data;
     private final LifecycleOwner lifecycleOwner;
     private int colorAccent;
     private int colorDefault;
     private RecyclerView recycler;
     private boolean powerfulConverter = false;
 
-    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem[] items, boolean isPowerfulConverter) {
+    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem<Double>[] items, boolean isPowerfulConverter) {
         data = items;
         mContext = ctx;
         powerfulConverter = isPowerfulConverter;
@@ -55,7 +55,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         init();
     }
 
-    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem[] items, int pos) {
+    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem<Double>[] items, int pos) {
         data = items;
         mContext = ctx;
         this.lifecycleOwner = lifecycleOwner;
@@ -74,7 +74,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
         setCurrentDimension(position);
 
-        UnitConverterItem from = data[position];
+        UnitConverterItem<Double> from = data[position];
         from.setValue(value);
 
         for (int i = 0; i < getItemCount(); i++) {
@@ -231,7 +231,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             });
         }
 
-        void bind(UnitConverterItem item, boolean isSelected) {
+        void bind(UnitConverterItem<Double> item, boolean isSelected) {
 
             dimensionNameView.setText(item.getNameResourceId());
             dimensionValueView.setText(doubleToString(item.getCurrentValue()));

@@ -10,11 +10,9 @@ import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.viewbinding.ViewBinding
-import ru.art2000.calculator.model.unit.UnitConverterItem
 import ru.art2000.calculator.view_model.unit.UnitConverterDependencies
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
-import ru.art2000.helpers.PrefsHelper
 
 abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment() {
 
@@ -65,21 +63,17 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         }).root
     }
 
-    protected val items: Array<UnitConverterItem>
-        get() = UnitConverterDependencies.getCategoryItems(category)
+    protected val items by lazy { UnitConverterDependencies.getCategoryItems(category) }
 
-    protected fun createSpinnerAdapter(): ArrayAdapter<CharSequence> {
-        val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(requireContext(), getDimensionsArrayId(),
-                android.R.layout.simple_spinner_item)
+    protected fun createSpinnerAdapter(): SpinnerAdapter {
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            items.map { getString(it.nameResourceId) }
+        )
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         return adapter
-    }
-
-    private fun getDimensionsArrayId(): Int {
-        val items = "_items"
-        return requireContext().resources.getIdentifier(
-                category + items, "array", requireContext().packageName)
     }
 }
