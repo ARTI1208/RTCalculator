@@ -66,8 +66,8 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     private void init() {
-        colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorAccent);
-        colorDefault = AndroidHelper.getColorAttribute(mContext, android.R.attr.textColorSecondary);
+        colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorSecondary);
+        colorDefault = AndroidHelper.getColorAttribute(mContext, R.attr.colorOnSurface);
     }
 
     void setValue(int position, double value) {

@@ -283,7 +283,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
     private fun applyMenuIconTint(icon: Drawable?) {
         icon?.colorFilter = PorterDuffColorFilter(
-                getColorAttribute(R.attr.colorAccent), PorterDuff.Mode.SRC_ATOP
+            getColorAttribute(R.attr.colorSecondary), PorterDuff.Mode.SRC_ATOP
         )
     }
 

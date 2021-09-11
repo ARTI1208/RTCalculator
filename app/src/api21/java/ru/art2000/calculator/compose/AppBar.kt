@@ -54,7 +54,7 @@ fun CalculatorAppBar(
                         painter = painterResource(R.drawable.ic_ab_back),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
                     )
                 })
             }
@@ -71,7 +71,7 @@ fun CalculatorAppBar(
             ProvideTextStyle(value = MaterialTheme.typography.h6) {
                 CompositionLocalProvider(
                     LocalContentAlpha provides ContentAlpha.high,
-                    content = { Text(text = titleText, color = MaterialTheme.colors.primary) }
+                    content = { Text(text = titleText, color = MaterialTheme.colors.secondary) }
                 )
             }
         }

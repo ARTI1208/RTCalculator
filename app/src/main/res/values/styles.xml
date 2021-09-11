@@ -1,16 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.RT.v18.AppTheme.Light" parent="Theme.MaterialComponents.Light">
+
+        <item name="colorPrimary">@color/LightTheme_colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/LightTheme_colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/LightTheme_colorOnPrimary</item>
+        <item name="colorSecondary">@color/LightTheme_colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/LightTheme_colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/LightTheme_colorOnSecondary</item>
+        <item name="colorError">@color/LightTheme_colorError</item>
+        <item name="colorOnError">@color/LightTheme_colorOnError</item>
+        <item name="colorSurface">@color/LightTheme_colorSurface</item>
+        <item name="colorOnSurface">@color/LightTheme_colorOnSurface</item>
+        <item name="android:windowBackground">@color/LightTheme_colorBackground</item>
+        <item name="android:colorBackground">@color/LightTheme_colorBackground</item>
+        <item name="colorOnBackground">@color/LightTheme_colorOnBackground</item>
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="background">@color/LightTheme_colorPrimary</item>
-        <item name="android:windowBackground">@color/LightTheme_colorPrimary</item>
-        <item name="colorPrimary">@color/LightTheme_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
-        <item name="colorAccent">@color/LightTheme_colorAccent</item>
-        <item name="colorAccentTransparent">@color/LightTheme_colorAccentTransparent</item>
-        <item name="calculatorInputBackground">@color/LightTheme_inputBackground</item>
-        <item name="buttonTextColor">@color/LightTheme_buttonTextColor</item>
+        <item name="colorSurfaceVariant">@color/LightTheme_inputBackground</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
         <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
         <item name="tabStyle">@style/RT.Widget.TabLayout</item>
@@ -25,7 +33,7 @@
         <item name="strokeColor">@color/LightTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
-        <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
+        <item name="bottomNavigationStyle">@style/RT.Widget.BottomNavigationView</item>
         <item name="changelogBackground">@drawable/changelog_background_light</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
         <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
@@ -35,16 +43,24 @@
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light" />
 
     <style name="Base.RT.v18.AppTheme.Dark" parent="Theme.MaterialComponents">
+
+        <item name="colorPrimary">@color/DarkTheme_colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/DarkTheme_colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/DarkTheme_colorOnPrimary</item>
+        <item name="colorSecondary">@color/DarkTheme_colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/DarkTheme_colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/DarkTheme_colorOnSecondary</item>
+        <item name="colorError">@color/DarkTheme_colorError</item>
+        <item name="colorOnError">@color/DarkTheme_colorOnError</item>
+        <item name="colorSurface">@color/DarkTheme_colorSurface</item>
+        <item name="colorOnSurface">@color/DarkTheme_colorOnSurface</item>
+        <item name="android:windowBackground">@color/DarkTheme_colorBackground</item>
+        <item name="android:colorBackground">@color/DarkTheme_colorBackground</item>
+        <item name="colorOnBackground">@color/DarkTheme_colorOnBackground</item>
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="background">@color/DarkTheme_colorPrimary</item>
-        <item name="android:windowBackground">@color/DarkTheme_colorPrimary</item>
-        <item name="colorPrimary">@color/DarkTheme_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
-        <item name="colorAccent">@color/DarkTheme_colorAccent</item>
-        <item name="colorAccentTransparent">@color/DarkTheme_colorAccentTransparent</item>
-        <item name="calculatorInputBackground">@color/DarkTheme_inputBackground</item>
-        <item name="buttonTextColor">@color/DarkTheme_buttonTextColor</item>
+        <item name="colorSurfaceVariant">@color/DarkTheme_inputBackground</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
         <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
         <item name="tabStyle">@style/RT.Widget.TabLayout</item>
@@ -59,7 +75,7 @@
         <item name="strokeColor">@color/DarkTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
-        <item name="bottomNavigationStyle">@style/Widget.Design.BottomNavigationView</item>
+        <item name="bottomNavigationStyle">@style/RT.Widget.BottomNavigationView</item>
         <item name="changelogBackground">@drawable/changelog_background_dark</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
         <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
@@ -69,25 +85,31 @@
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark" />
 
     <style name="Base.RT.v18.AppTheme.Black" parent="Base.RT.v18.AppTheme.Dark">
-        <item name="background">@color/BlackTheme_colorPrimary</item>
-        <item name="android:windowBackground">@color/BlackTheme_colorPrimary</item>
+
         <item name="colorPrimary">@color/BlackTheme_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/BlackTheme_colorPrimaryDark</item>
-        <item name="colorAccent">@color/BlackTheme_colorAccent</item>
-        <item name="colorAccentTransparent">@color/BlackTheme_colorAccentTransparent</item>
-        <item name="calculatorInputBackground">@color/BlackTheme_inputBackground</item>
-        <item name="buttonTextColor">@color/BlackTheme_buttonTextColor</item>
+        <item name="colorPrimaryVariant">@color/BlackTheme_colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/BlackTheme_colorOnPrimary</item>
+        <item name="colorSecondary">@color/BlackTheme_colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/BlackTheme_colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/BlackTheme_colorOnSecondary</item>
+        <item name="colorError">@color/BlackTheme_colorError</item>
+        <item name="colorOnError">@color/BlackTheme_colorOnError</item>
+        <item name="colorSurface">@color/BlackTheme_colorSurface</item>
+        <item name="colorOnSurface">@color/BlackTheme_colorOnSurface</item>
+        <item name="android:windowBackground">@color/BlackTheme_colorBackground</item>
+        <item name="android:colorBackground">@color/BlackTheme_colorBackground</item>
+        <item name="colorOnBackground">@color/BlackTheme_colorOnBackground</item>
+
+        <item name="colorSurfaceVariant">@color/BlackTheme_inputBackground</item>
         <item name="floatingViewBackground">@color/BlackTheme_floatingBottomBarBackground</item>
         <item name="strokeColor">@color/BlackTheme_strokeColor</item>
         <item name="changelogBackground">@drawable/changelog_background_black</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_black</item>
-        <item name="alertDialogTheme">@style/RT.Dialog.Black</item>
-        <item name="colorSurface">@color/LightTheme_colorPrimary</item>
     </style>
 
     <style name="Base.RT.AppTheme.Black" parent="Base.RT.v18.AppTheme.Black" />
 
-    <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.AppCompat.Button">
+    <style name="Base.RT.TextAppearance.Tab" parent="@style/TextAppearance.MaterialComponents.Button">
         <item name="android:textColor">@color/tab_icon_text_color_selector</item>
         <item name="textAllCaps">false</item>
         <item name="android:textSize">16.0sp</item>
@@ -98,7 +120,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center|center</item>
         <item name="android:layout_gravity">center|center</item>
-        <item name="android:textColor">?attr/buttonTextColor</item>
+        <item name="android:textColor">?colorSecondary</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="elevation">0dp</item>
@@ -130,7 +152,7 @@
 
     <style name="RT.TextAppearance.PreferenceCategory" parent="">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?colorAccent</item>
+        <item name="android:textColor">?colorSecondary</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -144,14 +166,14 @@
 
     <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="rippleColor">?colorAccentTransparent</item>
+        <item name="android:textColor">?colorSecondary</item>
+        <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
     <style name="RT.Widget.ButtonBar.TextButton.Neutral" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
         <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="rippleColor">?colorAccentTransparent</item>
+        <item name="android:textColor">?colorSecondary</item>
+        <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
     <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView"/>
@@ -166,34 +188,41 @@
         <item name="android:paddingEnd">8dp</item>
         <item name="android:layout_marginStart">20dp</item>
         <item name="android:layout_marginEnd">20dp</item>
-        <item name="android:textColor">?colorAccent</item>
+        <item name="android:textColor">?colorSecondary</item>
     </style>
 
     <style name="RT.Widget.Snackbar.TextButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">?colorAccent</item>
+        <item name="android:textColor">?colorSecondary</item>
         <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
-        <item name="rippleColor">?colorAccentTransparent</item>
+        <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
-    <style name="RT.Widget.TabLayout" parent="@style/Widget.Design.TabLayout">
+    <style name="RT.Widget.TabLayout" parent="@style/Widget.MaterialComponents.TabLayout.PrimarySurface">
         <item name="tabIndicator">@drawable/tab_rounded_line_indicator</item>
         <item name="tabIndicatorFullWidth">false</item>
-        <item name="tabInlineLabel">true</item>
-        <item name="tabMode">fixed</item>
+<!--        <item name="tabInlineLabel">true</item>-->
+<!--        <item name="tabMode">fixed</item>-->
         <item name="tabTextAppearance">@style/RT.TextAppearance.Tab</item>
         <item name="tabIconTint">@color/tab_icon_text_color_selector</item>
-        <item name="tabIndicatorColor">?colorAccent</item>
-        <item name="tabRippleColor">@color/tab_ripple_color_selector</item>
+        <item name="tabIndicatorColor">?colorSecondary</item>
+<!--        <item name="tabRippleColor">@color/tab_ripple_color_selector</item>-->
         <item name="tabTextColor">@color/tab_icon_text_color_selector</item>
-        <item name="tabUnboundedRipple">true</item>
-        <item name="android:background">?android:windowBackground</item>
+<!--        <item name="tabUnboundedRipple">true</item>-->
+        <item name="android:background">?android:colorBackground</item>
     </style>
 
-    <style name="RT.Widget.Toolbar" parent="Widget.AppCompat.Toolbar">
+    <style name="RT.Widget.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="contentInsetStartWithNavigation">0dp</item>
-        <item name="titleTextColor">?colorAccent</item>
-        <item name="colorControlNormal">?colorAccent</item>
-        <item name="android:background">?colorPrimary</item>
+        <item name="titleTextColor">?colorSecondary</item>
+        <item name="android:background">?android:colorBackground</item>
+    </style>
+
+    <style name="RT.Widget.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">?android:colorBackground</item>
+        <item name="itemIconTint">@color/navigation_tint</item>
+        <item name="itemTextColor">@color/navigation_tint</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
     </style>
 
     <style name="RT.View.LinkImageButton" parent="Widget.AppCompat.ImageButton">
@@ -207,10 +236,6 @@
         <item name="android:textColor">?colorOnSurface</item>
         <item name="android:background">?changelogBackground</item>
         <item name="android:padding">@dimen/changelog_padding</item>
-    </style>
-
-    <style name="RT.Dialog.Black" parent="Theme.MaterialComponents.Dialog.Alert">
-        <item name="colorSecondary">@color/BlackTheme_colorAccent</item>
     </style>
 
     <style name="Base.RT.Design.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog" >

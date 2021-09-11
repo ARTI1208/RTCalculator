@@ -47,7 +47,7 @@ class CurrenciesEditRecyclerTouchCallback(
             if (!initiated) {
                 init()
             }
-            val windowBackgroundColor = mContext.getColorAttribute(android.R.attr.windowBackground)
+            val windowBackgroundColor = mContext.getColorAttribute(android.R.attr.colorBackground)
             itemView.setBackgroundColor(windowBackgroundColor)
             val itemHeight = itemView.bottom - itemView.top
             val intrinsicWidth = xMark!!.intrinsicWidth

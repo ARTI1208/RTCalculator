@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="RT.AppTheme.Dark" parent="Base.RT.AppTheme.Dark">
+    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark" />
+
+    <style name="Base.RT.v23.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="RT.AppTheme.Light" parent="Base.RT.AppTheme.Light">
+    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v21.AppTheme.Light" />
+
+    <style name="Base.RT.v23.AppTheme.Light" parent="Base.RT.v21.AppTheme.Light">
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 
     <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Light" />

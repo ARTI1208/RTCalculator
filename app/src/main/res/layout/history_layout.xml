@@ -35,7 +35,7 @@
                 android:layout_margin="10dp"
                 android:layout_centerVertical="true"
                 android:text="@string/history"
-                android:textColor="?colorAccent"
+                android:textColor="?colorSecondary"
                 android:textSize="24sp" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -47,7 +47,7 @@
                 android:layout_toEndOf="@+id/historyTitle"
                 android:background="?selectableItemBackgroundBorderless"
                 android:scaleType="center"
-                android:tint="?colorAccent"
+                android:tint="?colorSecondary"
                 app:srcCompat="@drawable/ic_scroll_up" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -58,7 +58,7 @@
                 android:layout_toEndOf="@id/scroll_up"
                 android:background="?selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
-                android:tint="?colorAccent"
+                android:tint="?colorSecondary"
                 app:srcCompat="@drawable/ic_scroll_bottom" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -70,7 +70,7 @@
                 android:layout_marginEnd="5dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:scaleType="center"
-                android:tint="?colorAccent"
+                android:tint="?colorSecondary"
                 app:srcCompat="@drawable/ic_clear_history" />
         </RelativeLayout>
     </LinearLayout>

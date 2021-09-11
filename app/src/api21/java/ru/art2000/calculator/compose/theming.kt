@@ -1,5 +1,6 @@
 package ru.art2000.calculator.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
 import androidx.compose.foundation.gestures.OverScrollConfiguration
@@ -79,44 +80,71 @@ private val LocalColors = staticCompositionLocalOf { lightCalculatorColors() }
 
 fun lightCalculatorColors(fallback: Colors = myLightColors()) = CalculatorColors(
     fallback,
-    calculatorInputBackground = Color(0xffdedede),
-    buttonTextColor = fallback.primary, //accent
-    colorAccentTransparent = Color(0x203F51B5),
+    colorSurfaceVariant = Color(0xffdedede),
     floatingViewBackground = Color(0xffdedede),
     strokeColor = Color(0xffa7a7a7),
 )
 
+@SuppressLint("ConflictingOnColor")
 private fun myLightColors() = lightColors(
-    primary = Color(0XFF3F51B5),
-    background = Color(0xfffafafa),
+    primary = Color(0xFFFAFAFA),
+    primaryVariant = Color(0xFFFAFAFA),
+    onPrimary = Color(0XFF3F51B5),
+    secondary = Color(0XFF3F51B5),
+    secondaryVariant = Color(0X203F51B5),
+    onSecondary = Color(0xFFFFFFFF),
+    error = Color(0xFFFF0000),
+    onError = Color(0xFFFFFFFF),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF737373),
+    background = Color(0xFFFAFAFA),
+    onBackground = Color(0xFF000000),
 )
 
 fun darkCalculatorColors(fallback: Colors = myDarkColors()) = CalculatorColors(
     fallback,
-    calculatorInputBackground = Color(0xff000000),
-    buttonTextColor = fallback.primary, //accent
-    colorAccentTransparent = Color(0x208E8CD8),
+    colorSurfaceVariant = Color(0xff000000),
     floatingViewBackground = Color(0xff1e1e1e),
     strokeColor = Color(0xff8a8a8a),
 )
 
+@SuppressLint("ConflictingOnColor")
 private fun myDarkColors() = darkColors(
-    primary = Color(0XFF8E8CD8),
-    background = Color(0xff404040),
+    primary = Color(0xFF404040),
+    primaryVariant = Color(0xFF404040),
+    onPrimary = Color(0XFF8E8CD8),
+    secondary = Color(0XFF8E8CD8),
+    secondaryVariant = Color(0X208E8CD8),
+    onSecondary = Color(0xFFFFFFFF),
+    error = Color(0xFFFF0000),
+    onError = Color(0xFFFFFFFF),
+    surface = Color(0xFF2C2C2C),
+    onSurface = Color(0xFFC6C6C6),
+    background = Color(0xFF404040),
+    onBackground = Color(0xFFFFFFFF),
 )
 
 fun blackCalculatorColors(fallback: Colors = myBlackColors()) = CalculatorColors(
     fallback,
-    calculatorInputBackground = Color(0xff000000),
-    buttonTextColor = fallback.primary, //accent
-    colorAccentTransparent = Color(0x208E8CD8),
+    colorSurfaceVariant = Color(0xff000000),
     floatingViewBackground = Color(0xff1e1e1e),
     strokeColor = Color(0xffa7a7a7),
 )
 
+@SuppressLint("ConflictingOnColor")
 private fun myBlackColors() = darkColors(
-    primary = Color(0XFF8E8CD8),
-    background = Color(0xff000000),
+    primary = Color(0xFF000000),
+    primaryVariant = Color(0xFF000000),
+    onPrimary = Color(0XFF8E8CD8),
+    secondary = Color(0XFF8E8CD8),
+    secondaryVariant = Color(0X208E8CD8),
+    onSecondary = Color(0xFFFFFFFF),
+    error = Color(0xFFFF0000),
+    onError = Color(0xFFFFFFFF),
+    surface = Color(0xFF121212),
+    onSurface = Color(0xFFC6C6C6),
+    background = Color(0xFF000000),
+    onBackground = Color(0xFFFFFFFF),
 )
 
 private fun isBlackTheme() = PrefsHelper.getAppTheme() != R.style.RT_AppTheme_Dark &&

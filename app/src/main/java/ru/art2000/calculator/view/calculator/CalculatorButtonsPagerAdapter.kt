@@ -22,8 +22,8 @@ import ru.art2000.helpers.getColorAttribute
 import java.util.*
 
 class CalculatorButtonsPagerAdapter(
-        private val mContext: Context,
-        private val model: CalculatorModel,
+    private val mContext: Context,
+    private val model: CalculatorModel,
 ) : PagerAdapter() {
 
     override fun getCount(): Int {
@@ -34,13 +34,13 @@ class CalculatorButtonsPagerAdapter(
 
         val view = if (position == 1) {
             val page2Binding = CalculatorPage2Binding.inflate(
-                    LayoutInflater.from(mContext), container, false
+                LayoutInflater.from(mContext), container, false
             )
             setButtonsClickListener(page2Binding)
             page2Binding.root
         } else {
             val page1Binding = CalculatorPage1Binding.inflate(
-                    LayoutInflater.from(mContext), container, false
+                LayoutInflater.from(mContext), container, false
             )
             setButtonsClickListener(page1Binding)
             page1Binding.root
@@ -66,8 +66,8 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setSignButtonsClickListener(page1Binding: CalculatorPage1Binding) {
         val buttons = arrayOf(
-                page1Binding.buttonPlus, page1Binding.buttonMinus,
-                page1Binding.buttonMult, page1Binding.buttonDiv
+            page1Binding.buttonPlus, page1Binding.buttonMinus,
+            page1Binding.buttonMult, page1Binding.buttonDiv
         )
         for (button in buttons) {
             button.setOnClickListener { onBinaryOperationSignButtonClick(button) }
@@ -76,7 +76,7 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setSignButtonsClickListener(page2Binding: CalculatorPage2Binding) {
         val buttons = arrayOf(
-                page2Binding.buttonRDiv, page2Binding.buttonMod, page2Binding.buttonPow
+            page2Binding.buttonRDiv, page2Binding.buttonMod, page2Binding.buttonPow
         )
         for (button in buttons) {
             button.setOnClickListener { onBinaryOperationSignButtonClick(button) }
@@ -90,11 +90,12 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setNumberButtonsClickListener(page1Binding: CalculatorPage1Binding) {
         val buttons = arrayOf(
-                page1Binding.button0, page1Binding.button1,
-                page1Binding.button2, page1Binding.button3,
-                page1Binding.button4, page1Binding.button5,
-                page1Binding.button6, page1Binding.button7,
-                page1Binding.button8, page1Binding.button9)
+            page1Binding.button0, page1Binding.button1,
+            page1Binding.button2, page1Binding.button3,
+            page1Binding.button4, page1Binding.button5,
+            page1Binding.button6, page1Binding.button7,
+            page1Binding.button8, page1Binding.button9
+        )
         for (button in buttons) {
             button.setOnClickListener { model.handleNumber(button.text) }
         }
@@ -142,8 +143,11 @@ class CalculatorButtonsPagerAdapter(
             binding.parserTime.text = mContext.getString(R.string.debug_parser_time, parserTime)
             binding.computeTime.text = mContext.getString(R.string.debug_compute_time, computeTime)
 
-            val ioBackground = ContextCompat.getDrawable(mContext, R.drawable.calculator_input_bg_debug) as GradientDrawable
-            val inputBackgroundColor = mContext.getColorAttribute(R.attr.calculatorInputBackground)
+            val ioBackground = ContextCompat.getDrawable(
+                mContext,
+                R.drawable.calculator_input_bg_debug
+            ) as GradientDrawable
+            val inputBackgroundColor = mContext.getColorAttribute(R.attr.colorSurfaceVariant)
             ioBackground.setColor(inputBackgroundColor)
 
             binding.expertiseIoWrapper.background = ioBackground
@@ -154,10 +158,10 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setPreUnarySignButtonsClickListener(page2Binding: CalculatorPage2Binding) {
         val buttons = arrayOf(
-                page2Binding.buttonSin, page2Binding.buttonCos,
-                page2Binding.buttonTg, page2Binding.buttonCtg,
-                page2Binding.buttonLg, page2Binding.buttonLn,
-                page2Binding.buttonSqrt
+            page2Binding.buttonSin, page2Binding.buttonCos,
+            page2Binding.buttonTg, page2Binding.buttonCtg,
+            page2Binding.buttonLg, page2Binding.buttonLn,
+            page2Binding.buttonSqrt
         )
         for (button in buttons) {
             button.setOnClickListener { model.handlePrefixUnaryOperationSign(button.text) }
@@ -166,7 +170,8 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setPostUnarySignButtonsClickListener(page2Binding: CalculatorPage2Binding) {
         val buttons = arrayOf(
-                page2Binding.buttonPercent, page2Binding.buttonFactorial)
+            page2Binding.buttonPercent, page2Binding.buttonFactorial
+        )
         for (button in buttons) {
             button.setOnClickListener { model.handlePostfixUnaryOperationSign(button.text) }
         }
@@ -174,8 +179,9 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setMemoryButtonsClickListener(page2Binding: CalculatorPage2Binding) {
         val buttons = arrayOf(
-                page2Binding.buttonMPlus, page2Binding.buttonMMinus,
-                page2Binding.buttonMClear, page2Binding.buttonMResult)
+            page2Binding.buttonMPlus, page2Binding.buttonMMinus,
+            page2Binding.buttonMClear, page2Binding.buttonMResult
+        )
         for (button in buttons) {
             button.setOnClickListener { model.handleMemoryOperation(button.text) }
         }
@@ -183,7 +189,8 @@ class CalculatorButtonsPagerAdapter(
 
     private fun setConstantButtonsClickListener(page2Binding: CalculatorPage2Binding) {
         val buttons = arrayOf(
-                page2Binding.buttonPi, page2Binding.buttonEulerNumber, page2Binding.buttonGoldenRatio)
+            page2Binding.buttonPi, page2Binding.buttonEulerNumber, page2Binding.buttonGoldenRatio
+        )
         for (button in buttons) {
             button.setOnClickListener { model.handleConstant(button.text) }
         }

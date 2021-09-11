@@ -28,7 +28,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="5dp"
-            android:background="?colorAccent" />
+            android:background="?colorSecondary" />
 
         <TextView
             android:id="@+id/changelogTitle"
@@ -40,7 +40,7 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/changelog"
-            android:textColor="?colorAccent"
+            android:textColor="?colorSecondary"
             android:textSize="20sp" />
 
     </FrameLayout>
@@ -76,7 +76,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="5dp"
-                android:background="?colorAccent" />
+                android:background="?colorSecondary" />
 
             <TextView
                 android:id="@+id/devTitle"
@@ -88,7 +88,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/dev"
-                android:textColor="?colorAccent"
+                android:textColor="?colorSecondary"
                 android:textSize="20sp" />
         </FrameLayout>
 

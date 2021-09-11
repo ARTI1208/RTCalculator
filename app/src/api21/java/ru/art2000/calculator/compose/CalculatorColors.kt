@@ -5,9 +5,7 @@ import androidx.compose.ui.graphics.Color
 
 data class CalculatorColors(
     val fallback: Colors,
-    val calculatorInputBackground: Color,
-    val buttonTextColor: Color,
-    val colorAccentTransparent: Color,
+    val colorSurfaceVariant: Color,
     val floatingViewBackground: Color,
     val strokeColor: Color,
 )

@@ -110,7 +110,7 @@ class InfoActivity : InfoActivityBase() {
             ChangeLogText(
                 text = model.changeLogText ?: stringResource(R.string.changelog_load_failed),
                 textColor = MaterialTheme.colors.onSurface,
-                backgroundColor = MaterialTheme.calculatorColors.calculatorInputBackground,
+                backgroundColor = MaterialTheme.calculatorColors.colorSurfaceVariant,
             )
 
             SectionHeader(stringRes = R.string.dev)
@@ -130,11 +130,11 @@ class InfoActivity : InfoActivityBase() {
                 Modifier
                     .fillMaxWidth()
                     .padding(start = 5.dp, top = 3.dp, end = 5.dp),
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colors.secondary,
             )
             Text(
                 text = stringResource(stringRes),
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colors.secondary,
                 fontSize = 20.sp,
                 modifier = Modifier
                     .background(MaterialTheme.colors.background)

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:gravity="end"
-        android:textColor="?colorAccent"
+        android:textColor="?colorSecondary"
         android:textSize="28sp"
         android:text="Result" />
 

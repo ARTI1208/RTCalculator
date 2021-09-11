@@ -84,7 +84,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="6dp"
                 android:gravity="end|bottom"
-                android:textColor="?colorAccent"
+                android:textColor="?colorSecondary"
                 android:textSize="@dimen/calc_text_size"
                 android:visibility="invisible" />
         </HorizontalScrollView>

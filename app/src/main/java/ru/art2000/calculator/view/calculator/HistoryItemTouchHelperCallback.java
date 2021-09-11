@@ -69,7 +69,7 @@ class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
             init();
         }
 
-        int windowBackgroundColor = AndroidHelper.getColorAttribute(context, android.R.attr.windowBackground);
+        int windowBackgroundColor = AndroidHelper.getColorAttribute(context, android.R.attr.colorBackground);
         itemView.setBackgroundColor(windowBackgroundColor);
 
         int itemHeight = itemView.getBottom() - itemView.getTop();

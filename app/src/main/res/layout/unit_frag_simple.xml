@@ -14,7 +14,7 @@
             android:id="@+id/or_hsv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
-            android:background="?attr/calculatorInputBackground"
+            android:background="?attr/colorSurfaceVariant"
             android:layout_gravity="end|center"
             android:scrollbars="none">
 
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
             android:layout_gravity="end|center"
-            android:background="?attr/calculatorInputBackground"
+            android:background="?attr/colorSurfaceVariant"
             android:scrollbars="none">
 
             <TextView
@@ -212,7 +212,7 @@
                 android:id="@+id/buttonN"
                 style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
-                android:tint="?attr/buttonTextColor"
+                app:tint="?colorSecondary"
                 app:srcCompat="@drawable/ic_list_all" />
         </LinearLayout>
     </LinearLayout>
@@ -233,7 +233,7 @@
             style="@style/RT.Widget.Button"
             app:srcCompat="@drawable/ic_horizontal_swap"
             android:id="@+id/swap_button"
-            android:tint="?attr/buttonTextColor"
+            app:tint="?colorSecondary"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 

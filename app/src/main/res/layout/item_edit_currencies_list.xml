@@ -40,6 +40,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         app:srcCompat="@drawable/ic_drag_handle"
-        app:tint="?colorAccent" />
+        app:tint="?colorSecondary" />
 
 </RelativeLayout>
