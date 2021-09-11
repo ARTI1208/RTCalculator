@@ -35,6 +35,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     override fun setup() {
 
+        val binding = mBinding ?: return
+
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
 
         setSimpleViewButtonsClickListener()
@@ -81,11 +83,13 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         binding.spinnerTo.setSelection(spinnerToPosition)
 
         binding.spinnerFrom.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?,
-                                        itemSelected: View?,
-                                        selectedItemPosition: Int,
-                                        selectedId: Long) {
-                binding.originalDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                itemSelected: View?,
+                selectedItemPosition: Int,
+                selectedId: Long
+            ) {
+                binding.originalDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)?.toString()
                 if (selectedItemPosition == spinnerToPosition) {
                     model.setExpression(items[selectedItemPosition].displayValue)
                     binding.spinnerTo.setSelection(spinnerFromPosition)
@@ -97,9 +101,13 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         binding.spinnerTo.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?,
-                                        itemSelected: View?, selectedItemPosition: Int, selectedId: Long) {
-                binding.convertedDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                itemSelected: View?,
+                selectedItemPosition: Int,
+                selectedId: Long
+            ) {
+                binding.convertedDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)?.toString()
                 if (selectedItemPosition == spinnerFromPosition) binding.spinnerFrom.setSelection(spinnerToPosition)
                 spinnerToPosition = selectedItemPosition
                 updateResult(binding.spinnerFrom.selectedItemPosition, binding.valueOriginal.text.toString())
@@ -121,7 +129,9 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     private fun onContextItemClick(item: MenuItem, view: View): Boolean {
         val cmg = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-                ?: return true
+            ?: return true
+
+        val binding = mBinding ?: return true
 
         when (item.itemId) {
             MENU_ITEM_COPY -> {
@@ -141,11 +151,13 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     private fun setSimpleViewButtonsClickListener() {
+        val binding = mBinding ?: return
+
         val numberButtons = arrayOf(
-                binding.button9, binding.button8, binding.button7,
-                binding.button6, binding.button5, binding.button4,
-                binding.button3, binding.button2, binding.button1,
-                binding.button0, binding.button00
+            binding.button9, binding.button8, binding.button7,
+            binding.button6, binding.button5, binding.button4,
+            binding.button3, binding.button2, binding.button1,
+            binding.button0, binding.button00
         )
 
         numberButtons.forEach { button ->
@@ -180,6 +192,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             }
         }
 
+        val binding = mBinding ?: return
         binding.valueConverted.textValue = items[binding.spinnerTo.selectedItemPosition].displayValue
     }
 

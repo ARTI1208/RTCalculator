@@ -15,15 +15,18 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
 
     override fun setup() {
 
+        val binding = mBinding ?: return
+
         binding.unitRv.layoutManager = LinearLayoutManager(requireContext())
         binding.unitRv.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         binding.unitRv.adapter = UnitListAdapter(
-                requireContext(), viewLifecycleOwner, items, true
+            requireContext(), viewLifecycleOwner, items, true
         )
     }
 
     override fun onShown(previousReplaceable: IReplaceableFragment?) {
+        val binding = mBinding ?: return
         (binding.unitRv.adapter as UnitListAdapter).requestFocusForCurrent()
     }
 }

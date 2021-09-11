@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.SpinnerAdapter
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -42,9 +43,8 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         arguments?.getString("category", defaultCategory) ?: defaultCategory
     }
 
-    protected val binding: VB get() = mBinding!!
-
-    private var mBinding: VB? = null
+    protected var mBinding: VB? = null
+        private set
 
     protected val model: UnitConverterModel by viewModels()
 
@@ -53,9 +53,11 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
     protected open fun setup() {}
 
     @CallSuper
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         return (mBinding ?: inflate(inflater, container).also {
             mBinding = it
