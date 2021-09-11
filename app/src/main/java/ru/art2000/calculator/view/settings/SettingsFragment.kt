@@ -2,15 +2,20 @@ package ru.art2000.calculator.view.settings
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
-import ru.art2000.calculator.view.MainActivity
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_APP_THEME
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_AUTO_DARK_THEME
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_SAVE_CURRENCY
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_TAB_DEFAULT
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_UNIT_VIEW
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_ZERO_DIVISION
 import ru.art2000.extensions.activities.DayNightActivity
 import ru.art2000.extensions.fragments.PreferenceNavigationFragment
 import ru.art2000.extensions.preferences.TimePickerPreference
@@ -23,14 +28,6 @@ class SettingsFragment : PreferenceNavigationFragment() {
     companion object {
         private val CLICKS_TO_OPEN_HIDDEN_INFO = if (BuildConfig.DEBUG) 1 else 7
 
-        private const val KEY_TAB_DEFAULT = "tab_default"
-        private const val KEY_APP_THEME = "app_theme"
-        private const val KEY_AUTO_DARK_THEME = "app_auto_dark_theme"
-        private const val KEY_DARK_THEME_ACTIVATION = "app_auto_dark_theme_time_start"
-        private const val KEY_DARK_THEME_DEACTIVATION = "app_auto_dark_theme_time_end"
-        private const val KEY_SAVE_CURRENCY = "save_currency_value"
-        private const val KEY_ZERO_DIVISION = "zero_div"
-        private const val KEY_UNIT_VIEW = "unit_view"
         private const val KEY_APP_VERSION = "app_version"
 
         private const val THEME_SYSTEM = "system"
@@ -59,24 +56,25 @@ class SettingsFragment : PreferenceNavigationFragment() {
         val appTheme = findPreference<ListPreference>(KEY_APP_THEME)
 
         appTheme?.also {
-            appTheme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue: Any ->
-                if (appTheme.value == newValue) {
-                    return@OnPreferenceChangeListener false
-                }
-                appTheme.value = newValue.toString()
-                if (newValue.toString() in AUTO_THEMES_ANDROIDX) {
-                    Toast.makeText(
+            appTheme.onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener { _, newValue: Any ->
+                    if (appTheme.value == newValue) {
+                        return@OnPreferenceChangeListener false
+                    }
+                    appTheme.value = newValue.toString()
+                    if (newValue.toString() in AUTO_THEMES_ANDROIDX) {
+                        Toast.makeText(
                             requireContext(),
                             R.string.daynight_support_message,
                             Toast.LENGTH_LONG
-                    ).show()
+                        ).show()
+                    }
+                    PrefsHelper.setAppTheme(newValue.toString())
+                    requireActivity().apply {
+                        recreate()
+                    }
+                    true
                 }
-                PrefsHelper.setAppTheme(newValue.toString())
-                requireActivity().apply {
-                    recreate()
-                }
-                true
-            }
         }
 
         /* appAutoDarkTheme preference */
@@ -103,7 +101,8 @@ class SettingsFragment : PreferenceNavigationFragment() {
         }
 
         /* appAutoDarkTheme preference */
-        val appDarkThemeActivationTime = findPreference<TimePickerPreference>(KEY_DARK_THEME_ACTIVATION)
+        val appDarkThemeActivationTime =
+            findPreference<TimePickerPreference>(KEY_DARK_THEME_ACTIVATION)
 
         appDarkThemeActivationTime?.also {
             if (appTheme?.value != THEME_DAY_NIGHT) {
@@ -119,7 +118,8 @@ class SettingsFragment : PreferenceNavigationFragment() {
         }
 
         /* appAutoDarkTheme preference */
-        val appDarkThemeDeactivationTime = findPreference<TimePickerPreference>(KEY_DARK_THEME_DEACTIVATION)
+        val appDarkThemeDeactivationTime =
+            findPreference<TimePickerPreference>(KEY_DARK_THEME_DEACTIVATION)
 
         appDarkThemeDeactivationTime?.also {
             if (appTheme?.value != THEME_DAY_NIGHT) {
@@ -136,10 +136,11 @@ class SettingsFragment : PreferenceNavigationFragment() {
 
         /* saveCurrencyConversion preference */
         val saveCurrencyConversion = findPreference<SwitchPreferenceCompat>(KEY_SAVE_CURRENCY)
-        saveCurrencyConversion?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            PrefsHelper.setShouldSaveCurrencyConversion(newValue as Boolean)
-            true
-        }
+        saveCurrencyConversion?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                PrefsHelper.setShouldSaveCurrencyConversion(newValue as Boolean)
+                true
+            }
 
         /* zeroDiv preference */
         val zeroDiv = findPreference<SwitchPreferenceCompat>(KEY_ZERO_DIVISION)
@@ -152,19 +153,16 @@ class SettingsFragment : PreferenceNavigationFragment() {
         val unitView = findPreference<ListPreference>(KEY_UNIT_VIEW)
 
         unitView?.also {
-            unitView.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                if (unitView.value == newValue) {
-                    return@OnPreferenceChangeListener false
+            unitView.onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener { _, newValue ->
+                    if (unitView.value == newValue) {
+                        return@OnPreferenceChangeListener false
+                    }
+                    unitView.value = newValue.toString()
+                    PrefsHelper.setUnitViewType(newValue.toString())
+
+                    true
                 }
-                unitView.value = newValue.toString()
-                PrefsHelper.setUnitViewType(newValue.toString())
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    (activity as MainActivity).updateUnitView()
-                }, 400)
-
-                true
-            }
         }
 
         /* appVersion preference */

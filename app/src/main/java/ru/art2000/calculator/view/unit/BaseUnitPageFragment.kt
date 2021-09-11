@@ -25,8 +25,8 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         private const val categoryKey = "category"
 
         @JvmStatic
-        fun newInstance(category: String): BaseUnitPageFragment<*> {
-            return when (PrefsHelper.getUnitViewType()) {
+        fun newInstance(category: String, viewType: String): BaseUnitPageFragment<*> {
+            return when (viewType) {
                 "simple" -> SimpleUnitPageFragment()
                 "powerful" -> PowerfulUnitPageFragment()
                 else -> HalfPoweredUnitPageFragment()
