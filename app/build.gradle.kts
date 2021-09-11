@@ -119,8 +119,6 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.core:core-ktx:1.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
-    implementation("io.reactivex.rxjava3:rxjava:3.0.13") // 3.1+ requires minApi 21+
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
 

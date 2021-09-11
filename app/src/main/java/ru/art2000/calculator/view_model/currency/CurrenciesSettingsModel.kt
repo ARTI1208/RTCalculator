@@ -5,9 +5,6 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -16,6 +13,7 @@ import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getCurrenc
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
 import ru.art2000.extensions.collections.ArrayLiveList
 import ru.art2000.extensions.collections.LiveList
+import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.getLocalizedString
 import java.util.*
@@ -138,15 +136,10 @@ class CurrenciesSettingsModel(application: Application) : AndroidViewModel(appli
     }
 
     override fun databaseMarkHidden(item: CurrencyItem) {
-        Maybe
-            .fromRunnable<Any> {
-                currencyDao.removeFromVisible(item.code)
-            }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnComplete {
-                removedItems.value = listOf(item)
-            }
-            .subscribe()
+        writeAndUpdateUi(
+            compute = { currencyDao.removeFromVisible(item.code) },
+            update = { removedItems.value = listOf(item) }
+        )
     }
 
     override fun dismissFirstTimeTooltip() {

@@ -26,15 +26,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
+import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.helpers.PrefsHelper
@@ -114,7 +112,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
             registerOnPageChangeCallback(object : OnPageChangeCallback() {
                 override fun onPageScrolled(
-                        position: Int, positionOffset: Float, positionOffsetPixels: Int
+                    position: Int, positionOffset: Float, positionOffsetPixels: Int
                 ) {
 
                     val maxScroll = measuredWidth
@@ -248,7 +246,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         }
 
         deleteTooltip = binding.coordinator.createThemedSnackbar(
-                R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE
+            R.string.tooltip_remove_currency, Snackbar.LENGTH_INDEFINITE
         ).fixedSizes.apply {
 
             addCallback(object : Snackbar.Callback() {
@@ -258,7 +256,8 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
                 override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
                     if (event == DISMISS_EVENT_ACTION
-                            || event == DISMISS_EVENT_SWIPE) {
+                        || event == DISMISS_EVENT_SWIPE
+                    ) {
                         model.liveIsFirstTimeTooltipShown.value = false
                     }
                 }
@@ -344,34 +343,49 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             return this
         }
 
+//    private inline fun computeAndUpdateUi(
+//        crossinline compute: () -> Unit,
+//        crossinline update: () -> Unit
+//    ) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            compute()
+//            CoroutineScope(Dispatchers.Main).launch {
+//                update()
+//            }
+//        }
+//    }
+
     private fun generateUndoSnackBar(editedItems: List<CurrencyItem>, added: Boolean) {
         if (editedItems.isEmpty()) return
 
         val message = if (editedItems.size == 1) {
             getString(
-                    if (added) R.string.message_item_shown else R.string.message_item_hidden,
-                    editedItems[0].code)
+                if (added) R.string.message_item_shown else R.string.message_item_hidden,
+                editedItems[0].code
+            )
         } else {
             resources.getQuantityString(
-                    if (added) R.plurals.message_items_shown else R.plurals.message_items_hidden,
-                    editedItems.size,
-                    editedItems.size)
+                if (added) R.plurals.message_items_shown else R.plurals.message_items_hidden,
+                editedItems.size,
+                editedItems.size
+            )
         }
 
         val undoSnackBar = binding.coordinator
-                .createThemedSnackbar(message, Snackbar.LENGTH_LONG).fixedSizes
+            .createThemedSnackbar(message, Snackbar.LENGTH_LONG).fixedSizes
 
         undoSnackBar.setAction(R.string.action_undo) {
-            Completable
-                    .fromRunnable {
-                        if (added) {
-                            model.makeItemsHidden(editedItems)
-                        } else {
-                            model.makeItemsVisible(editedItems)
-                        }
-                    }.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete { generateUndoSnackBar(editedItems, !added) }.subscribe()
+
+            writeAndUpdateUi(
+                compute = {
+                    if (added) {
+                        model.makeItemsHidden(editedItems)
+                    } else {
+                        model.makeItemsVisible(editedItems)
+                    }
+                },
+                update = { generateUndoSnackBar(editedItems, !added) }
+            )
         }
         undoSnackBar.show()
     }
@@ -381,31 +395,25 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             setNewFabImage(checkDrawable)
             binding.floatingActionButton.setOnClickListener {
                 val selectedItems = ArrayList(model.selectedHiddenItems)
-                Completable
-                        .fromRunnable {
-                            model.makeItemsVisible(selectedItems)
-                        }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete { generateUndoSnackBar(selectedItems, true) }
-                        .subscribe()
+                writeAndUpdateUi(
+                    compute = { model.makeItemsVisible(selectedItems) },
+                    update = { generateUndoSnackBar(selectedItems, true) }
+                )
             }
         } else {
             setNewFabImage(deleteDrawable)
             binding.floatingActionButton.setOnClickListener {
                 val selectedItems = ArrayList(model.selectedVisibleItems)
-                Completable
-                        .fromRunnable {
-                            model.makeItemsHidden(selectedItems)
-                        }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete { generateUndoSnackBar(selectedItems, false) }
-                        .subscribe()
+                writeAndUpdateUi(
+                    compute = { model.makeItemsHidden(selectedItems) },
+                    update = { generateUndoSnackBar(selectedItems, false) }
+                )
             }
         }
     }
 
     private inner class CurrencyEditorPager2Adapter :
-            FragmentStateAdapter(this@CurrenciesSettingsActivity) {
+        FragmentStateAdapter(this@CurrenciesSettingsActivity) {
 
         private val fragments: Array<UniqueReplaceableFragment> = arrayOf(add, edit)
 

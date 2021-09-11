@@ -23,8 +23,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.model.currency.CurrencyItem;
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies;
@@ -150,11 +148,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         InputMethodManager imm =
                 (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            Flowable.fromRunnable(() ->
-                    imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0)
-            ).subscribeOn(Schedulers.computation())
-                    .subscribe();
-
+            imm.hideSoftInputFromWindow(recycler.getWindowToken(), 0);
         }
     }
 
@@ -216,10 +210,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
                 if (keyboard != null) {
 
-                    Flowable.fromRunnable(() ->
-                            keyboard.showSoftInput(input, 0)
-                    ).subscribeOn(Schedulers.computation())
-                            .subscribe();
+                    keyboard.showSoftInput(input, 0);
                 }
             });
 
