@@ -105,11 +105,6 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
     }
 
     @Override
-    public int getOrder() {
-        return 1;
-    }
-
-    @Override
     public int getTitle() {
         return R.string.currencies_edit;
     }

@@ -21,8 +21,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.Arrays;
-
 import ru.art2000.extensions.fragments.INavigationFragment;
 import ru.art2000.extensions.fragments.IReplaceableFragment;
 
@@ -52,7 +50,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     }
 
     @Nullable
-    private IReplaceableFragment getReplaceable(int position) {
+    public IReplaceableFragment getReplaceable(int position) {
         return replaceables.get(position, null);
     }
 
@@ -61,7 +59,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
             onNavigationItemSelected(item);
             return true;
         });
-        setOnItemReselectedListener(null);
+        setOnItemReselectedListener(this::onNavigationItemReselected);
     }
 
     private void onNavigationItemSelected(MenuItem item) {
@@ -82,20 +80,25 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
         }
     }
 
+    private void onNavigationItemReselected(MenuItem item) {
+
+        if (!firstReplaceDone) {
+            onNavigationItemSelected(item);
+            firstReplaceDone = true;
+        } else {
+            if (currentReplaceable != null) {
+                currentReplaceable.onReselected();
+            }
+        }
+    }
+
     @Override
     public void setOnItemReselectedListener(@Nullable OnItemReselectedListener listener) {
         super.setOnItemReselectedListener(item -> {
-            if (!firstReplaceDone) {
-                onNavigationItemSelected(item);
-                firstReplaceDone = true;
-            } else {
-                if (currentReplaceable != null) {
-                    currentReplaceable.onReselected();
-                }
+            onNavigationItemReselected(item);
 
-                if (listener != null) {
-                    listener.onNavigationItemReselected(item);
-                }
+            if (listener != null && firstReplaceDone) {
+                listener.onNavigationItemReselected(item);
             }
         });
     }
@@ -118,9 +121,7 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     public void setupWithViewPager2(AppCompatActivity parentActivity,
                                     ViewPager2 pager2,
                                     INavigationFragment... replaceableFragments) {
-        //noinspection ComparatorCombinators
-        Arrays.sort(replaceableFragments, (fragment1, fragment2) ->
-                Integer.compare(fragment1.getOrder(), fragment2.getOrder()));
+
         setReplaceableFragments(replaceableFragments);
         pager2.setOffscreenPageLimit(replaceableFragments.length - 1);
         pager2.setUserInputEnabled(false);
@@ -142,10 +143,6 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     public void setupWithFragments(AppCompatActivity parentActivity,
                                    int containerId,
                                    INavigationFragment... replaceableFragments) {
-
-        //noinspection ComparatorCombinators
-        Arrays.sort(replaceableFragments, (fragment1, fragment2) ->
-                Integer.compare(fragment1.getOrder(), fragment2.getOrder()));
 
         setReplaceableFragments(replaceableFragments);
 
@@ -227,26 +224,22 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
     public void setReplaceableFragments(INavigationFragment... replaceableFragments) {
         Menu menu = getMenu();
         menu.clear();
-        for (INavigationFragment replaceableFragment : replaceableFragments) {
+
+        for (int order = 0; order < replaceableFragments.length; ++order) {
+            INavigationFragment replaceableFragment = replaceableFragments[order];
             int id = replaceableFragment.getReplaceableId();
             id = id == -1 ? Menu.NONE : id;
-
-            if (replaceables.get(replaceableFragment.getOrder()) != null) {
-                throw new IllegalStateException(
-                        "Fragment with order " + replaceableFragment.getOrder() +
-                                " was already added");
-            }
 
             MenuItem item = menu.add(
                     Menu.NONE,
                     id,
-                    replaceableFragment.getOrder(),
+                    order,
                     replaceableFragment.getTitle());
             int iconRes = replaceableFragment.getIcon();
             if (iconRes != -1) {
                 item.setIcon(iconRes);
             }
-            this.replaceables.put(replaceableFragment.getOrder(), replaceableFragment);
+            this.replaceables.put(order, replaceableFragment);
         }
     }
 

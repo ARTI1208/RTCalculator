@@ -13,19 +13,26 @@ import ru.art2000.calculator.R
 import android.widget.Toast
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.view.MenuItem
 import ru.art2000.calculator.databinding.ActivityMainBinding
-import java.util.*
+import ru.art2000.extensions.fragments.INavigationFragment
 
 class MainActivity : AutoThemeActivity() {
     private var viewBinding: ActivityMainBinding? = null
     private var doubleBackToExitPressedOnce = false
-    private var currencyConverterFragment: CurrencyConverterFragment? = null
-    private var calculatorFragment: CalculatorFragment? = null
-    private var unitConverterFragment: UnitConverterFragment? = null
-    private var settingsFragment: SettingsFragment? = null
+
+    private val currentFragment: INavigationFragment
+        get() {
+            val binding = requireNotNull(viewBinding)
+            val replaceable = requireNotNull(
+                binding.navigation.getReplaceable(binding.pager2.currentItem)
+            )
+            return replaceable as? INavigationFragment
+                ?: throw IllegalStateException("Current fragment ($replaceable) is not an instance of INavigationFragment")
+        }
 
     @delegate:TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @get:ColorInt
@@ -37,10 +44,42 @@ class MainActivity : AutoThemeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         PrefsHelper.initialSetup(this)
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(viewBinding!!.root)
-        val list = supportFragmentManager.fragments
-        for (fragment in list) {
+
+        val binding = ActivityMainBinding.inflate(layoutInflater).also {
+            viewBinding = it
+        }
+
+        setContentView(binding.root)
+
+        binding.navigation.setOnItemSelectedListener { item: MenuItem ->
+            PrefsHelper.setDefaultTab(item.order)
+            when (item.itemId) {
+                R.id.navigation_unit -> {
+                    changeStatusBarColor(false)
+                    intent.action = ACTION_CONVERTER
+                }
+                R.id.navigation_currency -> {
+                    changeStatusBarColor(false)
+                    intent.action = ACTION_CURRENCIES
+                }
+                R.id.navigation_settings -> {
+                    changeStatusBarColor(false)
+                    intent.action = ACTION_SETTINGS
+                }
+                else -> {
+                    changeStatusBarColor(true)
+                    intent.action = ACTION_CALCULATOR
+                }
+            }
+            true
+        }
+
+        var currencyConverterFragment: CurrencyConverterFragment? = null
+        var calculatorFragment: CalculatorFragment? = null
+        var unitConverterFragment: UnitConverterFragment? = null
+        var settingsFragment: SettingsFragment? = null
+
+        for (fragment in supportFragmentManager.fragments) {
             when (fragment) {
                 is CurrencyConverterFragment -> currencyConverterFragment = fragment
                 is CalculatorFragment -> calculatorFragment = fragment
@@ -54,56 +93,25 @@ class MainActivity : AutoThemeActivity() {
         unitConverterFragment     ?: run { unitConverterFragment = UnitConverterFragment() }
         settingsFragment          ?: run { settingsFragment = SettingsFragment() }
 
-        viewBinding!!.navigation.setOnItemReselectedListener { item: MenuItem ->
-            if (item.itemId == R.id.navigation_calc) {
-                calculatorFragment!!.ensureHistoryPanelClosed()
-            }
-        }
-        viewBinding!!.navigation.setOnItemSelectedListener { item: MenuItem ->
-            PrefsHelper.setDefaultTab(item.order)
-            when (item.itemId) {
-                R.id.navigation_unit -> {
-                    changeStatusBarColor(false)
-                    intent.action = "ru.art2000.calculator.action.CONVERTER"
-                }
-                R.id.navigation_currency -> {
-                    changeStatusBarColor(false)
-                    intent.action = "ru.art2000.calculator.action.CURRENCIES"
-                }
-                R.id.navigation_settings -> {
-                    changeStatusBarColor(false)
-                    intent.action = "ru.art2000.calculator.action.SETTINGS"
-                }
-                else -> {
-                    changeStatusBarColor(true)
-                    intent.action = "ru.art2000.calculator.action.CALCULATOR"
-                }
-            }
-            true
-        }
-        viewBinding!!.navigation.setupWithViewPager2(
+        binding.navigation.setupWithViewPager2(
             this,
-            viewBinding!!.pager2,
-            unitConverterFragment, currencyConverterFragment, calculatorFragment, settingsFragment
+            binding.pager2,
+            currencyConverterFragment, calculatorFragment, unitConverterFragment, settingsFragment,
         )
-        val tabId = if (Objects.requireNonNull(intent.action) == "android.intent.action.MAIN") {
-            PrefsHelper.getDefaultNavItem()
-        } else {
-            when (intent.action) {
-                "ru.art2000.calculator.action.CALCULATOR" -> R.id.navigation_calc
-                "ru.art2000.calculator.action.CONVERTER" -> R.id.navigation_unit
-                "ru.art2000.calculator.action.CURRENCIES" -> R.id.navigation_currency
-                "ru.art2000.calculator.action.SETTINGS" -> R.id.navigation_settings
-                else -> R.id.navigation_calc
-            }
+
+        val tabId = when (intent.action) {
+            Intent.ACTION_MAIN -> PrefsHelper.getDefaultNavItem()
+            ACTION_CALCULATOR -> R.id.navigation_calc
+            ACTION_CONVERTER -> R.id.navigation_unit
+            ACTION_CURRENCIES -> R.id.navigation_currency
+            ACTION_SETTINGS -> R.id.navigation_settings
+            else -> R.id.navigation_calc
         }
-        viewBinding!!.navigation.selectedItemId = tabId
+        binding.navigation.selectedItemId = tabId
     }
 
     override fun onBackPressed() {
-        if (viewBinding!!.navigation.selectedItemId != R.id.navigation_calc
-            || calculatorFragment!!.ensureHistoryPanelClosed()
-        ) {
+        if (currentFragment.onBackPressed()) {
             if (doubleBackToExitPressedOnce) {
                 finish()
                 return
@@ -125,5 +133,14 @@ class MainActivity : AutoThemeActivity() {
                 window.statusBarColor = normalStatusBarColor
             }
         }
+    }
+
+    private companion object {
+
+        const val ACTION_CALCULATOR = "ru.art2000.calculator.action.CALCULATOR"
+        const val ACTION_CONVERTER  = "ru.art2000.calculator.action.CONVERTER"
+        const val ACTION_CURRENCIES = "ru.art2000.calculator.action.CURRENCIES"
+        const val ACTION_SETTINGS   = "ru.art2000.calculator.action.SETTINGS"
+
     }
 }

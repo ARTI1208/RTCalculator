@@ -89,10 +89,6 @@ class UnitConverterFragment : NavigationFragment() {
         }
     }
 
-    override fun getOrder(): Int {
-        return 2
-    }
-
     override fun getTitle(): Int {
         return R.string.title_unit
     }

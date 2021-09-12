@@ -178,10 +178,6 @@ class SettingsFragment : PreferenceNavigationFragment() {
         }
     }
 
-    override fun getOrder(): Int {
-        return 3
-    }
-
     override fun getTitle(): Int {
         return R.string.title_settings
     }

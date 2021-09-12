@@ -86,11 +86,6 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
     }
 
     @Override
-    public int getOrder() {
-        return 0;
-    }
-
-    @Override
     public int getTitle() {
         return R.string.currencies_add;
     }

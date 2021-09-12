@@ -113,11 +113,6 @@ public class CurrencyConverterFragment extends NavigationFragment {
     }
 
     @Override
-    public int getOrder() {
-        return 0;
-    }
-
-    @Override
     public int getReplaceableId() {
         return R.id.navigation_currency;
     }

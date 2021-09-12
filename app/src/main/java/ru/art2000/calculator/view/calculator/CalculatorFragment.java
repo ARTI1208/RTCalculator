@@ -255,11 +255,6 @@ public class CalculatorFragment extends NavigationFragment {
     }
 
     @Override
-    public int getOrder() {
-        return 1;
-    }
-
-    @Override
     public int getIcon() {
         return R.drawable.ic_calc;
     }
@@ -274,4 +269,13 @@ public class CalculatorFragment extends NavigationFragment {
         return R.string.title_calc;
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return ensureHistoryPanelClosed();
+    }
+
+    @Override
+    public void onReselected() {
+        ensureHistoryPanelClosed();
+    }
 }
