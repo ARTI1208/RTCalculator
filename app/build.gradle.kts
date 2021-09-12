@@ -81,6 +81,7 @@ android {
 
     // A bit of a hack. assembleApi21* tasks are generated and not accessible with getByName,
     // and trying to setup with tasks.whenTaskAdded and doFirst somewhy doesn't work
+    // TODO Rework this somehow to support building all flavours at the same time
     if (
         gradle.startParameter.taskNames.isEmpty() ||
         gradle.startParameter.taskNames.all { task ->
