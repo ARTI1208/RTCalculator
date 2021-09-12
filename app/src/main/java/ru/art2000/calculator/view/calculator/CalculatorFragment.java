@@ -113,6 +113,13 @@ public class CalculatorFragment extends NavigationFragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        model = null;
+    }
+
     public boolean ensureHistoryPanelClosed() {
         if (getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
                 getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED) {

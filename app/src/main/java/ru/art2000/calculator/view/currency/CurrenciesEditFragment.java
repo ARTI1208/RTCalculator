@@ -2,7 +2,6 @@ package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -88,6 +87,14 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        itemTouchHelper = null;
+        viewBinding = null;
+        model = null;
+    }
+
+    @Override
     public void onReselected() {
         viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
     }
@@ -109,13 +116,13 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
 
     private class EditCurrenciesAdapter extends RecyclerView.Adapter<EditCurrenciesAdapter.Holder> {
 
-        private final int REORDER_MODE = 0;
-        private final int SELECTION_MODE = 1;
+        private static final int REORDER_MODE = 0;
+        private static final int SELECTION_MODE = 1;
 
         @LayoutRes
-        private final int selectionItem = R.layout.item_add_currencies_list;
+        private static final int SELECTION_ITEM = R.layout.item_add_currencies_list;
         @LayoutRes
-        private final int reorderItem = R.layout.item_edit_currencies_list;
+        private static final int REORDER_ITEM = R.layout.item_edit_currencies_list;
         private int curMode = REORDER_MODE;
 
         EditCurrenciesAdapter() {
@@ -164,9 +171,9 @@ public class CurrenciesEditFragment extends UniqueReplaceableFragment {
         public EditCurrenciesAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View item;
             if (viewType == SELECTION_MODE)
-                item = LayoutInflater.from(requireContext()).inflate(selectionItem, null);
+                item = LayoutInflater.from(requireContext()).inflate(SELECTION_ITEM, null);
             else
-                item = LayoutInflater.from(requireContext()).inflate(reorderItem, null);
+                item = LayoutInflater.from(requireContext()).inflate(REORDER_ITEM, null);
             return new Holder(item);
         }
 

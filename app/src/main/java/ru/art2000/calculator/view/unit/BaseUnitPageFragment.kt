@@ -63,6 +63,11 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         }).root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mBinding = null
+    }
+
     protected val items by lazy { UnitConverterDependencies.getCategoryItems(category) }
 
     protected fun createSpinnerAdapter(): SpinnerAdapter {

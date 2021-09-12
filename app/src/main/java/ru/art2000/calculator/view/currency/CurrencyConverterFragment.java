@@ -87,6 +87,14 @@ public class CurrencyConverterFragment extends NavigationFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        adapter = null;
+        binding = null;
+        model = null;
+    }
+
+    @Override
     public void onReselected() {
         binding.currencyList.smoothScrollToPosition(0);
     }

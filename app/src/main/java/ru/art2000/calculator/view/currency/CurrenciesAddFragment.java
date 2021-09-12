@@ -74,6 +74,13 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewBinding = null;
+        model = null;
+    }
+
+    @Override
     public void onReselected() {
         viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
     }
