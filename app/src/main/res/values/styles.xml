@@ -200,14 +200,11 @@
     <style name="RT.Widget.TabLayout" parent="@style/Widget.MaterialComponents.TabLayout.PrimarySurface">
         <item name="tabIndicator">@drawable/tab_rounded_line_indicator</item>
         <item name="tabIndicatorFullWidth">false</item>
-<!--        <item name="tabInlineLabel">true</item>-->
-<!--        <item name="tabMode">fixed</item>-->
         <item name="tabTextAppearance">@style/RT.TextAppearance.Tab</item>
         <item name="tabIconTint">@color/tab_icon_text_color_selector</item>
         <item name="tabIndicatorColor">?colorSecondary</item>
-<!--        <item name="tabRippleColor">@color/tab_ripple_color_selector</item>-->
+        <item name="tabRippleColor">@color/tab_ripple_color_selector</item>
         <item name="tabTextColor">@color/tab_icon_text_color_selector</item>
-<!--        <item name="tabUnboundedRipple">true</item>-->
         <item name="android:background">?android:colorBackground</item>
     </style>
 
@@ -221,6 +218,7 @@
         <item name="backgroundTint">?android:colorBackground</item>
         <item name="itemIconTint">@color/navigation_tint</item>
         <item name="itemTextColor">@color/navigation_tint</item>
+        <item name="itemRippleColor">@color/tab_ripple_color_selector</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
     </style>
