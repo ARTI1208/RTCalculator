@@ -13,10 +13,7 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.UnitConverterItem
 import ru.art2000.calculator.view_model.calculator.CalculationClass
-import ru.art2000.extensions.views.CalculatorEditText
-import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.extensions.views.postFullScrollRight
-import ru.art2000.extensions.views.textValue
+import ru.art2000.extensions.views.*
 import ru.art2000.helpers.GeneralHelper
 
 class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
@@ -48,6 +45,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             }
         })
 
+        binding.orHsv.autoScrollOnInput()
+
         model.liveExpression.observe(viewLifecycleOwner, { expression: String ->
             if (expression != binding.valueOriginal.text?.toString()) {
                 binding.valueOriginal.setText(expression)
@@ -63,13 +62,6 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         binding.valueOriginal.onSelectionChangedListener = CalculatorEditText.OnSelectionChangedListener { selStart, selEnd ->
             model.inputSelection = Pair(selStart, selEnd)
         }
-
-        binding.valueConverted.addTextChangedListener(object : SimpleTextWatcher() {
-
-            override fun afterTextChanged(s: Editable) {
-                binding.convertedHsv.postFullScrollRight()
-            }
-        })
 
         binding.swapButton.setOnClickListener {
             binding.spinnerFrom.setSelection(binding.spinnerTo.selectedItemPosition)

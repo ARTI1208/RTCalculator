@@ -41,9 +41,6 @@ public class CalculatorFragment extends NavigationFragment {
     private CalculatorModel model;
     private CalculatorLayoutBinding binding;
 
-    private boolean selectionChanged;
-    private boolean textChanged;
-
     @Nullable
     @Override
     public View onCreateView(
@@ -66,56 +63,14 @@ public class CalculatorFragment extends NavigationFragment {
                         model.clearResult();
                     }
 
-                    textChanged = true;
                     model.getLiveExpression().setValue(s.toString());
                 }
             });
 
-            ViewTreeObserver vto = getInputTv().getViewTreeObserver();
-            vto.addOnPreDrawListener(() -> {
-                if (selectionChanged && textChanged) {
-                    textChanged = false;
-                    selectionChanged = false;
-                    Layout layout = getInputTv().getLayout();
-                    if (layout == null) return true;
-
-                    Pair<Integer, Integer> pair = model.getInputSelection();
-                    int first = pair.getFirst();
-                    if (first != pair.getSecond()) return true;
-
-                    int xCoordinate = (int) layout.getPrimaryHorizontal(first);
-                    int xCoordinate2 = (int) layout.getSecondaryHorizontal(first);
-                    xCoordinate = getInputTv().getLayoutDirection() == View.LAYOUT_DIRECTION_LTR ? xCoordinate : xCoordinate2;
-
-                    HorizontalScrollView scrollView = binding.calculatorIo.inputScrollView;
-
-                    int scrollToX = xCoordinate > scrollView.getWidth()
-                            ? xCoordinate - scrollView.getWidth() + scrollView.getPaddingStart() + scrollView.getPaddingEnd()
-                            : xCoordinate;
-
-                    boolean isOutOfScreenToStart = false;
-                    if (first > 0) {
-                        int previousX = (int) layout.getPrimaryHorizontal(first - 1);
-                        isOutOfScreenToStart = previousX - scrollView.getScrollX() < 0;
-                        if (isOutOfScreenToStart) {
-                            scrollToX = scrollToX - xCoordinate + previousX;
-                        }
-                    }
-
-                    boolean isOutOfScreenToEnd = xCoordinate - scrollView.getScrollX() > scrollView.getWidth() - scrollView.getPaddingStart() - scrollView.getPaddingEnd();
-
-                    if (isOutOfScreenToStart || isOutOfScreenToEnd) {
-                        scrollView.scrollTo(scrollToX, 0);
-                    }
-                }
-                return true;
-            });
+            ViewsKt.autoScrollOnInput(binding.calculatorIo.inputScrollView);
 
             getInputTv().setOnSelectionChangedListener((selStart, selEnd) -> {
                 model.setInputSelection(new Pair<>(selStart, selEnd));
-                if (selStart == selEnd) {
-                    selectionChanged = true;
-                }
             });
 
             model.getLiveExpression().observe(getViewLifecycleOwner(), (expression) -> {
