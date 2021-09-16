@@ -49,14 +49,13 @@
         android:paddingTop="@dimen/calc_field_vertical_padding"
         android:paddingBottom="@dimen/calc_field_vertical_padding">
 
-        <HorizontalScrollView
+        <ru.art2000.extensions.views.HorizontalScrollViewCompat
             android:id="@+id/input_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:longClickable="true"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
+            android:paddingHorizontal="6dp"
             android:scrollbars="none">
 
             <ru.art2000.extensions.views.CalculatorEditText
@@ -65,16 +64,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:gravity="end"
+                android:paddingHorizontal="0dp"
                 android:hint="@string/calculator_input_hint"
                 android:textSize="@dimen/calc_text_size" />
-        </HorizontalScrollView>
+        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
-        <HorizontalScrollView
+        <ru.art2000.extensions.views.HorizontalScrollViewCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
+            android:paddingHorizontal="6dp"
             android:scrollbars="none">
 
             <TextView
@@ -87,6 +86,6 @@
                 android:textColor="?colorSecondary"
                 android:textSize="@dimen/calc_text_size"
                 android:visibility="invisible" />
-        </HorizontalScrollView>
+        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
     </LinearLayout>
 </FrameLayout>

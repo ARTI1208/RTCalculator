@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/unit_view_simple_row_height">
 
-        <HorizontalScrollView
+        <ru.art2000.extensions.views.HorizontalScrollViewCompat
             android:id="@+id/or_hsv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
@@ -29,7 +29,7 @@
                 android:maxLines="1"
                 tools:text="0"
                 android:textSize="40sp" />
-        </HorizontalScrollView>
+        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
         <TextView
             android:id="@+id/original_dimension_hint"
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/unit_view_simple_row_height">
 
-        <HorizontalScrollView
+        <ru.art2000.extensions.views.HorizontalScrollViewCompat
             android:id="@+id/converted_hsv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
@@ -69,7 +69,7 @@
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
                 tools:text="0" />
-        </HorizontalScrollView>
+        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
         <TextView
             android:id="@+id/converted_dimension_hint"
