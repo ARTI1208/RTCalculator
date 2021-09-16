@@ -124,7 +124,7 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="elevation">0dp</item>
-        <item name="rippleColor">#00000000</item>
+        <item name="rippleColor">@color/calculator_button_ripple_color</item>
         <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
     </style>
 
@@ -160,7 +160,6 @@
     <style name="RT.TextAppearance.Tab" parent="Base.RT.TextAppearance.Tab" />
 
     <style name="RT.Widget.Button" parent="Base.RT.Widget.Button">
-        <item name="android:background">?selectableItemBackgroundBorderless</item>
         <item name="enforceMaterialTheme">false</item>
     </style>
 
@@ -176,11 +175,11 @@
         <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
-    <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView"/>
+    <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView" />
 
-    <style name="RT.Widget.ListView.VerticalIndicators" parent="@style/Widget.AppCompat.ListView"/>
+    <style name="RT.Widget.ListView.VerticalIndicators" parent="@style/Widget.AppCompat.ListView" />
 
-    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView"/>
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
 
     <style name="RT.Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="actionTextColorAlpha">1.0</item>
@@ -236,7 +235,7 @@
         <item name="android:padding">@dimen/changelog_padding</item>
     </style>
 
-    <style name="Base.RT.Design.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog" >
+    <style name="Base.RT.Design.BottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
 
         <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
     </style>
