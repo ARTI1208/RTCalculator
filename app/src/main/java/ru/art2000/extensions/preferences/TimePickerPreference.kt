@@ -5,14 +5,18 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.preference.DialogPreference
-import ru.art2000.calculator.R
+import androidx.preference.R as PreferenceR
 
 
 class TimePickerPreference @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = getAttr(context, R.attr.dialogPreferenceStyle, android.R.attr.dialogPreferenceStyle),
-        defStyleRes: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = getAttr(
+        context,
+        PreferenceR.attr.dialogPreferenceStyle,
+        android.R.attr.dialogPreferenceStyle
+    ),
+    defStyleRes: Int = 0
 ) : DialogPreference(context, attrs, defStyleAttr, defStyleRes) {
 
     var hour: Int = DEFAULT_HOUR
@@ -28,7 +32,7 @@ class TimePickerPreference @JvmOverloads constructor(
         }
 
     val timeString: String
-        get() = String.format("%02d", hour) + ":" + String.format("%02d", minute);
+        get() = String.format("%02d", hour) + ":" + String.format("%02d", minute)
 
     companion object {
         fun getAttr(context: Context, attr: Int, fallback: Int = attr): Int {
@@ -46,17 +50,17 @@ class TimePickerPreference @JvmOverloads constructor(
         private const val DEFAULT_MINUTE = 0
 
         @JvmStatic
-        public fun parseStringTime(time: String): Pair<Int, Int> {
+        fun parseStringTime(time: String): Pair<Int, Int> {
             val parts = time.split(':')
             if (parts.size != 2) return DEFAULT_HOUR to DEFAULT_MINUTE
 
             val hour = (parts.first().toIntOrNull() ?: DEFAULT_HOUR)
-                    .coerceAtLeast(0)
-                    .coerceAtMost(23)
+                .coerceAtLeast(0)
+                .coerceAtMost(23)
 
             val minute = (parts.last().toIntOrNull() ?: DEFAULT_MINUTE)
-                    .coerceAtLeast(0)
-                    .coerceAtMost(59)
+                .coerceAtLeast(0)
+                .coerceAtMost(59)
 
             return hour to minute
         }

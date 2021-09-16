@@ -56,7 +56,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
             binding.currencyList.setEmptyViewGenerator((context, viewGroup, integer) ->
                     ViewsKt.createTextEmptyView(context, R.string.empty_text_no_currencies_added));
 
-            int colorAccent = AndroidHelper.getColorAttribute(requireContext(), R.attr.colorSecondary);
+            int colorAccent = AndroidHelper.getColorAttribute(requireContext(), com.google.android.material.R.attr.colorSecondary);
             int circleBackground = AndroidHelper.getColorAttribute(requireContext(), R.attr.floatingViewBackground);
 
             binding.refresher.setProgressBackgroundColorSchemeColor(circleBackground);

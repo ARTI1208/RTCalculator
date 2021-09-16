@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.art2000.calculator.R
+import com.google.android.material.R as MaterialR
 
 fun Modifier.verticalScrollBar(
     state: ScrollState,
@@ -31,7 +31,8 @@ fun Modifier.verticalScrollBar(
         animationSpec = tween(durationMillis = duration)
     )
 
-    val actualColor = color ?: LocalContext.current.getColorFromAttribute(R.attr.colorControlNormal)
+    val actualColor =
+        color ?: LocalContext.current.getColorFromAttribute(MaterialR.attr.colorControlNormal)
 
     drawWithContent {
         drawContent()
@@ -44,8 +45,10 @@ fun Modifier.verticalScrollBar(
             val visibleHeight = containerHeight - state.maxValue
 
             val minScrollBarHeight = minHeightPx ?: 20.dp.toPx()
-            val scrollbarHeight = ((visibleHeight / containerHeight) * visibleHeight).coerceAtLeast(minScrollBarHeight)
-            val scrollbarOffsetY = ((state.value.toFloat() / state.maxValue) * (visibleHeight - scrollbarHeight)) + state.value
+            val scrollbarHeight =
+                ((visibleHeight / containerHeight) * visibleHeight).coerceAtLeast(minScrollBarHeight)
+            val scrollbarOffsetY =
+                ((state.value.toFloat() / state.maxValue) * (visibleHeight - scrollbarHeight)) + state.value
 
             drawRect(
                 color = actualColor,

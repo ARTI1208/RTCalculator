@@ -65,7 +65,7 @@ public class SnackbarThemeHelper {
         //Background
         MaterialShapeDrawable backgroundDrawable = new MaterialShapeDrawable();
         backgroundDrawable.setStroke(resources.getDimension(R.dimen.bottom_view_stroke_width),
-                AndroidHelper.getColorAttribute(context, R.attr.strokeColor));
+                AndroidHelper.getColorAttribute(context, com.google.android.material.R.attr.strokeColor));
         backgroundDrawable.setCornerSize(cornerRadius);
         backgroundDrawable.setFillColor(ColorStateList.valueOf(
                 AndroidHelper.getColorAttribute(context, R.attr.floatingViewBackground)));
@@ -73,7 +73,7 @@ public class SnackbarThemeHelper {
 
         //MessageView
         snackbar.setTextColor(
-                AndroidHelper.getColorAttribute(context, R.attr.colorOnSecondary));
+                AndroidHelper.getColorAttribute(context, com.google.android.material.R.attr.colorOnSecondary));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             contentLayout.getMessageView().setLetterSpacing(0);
         }

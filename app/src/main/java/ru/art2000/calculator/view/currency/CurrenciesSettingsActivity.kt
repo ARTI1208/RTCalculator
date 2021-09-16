@@ -32,14 +32,15 @@ import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
-import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
+import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.SnackbarThemeHelper
 import ru.art2000.helpers.getColorAttribute
 import java.util.*
 import kotlin.collections.ArrayList
+import com.google.android.material.R as MaterialR
 
 class CurrenciesSettingsActivity : AutoThemeActivity() {
 
@@ -282,7 +283,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
     private fun applyMenuIconTint(icon: Drawable?) {
         icon?.colorFilter = PorterDuffColorFilter(
-            getColorAttribute(R.attr.colorSecondary), PorterDuff.Mode.SRC_ATOP
+            getColorAttribute(MaterialR.attr.colorSecondary), PorterDuff.Mode.SRC_ATOP
         )
     }
 

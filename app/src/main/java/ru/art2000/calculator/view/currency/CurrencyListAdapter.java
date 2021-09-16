@@ -50,7 +50,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
     CurrencyListAdapter(Context context, CurrencyListAdapterModel model) {
         adapterModel = model;
         mContext = context;
-        colorAccent = AndroidHelper.getColorAttribute(mContext, R.attr.colorSecondary);
+        colorAccent = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorSecondary);
 
         codeTextSizeNormal =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_normal);
