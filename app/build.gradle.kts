@@ -66,12 +66,12 @@ android {
     flavorDimensions += listOf("sdk")
     productFlavors {
 
-        create("api18") {
+        create("minApi18") {
             minSdk = 18
             dimension = "sdk"
         }
 
-        create("api21") {
+        create("minApi21") {
             minSdk = 21
             dimension = "sdk"
         }
@@ -144,21 +144,21 @@ dependencies {
     }
 
     val composeVersion = "1.1.0-alpha03"
-    "api21Implementation"("androidx.compose.ui:ui:$composeVersion")
+    "minApi21Implementation"("androidx.compose.ui:ui:$composeVersion")
     // Tooling support (Previews, etc.)
-    "api21Implementation"("androidx.compose.ui:ui-tooling:$composeVersion")
+    "minApi21Implementation"("androidx.compose.ui:ui-tooling:$composeVersion")
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    "api21Implementation"("androidx.compose.foundation:foundation:$composeVersion")
+    "minApi21Implementation"("androidx.compose.foundation:foundation:$composeVersion")
     // Material Design
-    "api21Implementation"("androidx.compose.material:material:$composeVersion")
+    "minApi21Implementation"("androidx.compose.material:material:$composeVersion")
     // Material design icons
-    "api21Implementation"("androidx.compose.material:material-icons-core:$composeVersion")
-    "api21Implementation"("androidx.compose.material:material-icons-extended:$composeVersion")
+    "minApi21Implementation"("androidx.compose.material:material-icons-core:$composeVersion")
+    "minApi21Implementation"("androidx.compose.material:material-icons-extended:$composeVersion")
     // Integration with observables
-    "api21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    "api21Implementation"("androidx.compose.compiler:compiler:$composeVersion")
+    "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    "minApi21Implementation"("androidx.compose.compiler:compiler:$composeVersion")
 
-    "api21Implementation"("androidx.activity:activity-compose:1.3.1")
+    "minApi21Implementation"("androidx.activity:activity-compose:1.3.1")
 
     testImplementation("junit:junit:4.13.2")
 }
