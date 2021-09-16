@@ -15,11 +15,11 @@ android {
         applicationId = "ru.art2000.calculator"
         minSdk = 18
         targetSdk = 31
-        versionCode = 7
+        versionCode = 8
 
         val major = 1
-        val minor = 1
-        val patch = 5
+        val minor = 2
+        val patch = 0
 
         versionName = "$major.$minor.$patch"
 

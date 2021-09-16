@@ -1,3 +1,10 @@
+v1.2.0
+ - Split version for minApi 18 and 21. Version with minApi 21 uses Compose a little
+ - Added more units to unit converter
+ - Added auto scrolling on input in calculator and simple unit converter
+ - Fixed crash in unit converter after changing theme
+ - Fixed various styling nad layout problems on API <21
+
 v1.1.5
  - Fixed wrong lexeme type naming in debug view in release mode
 
