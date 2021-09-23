@@ -184,9 +184,13 @@
     <style name="RT.Widget.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="actionTextColorAlpha">1.0</item>
         <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingRight">8dp</item>
         <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
         <item name="android:textColor">?colorSecondary</item>
     </style>
 
@@ -219,7 +223,9 @@
         <item name="itemTextColor">@color/navigation_tint</item>
         <item name="itemRippleColor">@color/tab_ripple_color_selector</item>
         <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
     </style>
 
     <style name="RT.View.LinkImageButton" parent="Widget.AppCompat.ImageButton">

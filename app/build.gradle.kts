@@ -13,7 +13,7 @@ android {
     buildToolsVersion = "31.0.0"
     defaultConfig {
         applicationId = "ru.art2000.calculator"
-        minSdk = 18
+        minSdk = 16
         targetSdk = 31
         versionCode = 8
 
@@ -66,8 +66,8 @@ android {
     flavorDimensions += listOf("sdk")
     productFlavors {
 
-        create("minApi18") {
-            minSdk = 18
+        create("minApi16") {
+            minSdk = 16
             dimension = "sdk"
         }
 
@@ -77,7 +77,7 @@ android {
         }
     }
 
-    val flavorsWithoutCompose = listOf("api18")
+    val flavorsWithoutCompose = listOf("api16")
 
     // A bit of a hack. assembleApi21* tasks are generated and not accessible with getByName,
     // and trying to setup with tasks.whenTaskAdded and doFirst somewhy doesn't work

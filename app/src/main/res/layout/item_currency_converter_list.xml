@@ -12,7 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/value_layout"
+        android:layout_toStartOf="@+id/value_layout"
         android:orientation="vertical">
 
         <TextView
@@ -33,9 +36,11 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/value_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical">
 

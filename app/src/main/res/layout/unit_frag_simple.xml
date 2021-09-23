@@ -24,8 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
-                android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
-                android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
                 android:maxLines="1"
                 tools:text="0"
                 android:textSize="40sp" />
@@ -36,8 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
-            android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+            android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
             tools:text="m/s"/>
     </FrameLayout>
@@ -63,8 +61,7 @@
                 android:id="@+id/value_converted"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
-                android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
+                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
                 android:textSize="40sp"
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
@@ -76,8 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
-            android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+            android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
             tools:text="km/h"/>
     </FrameLayout>
@@ -219,8 +215,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/unit_view_edge_horizontal_margin"
-        android:paddingStart="@dimen/unit_view_edge_horizontal_margin"
+        android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
         android:orientation="horizontal">
 
         <Spinner

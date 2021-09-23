@@ -5,8 +5,7 @@
     android:layout_height="60dp"
     android:minHeight="60dp"
     android:orientation="horizontal"
-    android:paddingStart="5dp"
-    android:paddingEnd="5dp">
+    android:paddingHorizontal="5dp">
 
     <EditText
         android:id="@+id/value"
@@ -29,6 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_weight="1.0"
         android:gravity="start|center_vertical"
         android:textSize="25sp"

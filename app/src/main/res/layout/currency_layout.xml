@@ -14,8 +14,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:contentInsetStart="6dp"
+            app:contentInsetLeft="6dp"
             app:contentInsetEnd="6dp"
-            app:contentInsetStart="6dp" />
+            app:contentInsetRight="6dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

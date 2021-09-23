@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -12,7 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/handle"
+        android:layout_toStartOf="@+id/handle"
         android:orientation="vertical">
 
         <TextView
@@ -21,8 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Code"
-            android:textSize="@dimen/currency_list_item_code_normal" />
+            android:textSize="@dimen/currency_list_item_code_normal"
+            tools:text="Code"/>
 
         <TextView
             android:id="@+id/currency_name"
@@ -30,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Name" />
+            tools:text="Name" />
     </LinearLayout>
 
     <ImageView
@@ -38,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         app:srcCompat="@drawable/ic_drag_handle"
         app:tint="?colorSecondary" />

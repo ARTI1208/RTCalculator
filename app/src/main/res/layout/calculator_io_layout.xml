@@ -9,8 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp">
+        android:paddingHorizontal="6dp">
 
         <TextView
             android:id="@+id/degRadTv"
@@ -24,8 +23,7 @@
             android:id="@+id/info_divider"
             android:layout_width="@dimen/calculator_info_divider_width"
             android:layout_height="match_parent"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp"
+            android:layout_marginHorizontal="6dp"
             android:background="#888888"
             android:visibility="gone"
             tools:visibility="visible" />
