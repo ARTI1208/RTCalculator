@@ -73,7 +73,7 @@ public class SnackbarThemeHelper {
 
         //MessageView
         snackbar.setTextColor(
-                AndroidHelper.getColorAttribute(context, com.google.android.material.R.attr.colorOnSecondary));
+                AndroidHelper.getColorAttribute(context, com.google.android.material.R.attr.colorOnBackground));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             contentLayout.getMessageView().setLetterSpacing(0);
         }
