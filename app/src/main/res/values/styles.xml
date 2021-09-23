@@ -36,7 +36,6 @@
         <item name="bottomNavigationStyle">@style/RT.Widget.BottomNavigationView</item>
         <item name="changelogBackground">@drawable/changelog_background_light</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
-        <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
@@ -78,7 +77,6 @@
         <item name="bottomNavigationStyle">@style/RT.Widget.BottomNavigationView</item>
         <item name="changelogBackground">@drawable/changelog_background_dark</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
-        <item name="bottomSheetStyle">@style/RT.Design.BottomSheetDialog</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
@@ -249,7 +247,12 @@
 
     <style name="Widget.RT.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.RT.BottomSheet</item>
-        <item name="backgroundTint">?background</item>
+        <!--
+            This one should be colorPrimary, but looks like it's overridden at this point
+            by something, so we are lucky nothing (currently) uses colorPrimaryVariant
+            and colorPrimaryVariant = colorPrimary (also currently)
+         -->
+        <item name="backgroundTint">?colorPrimaryVariant</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.RT.BottomSheet" parent="">
