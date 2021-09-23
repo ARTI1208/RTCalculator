@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="?colorOnSurface"
+        android:textColor="?colorOnBackground"
         tools:text="666" />
 
     <TextView
@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textColor="?colorOnSurface"
         tools:text="[ExpressionValue]" />
 
 </LinearLayout>

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:text="@string/debug_lexeme_list_title"
-        android:textColor="?colorOnSurface"
+        android:textColor="?colorOnBackground"
         android:textSize="16sp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -46,21 +46,21 @@
             android:id="@+id/lexer_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?colorOnSurface"
+            android:textColor="?colorOnBackground"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/parser_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?colorOnSurface"
+            android:textColor="?colorOnBackground"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/compute_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?colorOnSurface"
+            android:textColor="?colorOnBackground"
             android:textSize="16sp" />
 
     </LinearLayout>
