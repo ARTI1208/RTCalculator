@@ -1,3 +1,8 @@
+v1.2.1
+ - Added support of Android versions 4.1-4.2 (API 16-17)
+ - Fixed crash on open of Calculator Expertise View
+ - Fixed snackbar message text color
+
 v1.2.0
  - Split version for minApi 18 and 21. Version with minApi 21 uses Compose a little
  - Added more units to unit converter
