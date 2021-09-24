@@ -82,7 +82,9 @@ public class CurrenciesAddFragment extends UniqueReplaceableFragment {
 
     @Override
     public void onReselected() {
-        viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
+        if (viewBinding != null) {
+            viewBinding.modifyCurrenciesList.smoothScrollToPosition(0);
+        }
     }
 
     @Override

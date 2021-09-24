@@ -126,7 +126,11 @@ public class CalculatorFragment extends NavigationFragment {
         model = null;
     }
 
-    public boolean ensureHistoryPanelClosed() {
+    /**
+     * @return true if panel was already closed, false otherwise
+     */
+    private boolean ensureHistoryPanelClosed() {
+        if (binding == null) return true;
         if (getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
                 getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED) {
             getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);

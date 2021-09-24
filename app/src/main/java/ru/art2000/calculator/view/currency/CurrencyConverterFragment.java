@@ -96,7 +96,9 @@ public class CurrencyConverterFragment extends NavigationFragment {
 
     @Override
     public void onReselected() {
-        binding.currencyList.smoothScrollToPosition(0);
+        if (binding != null) {
+            binding.currencyList.smoothScrollToPosition(0);
+        }
     }
 
     @Override
