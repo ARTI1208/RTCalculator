@@ -57,6 +57,7 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
     init {
         mLoadingState.observeForever {
             if (it != LoadingState.LOADING_STARTED && it != LoadingState.UNINITIALISED) {
+                isFirstUpdateDone = true
                 mLoadingState.postValue(LoadingState.UNINITIALISED)
             }
         }
