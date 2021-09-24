@@ -30,6 +30,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
     private CurrencyConverterModel model;
     private CurrencyLayoutBinding binding;
     private CurrencyListAdapter adapter;
+    private Runnable keyboardListenerSubscription;
 
     @SuppressLint({"InflateParams", "RestrictedApi"})
     @Nullable
@@ -95,16 +96,30 @@ public class CurrencyConverterFragment extends NavigationFragment {
     }
 
     @Override
-    public void onReselected() {
-        if (binding != null) {
-            binding.currencyList.smoothScrollToPosition(0);
-        }
+    public void onResume() {
+        super.onResume();
+        keyboardListenerSubscription = ViewsKt.addImeVisibilityListener(binding.getRoot(), isVisible -> {
+            if (!isVisible) {
+                adapter.removeEditText();
+            }
+        });
     }
 
     @Override
     public void onPause() {
         super.onPause();
         adapter.removeEditText();
+        if (keyboardListenerSubscription != null) {
+            keyboardListenerSubscription.run();
+            keyboardListenerSubscription = null;
+        }
+    }
+
+    @Override
+    public void onReselected() {
+        if (binding != null) {
+            binding.currencyList.smoothScrollToPosition(0);
+        }
     }
 
     @Override

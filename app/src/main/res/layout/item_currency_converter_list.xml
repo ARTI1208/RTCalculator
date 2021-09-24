@@ -63,6 +63,7 @@
             android:gravity="center"
             android:visibility="gone"
             android:inputType="numberDecimal"
+            android:imeOptions="flagNoFullscreen"
             android:maxWidth="200dp"
             android:maxLength="15"
             android:minWidth="10dp"
