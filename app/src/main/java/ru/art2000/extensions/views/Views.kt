@@ -1,6 +1,7 @@
 package ru.art2000.extensions.views
 
 import android.content.Context
+import android.os.Build
 import android.text.Editable
 import android.view.Gravity
 import android.view.View
@@ -51,27 +52,30 @@ fun HorizontalScrollView.autoScrollOnInput() {
             if (first != second) return@addOnPreDrawListener true
             var xCoordinate = layout.getPrimaryHorizontal(first).toInt()
             val xCoordinate2 = layout.getSecondaryHorizontal(first).toInt()
-            xCoordinate =
-                if (childEditText.layoutDirection == View.LAYOUT_DIRECTION_LTR) xCoordinate else xCoordinate2
-            val scrollView = this
 
-            val totalPadding =
-                scrollView.paddingStart + scrollView.paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
+            val totalPadding: Int
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                xCoordinate = if (childEditText.layoutDirection == View.LAYOUT_DIRECTION_LTR)
+                    xCoordinate
+                else
+                    xCoordinate2
+                totalPadding = paddingStart + paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
+            } else {
+                totalPadding = paddingLeft + paddingRight + childEditText.paddingLeft + childEditText.paddingRight
+            }
 
-            var scrollToX =
-                if (xCoordinate > scrollView.width) xCoordinate - scrollView.width + totalPadding else xCoordinate
+            var scrollToX = if (xCoordinate > width) xCoordinate - width + totalPadding else xCoordinate
             var isOutOfScreenToStart = false
             if (first > 0) {
                 val previousX = layout.getPrimaryHorizontal(first - 1).toInt()
-                isOutOfScreenToStart = previousX - scrollView.scrollX < 0
+                isOutOfScreenToStart = previousX - scrollX < 0
                 if (isOutOfScreenToStart) {
                     scrollToX = scrollToX - xCoordinate + previousX
                 }
             }
-            val isOutOfScreenToEnd =
-                xCoordinate - scrollView.scrollX > scrollView.width - totalPadding
+            val isOutOfScreenToEnd = xCoordinate - scrollX > width - totalPadding
             if (isOutOfScreenToStart || isOutOfScreenToEnd) {
-                scrollView.scrollTo(scrollToX, 0)
+                scrollTo(scrollToX, 0)
             }
         }
         true
