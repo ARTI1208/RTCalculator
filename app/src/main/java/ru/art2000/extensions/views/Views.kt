@@ -14,8 +14,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.util.Consumer
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.*
 import androidx.core.widget.addTextChangedListener
 
 operator fun TextView.plusAssign(text: CharSequence) {
@@ -36,7 +35,7 @@ fun createTextEmptyView(context: Context, @StringRes text: Int): TextView {
     val emptyView = TextView(context)
     emptyView.setText(text)
     emptyView.layoutParams = ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
     )
     emptyView.gravity = Gravity.CENTER
     return emptyView
@@ -88,7 +87,7 @@ fun HorizontalScrollView.autoScrollOnInput() {
     }
 }
 
-fun View.addImeVisibilityListener(listener: Consumer<Boolean>): Runnable {
+fun View.addImeVisibilityListener(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         addImeVisibilityListenerApi21(listener)
     } else {
@@ -101,7 +100,7 @@ fun View.addImeVisibilityListener(listener: Consumer<Boolean>): Runnable {
  * TODO not works for fullscreen keyboard
  * TODO may use many CPU resources because OnGlobalLayoutListener called regularly
  */
-private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): Runnable {
+private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {
     var keyboardVisible = false
 
     val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -131,8 +130,7 @@ private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): Run
         }
     }
 
-    viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-    return Runnable { viewTreeObserver.removeOnGlobalLayoutListener(layoutListener) }
+    return attachImeListener(viewTreeObserver, layoutListener, listener)
 }
 
 /*
@@ -141,9 +139,10 @@ private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): Run
  * TODO may use many CPU resources because OnGlobalLayoutListener called regularly
  */
 @RequiresApi(21)
-private fun View.addImeVisibilityListenerApi21(listener: Consumer<Boolean>): Runnable {
+private fun View.addImeVisibilityListenerApi21(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {
     var keyboardVisible = false
 
+    // Not setOnApplyWindowInsetsListener because it doesn't report in landscape
     val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         val rootInsets = ViewCompat.getRootWindowInsets(this) ?: return@OnGlobalLayoutListener
 
@@ -154,7 +153,23 @@ private fun View.addImeVisibilityListenerApi21(listener: Consumer<Boolean>): Run
         }
     }
 
-    // Not setOnApplyWindowInsetsListener because it doesn't report in landscape
+    return attachImeListener(viewTreeObserver, layoutListener, listener)
+}
+
+private fun attachImeListener(
+        viewTreeObserver: ViewTreeObserver,
+        layoutListener: ViewTreeObserver.OnGlobalLayoutListener,
+        imeListener: Consumer<Boolean>
+): ListenerSubscription<Boolean> {
     viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-    return Runnable { viewTreeObserver.removeOnGlobalLayoutListener(layoutListener) }
+    return ListenerSubscription {
+        if (it != null) imeListener.accept(it)
+        viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+    }
+}
+
+fun interface ListenerSubscription<T> {
+    operator fun invoke(value: T?)
+
+    operator fun invoke() = invoke(null)
 }

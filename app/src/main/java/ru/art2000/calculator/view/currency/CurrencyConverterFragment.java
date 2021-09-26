@@ -30,7 +30,7 @@ public class CurrencyConverterFragment extends NavigationFragment {
     private CurrencyConverterModel model;
     private CurrencyLayoutBinding binding;
     private CurrencyListAdapter adapter;
-    private Runnable keyboardListenerSubscription;
+    private ListenerSubscription<Boolean> keyboardListenerSubscription;
 
     @SuppressLint({"InflateParams", "RestrictedApi"})
     @Nullable
@@ -108,9 +108,8 @@ public class CurrencyConverterFragment extends NavigationFragment {
     @Override
     public void onPause() {
         super.onPause();
-        adapter.removeEditText();
         if (keyboardListenerSubscription != null) {
-            keyboardListenerSubscription.run();
+            keyboardListenerSubscription.invoke(false);
             keyboardListenerSubscription = null;
         }
     }
