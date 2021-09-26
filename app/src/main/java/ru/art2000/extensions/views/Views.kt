@@ -173,3 +173,38 @@ fun interface ListenerSubscription<T> {
 
     operator fun invoke() = invoke(null)
 }
+
+@JvmOverloads
+fun View.applyWindowTopInsets(margin: Boolean = true) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        applyWindowTopInsetsApi21(margin)
+    }
+}
+
+private fun View.applyWindowTopInsetsApi21(margin: Boolean) {
+    val originalTop by lazy {
+        if (margin) {
+            (layoutParams as ViewGroup.MarginLayoutParams).topMargin
+        } else {
+            paddingTop
+        }
+    }
+
+    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+        val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+        if (margin) {
+            updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = originalTop + systemInsets.top
+            }
+        } else {
+            setPadding(
+                    paddingLeft,
+                    originalTop + systemInsets.top,
+                    paddingRight,
+                    paddingBottom,
+            )
+        }
+        WindowInsetsCompat.CONSUMED
+    }
+}

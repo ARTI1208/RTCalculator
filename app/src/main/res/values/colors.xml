@@ -13,6 +13,7 @@
     <color name="LightTheme_colorSurface">#ffffff</color>
     <color name="LightTheme_colorOnSurface">#737373</color>
     <color name="LightTheme_colorBackground">#fafafa</color>
+    <color name="LightTheme_lollipopStatusBackgroundTransparent">#3b000000</color>
     <color name="LightTheme_lollipopStatusBackground">#c0c0c0</color>
     <color name="LightTheme_colorOnBackground">#000000</color>
     <color name="LightTheme_inputBackground">#dedede</color>

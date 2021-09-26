@@ -19,13 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
 import ru.art2000.calculator.model.currency.LoadingState;
+import ru.art2000.calculator.view.MainScreenFragment;
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel;
 import ru.art2000.extensions.fragments.IReplaceableFragment;
-import ru.art2000.extensions.fragments.NavigationFragment;
+import ru.art2000.extensions.views.ListenerSubscription;
 import ru.art2000.extensions.views.ViewsKt;
 import ru.art2000.helpers.AndroidHelper;
 
-public class CurrencyConverterFragment extends NavigationFragment {
+public class CurrencyConverterFragment extends MainScreenFragment {
 
     private CurrencyConverterModel model;
     private CurrencyLayoutBinding binding;

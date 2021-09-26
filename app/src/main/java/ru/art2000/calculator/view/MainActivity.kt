@@ -1,24 +1,28 @@
 package ru.art2000.calculator.view
 
-import ru.art2000.helpers.getColorAttribute
-import ru.art2000.extensions.activities.AutoThemeActivity
-import ru.art2000.calculator.view.currency.CurrencyConverterFragment
-import ru.art2000.calculator.view.calculator.CalculatorFragment
-import ru.art2000.calculator.view.unit.UnitConverterFragment
-import ru.art2000.calculator.view.settings.SettingsFragment
-import androidx.annotation.ColorInt
-import android.os.Bundle
-import ru.art2000.helpers.PrefsHelper
-import ru.art2000.calculator.R
-import android.widget.Toast
-import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
+import android.widget.Toast
+import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityMainBinding
+import ru.art2000.calculator.view.calculator.CalculatorFragment
+import ru.art2000.calculator.view.currency.CurrencyConverterFragment
+import ru.art2000.calculator.view.settings.SettingsFragment
+import ru.art2000.calculator.view.unit.UnitConverterFragment
+import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.fragments.INavigationFragment
+import ru.art2000.helpers.PrefsHelper
+
+import androidx.core.content.ContextCompat
+import androidx.core.view.*
+import androidx.core.view.ViewCompat
+
+import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
+import ru.art2000.extensions.views.allowDrawingUnderStatusBar
 
 class MainActivity : AutoThemeActivity() {
     private var viewBinding: ActivityMainBinding? = null
@@ -28,18 +32,11 @@ class MainActivity : AutoThemeActivity() {
         get() {
             val binding = requireNotNull(viewBinding)
             val replaceable = requireNotNull(
-                binding.navigation.getReplaceable(binding.pager2.currentItem)
+                    binding.navigation.getReplaceable(binding.pager2.currentItem)
             )
             return replaceable as? INavigationFragment
-                ?: throw IllegalStateException("Current fragment ($replaceable) is not an instance of INavigationFragment")
+                    ?: throw IllegalStateException("Current fragment ($replaceable) is not an instance of INavigationFragment")
         }
-
-    @delegate:TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @get:ColorInt
-    private val normalStatusBarColor by lazy { getColorAttribute(android.R.attr.statusBarColor) }
-
-    @get:ColorInt
-    private val calculatorStatusBarColor by lazy { getColorAttribute(R.attr.colorSurfaceVariant) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         PrefsHelper.initialSetup(this)
@@ -50,26 +47,36 @@ class MainActivity : AutoThemeActivity() {
         }
 
         setContentView(binding.root)
+        updateStatusBarColor()
+
+        window.allowDrawingUnderStatusBar(true)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.pager2,
+                OnApplyWindowInsetsListener { v, insets ->
+                    val newInsets = ViewCompat.onApplyWindowInsets(v, insets)
+                    if (newInsets.isConsumed) return@OnApplyWindowInsetsListener newInsets
+                    var consumed = false
+
+                    val recyclerView = binding.pager2[0] as RecyclerView
+
+                    repeat(recyclerView.childCount) { i ->
+                        val child = recyclerView[i]
+                        ViewCompat.dispatchApplyWindowInsets(child, newInsets)
+                        if (newInsets.isConsumed) {
+                            consumed = true
+                        }
+                    }
+
+                    if (consumed) WindowInsetsCompat.CONSUMED else newInsets
+                })
 
         binding.navigation.setOnItemSelectedListener { item: MenuItem ->
             PrefsHelper.setDefaultTab(item.order)
-            when (item.itemId) {
-                R.id.navigation_unit -> {
-                    changeStatusBarColor(false)
-                    intent.action = ACTION_CONVERTER
-                }
-                R.id.navigation_currency -> {
-                    changeStatusBarColor(false)
-                    intent.action = ACTION_CURRENCIES
-                }
-                R.id.navigation_settings -> {
-                    changeStatusBarColor(false)
-                    intent.action = ACTION_SETTINGS
-                }
-                else -> {
-                    changeStatusBarColor(true)
-                    intent.action = ACTION_CALCULATOR
-                }
+            intent.action = when (item.itemId) {
+                R.id.navigation_unit -> ACTION_CONVERTER
+                R.id.navigation_currency -> ACTION_CURRENCIES
+                R.id.navigation_settings -> ACTION_SETTINGS
+                else -> ACTION_CALCULATOR
             }
             true
         }
@@ -89,14 +96,14 @@ class MainActivity : AutoThemeActivity() {
         }
 
         currencyConverterFragment ?: run { currencyConverterFragment = CurrencyConverterFragment() }
-        calculatorFragment        ?: run { calculatorFragment = CalculatorFragment() }
-        unitConverterFragment     ?: run { unitConverterFragment = UnitConverterFragment() }
-        settingsFragment          ?: run { settingsFragment = SettingsFragment() }
+        calculatorFragment ?: run { calculatorFragment = CalculatorFragment() }
+        unitConverterFragment ?: run { unitConverterFragment = UnitConverterFragment() }
+        settingsFragment ?: run { settingsFragment = SettingsFragment() }
 
         binding.navigation.setupWithViewPager2(
-            this,
-            binding.pager2,
-            currencyConverterFragment, calculatorFragment, unitConverterFragment, settingsFragment,
+                this,
+                binding.pager2,
+                currencyConverterFragment, calculatorFragment, unitConverterFragment, settingsFragment,
         )
 
         val tabId = when (intent.action) {
@@ -122,25 +129,25 @@ class MainActivity : AutoThemeActivity() {
         }
     }
 
-    @SuppressLint("NewApi")
-    private fun changeStatusBarColor(isCalculatorPage: Boolean) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ||
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && isDarkThemeApplied
-        ) {
-            if (isCalculatorPage) {
-                window.statusBarColor = calculatorStatusBarColor
-            } else {
-                window.statusBarColor = normalStatusBarColor
-            }
+    private fun updateStatusBarColor() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            val statusBarColorRes = if (
+                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.M && !isDarkThemeApplied
+            ) R.color.LightTheme_lollipopStatusBackgroundTransparent
+            else android.R.color.transparent
+
+            window.statusBarColor = ContextCompat.getColor(this, statusBarColorRes)
         }
     }
 
     private companion object {
 
         const val ACTION_CALCULATOR = "ru.art2000.calculator.action.CALCULATOR"
-        const val ACTION_CONVERTER  = "ru.art2000.calculator.action.CONVERTER"
+        const val ACTION_CONVERTER = "ru.art2000.calculator.action.CONVERTER"
         const val ACTION_CURRENCIES = "ru.art2000.calculator.action.CURRENCIES"
-        const val ACTION_SETTINGS   = "ru.art2000.calculator.action.SETTINGS"
+        const val ACTION_SETTINGS = "ru.art2000.calculator.action.SETTINGS"
 
     }
 }

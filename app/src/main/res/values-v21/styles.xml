@@ -8,6 +8,7 @@
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
         <item name="android:statusBarColor">@color/LightTheme_lollipopStatusBackground</item>
+        <item name="android:navigationBarColor">@color/LightTheme_lollipopStatusBackground</item>
     </style>
 
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark" />

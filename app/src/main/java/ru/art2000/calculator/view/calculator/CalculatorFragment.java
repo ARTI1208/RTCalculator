@@ -2,12 +2,9 @@ package ru.art2000.calculator.view.calculator;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,8 +24,8 @@ import java.util.Objects;
 import kotlin.Pair;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding;
+import ru.art2000.calculator.view.MainScreenFragment;
 import ru.art2000.calculator.view_model.calculator.CalculatorModel;
-import ru.art2000.extensions.fragments.NavigationFragment;
 import ru.art2000.extensions.views.CalculatorEditText;
 import ru.art2000.extensions.views.RecyclerWithEmptyView;
 import ru.art2000.extensions.views.SimpleTextWatcher;
@@ -36,7 +33,7 @@ import ru.art2000.extensions.views.ViewsKt;
 import ru.art2000.helpers.GeneralHelper;
 
 
-public class CalculatorFragment extends NavigationFragment {
+public class CalculatorFragment extends MainScreenFragment {
 
     private CalculatorModel model;
     private CalculatorLayoutBinding binding;
@@ -69,6 +66,7 @@ public class CalculatorFragment extends NavigationFragment {
 
             ViewsKt.autoScrollOnInput(binding.calculatorIo.inputScrollView);
 
+            //noinspection CodeBlock2Expr
             getInputTv().setOnSelectionChangedListener((selStart, selEnd) -> {
                 model.setInputSelection(new Pair<>(selStart, selEnd));
             });
@@ -117,6 +115,11 @@ public class CalculatorFragment extends NavigationFragment {
             setupHistoryPart();
         }
         return binding.getRoot();
+    }
+
+    @Override
+    public void updateViewOnCreated(@NonNull View createdView) {
+        ViewsKt.applyWindowTopInsets(binding.calculatorIoWrappper, false);
     }
 
     @Override
