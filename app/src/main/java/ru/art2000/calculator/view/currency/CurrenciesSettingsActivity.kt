@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup.*
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateLayoutParams
@@ -65,7 +64,6 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
     val model: CurrenciesSettingsModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         super.onCreate(savedInstanceState)
 
         binding = ActivityCurrenciesEditorBinding.inflate(layoutInflater)
