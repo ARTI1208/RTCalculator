@@ -21,10 +21,19 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     companion object {
 
         const val MENU_ITEM_COPY = 0
+
+        private const val DEFAULT_EMPTY_VALUE_INTERPRETATION = 1
     }
 
     private var spinnerFromPosition = 0
     private var spinnerToPosition = 1
+
+    private var emptyValueInterpretation: Number = 0
+        set(value) {
+            field = value
+            val binding = mBinding ?: return
+            binding.valueOriginal.hint = GeneralHelper.resultNumberFormat.format(value)
+        }
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragSimpleBinding {
         return UnitFragSimpleBinding.inflate(inflater, container, false)
@@ -35,6 +44,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         val binding = mBinding ?: return
 
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
+        emptyValueInterpretation = DEFAULT_EMPTY_VALUE_INTERPRETATION
 
         setSimpleViewButtonsClickListener()
 
@@ -174,7 +184,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     private fun updateResult(position: Int, value: String) {
         val from = items[position]
 
-        val inputValue = CalculationClass.calculate(value) ?: 1.0
+        val inputValue = CalculationClass.calculate(value) ?: emptyValueInterpretation.toDouble()
 
         from.setValue(inputValue)
 
