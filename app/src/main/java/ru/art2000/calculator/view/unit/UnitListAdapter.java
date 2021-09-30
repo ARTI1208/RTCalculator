@@ -25,6 +25,7 @@ import java.util.Objects;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.ItemUnitConverterListBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding;
+import ru.art2000.calculator.databinding.ItemUnitConverterNamePartBinding;
 import ru.art2000.calculator.model.unit.UnitConverterItem;
 import ru.art2000.calculator.view_model.calculator.CalculationClass;
 import ru.art2000.extensions.views.SimpleTextWatcher;
@@ -39,7 +40,8 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     private final UnitConverterItem<Double>[] data;
     private final LifecycleOwner lifecycleOwner;
     private int colorAccent;
-    private int colorDefault;
+    private int colorDefaultBright;
+    private int colorDefaultDimmed;
     private RecyclerView recycler;
     private boolean powerfulConverter = false;
 
@@ -67,7 +69,8 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
     private void init() {
         colorAccent = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorSecondary);
-        colorDefault = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorOnSurface);
+        colorDefaultBright = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorOnBackground);
+        colorDefaultDimmed = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorOnSurface);
     }
 
     void setValue(int position, double value) {
@@ -132,11 +135,13 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             return;
 
         if (isSelected) {
+            holder.dimensionShortNameView.setTextColor(colorAccent);
             holder.dimensionNameView.setTextColor(colorAccent);
             holder.dimensionValueView.setTextColor(colorAccent);
         } else {
-            holder.dimensionNameView.setTextColor(colorDefault);
-            holder.dimensionValueView.setTextColor(colorDefault);
+            holder.dimensionShortNameView.setTextColor(colorDefaultBright);
+            holder.dimensionNameView.setTextColor(colorDefaultDimmed);
+            holder.dimensionValueView.setTextColor(colorDefaultDimmed);
         }
     }
 
@@ -168,12 +173,16 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
         final TextView dimensionValueView;
         final TextView dimensionNameView;
+        final TextView dimensionShortNameView;
 
         UnitItemHolder(final ItemUnitConverterListBinding binding) {
             super(binding.getRoot());
 
             dimensionValueView = binding.value;
-            dimensionNameView = binding.type;
+            ItemUnitConverterNamePartBinding nameBinding =
+                    ItemUnitConverterNamePartBinding.bind(binding.getRoot());
+            dimensionNameView = nameBinding.type;
+            dimensionShortNameView = nameBinding.typeShort;
 
             init();
         }
@@ -182,7 +191,10 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             super(binding.getRoot());
 
             dimensionValueView = binding.value;
-            dimensionNameView = binding.type;
+            ItemUnitConverterNamePartBinding nameBinding =
+                    ItemUnitConverterNamePartBinding.bind(binding.getRoot());
+            dimensionNameView = nameBinding.type;
+            dimensionShortNameView = nameBinding.typeShort;
 
             binding.value.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) return;
@@ -227,6 +239,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         void bind(UnitConverterItem<Double> item, boolean isSelected) {
 
             dimensionNameView.setText(item.getNameResourceId());
+            dimensionShortNameView.setText(item.getShortNameResourceId());
             dimensionValueView.setText(doubleToString(item.getCurrentValue()));
 
             setTextColors(this, isSelected);

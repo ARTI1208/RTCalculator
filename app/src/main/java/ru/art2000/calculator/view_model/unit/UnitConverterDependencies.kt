@@ -4,6 +4,7 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.model.unit.*
 import kotlin.math.pow
 
+@Suppress("RemoveExplicitTypeArguments")
 object UnitConverterDependencies {
 
     @JvmStatic
@@ -54,95 +55,95 @@ object UnitConverterDependencies {
     private const val PA = 101325.0
 
     private val velocityItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleRatioConverterItem(R.string.velocity_mpers, 1.0),
-        DoubleRatioConverterItem(R.string.velocity_mpermin, 60.0),
-        DoubleRatioConverterItem(R.string.velocity_kmpermin, 60.0 / 1000.0),
-        DoubleRatioConverterItem(R.string.velocity_kmperh, 3600.0 / 1000.0),
-        DoubleRatioConverterItem(R.string.velocity_ftpers, 3.280839),
-        DoubleRatioConverterItem(R.string.velocity_miperh, 2.2369),
-        DoubleRatioConverterItem(R.string.velocity_mach, 0.003),
-        DoubleRatioConverterItem(R.string.velocity_kn, 1.9438)
+            DoubleRatioConverterItem(R.string.velocity_mpers, R.string.short_velocity_mpers, 1.0),
+            DoubleRatioConverterItem(R.string.velocity_mpermin, R.string.short_velocity_mpermin, 60.0),
+            DoubleRatioConverterItem(R.string.velocity_kmpermin, R.string.short_velocity_kmpermin, 60.0 / 1000.0),
+            DoubleRatioConverterItem(R.string.velocity_kmperh, R.string.short_velocity_kmperh, 3600.0 / 1000.0),
+            DoubleRatioConverterItem(R.string.velocity_ftpers, R.string.short_velocity_ftpers, 3.280839),
+            DoubleRatioConverterItem(R.string.velocity_miperh, R.string.short_velocity_miperh, 2.2369),
+            DoubleRatioConverterItem(R.string.velocity_mach, R.string.short_velocity_mach, 0.003),
+            DoubleRatioConverterItem(R.string.velocity_kn, R.string.short_velocity_kn, 1.9438),
     )
 
     private val distanceItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleRatioConverterItem(R.string.distance_mm, MM),
-        DoubleRatioConverterItem(R.string.distance_cm, CM),
-        DoubleRatioConverterItem(R.string.distance_dm, DM),
-        DoubleRatioConverterItem(R.string.distance_m, METER),
-        DoubleRatioConverterItem(R.string.distance_km, KM),
-        DoubleRatioConverterItem(R.string.distance_in, IN),
-        DoubleRatioConverterItem(R.string.distance_ft, FT),
-        DoubleRatioConverterItem(R.string.distance_yd, YD),
-        DoubleRatioConverterItem(R.string.distance_mi, 0.00062137),
-        DoubleRatioConverterItem(R.string.distance_nmi, 0.0005399568),
-        DoubleRatioConverterItem(R.string.distance_ly, 1 / 946000000.0),
-        DoubleRatioConverterItem(R.string.distance_arshin, 1 / 0.71)
+            DoubleRatioConverterItem(R.string.distance_mm, R.string.short_distance_mm, MM),
+            DoubleRatioConverterItem(R.string.distance_cm, R.string.short_distance_cm, CM),
+            DoubleRatioConverterItem(R.string.distance_dm, R.string.short_distance_dm, DM),
+            DoubleRatioConverterItem(R.string.distance_m, R.string.short_distance_m, METER),
+            DoubleRatioConverterItem(R.string.distance_km, R.string.short_distance_km, KM),
+            DoubleRatioConverterItem(R.string.distance_in, R.string.short_distance_in, IN),
+            DoubleRatioConverterItem(R.string.distance_ft, R.string.short_distance_ft, FT),
+            DoubleRatioConverterItem(R.string.distance_yd, R.string.short_distance_yd, YD),
+            DoubleRatioConverterItem(R.string.distance_mi, R.string.short_distance_mi, 0.00062137),
+            DoubleRatioConverterItem(R.string.distance_nmi, R.string.short_distance_nmi, 0.0005399568),
+            DoubleRatioConverterItem(R.string.distance_ly, R.string.short_distance_ly, 1 / 946000000.0),
+            DoubleRatioConverterItem(R.string.distance_arshin, R.string.short_distance_arshin, 1 / 0.71),
     )
 
     private val areaItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleRatioConverterItem(R.string.area_mm2, MM.pow(2)),
-        DoubleRatioConverterItem(R.string.area_cm2, CM.pow(2)),
-        DoubleRatioConverterItem(R.string.area_dm2, DM.pow(2)),
-        DoubleRatioConverterItem(R.string.area_m2, METER.pow(2)),
-        DoubleRatioConverterItem(R.string.area_km2, KM.pow(2)),
-        DoubleRatioConverterItem(R.string.area_a, 1e-2),
-        DoubleRatioConverterItem(R.string.area_ha, 1e-4),
-        DoubleRatioConverterItem(R.string.area_in2, IN.pow(2)),
-        DoubleRatioConverterItem(R.string.area_ft2, FT.pow(2)),
-        DoubleRatioConverterItem(R.string.area_yd2, YD.pow(2)),
-        DoubleRatioConverterItem(R.string.area_acre, 4046.8564224),
+            DoubleRatioConverterItem(R.string.area_mm2, R.string.short_area_mm2, MM.pow(2)),
+            DoubleRatioConverterItem(R.string.area_cm2, R.string.short_area_cm2, CM.pow(2)),
+            DoubleRatioConverterItem(R.string.area_dm2, R.string.short_area_dm2, DM.pow(2)),
+            DoubleRatioConverterItem(R.string.area_m2, R.string.short_area_m2, METER.pow(2)),
+            DoubleRatioConverterItem(R.string.area_km2, R.string.short_area_km2, KM.pow(2)),
+            DoubleRatioConverterItem(R.string.area_a, R.string.short_area_a, 1e-2),
+            DoubleRatioConverterItem(R.string.area_ha, R.string.short_area_ha, 1e-4),
+            DoubleRatioConverterItem(R.string.area_in2, R.string.short_area_in2, IN.pow(2)),
+            DoubleRatioConverterItem(R.string.area_ft2, R.string.short_area_ft2, FT.pow(2)),
+            DoubleRatioConverterItem(R.string.area_yd2, R.string.short_area_yd2, YD.pow(2)),
+            DoubleRatioConverterItem(R.string.area_acre, R.string.short_area_acre, 4046.8564224),
     )
 
     private val GAL_UK = 4.5461 * DM.pow(3)
 
     private val volumeItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleRatioConverterItem(R.string.volume_mm3, MM.pow(3)),
-        DoubleRatioConverterItem(R.string.volume_cm3, CM.pow(3)),
-        DoubleRatioConverterItem(R.string.volume_dm3, DM.pow(3)),
-        DoubleRatioConverterItem(R.string.volume_m3, METER.pow(3)),
-        DoubleRatioConverterItem(R.string.volume_in3, IN.pow(3)),
-        DoubleRatioConverterItem(R.string.volume_ft3, FT.pow(2)),
-        DoubleRatioConverterItem(R.string.volume_yd3, YD.pow(3)),
-        DoubleRatioConverterItem(R.string.volume_gal_uk, GAL_UK),
-        DoubleRatioConverterItem(R.string.volume_oz_uk, 2.5 * GAL_UK),
-        DoubleRatioConverterItem(R.string.volume_qt_uk, 4 * GAL_UK),
-        DoubleRatioConverterItem(R.string.volume_pt_uk, 8 * GAL_UK),
-        DoubleRatioConverterItem(R.string.volume_bbl, 163.66 * CM.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_mm3, R.string.short_volume_mm3, MM.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_cm3, R.string.short_volume_cm3, CM.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_dm3, R.string.short_volume_dm3, DM.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_m3, R.string.short_volume_m3, METER.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_in3, R.string.short_volume_in3, IN.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_ft3, R.string.short_volume_ft3, FT.pow(2)),
+            DoubleRatioConverterItem(R.string.volume_yd3, R.string.short_volume_yd3, YD.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_gal_uk, R.string.short_volume_gal_uk, GAL_UK),
+            DoubleRatioConverterItem(R.string.volume_oz_uk, R.string.short_volume_oz_uk, 2.5 * GAL_UK),
+            DoubleRatioConverterItem(R.string.volume_qt_uk, R.string.short_volume_qt_uk, 4 * GAL_UK),
+            DoubleRatioConverterItem(R.string.volume_pt_uk, R.string.short_volume_pt_uk, 8 * GAL_UK),
+            DoubleRatioConverterItem(R.string.volume_bbl, R.string.short_volume_bbl, 163.66 * CM.pow(3)),
     )
 
     private val massItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleRatioConverterItem(R.string.mass_mg, 1e6),
-        DoubleRatioConverterItem(R.string.mass_g, 1e3),
-        DoubleRatioConverterItem(R.string.mass_kg, 1.0),
-        DoubleRatioConverterItem(R.string.mass_qq, 1e2),
-        DoubleRatioConverterItem(R.string.mass_t, 1e3),
-        DoubleRatioConverterItem(R.string.mass_gr, 64.79891e6),
-        DoubleRatioConverterItem(R.string.mass_oz, 28349.52e6),
-        DoubleRatioConverterItem(R.string.mass_lb, 0.45359237),
-        DoubleRatioConverterItem(R.string.mass_ct, 0.2e3),
-        DoubleRatioConverterItem(R.string.mass_u, 1.660539066605e-27),
+            DoubleRatioConverterItem(R.string.mass_mg, R.string.short_mass_mg, 1e6),
+            DoubleRatioConverterItem(R.string.mass_g, R.string.short_mass_g, 1e3),
+            DoubleRatioConverterItem(R.string.mass_kg, R.string.short_mass_kg, 1.0),
+            DoubleRatioConverterItem(R.string.mass_qq, R.string.short_mass_qq, 1e2),
+            DoubleRatioConverterItem(R.string.mass_t, R.string.short_mass_t, 1e3),
+            DoubleRatioConverterItem(R.string.mass_gr, R.string.short_mass_gr, 64.79891e6),
+            DoubleRatioConverterItem(R.string.mass_oz, R.string.short_mass_oz, 28349.52e6),
+            DoubleRatioConverterItem(R.string.mass_lb, R.string.short_mass_lb, 0.45359237),
+            DoubleRatioConverterItem(R.string.mass_ct, R.string.short_mass_ct, 0.2e3),
+            DoubleRatioConverterItem(R.string.mass_u, R.string.short_mass_u, 1.660539066605e-27),
     )
 
     private val pressureItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleRatioConverterItem(R.string.pressure_atm, 1.0),
-        DoubleRatioConverterItem(R.string.pressure_at, 0.96784),
-        DoubleRatioConverterItem(R.string.pressure_pa, PA),
-        DoubleRatioConverterItem(R.string.pressure_hpa, 1e-2 * PA),
-        DoubleRatioConverterItem(R.string.pressure_kpa, 1e-3 * PA),
-        DoubleRatioConverterItem(R.string.pressure_bar, 1e-5 * PA),
-        DoubleRatioConverterItem(R.string.pressure_mm_hg, 760.0),
-        DoubleRatioConverterItem(R.string.pressure_mm_wg, 10332.3),
-        DoubleRatioConverterItem(R.string.pressure_in_hg, 101325.0),
-        DoubleRatioConverterItem(R.string.pressure_in_wg, 29.9213),
-        DoubleRatioConverterItem(R.string.pressure_psi, 14.696),
+            DoubleRatioConverterItem(R.string.pressure_atm, R.string.short_pressure_atm, 1.0),
+            DoubleRatioConverterItem(R.string.pressure_at, R.string.short_pressure_at, 0.96784),
+            DoubleRatioConverterItem(R.string.pressure_pa, R.string.short_pressure_pa, PA),
+            DoubleRatioConverterItem(R.string.pressure_hpa, R.string.short_pressure_hpa, 1e-2 * PA),
+            DoubleRatioConverterItem(R.string.pressure_kpa, R.string.short_pressure_kpa, 1e-3 * PA),
+            DoubleRatioConverterItem(R.string.pressure_bar, R.string.short_pressure_bar, 1e-5 * PA),
+            DoubleRatioConverterItem(R.string.pressure_mm_hg, R.string.short_pressure_mm_hg, 760.0),
+            DoubleRatioConverterItem(R.string.pressure_mm_wg, R.string.short_pressure_mm_wg, 10332.3),
+            DoubleRatioConverterItem(R.string.pressure_in_hg, R.string.short_pressure_in_hg, 101325.0),
+            DoubleRatioConverterItem(R.string.pressure_in_wg, R.string.short_pressure_in_wg, 29.9213),
+            DoubleRatioConverterItem(R.string.pressure_psi, R.string.short_pressure_psi, 14.696),
     )
 
     private val temperatureItems = arrayOf<UnitConverterItem<Double>>(
-        DoubleFormulaConverterItem(R.string.temperature_celsius, { it - 273.15 }, { it + 273.15 }),
-        DoubleFormulaConverterItem(R.string.temperature_fahrenheit, { (it * 9 / 5) - 459.67 }, { (it + 459.67) * 5 / 9 }),
-        DoubleRatioConverterItem(R.string.temperature_kelvin, 1.0),
-        DoubleRatioConverterItem(R.string.temperature_rankin, 1.8),
-        DoubleFormulaConverterItem(R.string.temperature_réaumur, { 0.8 * (it - 273.15) }, { 1.25 * it + 273.15 }),
+            DoubleFormulaConverterItem(R.string.temperature_celsius, R.string.short_temperature_celsius, { it - 273.15 }, { it + 273.15 }),
+            DoubleFormulaConverterItem(R.string.temperature_fahrenheit, R.string.short_temperature_fahrenheit, { (it * 9 / 5) - 459.67 }, { (it + 459.67) * 5 / 9 }),
+            DoubleRatioConverterItem(R.string.temperature_kelvin, R.string.short_temperature_kelvin, 1.0),
+            DoubleRatioConverterItem(R.string.temperature_rankin, R.string.short_temperature_rankin, 1.8),
+            DoubleFormulaConverterItem(R.string.temperature_réaumur, R.string.short_temperature_réaumur, { 0.8 * (it - 273.15) }, { 1.25 * it + 273.15 }),
     )
 
 }

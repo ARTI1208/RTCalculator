@@ -10,6 +10,8 @@ interface UnitConverterItem<T> : DiffComparable<UnitConverterItem<T>> {
 
     val nameResourceId: Int
 
+    val shortNameResourceId: Int
+
     fun setValue(value: T)
 
     fun convert(from: UnitConverterItem<T>): T

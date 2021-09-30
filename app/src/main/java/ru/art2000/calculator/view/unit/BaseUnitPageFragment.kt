@@ -74,7 +74,7 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            items.map { getString(it.nameResourceId) }
+            items.map { getString(it.shortNameResourceId) }
         )
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

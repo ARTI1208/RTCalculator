@@ -3,11 +3,12 @@ package ru.art2000.calculator.model.unit
 import androidx.annotation.StringRes
 
 class RatioConverterItem<T>(
-    @StringRes override val nameResourceId: Int,
-    val ratio: T,
-    val multiply: (T, T) -> T,
-    val divide: (T, T) -> T,
-    zero: T,
+        @StringRes override val nameResourceId: Int,
+        @StringRes override val shortNameResourceId: Int,
+        val ratio: T,
+        val multiply: (T, T) -> T,
+        val divide: (T, T) -> T,
+        zero: T,
 ) : UnitConverterItem<T> {
 
     private var mCurrentValue = zero
@@ -49,6 +50,7 @@ class RatioConverterItem<T>(
 
 @Suppress("FunctionName")
 fun DoubleRatioConverterItem(
-    @StringRes nameResourceId: Int,
-    ratio: Double,
-) = RatioConverterItem(nameResourceId, ratio, Double::times, Double::div, 0.0)
+        @StringRes nameResourceId: Int,
+        @StringRes shortNameResourceId: Int,
+        ratio: Double,
+) = RatioConverterItem(nameResourceId, shortNameResourceId, ratio, Double::times, Double::div, 0.0)

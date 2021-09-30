@@ -1,13 +1,13 @@
 package ru.art2000.calculator.model.unit
 
 import androidx.annotation.StringRes
-import ru.art2000.calculator.view_model.calculator.CalculationClass
 
 class FormulaConverterItem<T>(
-    @StringRes override val nameResourceId: Int,
-    val fromAbsolute: (T) -> T,
-    val toAbsolute: (T) -> T,
-    zero: T,
+        @StringRes override val nameResourceId: Int,
+        @StringRes override val shortNameResourceId: Int,
+        val fromAbsolute: (T) -> T,
+        val toAbsolute: (T) -> T,
+        zero: T,
 ) : UnitConverterItem<T> {
 
     private var mCurrentValue = zero
@@ -47,7 +47,8 @@ class FormulaConverterItem<T>(
 
 @Suppress("FunctionName")
 fun DoubleFormulaConverterItem(
-    @StringRes nameResourceId: Int,
-    fromAbsolute: (Double) -> Double,
-    toAbsolute: (Double) -> Double,
-) = FormulaConverterItem(nameResourceId, fromAbsolute, toAbsolute, 0.0)
+        @StringRes nameResourceId: Int,
+        @StringRes shortNameResourceId: Int,
+        fromAbsolute: (Double) -> Double,
+        toAbsolute: (Double) -> Double,
+) = FormulaConverterItem(nameResourceId, shortNameResourceId, fromAbsolute, toAbsolute, 0.0)

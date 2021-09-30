@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:minHeight="60dp"
     android:orientation="horizontal"
     android:paddingHorizontal="5dp">
@@ -19,19 +19,6 @@
         android:selectAllOnFocus="true"
         tools:text="1" />
 
-    <Space
-        android:layout_width="10dp"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/type"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_weight="1.0"
-        android:gravity="start|center_vertical"
-        android:textSize="25sp"
-        tools:text="type" />
+    <include layout="@layout/item_unit_converter_name_part" />
 
 </LinearLayout>
