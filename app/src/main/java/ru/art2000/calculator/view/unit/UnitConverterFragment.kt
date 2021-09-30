@@ -16,7 +16,7 @@ import ru.art2000.calculator.view.settings.PreferenceKeys
 import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.newInstance
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.helpers.PrefsHelper
-import ru.art2000.helpers.getLocalizedResources
+import ru.art2000.helpers.getLocalizedArray
 import java.util.*
 
 internal class UnitConverterFragment : MainScreenFragment() {
@@ -115,8 +115,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
         private val categoriesNames = resources.getStringArray(R.array.unit_converter_categories)
 
         val fragments = kotlin.run {
-            val categoriesEnglish = requireContext().getLocalizedResources(Locale.ENGLISH)
-                    .getStringArray(R.array.unit_converter_categories)
+            val categoriesEnglish = requireContext().getLocalizedArray(Locale.ENGLISH, R.array.unit_converter_categories)
             Array(categoriesNames.size) { newInstance(categoriesEnglish[it].lowercase(Locale.ENGLISH), viewType) }
         }
 

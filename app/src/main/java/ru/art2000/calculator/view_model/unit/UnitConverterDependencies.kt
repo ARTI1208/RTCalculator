@@ -17,7 +17,7 @@ object UnitConverterDependencies {
             "mass" -> massItems
             "pressure" -> pressureItems
             "temperature" -> temperatureItems
-            else -> velocityItems
+            else -> throw IllegalArgumentException("Unknown unit category '$str'")
         }
     }
 
