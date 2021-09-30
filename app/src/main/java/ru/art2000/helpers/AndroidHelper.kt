@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.Dimension
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import java.util.*
@@ -44,4 +45,11 @@ fun Context.getColorAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(attribute, typedValue, true)
     return ContextCompat.getColor(this, typedValue.resourceId)
+}
+
+@Dimension
+fun Context.getDimenAttribute(@AttrRes attribute: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(attribute, typedValue, true)
+    return resources.getDimensionPixelOffset(typedValue.resourceId)
 }

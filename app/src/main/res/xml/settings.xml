@@ -6,7 +6,7 @@
         android:key="basic"
         android:layout="@layout/category"
         android:title="@string/basic">
-        <DropDownPreference
+        <ru.art2000.extensions.preferences.MyDropDownPreference
             android:defaultValue="calc_tab"
             android:entries="@array/default_tab"
             android:entryValues="@array/default_tab_values"
@@ -67,7 +67,7 @@
     <PreferenceCategory
         android:layout="@layout/category"
         android:title="@string/title_unit">
-        <DropDownPreference
+        <ru.art2000.extensions.preferences.MyDropDownPreference
             android:entries="@array/unit_view"
             android:entryValues="@array/unit_view_values"
             android:key="unit_view"
