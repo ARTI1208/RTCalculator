@@ -26,6 +26,7 @@
             android:layout_weight="1"
             android:gravity="start"
             android:textSize="@dimen/currency_list_item_code_normal"
+            android:textColor="?colorOnBackground"
             tools:text="Code"/>
 
         <TextView
