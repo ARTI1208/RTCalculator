@@ -2,7 +2,6 @@ package ru.art2000.calculator.view.currency;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.util.TypedValue;
@@ -41,16 +40,21 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     @ColorInt
     private final int colorAccent;
+    @ColorInt
+    private final int colorDefaultBright;
+    @ColorInt
+    private final int colorDefaultDimmed;
     private final float codeTextSizeNormal, codeTextSizeHighlighted, valueTextSizeNormal;
 
     private List<CurrencyItem> data = new ArrayList<>();
     private RecyclerView recycler;
-    private ColorStateList csl = null;
 
     CurrencyListAdapter(Context context, CurrencyListAdapterModel model) {
         adapterModel = model;
         mContext = context;
         colorAccent = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorSecondary);
+        colorDefaultBright = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorOnBackground);
+        colorDefaultDimmed = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorOnSurface);
 
         codeTextSizeNormal =
                 mContext.getResources().getDimension(R.dimen.currency_list_item_code_normal);
@@ -80,10 +84,6 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, final int position) {
-        TextView code = holder.codeView;
-
-        if (csl == null)
-            csl = code.getTextColors();
 
         if (adapterModel.getLastInputItemPosition() == position) {
             highlightHolderElements(holder);
@@ -168,9 +168,9 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         if (holder == null)
             return;
 
-        holder.codeView.setTextColor(csl);
-        holder.nameView.setTextColor(csl);
-        holder.value.setTextColor(csl);
+        holder.codeView.setTextColor(colorDefaultBright);
+        holder.nameView.setTextColor(colorDefaultDimmed);
+        holder.value.setTextColor(colorDefaultDimmed);
         holder.codeView.setTextSize(TypedValue.COMPLEX_UNIT_PX, codeTextSizeNormal);
         holder.codeView.setTypeface(null, Typeface.NORMAL);
         holder.value.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueTextSizeNormal);
