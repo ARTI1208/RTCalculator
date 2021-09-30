@@ -1,5 +1,6 @@
 package ru.art2000.calculator.view.unit;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -245,8 +246,13 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             setTextColors(this, isSelected);
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         private void init() {
             itemView.setOnCreateContextMenuListener(this);
+            dimensionValueView.setOnTouchListener((v, event) -> {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            });
         }
 
         void updateValue(CharSequence text) {

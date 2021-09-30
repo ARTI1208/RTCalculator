@@ -17,6 +17,7 @@
         android:inputType="numberDecimal"
         android:textSize="25sp"
         android:selectAllOnFocus="true"
+        android:maxLines="1"
         tools:text="1" />
 
     <include layout="@layout/item_unit_converter_name_part" />
