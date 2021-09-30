@@ -184,16 +184,19 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             dimensionValueView = binding.value;
             dimensionNameView = binding.type;
 
+            binding.value.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) return;
+
+                CharSequence text = binding.value.getText();
+                updateValue(text);
+            });
+
             TextWatcher textWatcher = new SimpleTextWatcher() {
                 @Override
                 public void onTextChanged(@NotNull CharSequence s, int start, int before, int count) {
                     if (!binding.value.hasFocus()) return;
 
-                    if (s.length() == 0) {
-                        setValue(getBindingAdapterPosition(), 1);
-                    } else {
-                        setValue(getBindingAdapterPosition(), s.toString());
-                    }
+                    updateValue(s);
                 }
             };
             binding.value.addTextChangedListener(textWatcher);
@@ -231,6 +234,14 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
         private void init() {
             itemView.setOnCreateContextMenuListener(this);
+        }
+
+        void updateValue(CharSequence text) {
+            if (text.length() == 0) {
+                setValue(getBindingAdapterPosition(), 1);
+            } else {
+                setValue(getBindingAdapterPosition(), text.toString());
+            }
         }
     }
 }
