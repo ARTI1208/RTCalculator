@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.art2000.calculator.databinding.UnitFragBinding
-import ru.art2000.extensions.fragments.IReplaceableFragment
 
 class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
 
@@ -23,10 +22,5 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
         binding.unitRv.adapter = UnitListAdapter(
             requireContext(), viewLifecycleOwner, items, true
         )
-    }
-
-    override fun onShown(previousReplaceable: IReplaceableFragment?) {
-        val binding = mBinding ?: return
-        (binding.unitRv.adapter as UnitListAdapter).requestFocusForCurrent()
     }
 }

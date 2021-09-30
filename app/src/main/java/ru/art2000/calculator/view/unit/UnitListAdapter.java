@@ -140,16 +140,6 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         }
     }
 
-    void requestFocusForCurrent() {
-        if (!powerfulConverter) return;
-
-        UnitItemHolder previousHolder = (UnitItemHolder) recycler.findViewHolderForLayoutPosition(getCurrentDimension());
-        if (previousHolder != null) {
-            previousHolder.dimensionValueView.requestFocus();
-            previousHolder.dimensionValueView.postDelayed(previousHolder.dimensionValueView::requestFocus, 150L);
-        }
-    }
-
     private int getCurrentDimension() {
         return Objects.requireNonNull(selectedPosition.getValue()).second;
     }
