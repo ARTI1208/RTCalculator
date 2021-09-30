@@ -125,6 +125,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
     }
 
     void removeEditText() {
+        if (data.isEmpty()) return;
         Holder holder = (Holder)
                 recycler.findViewHolderForAdapterPosition(adapterModel.getLastInputItemPosition());
 
