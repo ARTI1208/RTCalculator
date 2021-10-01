@@ -143,7 +143,7 @@ dependencies {
         exclude(group = "xpp3", module = "xpp3")
     }
 
-    val composeVersion = "1.1.0-alpha03"
+    val composeVersion = "1.1.0-alpha05"
     "minApi21Implementation"("androidx.compose.ui:ui:$composeVersion")
     // Tooling support (Previews, etc.)
     "minApi21Implementation"("androidx.compose.ui:ui-tooling:$composeVersion")
