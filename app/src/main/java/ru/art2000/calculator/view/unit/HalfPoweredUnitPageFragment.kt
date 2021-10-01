@@ -9,7 +9,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.art2000.calculator.databinding.UnitFragHalfBinding
-import ru.art2000.calculator.view_model.calculator.CalculationClass
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.SimpleTextWatcher
 
@@ -63,7 +62,7 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
     private fun UnitListAdapter.setValueForPosition(position: Int) {
         val binding = mBinding ?: return
-        val value = CalculationClass.calculate(binding.hpuvEt.text.toString()) ?: 1.0
+        val value = calculate(binding.hpuvEt.text.toString()) ?: 1.0
         setValue(position, value)
     }
 }

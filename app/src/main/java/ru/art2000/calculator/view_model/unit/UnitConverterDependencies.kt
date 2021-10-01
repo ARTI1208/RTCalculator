@@ -2,10 +2,15 @@ package ru.art2000.calculator.view_model.unit
 
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.unit.*
+import ru.art2000.calculator.view_model.calculator.DoubleCalculations
+import ru.art2000.calculator.view_model.calculator.Calculations
 import kotlin.math.pow
 
 @Suppress("RemoveExplicitTypeArguments")
 object UnitConverterDependencies {
+
+    @JvmStatic
+    val calculations: Calculations<Double> = DoubleCalculations
 
     @JvmStatic
     fun getCategoryItems(str: String): Array<UnitConverterItem<Double>> {

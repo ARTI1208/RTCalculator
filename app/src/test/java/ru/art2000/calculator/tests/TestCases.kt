@@ -9,7 +9,7 @@ import ru.art2000.calculator.utils.expr
 import ru.art2000.calculator.utils.findConstant
 import ru.art2000.calculator.utils.findOperation
 import ru.art2000.calculator.utils.toDisplayFormat
-import ru.art2000.calculator.view_model.calculator.CalculationClass
+import ru.art2000.calculator.view_model.calculator.Calculations
 
 @Suppress("unused")
 object TestCases {
@@ -317,7 +317,7 @@ object TestCases {
 
         val expectedLexemes = null
 
-        val answer = CalculationClass.calculationError
+        val answer = Calculations.calculationError
 
         return TestCase(expressions, expectedLexemes, answer)
     }

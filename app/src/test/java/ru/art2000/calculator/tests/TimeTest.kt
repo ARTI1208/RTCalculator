@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.utils.OldCalculationClass
-import ru.art2000.calculator.view_model.calculator.CalculationClass
+import ru.art2000.calculator.view_model.calculator.DoubleCalculations
 import kotlin.system.measureNanoTime
 
 @RunWith(Parameterized::class)
@@ -35,7 +35,7 @@ class TimeTest {
 
             val newResult: String
             val newTime = measureNanoTime {
-                newResult = CalculationClass.calculateForDisplay(expression, angleType)
+                newResult = DoubleCalculations.calculateForDisplay(expression, angleType)
             }
 
             var oldResult = ""
@@ -83,7 +83,7 @@ class TimeTest {
     @Suppress("UNUSED_VARIABLE")
     @Before
     fun beforeEach() {
-        val warm = CalculationClass.calculateForDisplay("1+1")
+        val warm = DoubleCalculations.calculateForDisplay("1+1")
         val warm2 = OldCalculationClass.calculateStr("1+1")
         val warm3 = Gamma.gamma(4.0)
     }

@@ -1,9 +1,9 @@
 package ru.art2000.calculator.utils
 
+import ru.art2000.calculator.model.calculator.numbers.DoubleField
 import ru.art2000.calculator.model.calculator.parts.Constant
 import ru.art2000.calculator.model.calculator.parts.ExpressionValue
 import ru.art2000.calculator.model.calculator.parts.Operation
-import ru.art2000.calculator.view_model.calculator.CalculationClass
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -12,11 +12,11 @@ fun Double.expr(): ExpressionValue<Double> = ExpressionValue(this)
 fun Int.expr(): ExpressionValue<Double> = ExpressionValue(this.toDouble())
 
 inline fun <reified O : Operation<Double>> findOperation(textRepresentation: String): O {
-    return CalculationClass.operations.first { it is O && it.textRepresentations.contains(textRepresentation) } as O
+    return DoubleField.operations.first { it is O && it.textRepresentations.contains(textRepresentation) } as O
 }
 
 fun findConstant(textRepresentation: String): Constant<Double> {
-    return CalculationClass.constants.first { it.symbols.contains(textRepresentation) }
+    return DoubleField.constants.first { it.symbols.contains(textRepresentation) }
 }
 
 fun Double.toDisplayFormat(): String {

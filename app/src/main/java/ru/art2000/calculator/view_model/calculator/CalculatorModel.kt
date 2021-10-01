@@ -9,8 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.numbers.CalculationNumber
 import ru.art2000.calculator.model.calculator.parts.BinaryOperation
-import ru.art2000.calculator.model.calculator.parts.ExpressionPart
 import ru.art2000.calculator.model.calculator.parts.PostfixOperation
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.floatingPointZero
@@ -21,7 +21,6 @@ import ru.art2000.extensions.language.dotSafeToDouble
 import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
 import kotlin.concurrent.thread
-import kotlin.system.measureTimeMillis
 
 class CalculatorModel(
         application: Application
@@ -47,6 +46,8 @@ class CalculatorModel(
         set(value) {
             mLiveResult.value = value
         }
+
+    override val calculations: Calculations<Double> = DoubleCalculations
 
     override fun getHistoryItems(): LiveData<List<HistoryItem>> {
         return historyDao.getAll()
@@ -109,8 +110,8 @@ class CalculatorModel(
 
         val extraAppend = when {
             last == null -> ""
-            CalculationClass.isFloatingPointSymbol(last) -> "0×"
-            CalculationClass.isNumberPart(last) -> "×"
+            calculations.field.isFloatingPointSymbol(last) -> "0×"
+            calculations.field.isNumberPart(last) -> "×"
             else -> ""
         }
 
@@ -122,7 +123,7 @@ class CalculatorModel(
         val last = expressionLastChar ?: return
 
         val extraAppend = when {
-            CalculationClass.isFloatingPointSymbol(last) -> zero
+            calculations.field.isFloatingPointSymbol(last) -> zero
             else -> ""
         }
 
@@ -144,7 +145,7 @@ class CalculatorModel(
 
         val append: String = when {
             currentExpression.isEmpty() -> ""
-            CalculationClass.isNumberPart(last) || last == ')' -> "×"
+            calculations.field.isNumberPart(last) || last == ')' -> "×"
             last.isFloatingPointSymbol -> "0×"
             else -> ""
         }
@@ -174,9 +175,9 @@ class CalculatorModel(
         if (o - c > 0) {
             val exInBrs = currentExpression.substring(lastOpenBr + 1)
             val newAr = exInBrs.toCharArray()
-            if (CalculationClass.hasSignsInExpression(exInBrs)
-                    && (newAr[0].toString() == "-" || CalculationClass.isNumberPart(newAr[0]))
-                    && !CalculationClass.isBinaryOperationSymbol(newAr[newAr.size - 1]))
+            if (calculations.hasSignsInExpression(exInBrs)
+                    && (newAr[0].toString() == "-" || calculations.field.isNumberPart(newAr[0]))
+                    && !calculations.isBinaryOperationSymbol(newAr[newAr.size - 1]))
                 insertInExpression(")")
         }
     }
@@ -216,8 +217,8 @@ class CalculatorModel(
             toAdd += zero
         }
 
-        if (CalculationClass.startsWithOperation<BinaryOperation<Double>>(textAfter) ||
-                CalculationClass.startsWithOperation<PostfixOperation<Double>>(textAfter)) {
+        if (calculations.startsWithOperation<BinaryOperation<Double>>(textAfter) ||
+                calculations.startsWithOperation<PostfixOperation<Double>>(textAfter)) {
             toAdd += "1"
         }
 
@@ -226,7 +227,7 @@ class CalculatorModel(
             return
         }
 
-        if (CalculationClass.isBinaryOperationSymbol(last)) {
+        if (calculations.isBinaryOperationSymbol(last)) {
             if (toAdd == "-") {
                 if (last == '-') return
 
@@ -249,18 +250,18 @@ class CalculatorModel(
 
         var err = false
         val last = countStr.last()
-        if (last.isFloatingPointSymbol || CalculationClass.isBinaryOperationSymbol(last) || result != null) return
-        var expr = CalculationClass.addRemoveBrackets(countStr)
+        if (last.isFloatingPointSymbol || calculations.isBinaryOperationSymbol(last) || result != null) return
+        var expr = addRemoveBrackets(countStr)
         if (expr.isEmpty()) {
             expr = context.getString(R.string.error)
         }
         setExpression(expr)
 
-        countStr = CalculationClass.calculateForDisplay(expr, liveAngleType.value!!)
+        countStr = calculations.calculateForDisplay(expr, liveAngleType.value!!)
 
         when (countStr) {
-            CalculationClass.calculationDivideByZero -> countStr = context.getString(PrefsHelper.getZeroDivResult())
-            CalculationClass.calculationError -> {
+            Calculations.calculationDivideByZero -> countStr = context.getString(PrefsHelper.getZeroDivResult())
+            Calculations.calculationError -> {
                 countStr = context.getString(R.string.error)
                 err = true
             }
@@ -271,36 +272,12 @@ class CalculatorModel(
         result = countStr
     }
 
-    fun debugLexemes(expr: String): Pair<List<ExpressionPart<Double>>, Long> {
-        return debug {
-            CalculationClass.lexer.getLexemes(expr.toCharArray()) ?: emptyList()
+    fun formatNumberForDisplay(calculationNumber: CalculationNumber<Double>?): String {
+        return when {
+            calculationNumber == null -> context.getString(PrefsHelper.getZeroDivResult())
+            calculationNumber.isInfinite -> context.getString(R.string.error)
+            else -> calculations.formatter.format(calculationNumber)
         }
-    }
-
-    fun debugParsing(lexemes: List<ExpressionPart<Double>>): Pair<Computable<Double>, Long> {
-        return debug {
-            CalculationClass.parser.fromLexemes(lexemes, liveAngleType.value!!)
-        }
-    }
-
-    fun debugComputation(computable: Computable<Double>): Pair<String, Long> {
-        return debug {
-            val computed = computable.compute()
-            when {
-                computed == null -> context.getString(PrefsHelper.getZeroDivResult())
-                computed.isInfinite() -> context.getString(R.string.error)
-                else -> CalculationClass.numberFormatter.format(computed)
-            }
-        }
-    }
-
-    private fun <T> debug(action: () -> T): Pair<T, Long> {
-        val result: T
-        val timeMillis = measureTimeMillis {
-            result = action()
-        }
-
-        return result to timeMillis
     }
 
     fun handleMemoryOperation(operation: CharSequence) {
@@ -329,7 +306,7 @@ class CalculatorModel(
         val last = expressionLastChar
         val append = when {
             last == null -> constant
-            CalculationClass.isNumberPart(last) -> "×$constant"
+            calculations.field.isNumberPart(last) -> "×$constant"
             last.isFloatingPointSymbol -> "0×$constant"
             else -> constant
         }

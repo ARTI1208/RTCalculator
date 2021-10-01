@@ -1,8 +1,8 @@
 package ru.art2000.calculator.utils
 
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.numbers.DoubleField
 import ru.art2000.calculator.model.calculator.parts.*
-import ru.art2000.calculator.view_model.calculator.CalculationClass
 import ru.art2000.extensions.language.safeToDouble
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -12,19 +12,19 @@ object TreeCalculations {
 
     @Suppress("UNCHECKED_CAST")
     private val binaryOperations : List<BinaryOperation<Double>> =
-            (CalculationClass.operations.filterIsInstance(BinaryOperation::class.java) as List<BinaryOperation<Double>>)
+            (DoubleField.operations.filterIsInstance(BinaryOperation::class.java) as List<BinaryOperation<Double>>)
                     .sortedByDescending { it.priority }
 
     private fun findOperation(textRepresentation: String): Operation<Double>? {
-        return CalculationClass.operations.find { it.textRepresentations.contains(textRepresentation) }
+        return DoubleField.operations.find { it.textRepresentations.contains(textRepresentation) }
     }
 
     private inline fun <reified T : Operation<Double>> findTypedOperation(textRepresentation: String): T? {
-        return CalculationClass.operations.filterIsInstance(T::class.java).find { it.textRepresentations.contains(textRepresentation) }
+        return DoubleField.operations.filterIsInstance(T::class.java).find { it.textRepresentations.contains(textRepresentation) }
     }
 
     private fun findConstant(symbol: String): Constant<Double>? {
-        return CalculationClass.constants.find { constant -> constant.symbols.any { it == symbol } }
+        return DoubleField.constants.find { constant -> constant.symbols.any { it == symbol } }
     }
 
     private val String.isInBrackets: Boolean
@@ -175,7 +175,7 @@ object TreeCalculations {
 
     private inline fun <reified T : Operation<Double>> getStartingOperation(text: String): Pair<T, String>? {
         var sign: String? = null
-        val operation = CalculationClass.operations.filterIsInstance(T::class.java).find { operation ->
+        val operation = DoubleField.operations.filterIsInstance(T::class.java).find { operation ->
             sign = operation.textRepresentations.find {
                 text.startsWith(it)
             }
@@ -187,7 +187,7 @@ object TreeCalculations {
 
     private inline fun <reified T : Operation<Double>> getEndingOperation(text: String): Pair<T, String>? {
         var sign: String? = null
-        val operation = CalculationClass.operations.filterIsInstance(T::class.java).find { operation ->
+        val operation = DoubleField.operations.filterIsInstance(T::class.java).find { operation ->
             sign = operation.textRepresentations.find {
                 text.endsWith(it)
             }

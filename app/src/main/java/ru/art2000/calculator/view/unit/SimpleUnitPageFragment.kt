@@ -12,7 +12,6 @@ import android.widget.Toast
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.UnitConverterItem
-import ru.art2000.calculator.view_model.calculator.CalculationClass
 import ru.art2000.extensions.views.*
 import ru.art2000.helpers.GeneralHelper
 
@@ -184,7 +183,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     private fun updateResult(position: Int, value: String) {
         val from = items[position]
 
-        val inputValue = CalculationClass.calculate(value) ?: emptyValueInterpretation.toDouble()
+        val inputValue = calculate(value) ?: emptyValueInterpretation.toDouble()
 
         from.setValue(inputValue)
 

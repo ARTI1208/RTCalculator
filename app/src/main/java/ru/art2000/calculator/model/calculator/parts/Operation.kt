@@ -1,12 +1,27 @@
 package ru.art2000.calculator.model.calculator.parts
 
-sealed class Operation<O> : ExpressionPart<O> {
+sealed class Operation<out O> : ExpressionPart<O> {
 
     abstract val textRepresentations: Set<String>
 
     override fun toString(): String {
         return "'${textRepresentations.first()}'[${javaClass.simpleName}]"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Operation<*>) return false
+
+        if (textRepresentations != other.textRepresentations) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return textRepresentations.hashCode()
+    }
+
+
 }
 
 class BinaryOperation<O>(

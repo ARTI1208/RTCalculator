@@ -6,10 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.databinding.CalculatorLexemeItemBinding
 import ru.art2000.calculator.model.calculator.parts.ExpressionPart
+import ru.art2000.calculator.model.calculator.parts.ExpressionValue
+import ru.art2000.calculator.view_model.calculator.Calculations
 
-class LexemeListAdapter(
+class LexemeListAdapter<CN>(
         private val mContext: Context,
-        private val lexemes: List<ExpressionPart<*>>
+        private val lexemes: List<ExpressionPart<*>>,
+        private val calculations: Calculations<CN>,
 ) : RecyclerView.Adapter<LexemeListAdapter.LexemeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LexemeViewHolder {
@@ -22,7 +25,10 @@ class LexemeListAdapter(
     override fun onBindViewHolder(holder: LexemeViewHolder, position: Int) {
         val lexeme = lexemes[position]
 
-        holder.lexemeTextView.text = lexeme.partAsString()
+        holder.lexemeTextView.text = if (lexeme is ExpressionValue<*>)
+            calculations.format(lexeme.value as CN)
+        else
+            lexeme.partAsString()
         holder.lexemeTypeView.text = "[${lexeme.javaClass.simpleName}]"
     }
 

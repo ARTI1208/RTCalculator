@@ -8,10 +8,10 @@ class CalculationLexer<CalculationNumber>(
 ) {
 
     private inline val operations: List<Operation<CalculationNumber>>
-        get() = configuration.operations
+        get() = configuration.field.operations
 
     private inline val constants: List<Constant<CalculationNumber>>
-        get() = configuration.constants
+        get() = configuration.field.constants
 
     private inline val numberConverter: (String) -> CalculationNumber?
         get() = configuration::numberConverter
@@ -198,15 +198,15 @@ class CalculationLexer<CalculationNumber>(
 
         return numberConverter(replaced)?.let {
             val isNegation = this[unaryIndex] == '-'
-            val result = (if (isNegation) configuration.negateOperation(it) else it) ?: return null
+            val result = (if (isNegation) configuration.field.negateOperation(it) else it) ?: return null
             ExpressionValue(result)
         } ?: this[unaryIndex].signOperationLexeme()
     }
 
     private fun Char.signOperationLexeme(): Operation<CalculationNumber>? {
         return when (this) {
-            '+' -> configuration.identityOperation
-            '-' -> configuration.negateOperation
+            '+' -> configuration.field.identityOperation
+            '-' -> configuration.field.negateOperation
             else -> null
         }
     }

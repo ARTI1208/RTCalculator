@@ -28,7 +28,7 @@ import ru.art2000.calculator.databinding.ItemUnitConverterListBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterNamePartBinding;
 import ru.art2000.calculator.model.unit.UnitConverterItem;
-import ru.art2000.calculator.view_model.calculator.CalculationClass;
+import ru.art2000.calculator.view_model.unit.UnitConverterDependencies;
 import ru.art2000.extensions.views.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
 import ru.art2000.helpers.GeneralHelper;
@@ -100,7 +100,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     void setValue(int position, String value) {
-        Double result = CalculationClass.calculate(value);
+        Double result = UnitConverterDependencies.getCalculations().calculate(value);
         double doubleValue = result == null ? 1 : result;
         setValue(position, doubleValue);
     }

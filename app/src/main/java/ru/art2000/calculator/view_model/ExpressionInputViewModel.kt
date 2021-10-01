@@ -1,7 +1,8 @@
 package ru.art2000.calculator.view_model
 
 import androidx.lifecycle.MutableLiveData
-import ru.art2000.calculator.view_model.calculator.CalculationClass
+import ru.art2000.calculator.view_model.calculator.Calculations
+import ru.art2000.calculator.view_model.calculator.isBinaryOperationSymbol
 
 interface ExpressionInputViewModel {
 
@@ -35,6 +36,8 @@ interface ExpressionInputViewModel {
         set(value) {
             liveInputSelection.value = value
         }
+
+    val calculations: Calculations<Double>
 
     fun clearInput() {
         setExpression("")
@@ -74,7 +77,7 @@ interface ExpressionInputViewModel {
                 }
                 return
             }
-            if (CalculationClass.isBinaryOperationSymbol(last)) {
+            if (calculations.isBinaryOperationSymbol(last)) {
                 toAdd = floatingPointZero
             }
         }
@@ -95,7 +98,7 @@ interface ExpressionInputViewModel {
 
         var i: Int = inpLen - 1
         while (i > 0) {
-            if (CalculationClass.isBinaryOperationSymbol(inputText[i].toString())) {
+            if (calculations.isBinaryOperationSymbol(inputText[i].toString())) {
                 lastSign = i
                 break
             }
@@ -106,7 +109,7 @@ interface ExpressionInputViewModel {
 
         if (lNum.contains(".") || lNum.contains(",")) return
 
-        if (CalculationClass.isBinaryOperationSymbol(last)) {
+        if (calculations.isBinaryOperationSymbol(last)) {
             toAdd = floatingPointZero
         }
 
