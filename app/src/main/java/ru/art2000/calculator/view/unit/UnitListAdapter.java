@@ -200,8 +200,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             binding.value.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) return;
 
-                CharSequence text = binding.value.getText();
-                updateValue(text);
+                setCurrentDimension(getBindingAdapterPosition());
             });
 
             TextWatcher textWatcher = new SimpleTextWatcher() {
