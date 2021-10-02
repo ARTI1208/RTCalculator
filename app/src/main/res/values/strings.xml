@@ -99,6 +99,9 @@
     <string name="unit_view_simple_extra_action_title">Select button action</string>
     <string name="unit_view_simple_swap">Swap dimensions</string>
     <string name="unit_view_simple_list_all">List all</string>
+    <string name="context_menu_copy_value">Copy value</string>
+    <string name="context_menu_copy_with_short_name">Copy with short name</string>
+    <string name="context_menu_copy_with_full_name">Copy with full name</string>
 
     <!-- Settings -->
     <string name="basic">Basic</string>

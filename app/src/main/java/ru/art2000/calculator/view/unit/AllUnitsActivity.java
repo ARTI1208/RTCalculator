@@ -47,7 +47,7 @@ public class AllUnitsActivity extends AutoThemeActivity {
         llm.setOrientation(RecyclerView.VERTICAL);
         list.setLayoutManager(llm);
         UnitListAdapter adapter = new UnitListAdapter(this, this,
-                UnitConverterDependencies.getCategoryItems(category), model.getCalculations(), pos);
+                UnitConverterDependencies.getCategoryItems(category), model, pos);
         list.setAdapter(adapter);
     }
 

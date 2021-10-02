@@ -115,4 +115,8 @@
     <string name="debug_lexer_time">Время работы лексера: %1$d мс</string>
     <string name="debug_parser_time">Время работы парсера: %1$d мс</string>
     <string name="debug_compute_time">Время подсчёта: %1$d мс</string>
+
+    <string name="context_menu_copy_value">Скопировать значение</string>
+    <string name="context_menu_copy_with_short_name">Скопировать с сокращением</string>
+    <string name="context_menu_copy_with_full_name">Скопировать с названием</string>
 </resources>

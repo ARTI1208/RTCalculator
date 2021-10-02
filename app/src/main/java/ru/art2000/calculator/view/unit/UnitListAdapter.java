@@ -1,8 +1,6 @@
 package ru.art2000.calculator.view.unit;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.TextWatcher;
 import android.util.Pair;
@@ -12,7 +10,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -27,8 +24,9 @@ import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.ItemUnitConverterListBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterNamePartBinding;
+import ru.art2000.calculator.model.unit.CopyMode;
 import ru.art2000.calculator.model.unit.UnitConverterItem;
-import ru.art2000.calculator.view_model.calculator.Calculations;
+import ru.art2000.calculator.view_model.unit.UnitConverterModel;
 import ru.art2000.extensions.views.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
 
@@ -38,7 +36,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             new MutableLiveData<>(new Pair<>(0, 0));
     private final Context mContext;
     private final UnitConverterItem<Double>[] data;
-    private final Calculations<Double> calculations;
+    private final UnitConverterModel model;
     private final LifecycleOwner lifecycleOwner;
     private int colorAccent;
     private int colorDefaultBright;
@@ -50,14 +48,14 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             Context ctx,
             LifecycleOwner lifecycleOwner,
             UnitConverterItem<Double>[] items,
-            Calculations<Double> calculations,
+            UnitConverterModel model,
             boolean isPowerfulConverter
     ) {
         data = items;
         mContext = ctx;
         powerfulConverter = isPowerfulConverter;
         this.lifecycleOwner = lifecycleOwner;
-        this.calculations = calculations;
+        this.model = model;
 
         if (data != null && data.length > 0 && data[0].getCurrentValue() == 0.0)
             setValue(0, 1);
@@ -69,12 +67,12 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             Context ctx,
             LifecycleOwner lifecycleOwner,
             UnitConverterItem<Double>[] items,
-            Calculations<Double> calculations,
+            UnitConverterModel model,
             int pos) {
         data = items;
         mContext = ctx;
         this.lifecycleOwner = lifecycleOwner;
-        this.calculations = calculations;
+        this.model = model;
 
         setCurrentDimension(pos);
 
@@ -119,7 +117,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     void setValue(int position, String value) {
-        Double result = calculations.calculate(value);
+        Double result = model.getCalculations().calculate(value);
         double doubleValue = result == null ? 1 : result;
         setValue(position, doubleValue);
     }
@@ -177,7 +175,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     private String doubleToString(double d) {
-        return calculations.format(d);
+        return model.getCalculations().format(d);
     }
 
     @Override
@@ -248,21 +246,23 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle(mContext.getString(R.string.you_can));
-            menu.add(Menu.NONE, 0, Menu.NONE, mContext.getString(R.string.context_menu_copy)).setOnMenuItemClickListener(item -> {
-                ClipboardManager cmg =
-                        (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+            menu
+                    .add(Menu.NONE, 0, Menu.NONE, R.string.context_menu_copy_value)
+                    .setOnMenuItemClickListener(item -> copy(CopyMode.VALUE_ONLY));
+            menu
+                    .add(Menu.NONE, 0, Menu.NONE, R.string.context_menu_copy_with_short_name)
+                    .setOnMenuItemClickListener(item -> copy(CopyMode.VALUE_AND_SHORT_NAME));
+            menu
+                    .add(Menu.NONE, 0, Menu.NONE, R.string.context_menu_copy_with_full_name)
+                    .setOnMenuItemClickListener(item -> copy(CopyMode.VALUE_AND_FULL_NAME));
+        }
 
-                if (cmg == null) return true;
-
-                CharSequence copiedText = dimensionValueView.getText() + " " + dimensionNameView.getText();
-                ClipData clipData = ClipData.newPlainText("unitConvertResult", copiedText);
-                cmg.setPrimaryClip(clipData);
-
-                CharSequence toastText = mContext.getString(R.string.copied) + " " + copiedText;
-                Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
-
-                return true;
-            });
+        private boolean copy(CopyMode copyMode) {
+            return model.copy(
+                    mContext, dimensionValueView.getText(),
+                    dimensionValueView.getText(), dimensionValueView.getText(),
+                    copyMode
+            );
         }
 
         void bind(UnitConverterItem<Double> item, boolean isSelected) {
@@ -277,6 +277,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         @SuppressLint("ClickableViewAccessibility")
         private void init() {
             itemView.setOnCreateContextMenuListener(this);
+            dimensionValueView.setLongClickable(true);
             dimensionValueView.setOnTouchListener((v, event) -> {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;

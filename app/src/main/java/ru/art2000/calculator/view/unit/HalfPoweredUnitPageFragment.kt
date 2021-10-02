@@ -24,7 +24,7 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
         registerForContextMenu(binding.unitRv)
 
-        val adapter = UnitListAdapter(requireContext(), viewLifecycleOwner, items, model.calculations, false)
+        val adapter = UnitListAdapter(requireContext(), viewLifecycleOwner, items, model, false)
 
         binding.unitRv.adapter = adapter
         binding.unitRv.layoutManager = LinearLayoutManager(requireContext())

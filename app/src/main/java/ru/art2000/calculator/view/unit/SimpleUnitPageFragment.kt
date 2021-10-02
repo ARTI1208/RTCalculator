@@ -1,18 +1,14 @@
 package ru.art2000.calculator.view.unit
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.text.Editable
 import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.Toast
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
+import ru.art2000.calculator.model.unit.CopyMode
 import ru.art2000.calculator.model.unit.UnitConverterItem
-import ru.art2000.calculator.view_model.unit.UnitConverterDependencies
 import ru.art2000.extensions.views.*
 import ru.art2000.helpers.GeneralHelper
 
@@ -123,33 +119,30 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
 
-        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy).setOnMenuItemClickListener {
-            onContextItemClick(it, v)
+        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_value).setOnMenuItemClickListener {
+            copy(CopyMode.VALUE_ONLY)
+        }
+
+        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_with_short_name).setOnMenuItemClickListener {
+            copy(CopyMode.VALUE_AND_SHORT_NAME)
+        }
+
+        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_with_full_name).setOnMenuItemClickListener {
+            copy(CopyMode.VALUE_AND_FULL_NAME)
         }
 
     }
 
-    private fun onContextItemClick(item: MenuItem, view: View): Boolean {
-        val cmg = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-            ?: return true
-
+    private fun copy(copyMode: CopyMode): Boolean {
         val binding = mBinding ?: return true
 
-        when (item.itemId) {
-            MENU_ITEM_COPY -> {
-                val copiedText = if (view.id == binding.valueOriginal.id)
-                    binding.valueOriginal.text.toString() + " " + binding.originalDimensionHint.text
-                else
-                    binding.valueConverted.text.toString() + " " + binding.convertedDimensionHint.text
+        val convertToItem = items[binding.spinnerTo.selectedItemPosition];
 
-                cmg.setPrimaryClip(ClipData.newPlainText("unitConvertResult", copiedText))
-
-                val toastText = requireContext().getString(R.string.copied) + " " + copiedText
-                Toast.makeText(requireContext(), toastText, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        return true
+        return model.copy(
+                requireContext(), binding.valueConverted.text,
+                getString(convertToItem.shortNameResourceId), getString(convertToItem.nameResourceId),
+                copyMode
+        )
     }
 
     private fun setSimpleViewButtonsClickListener() {
