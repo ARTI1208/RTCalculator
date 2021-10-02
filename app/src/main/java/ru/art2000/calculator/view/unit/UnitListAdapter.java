@@ -87,16 +87,18 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         colorDefaultDimmed = AndroidHelper.getColorAttribute(mContext, com.google.android.material.R.attr.colorOnSurface);
     }
 
-    void setValue(int position, double value) {
+    void setValue(int position, double value, boolean updatePosition) {
 
-        setCurrentDimension(position);
+        if (updatePosition) {
+            setCurrentDimension(position);
+        }
 
         UnitConverterItem<Double> from = data[position];
         from.setValue(value);
 
         for (int i = 0; i < getItemCount(); i++) {
 
-            if (powerfulConverter && i == position)
+            if (powerfulConverter && i == position) // don't skip for half-powerful to correctly recalculate
                 continue;
 
             double convertedValue = data[i].convert(from);
@@ -110,6 +112,10 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
                 holder.dimensionValueView.setText(v);
             }
         }
+    }
+
+    void setValue(int position, double value) {
+        setValue(position, value, true);
     }
 
     void setValue(int position, String value) {
@@ -165,6 +171,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
 
     private void setCurrentDimension(int dimension) {
         Integer oldValue = Objects.requireNonNull(selectedPosition.getValue()).second;
+        if (oldValue == dimension) return;
         Pair<Integer, Integer> newPair = new Pair<>(oldValue, dimension);
         selectedPosition.setValue(newPair);
     }
@@ -176,6 +183,15 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     @Override
     public void onBindViewHolder(@NonNull final UnitItemHolder holder, final int position) {
         holder.bind(data[position], position == getCurrentDimension());
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull UnitItemHolder holder) {
+        super.onViewAttachedToWindow(holder);
+
+        int position = holder.getAbsoluteAdapterPosition();
+        setTextColors(holder, position == getCurrentDimension());
+        setValue(position, data[position].getCurrentValue(), false);
     }
 
     @Override
