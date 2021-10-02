@@ -1,5 +1,6 @@
 package ru.art2000.calculator.view.calculator
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,10 +23,12 @@ class LexemeListAdapter<CN>(
         return LexemeViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LexemeViewHolder, position: Int) {
         val lexeme = lexemes[position]
 
         holder.lexemeTextView.text = if (lexeme is ExpressionValue<*>)
+            @Suppress("UNCHECKED_CAST")
             calculations.format(lexeme.value as CN)
         else
             lexeme.partAsString()

@@ -65,11 +65,16 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         init();
     }
 
-    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem<Double>[] items, int pos) {
+    UnitListAdapter(
+            Context ctx,
+            LifecycleOwner lifecycleOwner,
+            UnitConverterItem<Double>[] items,
+            Calculations<Double> calculations,
+            int pos) {
         data = items;
         mContext = ctx;
         this.lifecycleOwner = lifecycleOwner;
-        this.calculations = null;
+        this.calculations = calculations;
 
         setCurrentDimension(pos);
 
