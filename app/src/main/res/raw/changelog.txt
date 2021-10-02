@@ -1,3 +1,16 @@
+v1.3.0
+ - Split unit converter name into short and full ones
+ - Added ability to copy unit value only and value with short name
+ - Added auto-hide of text input field in Currency Converter screen on IME close
+ - Improved RTL layout support
+ - Draw calculator IO layout behind statusbar instead of setting statusbar color
+ - Use scientific notation in unit converter for big and small values
+ - Fixed Unit Converter displayed only one category in non-English locales on API 16
+ - Fixed crash when opening Currencies editor when no currencies were added
+ - Fixed absence of message in Currency Add Screen after opening when all currencies were already added
+ - Fixed currencies update on every open of tab instead of only first one
+ - Fixed wrong unit conversions
+
 v1.2.1
  - Added support of Android versions 4.1-4.2 (API 16-17)
  - Fixed crash on open of Calculator Expertise View
