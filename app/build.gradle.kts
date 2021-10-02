@@ -8,6 +8,8 @@ plugins {
     id("kotlin-kapt")
 }
 
+val composeVersion = "1.1.0-alpha05"
+
 android {
     compileSdkVersion = "android-31"
     buildToolsVersion = "31.0.0"
@@ -83,10 +85,10 @@ android {
     // and trying to setup with tasks.whenTaskAdded and doFirst somewhy doesn't work
     // TODO Rework this somehow to support building all flavours at the same time
     if (
-        gradle.startParameter.taskNames.isEmpty() ||
-        gradle.startParameter.taskNames.all { task ->
-            !flavorsWithoutCompose.any { task.contains(it, ignoreCase = true) }
-        }
+            gradle.startParameter.taskNames.isEmpty() ||
+            gradle.startParameter.taskNames.all { task ->
+                !flavorsWithoutCompose.any { task.contains(it, ignoreCase = true) }
+            }
     ) {
 
         buildFeatures {
@@ -94,7 +96,7 @@ android {
         }
 
         composeOptions {
-            kotlinCompilerExtensionVersion = "1.1.0-alpha03"
+            kotlinCompilerExtensionVersion = composeVersion
         }
     }
 }
@@ -143,7 +145,6 @@ dependencies {
         exclude(group = "xpp3", module = "xpp3")
     }
 
-    val composeVersion = "1.1.0-alpha03"
     "minApi21Implementation"("androidx.compose.ui:ui:$composeVersion")
     // Tooling support (Previews, etc.)
     "minApi21Implementation"("androidx.compose.ui:ui-tooling:$composeVersion")
