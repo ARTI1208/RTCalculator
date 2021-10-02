@@ -35,8 +35,6 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
             arguments = bundleOf(categoryKey to category)
             return this
         }
-
-        fun calculate(expression: String): Double? = UnitConverterDependencies.calculations.calculate(expression)
     }
 
     protected val category: String by lazy {
@@ -83,4 +81,6 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
 
         return adapter
     }
+
+    protected fun calculate(expression: String): Double? = model.calculations.calculate(expression)
 }

@@ -12,7 +12,7 @@ class UnitConverterModel : ViewModel(), ExpressionInputViewModel {
 
     override val liveInputSelection: MutableLiveData<Pair<Int, Int>> = createInputLiveData()
 
-    override val calculations = DoubleCalculations
+    override val calculations = DoubleCalculations(UnitConverterFormatter)
 
     fun onMinusClick() {
         val input = expression

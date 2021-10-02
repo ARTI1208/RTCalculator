@@ -10,7 +10,7 @@ class DoubleParserConfiguration(
 
     override fun angleToRadiansConverter(originalNumber: Double, angleType: AngleType): Double {
         return when (angleType) {
-            AngleType.DEGREES -> originalNumber * Math.PI / 180
+            AngleType.DEGREES -> Math.toRadians(originalNumber)
             AngleType.RADIANS -> originalNumber
         }
     }

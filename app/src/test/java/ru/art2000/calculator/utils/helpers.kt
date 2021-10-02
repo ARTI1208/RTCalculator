@@ -4,12 +4,10 @@ import ru.art2000.calculator.model.calculator.numbers.DoubleField
 import ru.art2000.calculator.model.calculator.parts.Constant
 import ru.art2000.calculator.model.calculator.parts.ExpressionValue
 import ru.art2000.calculator.model.calculator.parts.Operation
-import java.text.DecimalFormat
-import java.text.NumberFormat
+import ru.art2000.calculator.view_model.calculator.CalculatorFormatter
+import ru.art2000.calculator.view_model.calculator.DoubleCalculations
 
-fun Double.expr(): ExpressionValue<Double> = ExpressionValue(this)
-
-fun Int.expr(): ExpressionValue<Double> = ExpressionValue(this.toDouble())
+fun Number.expr(): ExpressionValue<Double> = ExpressionValue(this.toDouble())
 
 inline fun <reified O : Operation<Double>> findOperation(textRepresentation: String): O {
     return DoubleField.operations.first { it is O && it.textRepresentations.contains(textRepresentation) } as O
@@ -19,12 +17,8 @@ fun findConstant(textRepresentation: String): Constant<Double> {
     return DoubleField.constants.first { it.symbols.contains(textRepresentation) }
 }
 
-fun Double.toDisplayFormat(): String {
-    val nf: NumberFormat = DecimalFormat("#.#######")
-    return nf.format(this)
-}
+val calculations = DoubleCalculations(CalculatorFormatter)
 
-fun Int.toDisplayFormat(): String {
-    val nf: NumberFormat = DecimalFormat("#.#######")
-    return nf.format(this.toLong())
+fun Double.toDisplayFormat(): String {
+    return calculations.format(this)
 }

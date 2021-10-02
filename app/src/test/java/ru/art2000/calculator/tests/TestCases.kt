@@ -1,10 +1,7 @@
 package ru.art2000.calculator.tests
 
 import ru.art2000.calculator.model.calculator.*
-import ru.art2000.calculator.model.calculator.parts.BinaryOperation
-import ru.art2000.calculator.model.calculator.parts.BlockCloseExpression
-import ru.art2000.calculator.model.calculator.parts.BlockOpenExpression
-import ru.art2000.calculator.model.calculator.parts.UnaryOperation
+import ru.art2000.calculator.model.calculator.parts.*
 import ru.art2000.calculator.utils.expr
 import ru.art2000.calculator.utils.findConstant
 import ru.art2000.calculator.utils.findOperation
@@ -39,7 +36,9 @@ object TestCases {
 
         val methods = javaClass.declaredMethods
 
-        methods.filter { it.returnType == TestCase::class.java }.forEach {
+        methods.filter {
+            it.returnType == TestCase::class.java && it.parameterCount == 0
+        }.forEach {
             @Suppress("UNCHECKED_CAST")
             val result = it.invoke(this) as TestCase<Double>
             tests += result
@@ -58,7 +57,7 @@ object TestCases {
                 (-2.5).expr(), binaryPlus, (-4).expr()
         )
 
-        val answer = (-6.5).toDisplayFormat()
+        val answer = -6.5
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -76,7 +75,7 @@ object TestCases {
                 (-4).expr(),
         )
 
-        val answer = (-6.5).toDisplayFormat()
+        val answer = -6.5
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -91,7 +90,7 @@ object TestCases {
                 cos, openingBracket, pi, closingBracket,
         )
 
-        val answer = (-1).toDisplayFormat()
+        val answer = -1
 
         return TestCase(expressions, expectedLexemes, answer, AngleType.RADIANS)
     }
@@ -106,7 +105,7 @@ object TestCases {
                 cos, pi,
         )
 
-        val answer = (-1).toDisplayFormat()
+        val answer = -1
 
         return TestCase(expressions, expectedLexemes, answer, AngleType.RADIANS)
     }
@@ -120,7 +119,7 @@ object TestCases {
                 cos, openingBracket, 90.expr(), closingBracket,
         )
 
-        val answer = 0.toDisplayFormat()
+        val answer = 0
 
         return TestCase(expressions, expectedLexemes, answer, AngleType.DEGREES)
     }
@@ -134,7 +133,7 @@ object TestCases {
                 cos, 90.expr(),
         )
 
-        val answer = 0.toDisplayFormat()
+        val answer = 0
 
         return TestCase(expressions, expectedLexemes, answer, AngleType.DEGREES)
     }
@@ -160,7 +159,7 @@ object TestCases {
                 oneExpr,
         )
 
-        val answer = 5.toDisplayFormat()
+        val answer = 5
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -188,7 +187,7 @@ object TestCases {
                 closingBracket,
         )
 
-        val answer = 1.toDisplayFormat()
+        val answer = 1
 
         return TestCase(expressions, expectedLexemes, answer, AngleType.DEGREES)
     }
@@ -202,7 +201,7 @@ object TestCases {
                 "     e    ",
         )
 
-        val answer = euler.value.toDisplayFormat()
+        val answer = euler.value
 
         return TestCase(expressions, listOf(euler), answer)
     }
@@ -216,7 +215,7 @@ object TestCases {
                 "     6    ",
         )
 
-        val answer = 6.toDisplayFormat()
+        val answer = 6
 
         return TestCase(expressions, listOf(6.expr()), answer)
     }
@@ -234,7 +233,7 @@ object TestCases {
 
         val expectedLexemes = listOf(6.expr(), binaryPlus, 8.expr())
 
-        val answer = 14.toDisplayFormat()
+        val answer = 14
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -248,7 +247,7 @@ object TestCases {
                 .zipWithNext { a, _ -> listOf(a, binaryPlus) }
                 .flatten() + e1
 
-        val answer = 13.toDisplayFormat()
+        val answer = 13
 
         return TestCase(expression, expectedLexemes, answer)
     }
@@ -263,7 +262,7 @@ object TestCases {
                 (-2.5).expr(), binaryPlus, 4.expr()
         )
 
-        val answer = (1.5).toDisplayFormat()
+        val answer = 1.5
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -277,7 +276,7 @@ object TestCases {
                 unaryMinus, openingBracket, 8.expr(), binaryMinus, 10.expr(), closingBracket
         )
 
-        val answer = 2.toDisplayFormat()
+        val answer = 2
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -291,7 +290,7 @@ object TestCases {
                 (-6.4).expr(), integerDiv, 2.expr()
         )
 
-        val answer = (-3).toDisplayFormat()
+        val answer = -3
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -305,7 +304,7 @@ object TestCases {
                 (-6).expr(), integerDiv, 2.expr()
         )
 
-        val answer = (-3).toDisplayFormat()
+        val answer = -3
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -335,7 +334,7 @@ object TestCases {
                 openingBracket, 4.expr(), binaryMinus, 3.expr(), closingBracket
         )
 
-        val answer = ((1.0 / ((1.0 / 30) + (1.0 / 40))) - 2 * (4 - 3)).toDisplayFormat()
+        val answer = (1.0 / ((1.0 / 30) + (1.0 / 40))) - 2 * (4 - 3)
 
         return TestCase(expressions, expectedLexemes, answer)
     }
@@ -349,8 +348,68 @@ object TestCases {
                 6.expr(), times, openingBracket, (-8).expr(), closingBracket
         )
 
-        val answer = (6 * -8).toDisplayFormat()
+        val answer = 6 * -8
 
         return TestCase(expressions, expectedLexemes, answer)
     }
+
+    fun testScientificNotation(): TestCase<Double> {
+        val expressions = listOf(
+                "2×1.1e2"
+        )
+
+        val expectedLexemes = listOf(
+                2.expr(), times, 1.1e2.expr()
+        )
+
+        val answer = 2 * 1.1e2
+
+        return TestCase(expressions, expectedLexemes, answer)
+    }
+
+    fun testLongExpression(): TestCase<Double> {
+        val expressions = listOf(
+                "6 666 466 131×8 115 214"
+        )
+
+        val expectedLexemes = listOf(
+                6666466131.expr(), times, 8115214.expr()
+        )
+
+        val answer = 6666466131 * 8115214
+
+        return TestCase(expressions, expectedLexemes, answer)
+    }
+
+    fun testExponentNumber(): TestCase<Double> {
+        val expressions = listOf(
+                "1e-7",
+                "1E-7",
+        )
+
+        val expectedLexemes = listOf(
+                1e-7.expr()
+        )
+
+        val answer = 1e-7
+
+        return TestCase(expressions, expectedLexemes, answer)
+    }
+
+    @Suppress("TestFunctionName")
+    private fun TestCase(
+            expressions: List<String>,
+            expectedLexemes: List<ExpressionPart<Double>>?,
+            expectedResult: Number,
+            angleType: AngleType = AngleType.RADIANS
+    ) : TestCase<Double> = TestCase(expressions, expectedLexemes, expectedResult.toDouble().toDisplayFormat(), angleType)
+
+    @Suppress("TestFunctionName")
+    private fun TestCase(
+            expression: String,
+            expectedLexemes: List<ExpressionPart<Double>>?,
+            expectedResult: Number,
+            angleType: AngleType = AngleType.RADIANS
+    ) : TestCase<Double> = TestCase(listOf(expression), expectedLexemes, expectedResult, angleType)
+
 }

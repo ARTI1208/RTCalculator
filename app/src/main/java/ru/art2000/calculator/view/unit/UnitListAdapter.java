@@ -28,10 +28,9 @@ import ru.art2000.calculator.databinding.ItemUnitConverterListBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding;
 import ru.art2000.calculator.databinding.ItemUnitConverterNamePartBinding;
 import ru.art2000.calculator.model.unit.UnitConverterItem;
-import ru.art2000.calculator.view_model.unit.UnitConverterDependencies;
+import ru.art2000.calculator.view_model.calculator.Calculations;
 import ru.art2000.extensions.views.SimpleTextWatcher;
 import ru.art2000.helpers.AndroidHelper;
-import ru.art2000.helpers.GeneralHelper;
 
 public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitItemHolder> {
 
@@ -39,6 +38,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
             new MutableLiveData<>(new Pair<>(0, 0));
     private final Context mContext;
     private final UnitConverterItem<Double>[] data;
+    private final Calculations<Double> calculations;
     private final LifecycleOwner lifecycleOwner;
     private int colorAccent;
     private int colorDefaultBright;
@@ -46,11 +46,18 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     private RecyclerView recycler;
     private boolean powerfulConverter = false;
 
-    UnitListAdapter(Context ctx, LifecycleOwner lifecycleOwner, UnitConverterItem<Double>[] items, boolean isPowerfulConverter) {
+    UnitListAdapter(
+            Context ctx,
+            LifecycleOwner lifecycleOwner,
+            UnitConverterItem<Double>[] items,
+            Calculations<Double> calculations,
+            boolean isPowerfulConverter
+    ) {
         data = items;
         mContext = ctx;
         powerfulConverter = isPowerfulConverter;
         this.lifecycleOwner = lifecycleOwner;
+        this.calculations = calculations;
 
         if (data != null && data.length > 0 && data[0].getCurrentValue() == 0.0)
             setValue(0, 1);
@@ -62,6 +69,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
         data = items;
         mContext = ctx;
         this.lifecycleOwner = lifecycleOwner;
+        this.calculations = null;
 
         setCurrentDimension(pos);
 
@@ -100,7 +108,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     void setValue(int position, String value) {
-        Double result = UnitConverterDependencies.getCalculations().calculate(value);
+        Double result = calculations.calculate(value);
         double doubleValue = result == null ? 1 : result;
         setValue(position, doubleValue);
     }
@@ -157,7 +165,7 @@ public class UnitListAdapter extends RecyclerView.Adapter<UnitListAdapter.UnitIt
     }
 
     private String doubleToString(double d) {
-        return GeneralHelper.resultNumberFormat.format(d);
+        return calculations.format(d);
     }
 
     @Override

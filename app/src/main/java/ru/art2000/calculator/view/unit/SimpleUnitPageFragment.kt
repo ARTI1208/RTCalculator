@@ -12,6 +12,7 @@ import android.widget.Toast
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.UnitConverterItem
+import ru.art2000.calculator.view_model.unit.UnitConverterDependencies
 import ru.art2000.extensions.views.*
 import ru.art2000.helpers.GeneralHelper
 
@@ -197,7 +198,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         binding.valueConverted.textValue = items[binding.spinnerTo.selectedItemPosition].displayValue
     }
 
-    private val UnitConverterItem<*>.displayValue
-        get() = GeneralHelper.resultNumberFormat.format(this.currentValue)
+    private val UnitConverterItem<Double>.displayValue
+        get() = model.calculations.format(currentValue)
 
 }

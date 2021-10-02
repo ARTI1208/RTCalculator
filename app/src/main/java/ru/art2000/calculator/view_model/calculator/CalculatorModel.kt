@@ -47,7 +47,8 @@ class CalculatorModel(
             mLiveResult.value = value
         }
 
-    override val calculations: Calculations<Double> = DoubleCalculations
+    // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
+    override val calculations: Calculations<Double> = DoubleCalculations(CalculatorFormatter)
 
     override fun getHistoryItems(): LiveData<List<HistoryItem>> {
         return historyDao.getAll()

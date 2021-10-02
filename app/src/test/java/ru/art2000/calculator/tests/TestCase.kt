@@ -2,6 +2,7 @@ package ru.art2000.calculator.tests
 
 import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.model.calculator.parts.ExpressionPart
+import ru.art2000.calculator.view_model.calculator.CalculationNumberFormatter
 
 data class TestCase<CalculationNumber>(
     val expressions: List<String>,
@@ -16,7 +17,6 @@ data class TestCase<CalculationNumber>(
         expectedResult: String,
         angleType: AngleType = AngleType.RADIANS
     ) : this(listOf(expression), expectedLexemes, expectedResult, angleType)
-
 
     override fun toString(): String {
         return expressions.joinToString()

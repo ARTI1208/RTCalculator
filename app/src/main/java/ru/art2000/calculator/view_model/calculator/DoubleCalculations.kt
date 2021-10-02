@@ -14,11 +14,11 @@ import ru.art2000.calculator.model.calculator.parts.*
 import ru.art2000.calculator.view.calculator.LexemeListAdapter
 import kotlin.system.measureTimeMillis
 
-object DoubleCalculations : Calculations<Double> {
+class DoubleCalculations(
+        override val formatter: CalculationNumberFormatter<Double>,
+) : Calculations<Double> {
 
     override val field = DoubleField
-
-    override val formatter = DoubleFormatter
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val parser = CalculationParser(DoubleParserConfiguration(field))

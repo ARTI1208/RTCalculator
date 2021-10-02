@@ -2,15 +2,10 @@ package ru.art2000.calculator.view_model.unit
 
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.unit.*
-import ru.art2000.calculator.view_model.calculator.DoubleCalculations
-import ru.art2000.calculator.view_model.calculator.Calculations
 import kotlin.math.pow
 
 @Suppress("RemoveExplicitTypeArguments")
 object UnitConverterDependencies {
-
-    @JvmStatic
-    val calculations: Calculations<Double> = DoubleCalculations
 
     @JvmStatic
     fun getCategoryItems(str: String): Array<UnitConverterItem<Double>> {
@@ -120,8 +115,8 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.mass_mg, R.string.short_mass_mg, 1e6),
             DoubleRatioConverterItem(R.string.mass_g, R.string.short_mass_g, 1e3),
             DoubleRatioConverterItem(R.string.mass_kg, R.string.short_mass_kg, 1.0),
-            DoubleRatioConverterItem(R.string.mass_qq, R.string.short_mass_qq, 1e2),
-            DoubleRatioConverterItem(R.string.mass_t, R.string.short_mass_t, 1e3),
+            DoubleRatioConverterItem(R.string.mass_qq, R.string.short_mass_qq, 1e-2),
+            DoubleRatioConverterItem(R.string.mass_t, R.string.short_mass_t, 1e-3),
             DoubleRatioConverterItem(R.string.mass_gr, R.string.short_mass_gr, 64.79891e6),
             DoubleRatioConverterItem(R.string.mass_oz, R.string.short_mass_oz, 28349.52e6),
             DoubleRatioConverterItem(R.string.mass_lb, R.string.short_mass_lb, 0.45359237),

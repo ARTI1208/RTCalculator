@@ -20,7 +20,7 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
         binding.unitRv.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         binding.unitRv.adapter = UnitListAdapter(
-            requireContext(), viewLifecycleOwner, items, true
+            requireContext(), viewLifecycleOwner, items, model.calculations, true
         )
     }
 }

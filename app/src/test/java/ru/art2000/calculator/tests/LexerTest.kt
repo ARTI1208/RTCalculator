@@ -4,14 +4,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.parts.ExpressionPart
-import ru.art2000.calculator.view_model.calculator.DoubleCalculations
+import ru.art2000.calculator.utils.calculations
 
 @RunWith(Parameterized::class)
 class LexerTest {
 
     companion object {
 
-        private inline val lexer get() = DoubleCalculations.lexer
+        private inline val lexer get() = calculations.lexer
 
         @JvmStatic
         @Parameterized.Parameters(name = "{0}")
@@ -26,11 +26,6 @@ class LexerTest {
         private fun test(expression: String, expectedLexemes: List<ExpressionPart<Double>>?) {
             println(expression)
             val actualLexemes = lexer.getLexemes(expression.toCharArray())
-
-            for (i in expectedLexemes?.indices ?: IntRange.EMPTY) {
-                val actual = actualLexemes!![i]
-                val expected = expectedLexemes!![i]
-            }
 
             assert(actualLexemes == expectedLexemes) {
                 """ 

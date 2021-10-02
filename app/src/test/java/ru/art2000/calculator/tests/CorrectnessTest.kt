@@ -5,7 +5,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.utils.OldCalculationClass
-import ru.art2000.calculator.view_model.calculator.DoubleCalculations
+import ru.art2000.calculator.utils.calculations
 
 @RunWith(Parameterized::class)
 class CorrectnessTest {
@@ -23,7 +23,7 @@ class CorrectnessTest {
         }
 
         private fun test(expression: String, expectedAnswer: String, angleType: AngleType = AngleType.RADIANS) {
-            val newResult: String = DoubleCalculations.calculateForDisplay(expression, angleType)
+            val newResult: String = calculations.calculateForDisplay(expression, angleType)
 
             val oldResult = try {
                 OldCalculationClass.radians = angleType == AngleType.RADIANS

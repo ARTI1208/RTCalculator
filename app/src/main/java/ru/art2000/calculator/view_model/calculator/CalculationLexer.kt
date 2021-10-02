@@ -26,121 +26,135 @@ class CalculationLexer<CalculationNumber>(
         var isReadingNumber = false
         var isSignRead = false
         var startingIndex = -1
+        var exponentStarted = false
 
         var index = 0
         while (index < expression.length) {
             val c = expression[index]
 
-            when {
-                c.isOpeningBracket -> {
-                    if (startingIndex >= 0) {
+            var charProcessed = false
 
-                        val part = expression.substring(startingIndex, index)
+            if (!charProcessed && c.isOpeningBracket) {
+                if (startingIndex >= 0) {
 
-                        val subLexemes = part.numberOrUnaryOrWords(isReadingNumber && (!isSignRead || lexemes.isEmpty()))
-                        if (subLexemes.isEmpty()) return null
+                    val part = expression.substring(startingIndex, index)
 
-                        lexemes += subLexemes
+                    val subLexemes = part.numberOrUnaryOrWords(isReadingNumber && (!isSignRead || lexemes.isEmpty()))
+                    if (subLexemes.isEmpty()) return null
 
-                        startingIndex = -1
-                        isReadingNumber = false
-                    }
+                    lexemes += subLexemes
 
-                    lexemes += blockOpening
-                }
-                c.isClosingBracket -> {
-                    if (startingIndex >= 0) {
-
-                        val part = expression.substring(startingIndex, index)
-                        val subLexemes = part.numberOrUnaryOrWords(isReadingNumber && !isSignRead)
-                        if (subLexemes.isEmpty()) return null
-
-                        lexemes += subLexemes
-
-                        startingIndex = -1
-                        isReadingNumber = false
-                    }
-
-                    lexemes += blockClosing
-                }
-                c.isNumberPart -> {
-
-                    if (c == ',') {
-                        expression[index] = '.'
-                    }
-
-                    if (startingIndex == -1) {
-                        if (c.isNumberSign && lexemes.isNotEmpty() && (lexemes.lastOrNull() !is BlockOpenExpression)) {
-                            val cStr = c.toString()
-                            val signOperation = operations.first { it is BinaryOperation<*> && it.textRepresentations.contains(cStr) }
-                            lexemes += signOperation
-                        } else {
-                            startingIndex = index
-                            isReadingNumber = true
-                            isSignRead = c.isNumberSign
-                        }
-                    } else if (!isReadingNumber) {
-                        val part = expression.substring(startingIndex, index)
-
-                        val wordLexemes = part.wordLexemes()
-
-                        if (wordLexemes.isEmpty()) return null
-
-                        lexemes += wordLexemes
-
-                        startingIndex = index
-                        isReadingNumber = true
-                        isSignRead = false
-                    } else if (c.isNumberSign) {
-
-                        val sub = expression.substring(startingIndex, index)
-
-                        val lastLexeme = lexemes.lastOrNull()
-
-                        val unary = lastLexeme == null || lastLexeme is Operation || lastLexeme is BlockOpenExpression
-
-                        val subLexemes = sub.numberOrUnaryOrWords(unary)
-                        if (subLexemes.isEmpty()) return null
-                        lexemes += subLexemes
-
-                        startingIndex = index
-                        isReadingNumber = subLexemes.lastOrNull() is Operation
-                        isSignRead = true
-                    } else {
-                        isSignRead = false
-                    }
-                }
-                c.isSpacing -> {
-
-                    if (startingIndex >= 0 && !(isReadingNumber || isSignRead)) {
-
-                        val part = expression.substring(startingIndex, index)
-
-                        val subLexemes = part.numberOrUnaryOrWords(isReadingNumber)
-                        if (subLexemes.isEmpty()) return null
-                        lexemes += subLexemes
-
-                        startingIndex = -1
-                        isReadingNumber = false
-                    }
-
-                }
-                else -> { // word lexeme part
-
-                    if (startingIndex == -1) {
-                        startingIndex = index
-                    } else if (isReadingNumber) {
-                        val part = expression.substring(startingIndex, index)
-                        val double = part.numberLexeme() ?: kotlin.run {
-                            println("Unknown number lexeme '${expression.substring(startingIndex, index)}'")
-                            return null
-                        }
-
-                        lexemes += double
-                        startingIndex = index
-                    }
+                    startingIndex = -1
                     isReadingNumber = false
                 }
+
+                lexemes += blockOpening
+                charProcessed = true
+            }
+
+            if (!charProcessed && c.isClosingBracket) {
+                if (startingIndex >= 0) {
+
+                    val part = expression.substring(startingIndex, index)
+                    val subLexemes = part.numberOrUnaryOrWords(isReadingNumber && !isSignRead)
+                    if (subLexemes.isEmpty()) return null
+
+                    lexemes += subLexemes
+
+                    startingIndex = -1
+                    isReadingNumber = false
+                }
+
+                lexemes += blockClosing
+                charProcessed = true
+            }
+
+            if (!charProcessed && c.isNumberPart) {
+                if (c == ',') {
+                    expression[index] = '.'
+                }
+
+                if (startingIndex == -1) {
+                    if (c.isNumberSign && lexemes.isNotEmpty() && (lexemes.lastOrNull() !is BlockOpenExpression)) {
+                        val cStr = c.toString()
+                        val signOperation = operations.first { it is BinaryOperation<*> && it.textRepresentations.contains(cStr) }
+                        lexemes += signOperation
+                    } else {
+                        startingIndex = index
+                        isReadingNumber = true
+                        exponentStarted = false
+                        isSignRead = c.isNumberSign
+                    }
+                } else if (!isReadingNumber) {
+                    val part = expression.substring(startingIndex, index)
+
+                    val wordLexemes = part.wordLexemes()
+
+                    if (wordLexemes.isEmpty()) return null
+
+                    lexemes += wordLexemes
+
+                    startingIndex = index
+                    isReadingNumber = true
+                    isSignRead = false
+                } else if (c.isNumberSign && !exponentStarted) {
+
+                    val sub = expression.substring(startingIndex, index)
+
+                    val lastLexeme = lexemes.lastOrNull()
+
+                    val unary = lastLexeme == null || lastLexeme is Operation || lastLexeme is BlockOpenExpression
+
+                    val subLexemes = sub.numberOrUnaryOrWords(unary)
+                    if (subLexemes.isEmpty()) return null
+                    lexemes += subLexemes
+
+                    startingIndex = index
+                    isReadingNumber = subLexemes.lastOrNull() is Operation
+                    isSignRead = true
+                } else {
+                    isSignRead = false
+                }
+
+                charProcessed = true
+            }
+
+            if (!charProcessed && c.isSpacing) {
+                if (startingIndex >= 0 && !(isReadingNumber || isSignRead)) {
+
+                    val part = expression.substring(startingIndex, index)
+
+                    val subLexemes = part.numberOrUnaryOrWords(isReadingNumber)
+                    if (subLexemes.isEmpty()) return null
+                    lexemes += subLexemes
+
+                    startingIndex = -1
+                    isReadingNumber = false
+                }
+                charProcessed = true
+            }
+
+            if (!charProcessed && c.isScientific) {
+                if (isReadingNumber) {
+                    exponentStarted = true
+                    charProcessed = true
+                }
+            }
+
+            if (!charProcessed) {
+                if (startingIndex == -1) {
+                    startingIndex = index
+                } else if (isReadingNumber) {
+                    val part = expression.substring(startingIndex, index)
+                    val double = part.numberLexeme() ?: kotlin.run {
+                        println("Unknown number lexeme '${expression.substring(startingIndex, index)}'")
+                        return null
+                    }
+
+                    lexemes += double
+                    startingIndex = index
+                }
+                isReadingNumber = false
             }
 
             // fallback
@@ -177,6 +191,9 @@ class CalculationLexer<CalculationNumber>(
     private inline val Char.isFloatingPointSymbol: Boolean
         get() = this == '.' || this == ','
 
+    private inline val Char.isScientific: Boolean
+        get() = this == 'e' || this == 'E'
+
     private fun String.numberLexeme(): ExpressionValue<CalculationNumber>? = numberConverter(replace(" ", ""))?.let { ExpressionValue(it) }
 
     private fun String.numberLexemeNoReplace(): ExpressionValue<CalculationNumber>? = numberConverter(this)?.let { ExpressionValue(it) }
@@ -190,7 +207,7 @@ class CalculationLexer<CalculationNumber>(
 
     private fun String.numberOrUnaryOperationLexeme(): ExpressionPart<CalculationNumber>? {
         val unaryIndex = indexOfUnaryOperation()
-        if (unaryIndex < 0) return numberLexemeNoReplace()
+        if (unaryIndex < 0 || (unaryIndex > 0 && this[unaryIndex - 1].isScientific)) return numberLexemeNoReplace()
 
         if (unaryIndex == lastIndex) return this[unaryIndex].signOperationLexeme()
 
