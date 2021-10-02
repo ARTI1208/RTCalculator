@@ -91,10 +91,10 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.area_in2, R.string.short_area_in2, IN.pow(2)),
             DoubleRatioConverterItem(R.string.area_ft2, R.string.short_area_ft2, FT.pow(2)),
             DoubleRatioConverterItem(R.string.area_yd2, R.string.short_area_yd2, YD.pow(2)),
-            DoubleRatioConverterItem(R.string.area_acre, R.string.short_area_acre, 4046.8564224),
+            DoubleRatioConverterItem(R.string.area_acre, R.string.short_area_acre, 2.471053814671653E-4),
     )
 
-    private val GAL_UK = 4.5461 * DM.pow(3)
+    private val GAL_UK = DM.pow(3) / 4.5461
 
     private val volumeItems = arrayOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.volume_mm3, R.string.short_volume_mm3, MM.pow(3)),
@@ -102,13 +102,13 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.volume_dm3, R.string.short_volume_dm3, DM.pow(3)),
             DoubleRatioConverterItem(R.string.volume_m3, R.string.short_volume_m3, METER.pow(3)),
             DoubleRatioConverterItem(R.string.volume_in3, R.string.short_volume_in3, IN.pow(3)),
-            DoubleRatioConverterItem(R.string.volume_ft3, R.string.short_volume_ft3, FT.pow(2)),
+            DoubleRatioConverterItem(R.string.volume_ft3, R.string.short_volume_ft3, FT.pow(3)),
             DoubleRatioConverterItem(R.string.volume_yd3, R.string.short_volume_yd3, YD.pow(3)),
             DoubleRatioConverterItem(R.string.volume_gal_uk, R.string.short_volume_gal_uk, GAL_UK),
-            DoubleRatioConverterItem(R.string.volume_oz_uk, R.string.short_volume_oz_uk, 2.5 * GAL_UK),
+            DoubleRatioConverterItem(R.string.volume_oz_uk, R.string.short_volume_oz_uk, 160 * GAL_UK),
             DoubleRatioConverterItem(R.string.volume_qt_uk, R.string.short_volume_qt_uk, 4 * GAL_UK),
             DoubleRatioConverterItem(R.string.volume_pt_uk, R.string.short_volume_pt_uk, 8 * GAL_UK),
-            DoubleRatioConverterItem(R.string.volume_bbl, R.string.short_volume_bbl, 163.66 * CM.pow(3)),
+            DoubleRatioConverterItem(R.string.volume_bbl, R.string.short_volume_bbl, CM.pow(3) / 158.988),
     )
 
     private val massItems = arrayOf<UnitConverterItem<Double>>(
@@ -117,24 +117,24 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.mass_kg, R.string.short_mass_kg, 1.0),
             DoubleRatioConverterItem(R.string.mass_qq, R.string.short_mass_qq, 1e-2),
             DoubleRatioConverterItem(R.string.mass_t, R.string.short_mass_t, 1e-3),
-            DoubleRatioConverterItem(R.string.mass_gr, R.string.short_mass_gr, 64.79891e6),
-            DoubleRatioConverterItem(R.string.mass_oz, R.string.short_mass_oz, 28349.52e6),
-            DoubleRatioConverterItem(R.string.mass_lb, R.string.short_mass_lb, 0.45359237),
-            DoubleRatioConverterItem(R.string.mass_ct, R.string.short_mass_ct, 0.2e3),
-            DoubleRatioConverterItem(R.string.mass_u, R.string.short_mass_u, 1.660539066605e-27),
+            DoubleRatioConverterItem(R.string.mass_gr, R.string.short_mass_gr, 1e6 / 64.79891),
+            DoubleRatioConverterItem(R.string.mass_oz, R.string.short_mass_oz, 1e6 / 28349.52),
+            DoubleRatioConverterItem(R.string.mass_lb, R.string.short_mass_lb, 1 / 0.45359237),
+            DoubleRatioConverterItem(R.string.mass_ct, R.string.short_mass_ct, 1e3 / 0.2),
+            DoubleRatioConverterItem(R.string.mass_u, R.string.short_mass_u, 1 / 1.660539066605e-27),
     )
 
     private val pressureItems = arrayOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.pressure_atm, R.string.short_pressure_atm, 1.0),
-            DoubleRatioConverterItem(R.string.pressure_at, R.string.short_pressure_at, 0.96784),
+            DoubleRatioConverterItem(R.string.pressure_at, R.string.short_pressure_at, 1.03323),
             DoubleRatioConverterItem(R.string.pressure_pa, R.string.short_pressure_pa, PA),
             DoubleRatioConverterItem(R.string.pressure_hpa, R.string.short_pressure_hpa, 1e-2 * PA),
             DoubleRatioConverterItem(R.string.pressure_kpa, R.string.short_pressure_kpa, 1e-3 * PA),
             DoubleRatioConverterItem(R.string.pressure_bar, R.string.short_pressure_bar, 1e-5 * PA),
             DoubleRatioConverterItem(R.string.pressure_mm_hg, R.string.short_pressure_mm_hg, 760.0),
             DoubleRatioConverterItem(R.string.pressure_mm_wg, R.string.short_pressure_mm_wg, 10332.3),
-            DoubleRatioConverterItem(R.string.pressure_in_hg, R.string.short_pressure_in_hg, 101325.0),
-            DoubleRatioConverterItem(R.string.pressure_in_wg, R.string.short_pressure_in_wg, 29.9213),
+            DoubleRatioConverterItem(R.string.pressure_in_hg, R.string.short_pressure_in_hg, PA / 3386.389),
+            DoubleRatioConverterItem(R.string.pressure_in_wg, R.string.short_pressure_in_wg, 1 / 0.002456),
             DoubleRatioConverterItem(R.string.pressure_psi, R.string.short_pressure_psi, 14.696),
     )
 
