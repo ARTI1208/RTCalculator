@@ -159,7 +159,7 @@ dependencies {
     "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
     "minApi21Implementation"("androidx.compose.compiler:compiler:$composeVersion")
 
-    "minApi21Implementation"("androidx.activity:activity-compose:1.3.1")
+    "minApi21Implementation"("androidx.activity:activity-compose:1.4.0")
 
     testImplementation("junit:junit:4.13.2")
 }
