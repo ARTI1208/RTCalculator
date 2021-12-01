@@ -108,7 +108,7 @@ val kotlinVersion = "1.5.31"
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
