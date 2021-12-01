@@ -103,7 +103,7 @@ android {
 
 fun getBuildDate() = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(Date())
 
-val kotlinVersion = "1.5.31"
+val kotlinVersion = "1.6.0"
 
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
