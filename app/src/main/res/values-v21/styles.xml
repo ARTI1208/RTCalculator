@@ -33,7 +33,11 @@
 
     <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Light" />
 
+    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Light" />
+
     <style name="RT.AppTheme.System" parent="RT.AppTheme.Light" />
+
+    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Light" />
 
     <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light">
         <item name="android:windowBackground">@drawable/splash</item>

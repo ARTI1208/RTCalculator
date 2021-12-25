@@ -14,11 +14,7 @@
         <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 
-    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Light" />
-
     <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Light" />
 
     <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView">
         <item name="android:scrollIndicators">top</item>
