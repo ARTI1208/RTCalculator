@@ -167,7 +167,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         /* appVersion preference */
         val appVersion = findPreference<Preference>(KEY_APP_VERSION)
-        appVersion?.summary = BuildConfig.VERSION_NAME + " (" + BuildConfig.BUILD_DATE + ")"
+        appVersion?.summary = "${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}${if (BuildConfig.DEBUG) "-debug" else ""} (${BuildConfig.BUILD_DATE})"
         appVersion?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dev++
             if (dev == CLICKS_TO_OPEN_HIDDEN_INFO) {
