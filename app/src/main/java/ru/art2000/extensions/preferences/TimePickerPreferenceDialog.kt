@@ -30,7 +30,7 @@ class TimePickerPreferenceDialog : PreferenceDialogFragmentCompat() {
     }
 
     @Suppress("DEPRECATION")
-    override fun onBindDialogView(v: View?) {
+    override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
         val preference = preference as TimePickerPreference
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {

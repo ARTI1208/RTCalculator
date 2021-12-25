@@ -25,6 +25,7 @@ abstract class ExtendedPreferenceFragment : PreferenceFragmentCompat() {
                 val dialogFragment = dialogConstructor(preference.key)
 
                 // FIXME. Seems like PreferenceDialogFragmentCompat does not yet support proposed replacement
+                @Suppress("DEPRECATION")
                 dialogFragment.setTargetFragment(this, 0)
                 dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
             }

@@ -1,9 +1,6 @@
 package ru.art2000.extensions.collections
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 
 class LifecycleObserverWrapper<O>(val lifecycleOwner: LifecycleOwner,
                                   override val observer: O) : LiveObserverWrapper<O>(observer) {
@@ -12,9 +9,8 @@ class LifecycleObserverWrapper<O>(val lifecycleOwner: LifecycleOwner,
 
     override fun subscribe(observerRemoveCallback: () -> Unit) {
 
-        lifecycleObserver = object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroy() {
+        lifecycleObserver = object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
                 observerRemoveCallback()
             }
         }

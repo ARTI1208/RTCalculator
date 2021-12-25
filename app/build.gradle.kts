@@ -8,7 +8,8 @@ plugins {
     id("kotlin-kapt")
 }
 
-val composeVersion = "1.1.0-alpha05"
+val composeVersion = "1.1.0-rc01"
+val composeCompilerVersion = "1.1.0-rc02"
 
 android {
     compileSdkVersion = "android-31"
@@ -96,31 +97,31 @@ android {
         }
 
         composeOptions {
-            kotlinCompilerExtensionVersion = composeVersion
+            kotlinCompilerExtensionVersion = composeCompilerVersion
         }
     }
 }
 
 fun getBuildDate() = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(Date())
 
-val kotlinVersion = "1.5.31"
+val kotlinVersion = "1.6.10"
 
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.preference:preference-ktx:1.1.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.preference:preference-ktx:1.2.0-rc01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("com.google.android.material:material:1.4.0")
     implementation("com.sothree.slidinguppanel:library:3.4.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
 
-    val roomVersion = "2.3.0"
+    val roomVersion = "2.4.0"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.core:core-ktx:1.7.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
@@ -129,17 +130,29 @@ dependencies {
     implementation("androidx.multidex:multidex:$multidexVersion")
 
 
-    val okhttpVersion = "3.12.12"
+    val okhttpVersionMinApi16 = "3.12.13"
     //noinspection GradleDependency
-    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
+    "minApi16Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi16")
     //noinspection GradleDependency
-    implementation("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersion")
+    "minApi16Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi16")
 
-    val retrofitVersion = "2.6.0"
+    val okhttpVersionMinApi21 = "4.9.3"
+    "minApi21Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi21")
+    "minApi21Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi21")
+
+    val retrofitVersionMinApi16 = "2.6.4"
     //noinspection GradleDependency
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    "minApi16Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi16")
     //noinspection GradleDependency
-    implementation("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
+    "minApi16Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi16") {
+        exclude(group = "stax", module = "stax-api")
+        exclude(group = "stax", module = "stax")
+        exclude(group = "xpp3", module = "xpp3")
+    }
+
+    val retrofitVersionMinApi21 = "2.9.0"
+    "minApi21Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi21")
+    "minApi21Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi21") {
         exclude(group = "stax", module = "stax-api")
         exclude(group = "stax", module = "stax")
         exclude(group = "xpp3", module = "xpp3")
@@ -157,9 +170,9 @@ dependencies {
     "minApi21Implementation"("androidx.compose.material:material-icons-extended:$composeVersion")
     // Integration with observables
     "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    "minApi21Implementation"("androidx.compose.compiler:compiler:$composeVersion")
+    "minApi21Implementation"("androidx.compose.compiler:compiler:$composeCompilerVersion")
 
-    "minApi21Implementation"("androidx.activity:activity-compose:1.3.1")
+    "minApi21Implementation"("androidx.activity:activity-compose:1.4.0")
 
     testImplementation("junit:junit:4.13.2")
 }
