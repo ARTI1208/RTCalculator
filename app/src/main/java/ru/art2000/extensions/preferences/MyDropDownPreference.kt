@@ -1,6 +1,7 @@
 package ru.art2000.extensions.preferences
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.util.AttributeSet
 import android.view.ViewGroup
@@ -35,16 +36,22 @@ class MyDropDownPreference(
     @Suppress("unused")
     constructor(context: Context) : this(context, null)
 
-    override fun onBindViewHolder(view: PreferenceViewHolder?) {
+    override fun onBindViewHolder(view: PreferenceViewHolder) {
         super.onBindViewHolder(view)
-        mSpinner.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                val paddingStart = context.getDimenAttribute(android.R.attr.listPreferredItemPaddingStart)
-                marginStart = paddingStart
-            } else {
-                val paddingLeft = context.getDimenAttribute(android.R.attr.listPreferredItemPaddingLeft)
-                leftMargin = paddingLeft
+
+        try {
+            mSpinner.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    val paddingStart = context.getDimenAttribute(android.R.attr.listPreferredItemPaddingStart)
+                    marginStart = paddingStart
+                } else {
+                    val paddingLeft = context.getDimenAttribute(android.R.attr.listPreferredItemPaddingLeft)
+                    leftMargin = paddingLeft
+                }
             }
+        } catch (e: Resources.NotFoundException) {
+            // TODO context.getDimenAttribute below fails as theme.resolveAttribute returns 0 somewhy
+            e.printStackTrace()
         }
     }
 
