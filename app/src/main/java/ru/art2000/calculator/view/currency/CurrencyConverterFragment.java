@@ -144,11 +144,17 @@ public class CurrencyConverterFragment extends MainScreenFragment {
         return R.string.title_currency;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void applyLoadingState(LoadingState loadingState) {
         setRefreshStatus(loadingState == LoadingState.LOADING_STARTED);
 
-        if (loadingState == LoadingState.UNINITIALISED || loadingState == LoadingState.LOADING_ENDED)
+        if (loadingState == LoadingState.UNINITIALISED)
             return;
+
+        if (loadingState == LoadingState.LOADING_ENDED) {
+            adapter.notifyDataSetChanged();
+            return;
+        }
 
         int messageId;
         switch (loadingState) {
