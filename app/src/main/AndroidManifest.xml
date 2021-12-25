@@ -30,13 +30,7 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity android:name=".view.settings.InfoActivity" android:label="@string/info"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".view.settings.InfoActivity" android:label="@string/info" />
         <activity android:name=".view.currency.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
         <activity android:name=".view.unit.AllUnitsActivity" />
     </application>
