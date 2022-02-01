@@ -113,7 +113,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:1.5.0")
     implementation("com.sothree.slidinguppanel:library:3.4.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
 
