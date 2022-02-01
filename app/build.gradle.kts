@@ -117,7 +117,7 @@ dependencies {
     implementation("com.sothree.slidinguppanel:library:3.4.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
 
-    val roomVersion = "2.4.0"
+    val roomVersion = "2.4.1"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
