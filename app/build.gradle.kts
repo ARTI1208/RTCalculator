@@ -110,7 +110,7 @@ dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
     implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("androidx.preference:preference-ktx:1.2.0-rc01")
+    implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("com.google.android.material:material:1.4.0")
