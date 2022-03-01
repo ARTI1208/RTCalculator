@@ -9,7 +9,7 @@ plugins {
 }
 
 val composeVersion = "1.1.0-rc01"
-val composeCompilerVersion = "1.1.0-rc02"
+val composeCompilerVersion = "1.2.0-alpha04"
 
 android {
     compileSdkVersion = "android-31"
