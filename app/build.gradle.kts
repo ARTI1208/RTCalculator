@@ -8,12 +8,12 @@ plugins {
     id("kotlin-kapt")
 }
 
-val composeVersion = "1.1.0-rc01"
-val composeCompilerVersion = "1.1.0-rc02"
+val composeVersion = "1.1.1"
+val composeCompilerVersion = composeVersion
 
 android {
     compileSdkVersion = "android-31"
-    buildToolsVersion = "31.0.0"
+    buildToolsVersion = "32.0.0"
     defaultConfig {
         applicationId = "ru.art2000.calculator"
         minSdk = 16
@@ -56,7 +56,7 @@ android {
         }
     }
     lint {
-        isCheckReleaseBuilds = false
+        checkReleaseBuilds = false
     }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -109,15 +109,15 @@ val kotlinVersion = "1.6.10"
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
-    implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("androidx.preference:preference-ktx:1.2.0-rc01")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:1.5.0")
     implementation("com.sothree.slidinguppanel:library:3.4.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
 
-    val roomVersion = "2.4.0"
+    val roomVersion = "2.4.2"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
