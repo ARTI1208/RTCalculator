@@ -1,3 +1,8 @@
+v1.3.1
+ - Fix black theme was applied in API21-22 for Follow System, Follow Battery instead of light one
+ - Fix crash on API21 caused by MyDropDownPreference
+ - Fix new currencies' values were not shown after data loaded until app restart
+
 v1.3.0
  - Split unit converter name into short and full ones
  - Added ability to copy unit value only and value with short name
