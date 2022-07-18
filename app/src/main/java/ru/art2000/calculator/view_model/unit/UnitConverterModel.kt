@@ -3,6 +3,7 @@ package ru.art2000.calculator.view_model.unit
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,8 +49,11 @@ class UnitConverterModel : ViewModel(), ExpressionInputViewModel {
         val clipData = ClipData.newPlainText("unitConvertResult", copiedText)
         cmg.setPrimaryClip(clipData)
 
-        val toastText = context.getString(R.string.copied) + " " + copiedText
-        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+        // API 33+ features UI showing copied content, so skip toasts for them
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            val toastText = context.getString(R.string.copied) + " " + copiedText
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+        }
 
         return true
     }

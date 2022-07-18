@@ -1,6 +1,7 @@
 package ru.art2000.calculator.view.calculator;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -107,9 +108,10 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         private boolean onContextItemSelected(@NonNull MenuItem menuItem) {
 
             int id = menuItem.getItemId();
+            boolean isCopy = id >= HistoryViewModel.COPY_ALL && id <= HistoryViewModel.COPY_RES;
 
             String toastText;
-            if (id >= HistoryViewModel.COPY_ALL && id <= HistoryViewModel.COPY_RES) {
+            if (isCopy) {
 
                 HistoryItem selectedItem = historyList.get(getBindingAdapterPosition());
                 toastText = mModel.copyHistoryItemToClipboard(selectedItem, id);
@@ -122,7 +124,10 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
             } else return true;
 
-            Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
+            // API 33+ features UI showing copied content, so skip toasts for them
+            if (!isCopy || Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
+            }
 
             return true;
         }
