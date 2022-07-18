@@ -119,4 +119,9 @@
     <string name="context_menu_copy_value">Скопировать значение</string>
     <string name="context_menu_copy_with_short_name">Скопировать с сокращением</string>
     <string name="context_menu_copy_with_full_name">Скопировать с названием</string>
+
+    <string name="update_currencies_on_tab_open">Обновлять при открытии вкладки</string>
+    <string name="update_currencies_on_tab_open_summary">При первом открытии за сессию</string>
+    <string name="action_update">Обновить</string>
+    <string name="message_manually_update">Обновить курс валют?</string>
 </resources>

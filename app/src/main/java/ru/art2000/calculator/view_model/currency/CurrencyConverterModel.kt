@@ -35,8 +35,6 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     private val preferences = PreferenceManager.getDefaultSharedPreferences(application)
 
-    private val updateDateKey = "currency_update_date"
-
     private val mUpdateDate by lazy {
         MutableLiveData<String?>(preferences.getString(
                 updateDateKey, context.getString(R.string.preloaded_currencies_date)))
@@ -112,6 +110,9 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
         }
     }
 
+    fun isUpdateOnFirstTabOpenEnabled() =
+            preferences.getBoolean(updateCurrenciesOnTabOpenKey, updateCurrenciesOnTabOpenDefault)
+
     private fun convertToCurrencyRates(valutes: List<Valute>): List<CurrencyRate> {
         val usdValute = valutes.first { it.charCode == "USD" }
         val usdValuteValue = usdValute.value
@@ -121,4 +122,13 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
         } + CurrencyRate("RUB", usdValuteValue)
     }
 
+    companion object {
+
+        private const val updateDateKey = "currency_update_date"
+
+        private const val updateCurrenciesOnTabOpenKey = "update_currencies_on_tab_open"
+
+        private const val updateCurrenciesOnTabOpenDefault = true
+
+    }
 }

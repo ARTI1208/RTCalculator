@@ -74,6 +74,8 @@
     <string name="currency_JPY">Japanese yen</string>
     <string name="currency_RUB">Russian ruble</string>
     <string name="save_currency_value">Save last conversion</string>
+    <string name="update_currencies_on_tab_open">Update on tab opening</string>
+    <string name="update_currencies_on_tab_open_summary">On first time opening during session</string>
     <string name="empty_text_no_currencies_added">No currency items added</string>
     <string name="empty_text_no_currencies_found">No matching currencies found</string>
     <string name="empty_text_all_currencies_added">All available items already added</string>
@@ -90,6 +92,8 @@
     <string name="action_undo">Undo</string>
     <string name="message_item_shown">Item \"%s\" made shown</string>
     <string name="message_item_hidden">Item \"%s\" made hidden</string>
+    <string name="message_manually_update">Update currencies?</string>
+    <string name="action_update">Update</string>
 
     <!-- Unit Converter -->
     <string name="unit_view">Unit view</string>

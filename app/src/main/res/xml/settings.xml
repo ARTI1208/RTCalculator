@@ -47,11 +47,20 @@
         android:key="currency"
         android:layout="@layout/category"
         android:title="@string/title_currency">
+
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="save_currency_value"
             android:title="@string/save_currency_value"
             app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="update_currencies_on_tab_open"
+            android:title="@string/update_currencies_on_tab_open"
+            android:summary="@string/update_currencies_on_tab_open_summary"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:layout="@layout/category"

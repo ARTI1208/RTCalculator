@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".view.MainActivity">
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?colorPrimary"
@@ -29,7 +29,7 @@
             android:id="@+id/pager2"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <ru.art2000.extensions.views.ReplaceableBottomNavigation
         android:id="@+id/navigation"

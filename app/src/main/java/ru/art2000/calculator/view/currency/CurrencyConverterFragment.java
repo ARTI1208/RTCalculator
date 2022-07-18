@@ -16,6 +16,8 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
 import ru.art2000.calculator.model.currency.LoadingState;
@@ -25,6 +27,7 @@ import ru.art2000.extensions.fragments.IReplaceableFragment;
 import ru.art2000.extensions.views.ListenerSubscription;
 import ru.art2000.extensions.views.ViewsKt;
 import ru.art2000.helpers.AndroidHelper;
+import ru.art2000.helpers.SnackbarThemeHelper;
 
 public class CurrencyConverterFragment extends MainScreenFragment {
 
@@ -32,6 +35,7 @@ public class CurrencyConverterFragment extends MainScreenFragment {
     private CurrencyLayoutBinding binding;
     private CurrencyListAdapter adapter;
     private ListenerSubscription<Boolean> keyboardListenerSubscription;
+    private Snackbar updateSnackbar;
 
     @SuppressLint({"InflateParams", "RestrictedApi"})
     @Nullable
@@ -125,7 +129,25 @@ public class CurrencyConverterFragment extends MainScreenFragment {
     @Override
     public void onShown(@Nullable IReplaceableFragment previousReplaceable) {
         if (!model.isFirstUpdateDone()) {
-            model.loadData();
+            if (model.isUpdateOnFirstTabOpenEnabled()) {
+                model.loadData();
+            } else {
+                updateSnackbar = SnackbarThemeHelper.createThemedSnackbar(
+                        binding.currencyList,
+                        R.string.message_manually_update,
+                        Snackbar.LENGTH_INDEFINITE
+                );
+                updateSnackbar.setAction(R.string.action_update, v -> model.loadData());
+                updateSnackbar.show();
+            }
+        }
+    }
+
+    @Override
+    public void onReplaced(@Nullable IReplaceableFragment nextReplaceable) {
+        if (updateSnackbar != null) {
+            updateSnackbar.dismiss();
+            updateSnackbar = null;
         }
     }
 
