@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/parent"
     android:paddingHorizontal="6dp"
@@ -13,7 +14,7 @@
         android:textColor="#ff666666"
         android:gravity="start"
         android:textSize="24sp"
-        android:text="Expression" />
+        tools:text="Expression" />
 
     <TextView
         android:id="@+id/result"
@@ -23,7 +24,7 @@
         android:gravity="end"
         android:textColor="?colorSecondary"
         android:textSize="28sp"
-        android:text="Result" />
+        tools:text="Result" />
 
     <View
         android:layout_width="match_parent"

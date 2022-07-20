@@ -16,6 +16,8 @@ import androidx.core.util.Consumer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.function.Function;
+
 import ru.art2000.calculator.R;
 import ru.art2000.helpers.AndroidHelper;
 
@@ -23,16 +25,22 @@ class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
     private Context context;
     private Consumer<Integer> onItemSwiped;
+    private Function<Integer, Boolean> isSwipeable;
 
     private Drawable background;
     private Drawable xMark;
     private int xMarkMargin;
     private boolean initiated;
 
-    public HistoryItemTouchHelperCallback(Context context, Consumer<Integer> onItemSwiped) {
+    public HistoryItemTouchHelperCallback(
+            Context context,
+            Function<Integer, Boolean> isSwipeable,
+            Consumer<Integer> onItemSwiped
+    ) {
         this(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.context = context;
         this.onItemSwiped = onItemSwiped;
+        this.isSwipeable = isSwipeable;
     }
 
     private HistoryItemTouchHelperCallback(int dragDirs, int swipeDirs) {
@@ -59,8 +67,9 @@ class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
                             boolean isCurrentlyActive) {
         View itemView = viewHolder.itemView;
 
+        int position = viewHolder.getBindingAdapterPosition();
         // not sure why, but this method get's called for viewholder that are already swiped away
-        if (viewHolder.getBindingAdapterPosition() == -1) {
+        if (position == -1 || !isSwipeable.apply(position)) {
             // not interested in those
             return;
         }
@@ -110,6 +119,9 @@ class HistoryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
-        onItemSwiped.accept(viewHolder.getBindingAdapterPosition());
+        int position = viewHolder.getBindingAdapterPosition();
+        if (isSwipeable.apply(position)) {
+            onItemSwiped.accept(position);
+        }
     }
 }

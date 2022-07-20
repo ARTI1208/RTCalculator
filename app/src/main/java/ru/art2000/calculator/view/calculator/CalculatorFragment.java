@@ -15,18 +15,26 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kotlin.Pair;
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding;
+import ru.art2000.calculator.model.calculator.history.HistoryDateItem;
+import ru.art2000.calculator.model.calculator.history.HistoryListItem;
+import ru.art2000.calculator.model.calculator.history.HistoryValueItem;
 import ru.art2000.calculator.view.MainScreenFragment;
 import ru.art2000.calculator.view_model.calculator.CalculatorModel;
 import ru.art2000.extensions.views.CalculatorEditText;
+import ru.art2000.extensions.views.DisplayingKt;
 import ru.art2000.extensions.views.RecyclerWithEmptyView;
 import ru.art2000.extensions.views.SimpleTextWatcher;
 import ru.art2000.extensions.views.ViewsKt;
@@ -167,6 +175,10 @@ public class CalculatorFragment extends MainScreenFragment {
         return binding.calculatorPanel.historyPart.historyList;
     }
 
+    private TextView getHistoryFloatingDate() {
+        return binding.calculatorPanel.historyPart.floatingDateLayout.date;
+    }
+
     private SlidingUpPanelLayout getSlidingPanel() {
         return binding.calculatorPanel.slidingPanel;
     }
@@ -236,13 +248,24 @@ public class CalculatorFragment extends MainScreenFragment {
         getHistoryRecyclerView().setEmptyViewGenerator((context, viewGroup, integer) ->
                 ViewsKt.createTextEmptyView(context, R.string.no_history));
 
-        HistoryListAdapter adapter = new HistoryListAdapter(requireContext(), getViewLifecycleOwner(), model, model.getHistoryItems());
+        HistoryListAdapter adapter = new HistoryListAdapter(requireContext(), getViewLifecycleOwner(), model, model.getHistoryListItems());
         getHistoryRecyclerView().setAdapter(adapter);
-        getHistoryRecyclerView().setLayoutManager(new LinearLayoutManager(requireContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+        getHistoryRecyclerView().setLayoutManager(linearLayoutManager);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new HistoryItemTouchHelperCallback(requireContext(), (position) ->
-                        model.removeHistoryItem(adapter.getHistoryList().get(position).getId())
+                new HistoryItemTouchHelperCallback(
+                        requireContext(),
+                        (position) -> {
+                            HistoryListItem historyListItem = adapter.getHistoryList().get(position);
+                            return historyListItem instanceof HistoryValueItem;
+                        },
+                        (position) -> {
+                            // Cast is safe due to filtering in previous lambda
+                            HistoryValueItem historyListItem =
+                                    (HistoryValueItem) adapter.getHistoryList().get(position);
+                            model.removeHistoryItem(historyListItem.getDbItem().getId());
+                        }
                 )
         );
 
@@ -252,9 +275,63 @@ public class CalculatorFragment extends MainScreenFragment {
                 new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         );
 
-        model.getHistoryItems().observe(getViewLifecycleOwner(), data -> {
+        model.getHistoryListItems().observe(getViewLifecycleOwner(), data -> {
             if (!data.isEmpty()) {
                 getHistoryRecyclerView().scrollToPosition(adapter.getItemCount() - 1);
+            }
+        });
+
+        getHistoryRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            private final Timer timer = new Timer();
+            private TimerTask task;
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            requireActivity().runOnUiThread(() ->
+                                    getHistoryFloatingDate().setVisibility(View.GONE));
+                        }
+                    };
+                    timer.schedule(task, 1000);
+                } else {
+                    if (task != null) {
+                        task.cancel();
+                        task = null;
+                    }
+                    showFloatingDate(recyclerView);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) return;
+
+                showFloatingDate(recyclerView);
+            }
+
+            private void showFloatingDate(@NonNull RecyclerView recyclerView) {
+                int pos = linearLayoutManager.findFirstVisibleItemPosition();
+                List<HistoryListItem> items = adapter.getHistoryList();
+
+                if (pos >= items.size()) return;
+
+                for (int i = pos; i >= 0; i--) {
+                    HistoryListItem item = items.get(i);
+                    if (item instanceof HistoryDateItem) {
+                        String newText = DisplayingKt.toViewString(((HistoryDateItem) item).getDate());
+                        getHistoryFloatingDate().setText(newText);
+                        getHistoryFloatingDate().setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
             }
         });
 

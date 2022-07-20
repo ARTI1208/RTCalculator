@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import ru.art2000.calculator.model.calculator.HistoryItem;
+import ru.art2000.calculator.model.calculator.history.HistoryDatabaseItem;
+import ru.art2000.calculator.model.calculator.history.HistoryListItem;
 
 public interface HistoryViewModel {
 
@@ -15,9 +16,9 @@ public interface HistoryViewModel {
 
     int DELETE = 200;
 
-    LiveData<List<HistoryItem>> getHistoryItems();
+    LiveData<List<HistoryListItem>> getHistoryListItems();
 
-    String copyHistoryItemToClipboard(@NonNull HistoryItem item, int type);
+    String copyHistoryItemToClipboard(@NonNull HistoryDatabaseItem item, int type);
 
     void removeHistoryItem(int id);
 

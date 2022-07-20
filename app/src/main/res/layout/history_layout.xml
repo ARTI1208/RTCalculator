@@ -14,13 +14,23 @@
         android:layout_weight="1.0"
         android:orientation="vertical">
 
-        <ru.art2000.extensions.views.RecyclerWithEmptyView
-            android:id="@+id/history_list"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.0"
-            style="@style/RT.Widget.ListView.VerticalIndicators"
-            tools:ignore="NestedWeights" />
+            tools:ignore="NestedWeights">
+
+            <ru.art2000.extensions.views.RecyclerWithEmptyView
+                android:id="@+id/history_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/RT.Widget.ListView.VerticalIndicators" />
+
+            <include
+                android:id="@+id/floating_date_layout"
+                layout="@layout/item_history_date" />
+
+        </FrameLayout>
 
         <RelativeLayout
             android:id="@+id/header"

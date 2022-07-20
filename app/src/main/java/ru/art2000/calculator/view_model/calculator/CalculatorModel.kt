@@ -4,11 +4,15 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.history.HistoryDatabaseItem
+import ru.art2000.calculator.model.calculator.history.HistoryDateItem
+import ru.art2000.calculator.model.calculator.history.HistoryListItem
+import ru.art2000.calculator.model.calculator.history.HistoryValueItem
 import ru.art2000.calculator.model.calculator.numbers.CalculationNumber
 import ru.art2000.calculator.model.calculator.parts.BinaryOperation
 import ru.art2000.calculator.model.calculator.parts.PostfixOperation
@@ -20,6 +24,8 @@ import ru.art2000.extensions.arch.context
 import ru.art2000.extensions.language.dotSafeToDouble
 import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
+import java.time.LocalDate
+import java.util.*
 import kotlin.concurrent.thread
 
 class CalculatorModel(
@@ -50,11 +56,24 @@ class CalculatorModel(
     // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
     override val calculations: Calculations<Double> = DoubleCalculations(CalculatorFormatter)
 
-    override fun getHistoryItems(): LiveData<List<HistoryItem>> {
-        return historyDao.getAll()
+    override fun getHistoryListItems(): LiveData<List<HistoryListItem>> {
+        return Transformations.map(historyDao.getAll()) { items ->
+            var calendar: Calendar? = null
+            items.fold(mutableListOf()) { acc, historyDatabaseItem ->
+                if (!isSameDay(calendar, historyDatabaseItem.date)) {
+                    val date = historyDatabaseItem.date.let {
+                        LocalDate.ofYearDay(it[Calendar.YEAR], it[Calendar.DAY_OF_YEAR])
+                    }
+                    acc += HistoryDateItem(date)
+                    calendar = historyDatabaseItem.date
+                }
+                acc += HistoryValueItem(historyDatabaseItem)
+                acc
+            }
+        }
     }
 
-    override fun copyHistoryItemToClipboard(item: HistoryItem, type: Int): String {
+    override fun copyHistoryItemToClipboard(item: HistoryDatabaseItem, type: Int): String {
         val clip: ClipData?
         val copiedText: String?
 
@@ -95,8 +114,11 @@ class CalculatorModel(
     }
 
     private fun saveCalculationResult(expression: String, result: String) {
-        thread {
-            historyDao.insert(HistoryItem(expression, result))
+        viewModelScope.launch(Dispatchers.IO) {
+//            historyDao.insert(HistoryItem(expression, result, Date()))
+            historyDao.insert(HistoryDatabaseItem(expression, result
+                    , Calendar.getInstance()
+            ))
         }
     }
 
@@ -350,5 +372,13 @@ class CalculatorModel(
         mLiveAngleType.value = mLiveAngleType.value.reversed
 
         return mLiveAngleType.value.reversed.toString()
+    }
+
+    private fun isSameDay(calendar: Calendar?, otherCalendar: Calendar?): Boolean {
+        if (calendar == null) return otherCalendar == null
+        if (otherCalendar == null) return false
+
+        return calendar[Calendar.DAY_OF_YEAR] == otherCalendar[Calendar.DAY_OF_YEAR]
+                && calendar[Calendar.YEAR] == otherCalendar[Calendar.YEAR]
     }
 }
