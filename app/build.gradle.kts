@@ -8,7 +8,7 @@ plugins {
     id("kotlin-kapt")
 }
 
-val composeVersion = "1.1.1"
+val composeVersion = "1.2.0"
 val composeCompilerVersion = composeVersion
 
 android {
