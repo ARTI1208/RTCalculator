@@ -1,11 +1,11 @@
 package ru.art2000.calculator.view
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityMainBinding
 import ru.art2000.calculator.view.calculator.CalculatorFragment
@@ -16,7 +16,6 @@ import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.fragments.INavigationFragment
 import ru.art2000.helpers.PrefsHelper
 
-import androidx.core.content.ContextCompat
 import androidx.core.view.*
 import androidx.core.view.ViewCompat
 
@@ -47,7 +46,6 @@ class MainActivity : AutoThemeActivity() {
         }
 
         setContentView(binding.root)
-        updateStatusBarColor()
 
         window.allowDrawingUnderStatusBar(true)
 
@@ -126,19 +124,6 @@ class MainActivity : AutoThemeActivity() {
             doubleBackToExitPressedOnce = true
             Toast.makeText(this, R.string.twice_tap_exit, Toast.LENGTH_SHORT).show()
             Handler(mainLooper).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-        }
-    }
-
-    private fun updateStatusBarColor() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            val statusBarColorRes = if (
-                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.M && !isDarkThemeApplied
-            ) R.color.LightTheme_lollipopStatusBackgroundTransparent
-            else android.R.color.transparent
-
-            window.statusBarColor = ContextCompat.getColor(this, statusBarColorRes)
         }
     }
 
