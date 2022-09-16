@@ -2,8 +2,8 @@ package ru.art2000.calculator.compose
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
-import androidx.compose.foundation.gestures.OverScrollConfiguration
+import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.OverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -37,13 +37,13 @@ private fun Themed(
     content: @Composable () -> Unit
 ) {
 
-    val overScrollConfiguration = OverScrollConfiguration(
+    val overScrollConfiguration = OverscrollConfiguration(
         glowColor = calculatorColors.fallback.background,
     )
 
     CompositionLocalProvider(
         LocalColors provides calculatorColors,
-        LocalOverScrollConfiguration provides overScrollConfiguration,
+        LocalOverscrollConfiguration provides overScrollConfiguration,
     ) {
         MaterialTheme(
             colors = calculatorColors.fallback,

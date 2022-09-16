@@ -8,16 +8,16 @@ plugins {
     id("kotlin-kapt")
 }
 
-val composeVersion = "1.1.1"
-val composeCompilerVersion = composeVersion
+val composeVersion = "1.2.1"
+val composeCompilerVersion = "1.3.1"
 
 android {
-    compileSdkVersion = "android-31"
-    buildToolsVersion = "32.0.0"
+    compileSdkVersion = "android-33"
+    buildToolsVersion = "33.0.0"
     defaultConfig {
         applicationId = "ru.art2000.calculator"
         minSdk = 16
-        targetSdk = 31
+        targetSdk = 33
         versionCode = 11
 
         val major = 1
@@ -104,26 +104,26 @@ android {
 
 fun getBuildDate() = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(Date())
 
-val kotlinVersion = "1.6.10"
+val kotlinVersion = "1.7.10"
 
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation("com.google.android.material:material:1.5.0")
+    implementation("com.google.android.material:material:1.6.1")
     implementation("com.sothree.slidinguppanel:library:3.4.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
 
-    val roomVersion = "2.4.2"
+    val roomVersion = "2.4.3"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.9.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.0")
 
 
     val multidexVersion = "2.0.1"
@@ -172,7 +172,7 @@ dependencies {
     "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
     "minApi21Implementation"("androidx.compose.compiler:compiler:$composeCompilerVersion")
 
-    "minApi21Implementation"("androidx.activity:activity-compose:1.4.0")
+    "minApi21Implementation"("androidx.activity:activity-compose:1.5.1")
 
     testImplementation("junit:junit:4.13.2")
 }

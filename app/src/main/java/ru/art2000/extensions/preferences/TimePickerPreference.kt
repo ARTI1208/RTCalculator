@@ -70,6 +70,7 @@ class TimePickerPreference @JvmOverloads constructor(
         return a.getString(index)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onSetInitialValue(restoreValue: Boolean, defaultValue: Any?) {
         val value = if (restoreValue) {
             if (defaultValue == null)
