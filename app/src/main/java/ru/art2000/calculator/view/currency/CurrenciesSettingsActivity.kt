@@ -16,6 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -35,9 +36,7 @@ import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.PrefsHelper
-import ru.art2000.helpers.SnackbarThemeHelper
 import ru.art2000.helpers.getColorAttribute
-import java.util.*
 import kotlin.collections.ArrayList
 import com.google.android.material.R as MaterialR
 
@@ -324,6 +323,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             val cardLayoutParams = cardView.layoutParams as MarginLayoutParams
             var leftMargin = cardLayoutParams.leftMargin + cardView.paddingLeft
             var rightMargin = cardLayoutParams.rightMargin + cardView.paddingRight
+            var bottomMargin = cardLayoutParams.bottomMargin + cardView.paddingBottom
             var height = cardView.getChildAt(0).measuredHeight
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 height += (cardView.paddingBottom
@@ -331,11 +331,19 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                         - cardView.cardElevation.toInt())
                 leftMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
                 rightMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
+                bottomMargin -= (cardView.cardElevation + cardView.paddingBottom).toInt()
             } else {
                 view.elevation = 0f
             }
             view.minimumHeight = height
-            view.translationY = (cardView.paddingTop - cardView.strokeWidth).toFloat()
+
+            view.updateLayoutParams<MarginLayoutParams> {
+                updateMargins(
+                    left = leftMargin,
+                    right = rightMargin,
+                    bottom = bottomMargin,
+                )
+            }
 
             return this
         }
