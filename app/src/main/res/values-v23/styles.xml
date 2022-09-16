@@ -28,4 +28,10 @@
         <item name="android:scrollIndicators">top</item>
     </style>
 
+    <style name="Base.RT.v23.Widget.Button" parent="Base.RT.v21.Widget.Button">
+        <item name="android:background">#00000000</item>
+    </style>
+
+    <style name="RT.Widget.Button" parent="Base.RT.v23.Widget.Button" />
+
 </resources>
