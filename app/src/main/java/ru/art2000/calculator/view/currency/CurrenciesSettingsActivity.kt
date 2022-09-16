@@ -337,8 +337,6 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             view.minimumHeight = height
             view.translationY = (cardView.paddingTop - cardView.strokeWidth).toFloat()
 
-            SnackbarThemeHelper.fixSnackBarHorizontalMargin(this, leftMargin, rightMargin)
-
             return this
         }
 
