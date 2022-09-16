@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.VariantDimension
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import java.util.*
 import java.text.*
 
@@ -12,6 +13,17 @@ val composeVersion = "1.2.1"
 val composeCompilerVersion = "1.3.1"
 
 android {
+    signingConfigs {
+        create("release") {
+
+            val props = gradleLocalProperties(project.rootProject.projectDir)
+
+            storeFile = File(props.getProperty("signing.storeFile"))
+            storePassword = props.getProperty("signing.storePassword")
+            keyAlias = props.getProperty("signing.keyAlias")
+            keyPassword = props.getProperty("signing.keyPassword")
+        }
+    }
     compileSdkVersion = "android-33"
     buildToolsVersion = "33.0.0"
     defaultConfig {
@@ -48,11 +60,13 @@ android {
             isShrinkResources = false
             isMinifyEnabled = false
             withLocalProguard("proguard-rules-debug.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
         release {
             isShrinkResources = true
             isMinifyEnabled = true
             withLocalProguard("proguard-rules-release.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     lint {
