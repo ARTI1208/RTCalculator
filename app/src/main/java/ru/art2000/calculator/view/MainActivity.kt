@@ -113,9 +113,15 @@ class MainActivity : AutoThemeActivity() {
             else -> R.id.navigation_calc
         }
         binding.navigation.selectedItemId = tabId
+
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleBackPress()
+            }
+        })
     }
 
-    override fun onBackPressed() {
+    private fun handleBackPress() {
         if (currentFragment.onBackPressed()) {
             if (doubleBackToExitPressedOnce) {
                 finish()
