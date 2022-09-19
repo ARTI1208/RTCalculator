@@ -26,6 +26,9 @@ android {
     }
     compileSdkVersion = "android-33"
     buildToolsVersion = "33.0.0"
+
+    namespace = "ru.art2000.calculator"
+
     defaultConfig {
         applicationId = "ru.art2000.calculator"
         minSdk = 16
@@ -72,13 +75,16 @@ android {
     lint {
         checkReleaseBuilds = false
     }
+
+    val javaVersion = JavaVersion.VERSION_1_8
+
     compileOptions {
-        targetCompatibility = JavaVersion.VERSION_1_8
-        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = javaVersion
+        sourceCompatibility = javaVersion
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = javaVersion.toString()
     }
 
     flavorDimensions += listOf("sdk")
@@ -138,7 +144,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.8")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
 
 
     val multidexVersion = "2.0.1"
