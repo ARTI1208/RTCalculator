@@ -125,7 +125,7 @@ android {
 
 fun getBuildDate() = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(Date())
 
-val kotlinVersion = "1.7.10"
+val kotlinVersion = libs.versions.kotlin.get()
 
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
@@ -193,7 +193,7 @@ dependencies {
     "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
     "minApi21Implementation"("androidx.compose.compiler:compiler:$composeCompilerVersion")
 
-    "minApi21Implementation"("androidx.activity:activity-compose:1.5.1")
+    "minApi21Implementation"("androidx.activity:activity-compose:1.6.0")
 
     testImplementation("junit:junit:4.13.2")
 }
