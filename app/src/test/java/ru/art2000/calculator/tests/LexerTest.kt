@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.parts.ExpressionPart
+import ru.art2000.calculator.utils.OldLexerDoubleCalculations
 import ru.art2000.calculator.utils.calculations
 
 @RunWith(Parameterized::class)
@@ -11,7 +12,7 @@ class LexerTest {
 
     companion object {
 
-        private inline val lexer get() = calculations.lexer
+        private inline val lexer get() = OldLexerDoubleCalculations.lexer
 
         @JvmStatic
         @Parameterized.Parameters(name = "{0}")
@@ -32,6 +33,7 @@ class LexerTest {
                 Expression: $expression
                 Expected lexemes: $expectedLexemes
                 Actual lexemes:   $actualLexemes
+                Lexer:   ${lexer.javaClass.name}
             """.trimIndent()
             }
         }

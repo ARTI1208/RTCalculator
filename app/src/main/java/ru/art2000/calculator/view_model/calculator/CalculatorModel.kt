@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
 import ru.art2000.calculator.model.calculator.numbers.CalculationNumber
+import ru.art2000.calculator.model.calculator.numbers.FloatingPointField
 import ru.art2000.calculator.model.calculator.parts.BinaryOperation
 import ru.art2000.calculator.model.calculator.parts.PostfixOperation
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
@@ -111,7 +112,7 @@ class CalculatorModel(
 
         val extraAppend = when {
             last == null -> ""
-            calculations.field.isFloatingPointSymbol(last) -> "0×"
+            isFloatingPointSymbol(last) -> "0×"
             calculations.field.isNumberPart(last) -> "×"
             else -> ""
         }
@@ -124,7 +125,7 @@ class CalculatorModel(
         val last = expressionLastChar ?: return
 
         val extraAppend = when {
-            calculations.field.isFloatingPointSymbol(last) -> zero
+            isFloatingPointSymbol(last) -> zero
             else -> ""
         }
 
@@ -350,5 +351,9 @@ class CalculatorModel(
         mLiveAngleType.value = mLiveAngleType.value.reversed
 
         return mLiveAngleType.value.reversed.toString()
+    }
+
+    private fun isFloatingPointSymbol(char: Char) = calculations.field.let {
+        it is FloatingPointField && it.isFloatingPointSymbol(char)
     }
 }

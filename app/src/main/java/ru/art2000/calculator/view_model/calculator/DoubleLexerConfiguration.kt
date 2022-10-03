@@ -8,6 +8,6 @@ class DoubleLexerConfiguration(
         override val field: NumberField<Double>,
 ) : LexerConfiguration<Double> {
 
-    override fun numberConverter(numberString: String): Double? = numberString.safeToDouble()
+    override fun numberConverter(numberText: CharSequence): Double? = numberText.safeToDouble()
 
 }

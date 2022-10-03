@@ -4,12 +4,9 @@ import org.apache.commons.math3.special.Gamma
 import ru.art2000.calculator.model.calculator.parts.*
 import kotlin.math.*
 
-object DoubleField : NumberField<Double> {
+object DoubleField : FloatingPointField<Double> {
 
     private const val PRECISION = 1e-7
-
-    override val precision: Double
-        get() = PRECISION
 
     override val constants: List<Constant<Double>>
         get() = listOf(
@@ -109,12 +106,11 @@ object DoubleField : NumberField<Double> {
     private inline val Double.isZero: Boolean
         get() = abs(this) < PRECISION
 
-    override val negateOperation: PrefixOperation<Double>
+    override val negateOperation: UnaryOperation<Double>
         get() = PrefixOperation("-", ::negate)
 
-    override val identityOperation: PrefixOperation<Double>
+    override val identityOperation: UnaryOperation<Double>
         get() = PrefixOperation("+", { it })
-
 
     override fun toCalculationNumber(value: Double): CalculationNumber<Double> = CalculationDouble(value)
 

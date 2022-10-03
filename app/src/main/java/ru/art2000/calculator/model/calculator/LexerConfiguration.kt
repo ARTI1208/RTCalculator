@@ -6,6 +6,6 @@ interface LexerConfiguration<CalculationNumber> {
 
     val field: NumberField<CalculationNumber>
 
-    fun numberConverter(numberString: String): CalculationNumber?
+    fun numberConverter(numberText: CharSequence): CalculationNumber?
 
 }

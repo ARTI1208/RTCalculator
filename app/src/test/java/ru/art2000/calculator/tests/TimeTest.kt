@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.utils.OldCalculationClass
+import ru.art2000.calculator.utils.OldLexerDoubleCalculations
 import ru.art2000.calculator.utils.calculations
 import ru.art2000.calculator.view_model.calculator.DoubleCalculations
 import kotlin.system.measureNanoTime
@@ -23,6 +24,7 @@ class TimeTest {
         private fun test(expressions: List<String>, angleType: AngleType = AngleType.RADIANS) {
             expressions.forEach {
                 test(it, angleType)
+                lexerTest(it, angleType)
             }
         }
 
@@ -31,6 +33,34 @@ class TimeTest {
         private const val oldTimeMultiplier: Double = 1.6
 
         private const val oldTimeMaxDiffOverThreshold: Long = 100_000
+
+        private fun lexerTest(expression: String, angleType: AngleType = AngleType.RADIANS) {
+
+            val arr = expression.toCharArray()
+
+            val newTime = measureNanoTime {
+                calculations.lexer.getLexemes(arr)
+            }
+
+            val oldTime = measureNanoTime {
+                OldLexerDoubleCalculations.lexer.getLexemes(arr)
+            }
+
+            val times = """ 
+                Expression: $expression
+                Old l time: $oldTime
+                New l time: $newTime
+            """.trimIndent()
+
+            val oldTimeCorrected = if (oldTime < oldTimeMultiplierThreshold)
+                (oldTimeMultiplier * oldTime).toLong()
+            else
+                oldTime + oldTimeMaxDiffOverThreshold
+
+            assert(newTime <= oldTimeCorrected) {
+                times
+            }
+        }
 
         private fun test(expression: String, angleType: AngleType = AngleType.RADIANS) {
 
@@ -87,6 +117,7 @@ class TimeTest {
         val warm = calculations.calculateForDisplay("1+1")
         val warm2 = OldCalculationClass.calculateStr("1+1")
         val warm3 = Gamma.gamma(4.0)
+        val warm4 = OldLexerDoubleCalculations.calculateForDisplay("1+1")
     }
 
     @Test

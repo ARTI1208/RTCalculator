@@ -74,54 +74,52 @@ class CalculationParser<CalculationNumber>(
         return queue
     }
 
-    private fun calculate(lexemesInPolishNotation: ArrayDeque<ExpressionPart<CalculationNumber>>, angleType: AngleType): CalculationNumber? {
+    private fun calculate(
+        lexemesInPolishNotation: ArrayDeque<ExpressionPart<CalculationNumber>>,
+        angleType: AngleType
+    ): CalculationNumber? {
 
         val stack: Deque<CalculationNumber> = java.util.ArrayDeque()
 
         while (lexemesInPolishNotation.isNotEmpty()) {
-            val lastToken = lexemesInPolishNotation.removeFirst()
 
-            if (lastToken is ExpressionValue || lastToken is Constant) {
-                val value = lastToken.value ?: return null
+            when (val lastToken = lexemesInPolishNotation.removeFirst()) {
+                is ExpressionValue, is Constant -> {
+                    val value = lastToken.value ?: return null
 
-                if (lexemesInPolishNotation.isEmpty()) return value
+                    if (lexemesInPolishNotation.isEmpty()) return value
 
-                stack.push(value)
+                    stack.push(value)
+                }
+                !is Operation -> return null
+                is BinaryOperation -> {
+                    val rightOperand = stack.pollFirst() ?: return null
+                    val leftOperand = stack.pollFirst() ?: return null
 
-            } else if (lastToken !is Operation) {
-                return null
-            } else {
+                    val result = lastToken.invoke(leftOperand, rightOperand) ?: return null
 
-                when (lastToken) {
-                    is BinaryOperation -> {
-                        val rightOperand = stack.pollFirst() ?: return null
-                        val leftOperand = stack.pollFirst() ?: return null
+                    stack.push(result)
+                }
+                is PrefixOperation -> {
 
-                        val result = lastToken.invoke(leftOperand, rightOperand) ?: return null
+                    val operand = stack.pollFirst() ?: return null
 
-                        stack.push(result)
-                    }
-                    is PrefixOperation -> {
+                    val angleFixedOperand = if (lastToken.isTrigonometryOperation)
+                        configuration.angleToRadiansConverter(operand, angleType)
+                    else
+                        operand
 
-                        val operand = stack.pollFirst() ?: return null
+                    val result = lastToken.invoke(angleFixedOperand) ?: return null
 
-                        val angleFixedOperand = if (lastToken.isTrigonometryOperation)
-                            configuration.angleToRadiansConverter(operand, angleType)
-                        else
-                            operand
+                    stack.push(result)
 
-                        val result = lastToken.invoke(angleFixedOperand) ?: return null
+                }
+                is PostfixOperation -> {
+                    val operand = stack.pollFirst() ?: return null
 
-                        stack.push(result)
+                    val result = lastToken.invoke(operand) ?: return null
 
-                    }
-                    is PostfixOperation -> {
-                        val operand = stack.pollFirst() ?: return null
-
-                        val result = lastToken.invoke(operand) ?: return null
-
-                        stack.push(result)
-                    }
+                    stack.push(result)
                 }
             }
 
@@ -134,8 +132,7 @@ class CalculationParser<CalculationNumber>(
 
     private val <O> ExpressionPart<O>.value: O?
         get() = when (this) {
-            is ExpressionValue -> value
-            is Constant -> value
+            is ValueBased -> value
             else -> null
         }
 

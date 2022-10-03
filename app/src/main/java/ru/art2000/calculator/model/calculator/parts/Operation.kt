@@ -43,6 +43,8 @@ class BinaryOperation<O>(
 
     override fun partAsString(): String = textRepresentations.first()
 
+    override fun mayComeAfter(part: ExpressionPart<O>?) =
+        part is ValueBased || part is BlockCloseExpression
 }
 
 sealed class UnaryOperation<O>(
@@ -70,6 +72,8 @@ class PrefixOperation<O>(
             textRepresentation: String, inv: (O) -> O?, isTrigonometryOperation: Boolean = false
     ) : this(setOf(textRepresentation), inv, isTrigonometryOperation)
 
+    override fun mayComeAfter(part: ExpressionPart<O>?) =
+        part == null || part is BlockOpenExpression || part is BinaryOperation || part is PrefixOperation
 }
 
 class PostfixOperation<O>(
@@ -80,6 +84,8 @@ class PostfixOperation<O>(
             textRepresentation: String, inv: (O) -> O?, isTrigonometryOperation: Boolean = false
     ) : this(setOf(textRepresentation), inv, isTrigonometryOperation)
 
+    override fun mayComeAfter(part: ExpressionPart<O>?) =
+        part is ValueBased || part is PostfixOperation
 }
 
 val <O> PrefixOperation<O>.isSignOperation: Boolean

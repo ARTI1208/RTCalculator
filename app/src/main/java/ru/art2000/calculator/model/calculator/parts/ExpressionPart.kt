@@ -4,4 +4,6 @@ sealed interface ExpressionPart<out O> {
 
     fun partAsString(): String
 
+    fun mayComeAfter(part: ExpressionPart<@UnsafeVariance O>?): Boolean
+
 }

@@ -1,4 +1,4 @@
-package ru.art2000.calculator.view_model.calculator
+package ru.art2000.calculator.utils
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,17 +8,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.CalculatorLexerParseExpertiseViewBinding
-import ru.art2000.calculator.model.calculator.*
+import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.model.calculator.numbers.DoubleField
-import ru.art2000.calculator.model.calculator.parts.*
 import ru.art2000.calculator.view.calculator.LexemeListAdapter
+import ru.art2000.calculator.view_model.calculator.*
 import kotlin.system.measureTimeMillis
 
-class DoubleCalculations(
-        override val formatter: CalculationNumberFormatter<Double>,
+sealed class OldLexerDoubleCalculations(
+    override val formatter: CalculationNumberFormatter<Double>,
 ) : Calculations<Double> {
 
-    override val field = DoubleField
+    final override val field = DoubleField
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val parser = CalculationParser(DoubleParserConfiguration(field))
@@ -31,9 +31,9 @@ class DoubleCalculations(
     }
 
     override fun createDebugView(
-            context: Context,
-            expression: String,
-            angleType: AngleType,
+        context: Context,
+        expression: String,
+        angleType: AngleType,
     ): View {
         val binding = CalculatorLexerParseExpertiseViewBinding.inflate(LayoutInflater.from(context))
 
@@ -46,7 +46,7 @@ class DoubleCalculations(
         binding.computeTime.text = context.getString(R.string.debug_compute_time, computeTime)
 
         binding.lexemesList.apply {
-            adapter = LexemeListAdapter(context, lexemes, this@DoubleCalculations)
+            adapter = LexemeListAdapter(context, lexemes, this@OldLexerDoubleCalculations)
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
 
@@ -59,4 +59,5 @@ class DoubleCalculations(
         return result to timeMillis
     }
 
+    companion object : OldLexerDoubleCalculations(CalculatorFormatter)
 }
