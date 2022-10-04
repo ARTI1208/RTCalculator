@@ -36,6 +36,10 @@ class MyDropDownPreference(
     @Suppress("unused")
     constructor(context: Context) : this(context, null)
 
+    init {
+        summaryProvider = SimpleSummaryProvider.getInstance()
+    }
+
     override fun onBindViewHolder(view: PreferenceViewHolder) {
         super.onBindViewHolder(view)
 

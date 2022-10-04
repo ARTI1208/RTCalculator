@@ -134,5 +134,14 @@
     <string name="link_url_kde" translatable="false">https://invent.kde.org/artpinch</string>
     <string name="changelog_load_failed">Error loading changelog</string>
     <string name="preloaded_currencies_date" translatable="false">01.01.2021</string>
-
+    <string name="currency_update_title">Update currencies in background</string>
+    <string name="currency_update_never">Don\'t update</string>
+    <string name="currency_update_wifi">When Wi-Fi available</string>
+    <string name="currency_update_any">When mobile network available</string>
+    <string name="currency_update_interval_title">Currency update interval</string>
+    <string name="currency_update_interval_4">Every 4 hours</string>
+    <string name="currency_update_interval_6">Every 6 hours</string>
+    <string name="currency_update_interval_8">Every 8 hours</string>
+    <string name="currency_update_interval_12">Every 12 hours</string>
+    <string name="currency_update_interval_24">Every 24 hours</string>
 </resources>

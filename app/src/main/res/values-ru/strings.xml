@@ -124,4 +124,15 @@
     <string name="update_currencies_on_tab_open_summary">При первом открытии за сессию</string>
     <string name="action_update">Обновить</string>
     <string name="message_manually_update">Обновить курс валют?</string>
+
+    <string name="currency_update_title">Обновлять курс автоматически</string>
+    <string name="currency_update_never">Не обновлять</string>
+    <string name="currency_update_wifi">При доступе к Wi-Fi</string>
+    <string name="currency_update_any">При доступе к мобильным интернету</string>
+    <string name="currency_update_interval_title">Интервал обновления курса валют</string>
+    <string name="currency_update_interval_4">Каждые 4 часа</string>
+    <string name="currency_update_interval_6">Каждые 6 часов</string>
+    <string name="currency_update_interval_8">Каждые 8 часов</string>
+    <string name="currency_update_interval_12">Каждые 12 часов</string>
+    <string name="currency_update_interval_24">Каждые 24 часа</string>
 </resources>

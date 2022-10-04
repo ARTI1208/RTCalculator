@@ -6,7 +6,14 @@ import android.os.Handler
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.get
+import androidx.recyclerview.widget.RecyclerView
+import androidx.work.ExistingPeriodicWorkPolicy
 import ru.art2000.calculator.R
+import ru.art2000.calculator.background.currency.CurrencyFunctions
 import ru.art2000.calculator.databinding.ActivityMainBinding
 import ru.art2000.calculator.view.calculator.CalculatorFragment
 import ru.art2000.calculator.view.currency.CurrencyConverterFragment
@@ -14,14 +21,8 @@ import ru.art2000.calculator.view.settings.SettingsFragment
 import ru.art2000.calculator.view.unit.UnitConverterFragment
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.fragments.INavigationFragment
-import ru.art2000.helpers.PrefsHelper
-
-import androidx.core.view.*
-import androidx.core.view.ViewCompat
-
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.extensions.views.allowDrawingUnderStatusBar
+import ru.art2000.helpers.PrefsHelper
 
 class MainActivity : AutoThemeActivity() {
     private var viewBinding: ActivityMainBinding? = null
@@ -31,10 +32,10 @@ class MainActivity : AutoThemeActivity() {
         get() {
             val binding = requireNotNull(viewBinding)
             val replaceable = requireNotNull(
-                    binding.navigation.getReplaceable(binding.pager2.currentItem)
+                binding.navigation.getReplaceable(binding.pager2.currentItem)
             )
             return replaceable as? INavigationFragment
-                    ?: throw IllegalStateException("Current fragment ($replaceable) is not an instance of INavigationFragment")
+                ?: throw IllegalStateException("Current fragment ($replaceable) is not an instance of INavigationFragment")
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,23 +51,23 @@ class MainActivity : AutoThemeActivity() {
         window.allowDrawingUnderStatusBar(true)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.pager2,
-                OnApplyWindowInsetsListener { v, insets ->
-                    val newInsets = ViewCompat.onApplyWindowInsets(v, insets)
-                    if (newInsets.isConsumed) return@OnApplyWindowInsetsListener newInsets
-                    var consumed = false
+            OnApplyWindowInsetsListener { v, insets ->
+                val newInsets = ViewCompat.onApplyWindowInsets(v, insets)
+                if (newInsets.isConsumed) return@OnApplyWindowInsetsListener newInsets
+                var consumed = false
 
-                    val recyclerView = binding.pager2[0] as RecyclerView
+                val recyclerView = binding.pager2[0] as RecyclerView
 
-                    repeat(recyclerView.childCount) { i ->
-                        val child = recyclerView[i]
-                        ViewCompat.dispatchApplyWindowInsets(child, newInsets)
-                        if (newInsets.isConsumed) {
-                            consumed = true
-                        }
+                repeat(recyclerView.childCount) { i ->
+                    val child = recyclerView[i]
+                    ViewCompat.dispatchApplyWindowInsets(child, newInsets)
+                    if (newInsets.isConsumed) {
+                        consumed = true
                     }
+                }
 
-                    if (consumed) WindowInsetsCompat.CONSUMED else newInsets
-                })
+                if (consumed) WindowInsetsCompat.CONSUMED else newInsets
+            })
 
         binding.navigation.setOnItemSelectedListener { item: MenuItem ->
             PrefsHelper.setDefaultTab(item.order)
@@ -99,9 +100,9 @@ class MainActivity : AutoThemeActivity() {
         settingsFragment ?: run { settingsFragment = SettingsFragment() }
 
         binding.navigation.setupWithViewPager2(
-                this,
-                binding.pager2,
-                currencyConverterFragment, calculatorFragment, unitConverterFragment, settingsFragment,
+            this,
+            binding.pager2,
+            currencyConverterFragment, calculatorFragment, unitConverterFragment, settingsFragment,
         )
 
         val tabId = when (intent.action) {
@@ -119,6 +120,16 @@ class MainActivity : AutoThemeActivity() {
                 handleBackPress()
             }
         })
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        CurrencyFunctions.setupCurrencyDownload(
+            this,
+            PrefsHelper.getCurrencyBackgroundUpdateType(),
+            PrefsHelper.getCurrencyBackgroundUpdateInterval(),
+            ExistingPeriodicWorkPolicy.KEEP,
+        )
     }
 
     private fun handleBackPress() {

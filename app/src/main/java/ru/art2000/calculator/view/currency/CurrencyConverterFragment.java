@@ -78,6 +78,8 @@ public class CurrencyConverterFragment extends MainScreenFragment {
                 Intent intent = new Intent(getActivity(), CurrenciesSettingsActivity.class);
                 startActivity(intent);
             });
+            model.getPreferences()
+                    .registerOnSharedPreferenceChangeListener(model.getPreferenceListener());
         }
 
         return binding.getRoot();
@@ -95,6 +97,8 @@ public class CurrencyConverterFragment extends MainScreenFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        model.getPreferences()
+                .unregisterOnSharedPreferenceChangeListener(model.getPreferenceListener());
         adapter = null;
         binding = null;
         model = null;

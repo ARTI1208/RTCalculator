@@ -3,7 +3,7 @@
 package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
-import androidx.core.content.edit
+import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,18 +11,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import org.simpleframework.xml.convert.AnnotationStrategy
-import org.simpleframework.xml.core.Persister
-import retrofit2.Retrofit
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.art2000.calculator.R
+import ru.art2000.calculator.background.currency.CurrencyDownloadCallback
+import ru.art2000.calculator.background.currency.CurrencyFunctions
 import ru.art2000.calculator.model.currency.CurrencyRate
 import ru.art2000.calculator.model.currency.LoadingState
 import ru.art2000.calculator.model.currency.Valute
 import ru.art2000.extensions.arch.context
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 
 class CurrencyConverterModel(application: Application) : AndroidViewModel(application), CurrencyListAdapterModel {
@@ -33,14 +29,14 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     val loadingState: LiveData<LoadingState> = mLoadingState
 
-    private val preferences = PreferenceManager.getDefaultSharedPreferences(application)
+    val preferences = PreferenceManager.getDefaultSharedPreferences(application)!!
 
     private val mUpdateDate by lazy {
         MutableLiveData<String?>(preferences.getString(
                 updateDateKey, context.getString(R.string.preloaded_currencies_date)))
     }
 
-    val updateDate: LiveData<String?> = mUpdateDate
+    val updateDate: LiveData<String?> by ::mUpdateDate
 
     val visibleList = db.currencyDao().getVisibleItems()
 
@@ -52,6 +48,13 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     val titleUpdatedString: String by lazy { context.getString(R.string.updated) }
 
+    val preferenceListener =
+            SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+                if (key == updateDateKey) {
+                    mUpdateDate.postValue(sharedPreferences.getString(key, mUpdateDate.value))
+                }
+            }
+
     init {
         mLoadingState.observeForever {
             if (it != LoadingState.LOADING_STARTED && it != LoadingState.UNINITIALISED) {
@@ -59,72 +62,46 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
                 mLoadingState.postValue(LoadingState.UNINITIALISED)
             }
         }
+        preferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key -> }
     }
 
     fun loadData() {
-        if (mLoadingState.value == LoadingState.LOADING_STARTED)
-            return
-
-        mLoadingState.postValue(LoadingState.LOADING_STARTED)
-
-        val strategy = AnnotationStrategy()
-        val serializer = Persister(strategy)
-
-        val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(2, TimeUnit.MINUTES)
-                .writeTimeout(2, TimeUnit.MINUTES)
-                .readTimeout(2, TimeUnit.MINUTES)
-                .build()
-
-        val retrofit = Retrofit.Builder()
-                .addConverterFactory(SimpleXmlConverterFactory.create(serializer))
-                .baseUrl("http://www.cbr.ru")
-                .client(okHttpClient)
-                .build()
-
-        val cbrService = retrofit.create(CbrAPI::class.java)
-
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val currencies = cbrService.getDailyCurrencies()
+            CurrencyFunctions.downloadCurrencies(getApplication(), object : CurrencyDownloadCallback {
+                override fun onDownloadStarted(): Boolean {
+                    if (mLoadingState.value == LoadingState.LOADING_STARTED) return false
 
-                if (currencies.date == mUpdateDate.value) {
-                    mLoadingState.postValue(LoadingState.LOADING_ENDED)
-                    return@launch
+                    mLoadingState.postValue(LoadingState.LOADING_STARTED)
+                    return true
                 }
 
-                mUpdateDate.postValue(currencies.date)
-                preferences.edit { putString(updateDateKey, currencies.date) }
+                override fun onDataOfSameDate(): Boolean {
+                    mLoadingState.postValue(LoadingState.LOADING_ENDED)
+                    return false
+                }
 
-                val currencyRates = convertToCurrencyRates(currencies.valutes)
-                db.currencyDao().update(currencyRates)
+                override fun onSuccess(date: String) {
+                    mLoadingState.postValue(LoadingState.LOADING_ENDED)
+                }
 
-                mLoadingState.postValue(LoadingState.LOADING_ENDED)
-            } catch (ioException: IOException) {
-                ioException.printStackTrace()
-                mLoadingState.postValue(LoadingState.NETWORK_ERROR)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                mLoadingState.postValue(LoadingState.UNKNOWN_ERROR)
-            }
+                override fun onException(exception: Exception) {
+                    exception.printStackTrace()
+                    val loadingState = when (exception) {
+                        is IOException -> LoadingState.NETWORK_ERROR
+                        else -> LoadingState.UNKNOWN_ERROR
+                    }
+                    mLoadingState.postValue(loadingState)
+                }
+            })
         }
     }
 
     fun isUpdateOnFirstTabOpenEnabled() =
             preferences.getBoolean(updateCurrenciesOnTabOpenKey, updateCurrenciesOnTabOpenDefault)
 
-    private fun convertToCurrencyRates(valutes: List<Valute>): List<CurrencyRate> {
-        val usdValute = valutes.first { it.charCode == "USD" }
-        val usdValuteValue = usdValute.value
-
-        return valutes.map {
-            CurrencyRate(it.charCode, (usdValuteValue * it.quantity) / it.value)
-        } + CurrencyRate("RUB", usdValuteValue)
-    }
-
     companion object {
 
-        private const val updateDateKey = "currency_update_date"
+        const val updateDateKey = "currency_update_date"
 
         private const val updateCurrenciesOnTabOpenKey = "update_currencies_on_tab_open"
 

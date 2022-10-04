@@ -20,6 +20,8 @@ public class PrefsHelper {
     private final static boolean DEFAULT_DARK_THEME_IS_BLACK = true;
     private final static double DEFAULT_CONVERSION_VALUE = 1;
     private final static boolean DEFAULT_SHOULD_SAVE_CONVERSION_VALUE = false;
+    private final static String DEFAULT_CURRENCY_BACKGROUND_UPDATE_TYPE = "no_update";
+    private final static int DEFAULT_CURRENCY_BACKGROUND_UPDATE_INTERVAL = 8;
 
     private static SharedPreferences sSharedPreferences;
     private static int sAppTheme;
@@ -230,4 +232,42 @@ public class PrefsHelper {
         return sSharedPreferences.getBoolean("delete_tooltip_shown", false);
     }
 
+    public static String getCurrencyBackgroundUpdateType() {
+        return sSharedPreferences.getString(
+                "update_currencies_in_background",
+                DEFAULT_CURRENCY_BACKGROUND_UPDATE_TYPE
+        );
+    }
+
+    public static void setCurrencyBackgroundUpdateType(String type) {
+        sSharedPreferences.edit().putString(
+                "update_currencies_in_background",
+                type
+        ).apply();
+    }
+
+    private static int stringIntPref(String key, int defaultValue) {
+        String stringValue = sSharedPreferences.getString(
+                key,
+                null
+        );
+
+        if (stringValue == null) return defaultValue;
+
+        return Integer.parseInt(stringValue);
+    }
+
+    public static int getCurrencyBackgroundUpdateInterval() {
+        return stringIntPref(
+                "currency_update_interval",
+                DEFAULT_CURRENCY_BACKGROUND_UPDATE_INTERVAL
+        );
+    }
+
+    public static void setCurrencyBackgroundUpdateInterval(int interval) {
+        sSharedPreferences.edit().putString(
+                "currency_update_interval",
+                String.valueOf(interval)
+        ).apply();
+    }
 }

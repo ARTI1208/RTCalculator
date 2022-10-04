@@ -6,11 +6,15 @@ import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
+import androidx.work.*
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
+import ru.art2000.calculator.background.currency.CurrencyFunctions
 import ru.art2000.calculator.view.MainScreenPreferenceFragment
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_APP_THEME
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_AUTO_DARK_THEME
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_CURRENCIES_BACKGROUND
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_CURRENCIES_INTERVAL
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_SAVE_CURRENCY
@@ -36,6 +40,8 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         private val AUTO_THEMES_ANDROIDX = listOf(THEME_SYSTEM, THEME_BATTERY)
         private val AUTO_THEMES = AUTO_THEMES_ANDROIDX + THEME_DAY_NIGHT
+
+        private const val UPDATE_NEVER = "no_update"
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -141,6 +147,58 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
                     PrefsHelper.setShouldSaveCurrencyConversion(newValue as Boolean)
                     true
                 }
+
+        val updateCurrenciesInBackground = findPreference<ListPreference>(KEY_CURRENCIES_BACKGROUND)
+        val updateCurrenciesInterval = findPreference<ListPreference>(KEY_CURRENCIES_INTERVAL)
+
+        updateCurrenciesInBackground?.onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener { _, newValue ->
+
+                    val type = newValue.toString()
+
+                    when {
+                        updateCurrenciesInterval == null -> {}
+                        updateCurrenciesInBackground?.value == UPDATE_NEVER -> {
+                            updateCurrenciesInBackground.parent?.addPreference(updateCurrenciesInterval)
+                        }
+                        type == UPDATE_NEVER -> {
+                            updateCurrenciesInterval.parent?.removePreference(updateCurrenciesInterval)
+                        }
+                    }
+
+                    PrefsHelper.setCurrencyBackgroundUpdateType(type)
+
+                    CurrencyFunctions.setupCurrencyDownload(
+                            requireContext(),
+                            type,
+                            PrefsHelper.getCurrencyBackgroundUpdateInterval(),
+                            ExistingPeriodicWorkPolicy.REPLACE,
+                    )
+                    true
+                }
+
+
+        updateCurrenciesInterval?.apply {
+
+            if (updateCurrenciesInBackground?.value == UPDATE_NEVER) {
+                parent?.removePreference(this)
+            }
+
+            onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener { _, newValue ->
+
+                    val interval = newValue.toString().toInt()
+                    PrefsHelper.setCurrencyBackgroundUpdateInterval(interval)
+
+                    CurrencyFunctions.setupCurrencyDownload(
+                        requireContext(),
+                        PrefsHelper.getCurrencyBackgroundUpdateType(),
+                        interval,
+                        ExistingPeriodicWorkPolicy.REPLACE,
+                    )
+                    true
+                }
+        }
 
         /* zeroDiv preference */
         val zeroDiv = findPreference<SwitchPreferenceCompat>(KEY_ZERO_DIVISION)
