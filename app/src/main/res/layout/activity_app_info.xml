@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:elevation="@dimen/actionbar_elevation">
 
-        <androidx.appcompat.widget.Toolbar
+        <ru.art2000.extensions.views.ColoringToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

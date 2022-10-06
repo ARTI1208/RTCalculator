@@ -2,9 +2,6 @@ package ru.art2000.calculator.view.currency
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -14,7 +11,6 @@ import android.view.ViewGroup.*
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
@@ -36,9 +32,7 @@ import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.PrefsHelper
-import ru.art2000.helpers.getColorAttribute
 import kotlin.collections.ArrayList
-import com.google.android.material.R as MaterialR
 
 class CurrenciesSettingsActivity : AutoThemeActivity() {
 
@@ -167,7 +161,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         binding.searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         model.recyclerViewBottomPadding.value = binding.searchViewLayout.measuredHeight
 
-        binding.floatingActionButton.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+        binding.floatingActionButton.updateLayoutParams<MarginLayoutParams> {
             bottomMargin = binding.searchViewLayout.measuredHeight
         }
 
@@ -176,13 +170,10 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.currencies_editor_menu, menu)
+        binding.toolbar.inflateMenu(R.menu.currencies_editor_menu)
 
         select = menu.findItem(R.id.select_all)
         deselect = menu.findItem(R.id.deselect_all)
-
-        applyMenuIconTint(select?.icon)
-        applyMenuIconTint(deselect?.icon)
 
         toggleElementsVisibility()
 
@@ -278,12 +269,6 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         if (!this::edit.isInitialized) edit = CurrenciesEditFragment()
     }
 
-    private fun applyMenuIconTint(icon: Drawable?) {
-        icon?.colorFilter = PorterDuffColorFilter(
-            getColorAttribute(MaterialR.attr.colorSecondary), PorterDuff.Mode.SRC_ATOP
-        )
-    }
-
     private fun toggleElementsVisibility() {
         if (model.selectedTab == 0) {
             val selectedCount = model.selectedHiddenItems.size
@@ -347,18 +332,6 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
             return this
         }
-
-//    private inline fun computeAndUpdateUi(
-//        crossinline compute: () -> Unit,
-//        crossinline update: () -> Unit
-//    ) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            compute()
-//            CoroutineScope(Dispatchers.Main).launch {
-//                update()
-//            }
-//        }
-//    }
 
     private fun generateUndoSnackBar(editedItems: List<CurrencyItem>, added: Boolean) {
         if (editedItems.isEmpty()) return

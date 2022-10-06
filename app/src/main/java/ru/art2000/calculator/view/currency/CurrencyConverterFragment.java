@@ -2,8 +2,6 @@ package ru.art2000.calculator.view.currency;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,8 +70,6 @@ public class CurrencyConverterFragment extends MainScreenFragment {
             binding.refresher.setOnRefreshListener(model::loadData);
 
             ActionMenuItemView editMenuItem = binding.getRoot().findViewById(R.id.edit_currencies);
-            editMenuItem.getItemData().getIcon().setColorFilter(
-                    new PorterDuffColorFilter(colorAccent, PorterDuff.Mode.SRC_ATOP));
             editMenuItem.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), CurrenciesSettingsActivity.class);
                 startActivity(intent);
