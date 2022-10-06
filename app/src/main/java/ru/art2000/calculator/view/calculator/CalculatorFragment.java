@@ -128,6 +128,16 @@ public class CalculatorFragment extends MainScreenFragment {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        // Fix handle becoming visible in collapsed state after theme change
+        if (getSlidingPanel().getPanelState() != PanelState.COLLAPSED) {
+            getHistoryPanelHandle().setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void updateViewOnCreated(@NonNull View createdView) {
         ViewsKt.applyWindowTopInsets(binding.calculatorIoWrappper, false);
     }
