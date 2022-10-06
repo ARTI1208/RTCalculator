@@ -95,7 +95,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
     }
 
     override fun getIcon(): Int {
-        return R.drawable.ic_dashboard_black_24dp
+        return R.drawable.ic_unit
     }
 
     override fun getReplaceableId(): Int {

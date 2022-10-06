@@ -26,7 +26,7 @@
     </shortcut>
 
     <shortcut
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_unit"
         android:shortcutId="converter"
         android:shortcutLongLabel="@string/title_unit"
         android:shortcutShortLabel="@string/title_unit">
