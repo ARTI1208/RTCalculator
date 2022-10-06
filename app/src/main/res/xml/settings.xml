@@ -21,7 +21,7 @@
             android:title="@string/app_theme"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
-        <SwitchPreferenceCompat
+        <ru.art2000.extensions.preferences.Material3SwitchPreference
             android:defaultValue="true"
             android:key="app_auto_dark_theme"
             android:title="@string/app_auto_dark_theme"
@@ -29,13 +29,13 @@
             android:summaryOn="@string/theme_black"
             app:iconSpaceReserved="false" />
 
-        <ru.art2000.extensions.preferences.TimePickerPreference
+        <ru.art2000.extensions.preferences.MaterialTimePickerPreference
             android:key="app_auto_dark_theme_time_start"
             android:title="@string/theme_daynight_start"
             android:defaultValue="23:00"
             app:iconSpaceReserved="false" />
 
-        <ru.art2000.extensions.preferences.TimePickerPreference
+        <ru.art2000.extensions.preferences.MaterialTimePickerPreference
             android:key="app_auto_dark_theme_time_end"
             android:title="@string/theme_daynight_end"
             android:defaultValue="07:00"
@@ -47,13 +47,13 @@
         android:layout="@layout/category"
         android:title="@string/title_currency">
 
-        <SwitchPreferenceCompat
+        <ru.art2000.extensions.preferences.Material3SwitchPreference
             android:defaultValue="false"
             android:key="save_currency_value"
             android:title="@string/save_currency_value"
             app:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <ru.art2000.extensions.preferences.Material3SwitchPreference
             android:defaultValue="true"
             android:key="update_currencies_on_tab_open"
             android:title="@string/update_currencies_on_tab_open"
@@ -80,7 +80,7 @@
     <PreferenceCategory
         android:layout="@layout/category"
         android:title="@string/title_calc">
-        <SwitchPreferenceCompat
+        <ru.art2000.extensions.preferences.Material3SwitchPreference
             android:defaultValue="false"
             android:key="zero_div"
             android:summaryOff="@string/error"

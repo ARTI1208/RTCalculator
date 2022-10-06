@@ -108,7 +108,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         /* appAutoDarkTheme preference */
         val appDarkThemeActivationTime =
-                findPreference<TimePickerPreference>(KEY_DARK_THEME_ACTIVATION)
+                findPreference<Preference>(KEY_DARK_THEME_ACTIVATION)
 
         appDarkThemeActivationTime?.also {
             if (appTheme?.value != THEME_DAY_NIGHT) {
@@ -125,7 +125,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         /* appAutoDarkTheme preference */
         val appDarkThemeDeactivationTime =
-                findPreference<TimePickerPreference>(KEY_DARK_THEME_DEACTIVATION)
+                findPreference<Preference>(KEY_DARK_THEME_DEACTIVATION)
 
         appDarkThemeDeactivationTime?.also {
             if (appTheme?.value != THEME_DAY_NIGHT) {

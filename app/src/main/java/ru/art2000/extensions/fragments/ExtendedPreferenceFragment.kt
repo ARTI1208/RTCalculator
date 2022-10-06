@@ -1,18 +1,24 @@
 package ru.art2000.extensions.fragments
 
+import androidx.fragment.app.FragmentManager
 import androidx.preference.Preference
-import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
+import ru.art2000.extensions.preferences.MaterialTimePickerPreference
 import ru.art2000.extensions.preferences.TimePickerPreference
-import ru.art2000.extensions.preferences.TimePickerPreferenceDialog
 
 abstract class ExtendedPreferenceFragment : PreferenceFragmentCompat() {
 
-    companion object {
-        private const val DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG"
+    interface DialogShower {
 
-        val links : MutableMap<Class<out Preference>, (String?) -> PreferenceDialogFragmentCompat> = mutableMapOf(
-                TimePickerPreference::class.java to TimePickerPreferenceDialog::newInstance
+        fun show(preferenceFragment: ExtendedPreferenceFragment, fragmentManager: FragmentManager)
+    }
+
+    companion object {
+        const val DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG"
+
+        val links : MutableMap<Class<out Preference>, (Preference) -> DialogShower> = mutableMapOf(
+                TimePickerPreference::class.java to TimePickerPreference::newPickerDialog,
+                MaterialTimePickerPreference::class.java to MaterialTimePickerPreference::newPickerDialog,
         )
     }
 
@@ -22,12 +28,9 @@ abstract class ExtendedPreferenceFragment : PreferenceFragmentCompat() {
         } catch (_: IllegalArgumentException) {
 
             links[preference.javaClass]?.also { dialogConstructor ->
-                val dialogFragment = dialogConstructor(preference.key)
+                val dialogFragment = dialogConstructor(preference)
 
-                // FIXME. Seems like PreferenceDialogFragmentCompat does not yet support proposed replacement
-                @Suppress("DEPRECATION")
-                dialogFragment.setTargetFragment(this, 0)
-                dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
+                dialogFragment.show(this, parentFragmentManager)
             }
         }
     }

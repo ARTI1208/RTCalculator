@@ -2,13 +2,16 @@ package ru.art2000.extensions.preferences
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.os.Bundle
 import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.preference.DialogPreference
+import androidx.preference.Preference
+import ru.art2000.extensions.fragments.ExtendedPreferenceFragment
 import androidx.preference.R as PreferenceR
 
 
-class TimePickerPreference @JvmOverloads constructor(
+sealed class TimePickerPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = getAttr(
@@ -64,6 +67,14 @@ class TimePickerPreference @JvmOverloads constructor(
 
             return hour to minute
         }
+
+        fun newPickerDialog(preference: Preference): ExtendedPreferenceFragment.DialogShower {
+            val fragment = TimePickerPreferenceDialog()
+            val b = Bundle(1)
+            b.putString("key", preference.key)
+            fragment.arguments = b
+            return fragment
+        }
     }
 
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
@@ -89,6 +100,13 @@ class TimePickerPreference @JvmOverloads constructor(
 
     public override fun persistString(value: String?): Boolean {
         return super.persistString(value)
+    }
+
+    fun onTimeSelected(hour: Int, minute: Int) {
+        this.hour = hour
+        this.minute = minute
+
+        if (callChangeListener(timeString)) persistString(timeString)
     }
 
     private fun updateSummary() {

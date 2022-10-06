@@ -1,23 +1,14 @@
 package ru.art2000.extensions.preferences
 
 import android.content.Context
-import android.os.Bundle
 import android.view.View
 import android.widget.TimePicker
+import androidx.fragment.app.FragmentManager
 import androidx.preference.PreferenceDialogFragmentCompat
+import ru.art2000.extensions.fragments.ExtendedPreferenceFragment
 
-class TimePickerPreferenceDialog : PreferenceDialogFragmentCompat() {
-
-    companion object {
-
-        fun newInstance(key: String?): TimePickerPreferenceDialog {
-            val fragment = TimePickerPreferenceDialog()
-            val b = Bundle(1)
-            b.putString(ARG_KEY, key)
-            fragment.arguments = b
-            return fragment
-        }
-    }
+class TimePickerPreferenceDialog : PreferenceDialogFragmentCompat(),
+    ExtendedPreferenceFragment.DialogShower {
 
     private lateinit var timePicker: TimePicker
 
@@ -47,16 +38,27 @@ class TimePickerPreferenceDialog : PreferenceDialogFragmentCompat() {
         if (positiveResult) {
             val preference = preference as TimePickerPreference
 
+            val hour: Int
+            val minute: Int
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                preference.hour = timePicker.hour
-                preference.minute = timePicker.minute
+                hour = timePicker.hour
+                minute = timePicker.minute
             } else {
-                preference.hour = timePicker.currentHour
-                preference.minute = timePicker.currentMinute
+                hour = timePicker.currentHour
+                minute = timePicker.currentMinute
             }
 
-            val value: String = preference.timeString
-            if (preference.callChangeListener(value)) preference.persistString(value)
+            preference.onTimeSelected(hour, minute)
         }
+    }
+
+    override fun show(
+        preferenceFragment: ExtendedPreferenceFragment,
+        fragmentManager: FragmentManager
+    ) {
+        // FIXME. Seems like PreferenceDialogFragmentCompat does not yet support proposed replacement
+        @Suppress("DEPRECATION")
+        setTargetFragment(preferenceFragment, 0)
+        show(fragmentManager, ExtendedPreferenceFragment.DIALOG_FRAGMENT_TAG)
     }
 }
