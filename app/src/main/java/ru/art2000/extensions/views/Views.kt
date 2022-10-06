@@ -164,7 +164,9 @@ private fun attachImeListener(
     viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
     return ListenerSubscription {
         if (it != null) imeListener.accept(it)
-        viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        if (viewTreeObserver.isAlive) {
+            viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        }
     }
 }
 
