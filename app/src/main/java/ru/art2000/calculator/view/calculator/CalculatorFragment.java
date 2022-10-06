@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.sothree.slidinguppanel.PanelSlideListener;
+import com.sothree.slidinguppanel.PanelState;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.List;
@@ -142,9 +144,9 @@ public class CalculatorFragment extends MainScreenFragment {
      */
     private boolean ensureHistoryPanelClosed() {
         if (binding == null) return true;
-        if (getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
-                getSlidingPanel().getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED) {
-            getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (getSlidingPanel().getPanelState() == PanelState.EXPANDED ||
+                getSlidingPanel().getPanelState() == PanelState.ANCHORED) {
+            getSlidingPanel().setPanelState(PanelState.COLLAPSED);
             return false;
         }
 
@@ -194,13 +196,13 @@ public class CalculatorFragment extends MainScreenFragment {
 
     private void setupHistoryPanel(HistoryListAdapter adapter) {
         getHistoryPanelHandle().setOnClickListener(view ->
-                getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED));
+                getSlidingPanel().setPanelState(PanelState.EXPANDED));
         getHistoryPanelHeader().setOnClickListener(view ->
-                getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED));
+                getSlidingPanel().setPanelState(PanelState.COLLAPSED));
 
-        getSlidingPanel().addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+        getSlidingPanel().addPanelSlideListener(new PanelSlideListener() {
             @Override
-            public void onPanelSlide(View panel, float slideOffset) {
+            public void onPanelSlide(@NonNull View panel, float slideOffset) {
                 if (slideOffset > 0)
                     getHistoryPanelHandle().setVisibility(View.GONE);
                 else
@@ -208,15 +210,19 @@ public class CalculatorFragment extends MainScreenFragment {
             }
 
             @Override
-            public void onPanelStateChanged(View panelView, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (newState == SlidingUpPanelLayout.PanelState.DRAGGING &&
-                        previousState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            public void onPanelStateChanged(
+                    @NonNull View panelView,
+                    @NonNull PanelState previousState,
+                    @NonNull PanelState newState
+            ) {
+                if (newState == PanelState.DRAGGING &&
+                        previousState == PanelState.COLLAPSED) {
                     getHistoryRecyclerView().scrollToPosition(adapter.getItemCount() - 1);
                 }
-                if (newState == SlidingUpPanelLayout.PanelState.ANCHORED) {
-                    getSlidingPanel().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                if (newState == PanelState.ANCHORED) {
+                    getSlidingPanel().setPanelState(PanelState.COLLAPSED);
                 }
-                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                if (newState == PanelState.COLLAPSED) {
                     getSlidingPanel().setDragView(getHistoryPanelHandle());
                 }
             }

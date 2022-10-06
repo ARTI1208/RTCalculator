@@ -133,9 +133,10 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.work:work-runtime-ktx:2.7.1")
-    implementation("com.google.android.material:material:1.6.1")
-    implementation("com.sothree.slidinguppanel:library:3.4.0")
+    implementation("com.google.android.material:material:1.7.0-rc01")
+    implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
 
     val roomVersion = "2.4.3"

@@ -15,6 +15,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
     tasks.withType<JavaCompile> {
         options.compilerArgs.plusAssign(listOf(
