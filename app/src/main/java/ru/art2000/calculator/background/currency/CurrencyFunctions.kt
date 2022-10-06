@@ -12,6 +12,7 @@ import org.simpleframework.xml.core.Persister
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.art2000.calculator.R
+import ru.art2000.calculator.model.currency.CurrenciesList
 import ru.art2000.calculator.model.currency.CurrencyRate
 import ru.art2000.calculator.model.currency.Valute
 import ru.art2000.calculator.view_model.currency.CbrAPI
@@ -59,7 +60,36 @@ object CurrencyFunctions {
         )
     }
 
-    suspend fun downloadCurrencies(context: Context, callback: CurrencyDownloadCallback) {
+    suspend fun downloadCurrencies(
+        context: Context,
+        callback: CurrencyDownloadCallback,
+    ) = downloadCurrencies(
+            context,
+            CbrAPI::getDailyCurrencies,
+            callback
+        )
+
+    suspend fun downloadCurrencies(
+        context: Context,
+        year: Int,
+        month: Int,
+        day: Int,
+        callback: CurrencyDownloadCallback,
+    ) = downloadCurrencies(
+        context,
+        {
+            val dayStr = if (day < 10) "0$day" else day
+            val monthStr = if (month < 10) "0$month" else month
+            getCurrenciesOnDate("$dayStr/$monthStr/$year")
+        },
+        callback
+    )
+
+    private suspend fun downloadCurrencies(
+        context: Context,
+        currenciesGetter: suspend CbrAPI.() -> CurrenciesList,
+        callback: CurrencyDownloadCallback,
+    ) {
 
         callback.onDownloadStarted()
 
@@ -84,7 +114,7 @@ object CurrencyFunctions {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         try {
-            val currencies = cbrService.getDailyCurrencies()
+            val currencies = cbrService.currenciesGetter()
 
             if (currencies.date == preferences.getCurrentUpdateDate(context)) {
                 callback.onDataOfSameDate()

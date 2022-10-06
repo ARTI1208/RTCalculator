@@ -39,7 +39,7 @@
     <string name="app_version">Версия приложения</string>
     <string name="context_menu_copy">Скопировать</string>
     <string name="history_clear">Очистить</string>
-    <string name="updated">Обновлено: </string>
+    <string name="currency_date">На дату: </string>
     <string name="currencies_add">Добавление</string>
     <string name="currencies_edit">Изменение</string>
     <string name="currencies_list_modify">Настройка валют</string>
@@ -88,6 +88,7 @@
     <string name="tab_last_opened">Последняя открытая</string>
     <string name="daynight_support_message">Если система не имеет поддержки переключения светлой/тёмной темы, то эта опция также не будет работать</string>
     <string name="action_edit">Редактировать</string>
+    <string name="action_edit_date">Дата</string>
     <string name="action_select_all">Выбрать все</string>
     <string name="action_deselect_all">Отменить выбор</string>
     <string name="tooltip_remove_currency">Удержание элемента переводит список в режим удаления</string>

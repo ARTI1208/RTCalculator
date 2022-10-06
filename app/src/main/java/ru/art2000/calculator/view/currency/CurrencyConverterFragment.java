@@ -14,7 +14,16 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.CompositeDateValidator;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import ru.art2000.calculator.R;
 import ru.art2000.calculator.databinding.CurrencyLayoutBinding;
@@ -74,6 +83,46 @@ public class CurrencyConverterFragment extends MainScreenFragment {
                 Intent intent = new Intent(getActivity(), CurrenciesSettingsActivity.class);
                 startActivity(intent);
             });
+
+            ActionMenuItemView selectDateMenuItem = binding.getRoot().findViewById(R.id.select_date);
+            selectDateMenuItem.setOnClickListener(v -> {
+
+                CalendarConstraints.DateValidator minValidator =
+                        DateValidatorPointForward.from(model.getMinDateMillis());
+                CalendarConstraints.DateValidator maxValidator =
+                        DateValidatorPointBackward.before(model.getMaxDateMillis());
+
+                List<CalendarConstraints.DateValidator> validators = new ArrayList<>();
+                validators.add(minValidator);
+                validators.add(maxValidator);
+
+                MaterialDatePicker<Long> picker = MaterialDatePicker.Builder
+                        .datePicker()
+                        .setCalendarConstraints(
+                                new CalendarConstraints.Builder()
+                                        .setStart(model.getMinDateMillis())
+                                        .setEnd(model.getMaxDateMillis())
+                                        .setValidator(CompositeDateValidator.allOf(validators))
+                                        .build()
+                        )
+                        .build();
+
+                picker.addOnPositiveButtonClickListener(selection -> {
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(selection);
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH);
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    model.loadData(year, month + 1, day);
+                });
+
+                picker.show(requireActivity().getSupportFragmentManager(), "taag");
+            });
+            selectDateMenuItem.setOnLongClickListener(v -> {
+                model.loadData();
+                return true;
+            });
+
             model.getPreferences()
                     .registerOnSharedPreferenceChangeListener(model.getPreferenceListener());
         }
