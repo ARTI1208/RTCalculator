@@ -53,13 +53,13 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         binding.orHsv.autoScrollOnInput()
 
-        model.liveExpression.observe(viewLifecycleOwner, { expression: String ->
+        model.liveExpression.observe(viewLifecycleOwner) { expression: String ->
             if (expression != binding.valueOriginal.text?.toString()) {
                 binding.valueOriginal.setText(expression)
             }
 
             updateResult(binding.spinnerFrom.selectedItemPosition, expression)
-        })
+        }
 
         model.liveInputSelection.observe(viewLifecycleOwner) { (first, second) ->
             binding.valueOriginal.setSelection(first, second)
@@ -70,6 +70,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         }
 
         binding.swapButton.setOnClickListener {
+            val newScaleX = if (it.scaleX >= 0) -1f else 1f
+            it.animate().scaleX(newScaleX)
             binding.spinnerFrom.setSelection(binding.spinnerTo.selectedItemPosition)
         }
 
