@@ -13,6 +13,15 @@
             android:key="tab_default"
             android:title="@string/tab_default"
             app:iconSpaceReserved="false" />
+
+        <ru.art2000.extensions.preferences.Material3SwitchPreference
+            android:defaultValue="true"
+            android:key="app_dynamic_colors"
+            android:title="@string/app_dynamic_colors"
+            android:summaryOff="@string/app_dynamic_colors_off"
+            android:summaryOn="@string/app_dynamic_colors_on"
+            app:iconSpaceReserved="false" />
+
         <ru.art2000.extensions.preferences.MyDropDownPreference
             android:defaultValue="system"
             android:entries="@array/app_theme"

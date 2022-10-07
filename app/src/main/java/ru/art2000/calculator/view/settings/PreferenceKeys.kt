@@ -2,6 +2,7 @@ package ru.art2000.calculator.view.settings
 
 object PreferenceKeys {
     const val KEY_TAB_DEFAULT = "tab_default"
+    const val KEY_DYNAMIC_COLORS = "app_dynamic_colors"
     const val KEY_APP_THEME = "app_theme"
     const val KEY_AUTO_DARK_THEME = "app_auto_dark_theme"
     const val KEY_DARK_THEME_ACTIVATION = "app_auto_dark_theme_time_start"

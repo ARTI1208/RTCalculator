@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import kotlin.Pair;
+import ru.art2000.calculator.CalculatorApplication;
 import ru.art2000.calculator.R;
 import ru.art2000.extensions.preferences.TimePickerPreference;
 
@@ -269,5 +270,13 @@ public class PrefsHelper {
                 "currency_update_interval",
                 String.valueOf(interval)
         ).apply();
+    }
+
+    public static boolean areDynamicColorsEnabled() {
+        return CalculatorApplication.DYNAMIC_COLORS_AVAILABLE && sSharedPreferences.getBoolean("app_dynamic_colors", true);
+    }
+
+    public static void setDynamicColorsEnabled(boolean enabled) {
+        sSharedPreferences.edit().putBoolean("app_dynamic_colors", enabled).apply();
     }
 }

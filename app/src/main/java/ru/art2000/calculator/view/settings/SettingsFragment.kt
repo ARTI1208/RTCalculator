@@ -9,6 +9,7 @@ import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import androidx.work.*
 import ru.art2000.calculator.BuildConfig
+import ru.art2000.calculator.CalculatorApplication
 import ru.art2000.calculator.R
 import ru.art2000.calculator.background.currency.CurrencyFunctions
 import ru.art2000.calculator.view.MainScreenPreferenceFragment
@@ -18,12 +19,11 @@ import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_CURRENCIES_BACKGRO
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_CURRENCIES_INTERVAL
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
+import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_DYNAMIC_COLORS
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_SAVE_CURRENCY
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_TAB_DEFAULT
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_UNIT_VIEW
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_ZERO_DIVISION
-import ru.art2000.extensions.activities.DayNightActivity
-import ru.art2000.extensions.preferences.TimePickerPreference
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.getColorAttribute
 
@@ -60,8 +60,54 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
             }
         }
 
+        val dynamicColors = findPreference<SwitchPreferenceCompat>(KEY_DYNAMIC_COLORS)
         /* appTheme preference */
         val appTheme = findPreference<ListPreference>(KEY_APP_THEME)
+        /* appAutoDarkTheme preference */
+        val appAutoDarkTheme = findPreference<SwitchPreferenceCompat>(KEY_AUTO_DARK_THEME)
+        /* appAutoDarkTheme preference */
+        val appDarkThemeActivationTime =
+            findPreference<Preference>(KEY_DARK_THEME_ACTIVATION)
+        /* appAutoDarkTheme preference */
+        val appDarkThemeDeactivationTime =
+            findPreference<Preference>(KEY_DARK_THEME_DEACTIVATION)
+
+        val dynamicColorsDisable = listOf(
+            appTheme, appAutoDarkTheme,
+            appDarkThemeActivationTime, appDarkThemeDeactivationTime,
+        )
+
+        val themingGroup = dynamicColors?.parent
+
+        fun areDynamicColorsEnabled() = CalculatorApplication.DYNAMIC_COLORS_AVAILABLE
+                && (dynamicColors?.isChecked ?: false)
+
+        fun showThemingPreferences(dynamicColorsEnabled: Boolean) {
+            if (dynamicColorsEnabled) {
+                dynamicColorsDisable.forEach { preference ->
+                    preference?.also { themingGroup?.removePreference(it) }
+                }
+            } else {
+                dynamicColorsDisable.forEach { preference ->
+                    preference?.also { themingGroup?.addPreference(it) }
+                }
+            }
+        }
+
+        showThemingPreferences(areDynamicColorsEnabled())
+
+        dynamicColors?.also {
+            if (!CalculatorApplication.DYNAMIC_COLORS_AVAILABLE) {
+                it.parent?.removePreference(it)
+            }
+
+            it.setOnPreferenceChangeListener { _, newValue ->
+                val enabled = newValue as Boolean
+                PrefsHelper.setDynamicColorsEnabled(enabled)
+                true
+            }
+
+        }
 
         appTheme?.also {
             appTheme.onPreferenceChangeListener =
@@ -78,15 +124,9 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
                             ).show()
                         }
                         PrefsHelper.setAppTheme(newValue.toString())
-                        requireActivity().apply {
-                            recreate()
-                        }
                         true
                     }
         }
-
-        /* appAutoDarkTheme preference */
-        val appAutoDarkTheme = findPreference<SwitchPreferenceCompat>(KEY_AUTO_DARK_THEME)
 
         appAutoDarkTheme?.also {
             if (appTheme?.value !in AUTO_THEMES) {
@@ -95,22 +135,10 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
             }
 
             it.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-//                appAutoDarkTheme.isChecked = newValue as Boolean
-
-                (requireActivity() as DayNightActivity).apply {
-                    if (isDarkThemeApplied) {
-                        recreate()
-                    } else {
-                        appAutoDarkTheme.isChecked = newValue as Boolean
-                    }
-                }
+                appAutoDarkTheme.isChecked = newValue as Boolean
                 true
             }
         }
-
-        /* appAutoDarkTheme preference */
-        val appDarkThemeActivationTime =
-                findPreference<Preference>(KEY_DARK_THEME_ACTIVATION)
 
         appDarkThemeActivationTime?.also {
             if (appTheme?.value != THEME_DAY_NIGHT) {
@@ -120,14 +148,9 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
             it.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                 PrefsHelper.setDarkThemeActivationTime(newValue as String)
-                (requireActivity() as DayNightActivity?)?.requestThemeCheck()
                 true
             }
         }
-
-        /* appAutoDarkTheme preference */
-        val appDarkThemeDeactivationTime =
-                findPreference<Preference>(KEY_DARK_THEME_DEACTIVATION)
 
         appDarkThemeDeactivationTime?.also {
             if (appTheme?.value != THEME_DAY_NIGHT) {
@@ -137,7 +160,6 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
             it.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                 PrefsHelper.setDarkThemeDeactivationTime(newValue as String)
-                (requireActivity() as DayNightActivity?)?.requestThemeCheck()
                 true
             }
         }

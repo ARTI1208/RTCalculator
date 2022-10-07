@@ -98,8 +98,12 @@ public class DayNightActivity extends AppCompatActivity {
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
 
-    public void requestThemeCheck() {
+    protected void requestThemeCheck() {
         int theme = PrefsHelper.getAppTheme();
+        if (PrefsHelper.areDynamicColorsEnabled()) {
+            theme = R.style.RT_AppTheme_System;
+        }
+
         if (theme == R.style.RT_AppTheme_DayNight) {
             int newMode;
 
