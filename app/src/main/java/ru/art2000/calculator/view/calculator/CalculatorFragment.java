@@ -257,6 +257,13 @@ public class CalculatorFragment extends MainScreenFragment {
                 getHistoryRecyclerView().smoothScrollToPosition(0));
         binding.calculatorPanel.historyPart.scrollBottom.setOnClickListener(scrollDown ->
                 getHistoryRecyclerView().smoothScrollToPosition(adapter.getItemCount()));
+
+        model.getHistoryListItems().observe(getViewLifecycleOwner(), data -> {
+            int visibility = data.isEmpty() ? View.GONE : View.VISIBLE;
+            binding.calculatorPanel.historyPart.clearHistory.setVisibility(visibility);
+            binding.calculatorPanel.historyPart.scrollUp.setVisibility(visibility);
+            binding.calculatorPanel.historyPart.scrollBottom.setVisibility(visibility);
+        });
     }
 
     private HistoryListAdapter setupHistoryRecyclerView() {
