@@ -44,11 +44,6 @@
             tools:text="m/s"/>
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#888888"/>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/unit_view_simple_row_height">
@@ -69,6 +64,7 @@
                 android:textSize="40sp"
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
+                android:textColor="?colorSecondary"
                 tools:text="0" />
         </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
@@ -83,6 +79,7 @@
             android:gravity="end"
             android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
+            android:textColor="?colorSecondary"
             tools:text="km/h"/>
     </FrameLayout>
 
@@ -94,12 +91,6 @@
         android:layout_weight="1.0"
         android:layout_gravity="bottom"
         android:orientation="vertical">
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dip"
-            android:background="#888888" />
-
 
         <LinearLayout
             android:layout_width="fill_parent"

@@ -31,11 +31,11 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
     val preferences = PreferenceManager.getDefaultSharedPreferences(application)!!
 
     private val mUpdateDate by lazy {
-        MutableLiveData<String?>(preferences.getString(
+        MutableLiveData<String>(preferences.getString(
                 updateDateKey, context.getString(R.string.preloaded_currencies_date)))
     }
 
-    val updateDate: LiveData<String?> by ::mUpdateDate
+    val updateDate: LiveData<String> by ::mUpdateDate
 
     val visibleList = db.currencyDao().getVisibleItems()
 

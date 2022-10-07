@@ -2,32 +2,32 @@
 
     <style name="Base.RT.v18.AppTheme.Light" parent="Theme.Material3.Light">
 
-        <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
-        <item name="android:colorBackground">@color/md_theme_light_background</item>
-        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+        <item name="colorPrimary">@color/LightTheme_primary</item>
+        <item name="colorOnPrimary">@color/LightTheme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/LightTheme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/LightTheme_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/LightTheme_secondary</item>
+        <item name="colorOnSecondary">@color/LightTheme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/LightTheme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/LightTheme_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/LightTheme_tertiary</item>
+        <item name="colorOnTertiary">@color/LightTheme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/LightTheme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/LightTheme_onTertiaryContainer</item>
+        <item name="colorError">@color/LightTheme_error</item>
+        <item name="colorErrorContainer">@color/LightTheme_errorContainer</item>
+        <item name="colorOnError">@color/LightTheme_onError</item>
+        <item name="colorOnErrorContainer">@color/LightTheme_onErrorContainer</item>
+        <item name="android:colorBackground">@color/LightTheme_background</item>
+        <item name="colorOnBackground">@color/LightTheme_onBackground</item>
+        <item name="colorSurface">@color/LightTheme_surface</item>
+        <item name="colorOnSurface">@color/LightTheme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/LightTheme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/LightTheme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/LightTheme_outline</item>
+        <item name="colorOnSurfaceInverse">@color/LightTheme_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/LightTheme_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/LightTheme_inversePrimary</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -49,32 +49,32 @@
 
     <style name="Base.RT.v18.AppTheme.Dark" parent="Theme.Material3.Dark">
 
-        <item name="colorPrimary">@color/md_theme_dark_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_dark_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/md_theme_dark_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>
-        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_theme_dark_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_theme_dark_onTertiaryContainer</item>
-        <item name="colorError">@color/md_theme_dark_error</item>
-        <item name="colorErrorContainer">@color/md_theme_dark_errorContainer</item>
-        <item name="colorOnError">@color/md_theme_dark_onError</item>
-        <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer</item>
-        <item name="android:colorBackground">@color/md_theme_dark_background</item>
-        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
-        <item name="colorSurface">@color/md_theme_dark_surface</item>
-        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_theme_dark_outline</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_dark_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
+        <item name="colorPrimary">@color/DarkTheme_primary</item>
+        <item name="colorOnPrimary">@color/DarkTheme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/DarkTheme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/DarkTheme_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/DarkTheme_secondary</item>
+        <item name="colorOnSecondary">@color/DarkTheme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/DarkTheme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/DarkTheme_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/DarkTheme_tertiary</item>
+        <item name="colorOnTertiary">@color/DarkTheme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/DarkTheme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/DarkTheme_onTertiaryContainer</item>
+        <item name="colorError">@color/DarkTheme_error</item>
+        <item name="colorErrorContainer">@color/DarkTheme_errorContainer</item>
+        <item name="colorOnError">@color/DarkTheme_onError</item>
+        <item name="colorOnErrorContainer">@color/DarkTheme_onErrorContainer</item>
+        <item name="android:colorBackground">@color/DarkTheme_background</item>
+        <item name="colorOnBackground">@color/DarkTheme_onBackground</item>
+        <item name="colorSurface">@color/DarkTheme_surface</item>
+        <item name="colorOnSurface">@color/DarkTheme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/DarkTheme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/DarkTheme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/DarkTheme_outline</item>
+        <item name="colorOnSurfaceInverse">@color/DarkTheme_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/DarkTheme_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/DarkTheme_inversePrimary</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -96,9 +96,9 @@
 
     <style name="Base.RT.v18.AppTheme.Black" parent="Base.RT.v18.AppTheme.Dark">
 
-        <item name="android:colorBackground">@color/md_theme_black_background</item>
-        <item name="colorSurface">@color/md_theme_black_surface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_black_surfaceVariant</item>
+        <item name="android:colorBackground">@color/BlackTheme_background</item>
+        <item name="colorSurface">@color/BlackTheme_surface</item>
+        <item name="colorSurfaceVariant">@color/BlackTheme_surfaceVariant</item>
 
         <item name="floatingViewBackground">?colorSurfaceVariant</item>
         <item name="strokeColor">@color/BlackTheme_strokeColor</item>

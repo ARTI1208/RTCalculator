@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:textColor="#ff666666"
+        android:textColor="?colorOnSurfaceVariant"
         android:gravity="start"
         android:textSize="24sp"
         tools:text="Expression" />
@@ -29,5 +29,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:background="#ff404040" />
+        android:background="?colorOutline" />
 </LinearLayout>
