@@ -1,3 +1,20 @@
+v1.4.0
+ - Material3-based styling
+ - Add support of Android 12+ (API 31+) Dynamic Colors
+ - Add support of Android 13+ (API 33+) Themed Icons
+ - Add dates to calculator history list
+ - Add date selection in currency converter
+ - Add option to automatically download currencies in background
+ - Add setting to control automatic currencies update on first time tab opening
+ - Fix crashes on old platforms due to erroneously disabled desugaring
+ - Fix status bar styling on Android 6-7 (API 23-25)
+ - Fix calculator button press effect on Android 10+ (API 29+)
+ - Fix history panel handle becoming visible in expanded state after theme change
+ - Fix preference's dropdown margin on Android 5-5.1 (API 21-22)
+ - Improve snackbar positioning in currencies' settings
+ - Remove toasts with copied data on Android 13+ (API 33+)
+ - Use secure connection to download currencies
+
 v1.3.1
  - Fix black theme was applied in API21-22 for Follow System, Follow Battery instead of light one
  - Fix crash on API21 caused by MyDropDownPreference
