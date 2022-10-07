@@ -10,7 +10,8 @@ plugins {
 }
 
 val composeVersion = "1.2.1"
-val composeCompilerVersion = "1.3.1"
+val composeMaterial3Version = "1.0.0-rc01"
+val composeCompilerVersion = "1.3.2"
 
 android {
     signingConfigs {
@@ -158,7 +159,7 @@ dependencies {
     //noinspection GradleDependency
     "minApi16Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi16")
 
-    val okhttpVersionMinApi21 = "4.9.3"
+    val okhttpVersionMinApi21 = "4.10.0"
     "minApi21Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi21")
     "minApi21Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi21")
 
@@ -187,6 +188,7 @@ dependencies {
     "minApi21Implementation"("androidx.compose.foundation:foundation:$composeVersion")
     // Material Design
     "minApi21Implementation"("androidx.compose.material:material:$composeVersion")
+    "minApi21Implementation"("androidx.compose.material3:material3:$composeMaterial3Version")
     // Material design icons
     "minApi21Implementation"("androidx.compose.material:material-icons-core:$composeVersion")
     "minApi21Implementation"("androidx.compose.material:material-icons-extended:$composeVersion")

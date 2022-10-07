@@ -1,11 +1,9 @@
 package ru.art2000.calculator.compose
 
-import androidx.compose.material.Colors
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 
 data class CalculatorColors(
-    val fallback: Colors,
-    val colorSurfaceVariant: Color,
-    val floatingViewBackground: Color,
+    val fallback: ColorScheme,
     val strokeColor: Color,
 )

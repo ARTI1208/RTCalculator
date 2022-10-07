@@ -8,8 +8,10 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -99,7 +101,7 @@ class InfoActivity : InfoActivityBase() {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.background(MaterialTheme.colors.background),
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         ) {
 
             CalculatorAppBar(titleText = stringResource(R.string.info),
@@ -109,8 +111,8 @@ class InfoActivity : InfoActivityBase() {
             SectionHeader(stringRes = R.string.changelog, marginBottom = 8.dp)
             ChangeLogText(
                 text = model.changeLogText ?: stringResource(R.string.changelog_load_failed),
-                textColor = MaterialTheme.colors.onSurface,
-                backgroundColor = MaterialTheme.calculatorColors.colorSurfaceVariant,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
             )
 
             SectionHeader(stringRes = R.string.dev)
@@ -130,14 +132,14 @@ class InfoActivity : InfoActivityBase() {
                 Modifier
                     .fillMaxWidth()
                     .padding(start = 5.dp, top = 3.dp, end = 5.dp),
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
             )
             Text(
                 text = stringResource(stringRes),
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(start = 5.dp, end = 5.dp)
             )
         }
@@ -185,15 +187,18 @@ class InfoActivity : InfoActivityBase() {
                 .padding(avatarPadding) // padding
         ) {
 
-            Image(
-                painter = painterResource(R.drawable.dev_avatar),
-                contentDescription = "Dev avatar",
-                modifier = Modifier.size(dimensionResource(R.dimen.author_avatar_image_size)),
-            )
+            CompositionLocalProvider(LocalContentAlpha provides LocalContentAlpha.current) {
+                Image(
+                    painter = painterResource(R.drawable.dev_avatar),
+                    contentDescription = "Dev avatar",
+                    modifier = Modifier.size(dimensionResource(R.dimen.author_avatar_image_size)),
+                )
+            }
+
             Text(
                 text = stringResource(R.string.author_nick),
                 fontSize = textUnitResource(R.dimen.author_nick_text_size, TextUnitType.Sp),
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }
