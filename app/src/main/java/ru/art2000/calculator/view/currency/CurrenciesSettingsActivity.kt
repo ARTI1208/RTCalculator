@@ -316,7 +316,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                         - cardView.cardElevation.toInt())
                 leftMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
                 rightMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
-                bottomMargin -= (cardView.cardElevation + cardView.paddingBottom).toInt()
+                bottomMargin -= (cardView.cardElevation + cardView.paddingBottom - cardLayoutParams.topMargin - cardView.strokeWidth).toInt()
             } else {
                 view.elevation = 0f
             }
