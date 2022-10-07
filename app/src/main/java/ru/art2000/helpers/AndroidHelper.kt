@@ -53,5 +53,9 @@ fun Context.getColorAttribute(@AttrRes attribute: Int): Int {
 fun Context.getDimenAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(attribute, typedValue, true)
-    return resources.getDimensionPixelOffset(typedValue.resourceId)
+    return when (typedValue.type) {
+        TypedValue.TYPE_ATTRIBUTE -> resources.getDimensionPixelOffset(typedValue.resourceId)
+        TypedValue.TYPE_DIMENSION -> TypedValue.complexToDimensionPixelOffset(typedValue.data, resources.displayMetrics)
+        else -> throw Exception("Unsupported dimen attribute type: ${typedValue.type}")
+    }
 }
