@@ -7,6 +7,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.*
 import okhttp3.OkHttpClient
+import okhttp3.internal.Util
 import org.simpleframework.xml.convert.AnnotationStrategy
 import org.simpleframework.xml.core.Persister
 import retrofit2.Retrofit
@@ -18,6 +19,7 @@ import ru.art2000.calculator.model.currency.Valute
 import ru.art2000.calculator.view_model.currency.CbrAPI
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies
+import ru.art2000.extensions.platform.TLSSocketFactory
 import java.util.concurrent.TimeUnit
 
 object CurrencyFunctions {
@@ -100,12 +102,13 @@ object CurrencyFunctions {
             .connectTimeout(2, TimeUnit.MINUTES)
             .writeTimeout(2, TimeUnit.MINUTES)
             .readTimeout(2, TimeUnit.MINUTES)
+            .sslSocketFactory(TLSSocketFactory(), Util.platformTrustManager())
             .build()
 
 
         val retrofit = Retrofit.Builder()
             .addConverterFactory(SimpleXmlConverterFactory.create(serializer))
-            .baseUrl("http://www.cbr.ru")
+            .baseUrl("https://www.cbr.ru")
             .client(okHttpClient)
             .build()
 
