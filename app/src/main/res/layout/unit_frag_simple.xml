@@ -207,16 +207,14 @@
 
             <Button
                 android:id="@+id/button00"
-                android:background="@null"
                 style="@style/RT.Widget.Button"
                 android:layout_weight="1.0"
                 android:text="00" />
 
             <ImageButton
                 android:id="@+id/buttonN"
-                style="@style/RT.Widget.Button"
+                style="@style/RT.Widget.ImageButton"
                 android:layout_weight="1.0"
-                app:tint="?colorSecondary"
                 app:srcCompat="@drawable/ic_list_all" />
         </LinearLayout>
     </LinearLayout>
@@ -233,7 +231,8 @@
             android:layout_height="match_parent" />
 
         <ImageButton
-            style="@style/RT.Widget.Button"
+            android:background="?selectableItemBackground"
+            android:padding="8dp"
             app:srcCompat="@drawable/ic_horizontal_swap"
             android:id="@+id/swap_button"
             app:tint="?colorSecondary"

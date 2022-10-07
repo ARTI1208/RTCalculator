@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.sothree.slidinguppanel.PanelSlideListener;
 import com.sothree.slidinguppanel.PanelState;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -241,7 +242,7 @@ public class CalculatorFragment extends MainScreenFragment {
 
     private void setupHistoryHeader(HistoryListAdapter adapter) {
         binding.calculatorPanel.historyPart.clearHistory.setOnClickListener(clearBtn -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireContext());
 
             builder.setTitle(R.string.history_clear)
                     .setMessage(R.string.history_clear_confirm)
@@ -304,6 +305,7 @@ public class CalculatorFragment extends MainScreenFragment {
             }
         });
 
+        getHistoryFloatingDate().setVisibility(View.GONE);
         getHistoryRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             private final Timer timer = new Timer();

@@ -1,6 +1,9 @@
 package ru.art2000.extensions.views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -11,6 +14,7 @@ import android.view.animation.AccelerateInterpolator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,9 +24,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.shape.MaterialShapeDrawable;
 
 import ru.art2000.extensions.fragments.INavigationFragment;
 import ru.art2000.extensions.fragments.IReplaceableFragment;
+import ru.art2000.helpers.AndroidHelper;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class ReplaceableBottomNavigation extends BottomNavigationView {
@@ -237,7 +243,14 @@ public class ReplaceableBottomNavigation extends BottomNavigationView {
                     replaceableFragment.getTitle());
             int iconRes = replaceableFragment.getIcon();
             if (iconRes != -1) {
-                item.setIcon(iconRes);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    item.setIcon(iconRes);
+                } else {
+                    Drawable iconDrawable = ResourcesCompat.getDrawable(
+                            getContext().getResources(), iconRes, getContext().getTheme()
+                    );
+                    item.setIcon(iconDrawable);
+                }
             }
             this.replaceables.put(order, replaceableFragment);
         }

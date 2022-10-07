@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurfaceVariant"
-        android:minHeight="@dimen/calc_field_min_height"
-        android:paddingVertical="4.0dip">
+        android:minHeight="@dimen/calc_field_min_height">
 
         <include
             android:id="@+id/calculator_io"

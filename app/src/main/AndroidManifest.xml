@@ -9,6 +9,7 @@
         android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:allowBackup="false"
+        android:name=".CalculatorApplication"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity

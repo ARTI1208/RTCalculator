@@ -4,13 +4,13 @@
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v27.AppTheme.Light" />
 
     <style name="Base.RT.v27.AppTheme.Light" parent="Base.RT.v23.AppTheme.Light">
-        <item name="android:navigationBarColor">@color/LightTheme_colorBackground</item>
+        <item name="android:navigationBarColor">?colorSurface</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
     <style name="RT.Design.BottomSheetDialog" parent="Base.RT.v21.Design.BottomSheetDialog">
-        <item name="android:navigationBarColor">@color/LightTheme_colorBackground</item>
+        <item name="android:navigationBarColor">?colorSurface</item>
     </style>
 
 </resources>

@@ -134,14 +134,14 @@ class CalculatorButtonsPagerAdapter(
 
             binding.expertiseIo.tvResult.text = model.formatNumberForDisplay(calculationNumberResult)
 
-            val ioBackground = ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.calculator_input_bg_debug
-            ) as GradientDrawable
-            val inputBackgroundColor = mContext.getColorAttribute(R.attr.colorSurfaceVariant)
-            ioBackground.setColor(inputBackgroundColor)
+//            val ioBackground = ContextCompat.getDrawable(
+//                    mContext,
+//                    R.drawable.calculator_input_bg_debug
+//            ) as GradientDrawable
+//            val inputBackgroundColor = mContext.getColorAttribute(com.google.android.material.R.attr.colorSurfaceVariant)
+//            ioBackground.setColor(inputBackgroundColor)
 
-            binding.expertiseIoWrapper.background = ioBackground
+//            binding.expertiseIoWrapper.background = ioBackground
 
             return@setOnLongClickListener true
         }

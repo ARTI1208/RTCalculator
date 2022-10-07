@@ -4,12 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-20dp"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/expertise_io_wrapper"
-        android:minHeight="@dimen/calc_field_min_height"
-        android:paddingVertical="4.0dip">
+        android:minHeight="@dimen/calc_field_min_height">
 
         <include
             android:id="@+id/expertise_io"

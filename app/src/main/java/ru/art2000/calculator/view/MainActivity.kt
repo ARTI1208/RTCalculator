@@ -1,6 +1,7 @@
 package ru.art2000.calculator.view
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.ExistingPeriodicWorkPolicy
+import com.google.android.material.shape.MaterialShapeDrawable
 import ru.art2000.calculator.R
 import ru.art2000.calculator.background.currency.CurrencyFunctions
 import ru.art2000.calculator.databinding.ActivityMainBinding
@@ -23,6 +25,7 @@ import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.fragments.INavigationFragment
 import ru.art2000.extensions.views.allowDrawingUnderStatusBar
 import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.isLightTheme
 
 class MainActivity : AutoThemeActivity() {
     private var viewBinding: ActivityMainBinding? = null
@@ -114,6 +117,15 @@ class MainActivity : AutoThemeActivity() {
             else -> R.id.navigation_calc
         }
         binding.navigation.selectedItemId = tabId
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+            && (!isLightTheme() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+        ) {
+            val back = binding.navigation.background
+            if (back is MaterialShapeDrawable) {
+                window.navigationBarColor = back.resolvedTintColor
+            }
+        }
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

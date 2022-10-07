@@ -42,6 +42,20 @@ fun Context.getLocalizedArray(
         @ArrayRes resId: Int
 ): Array<String> = getLocalizedResource(desiredLocale) { it.getStringArray(resId) }
 
+fun Context.isLightTheme(): Boolean {
+    return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_NO
+}
+
+fun Context.getBooleanAttribute(@AttrRes attribute: Int): Boolean {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(attribute, typedValue, true)
+    return when (typedValue.type) {
+        TypedValue.TYPE_ATTRIBUTE -> resources.getBoolean(typedValue.resourceId)
+        TypedValue.TYPE_INT_BOOLEAN -> typedValue.data == 1
+        else -> throw Exception("Unsupported boolean attribute type: ${typedValue.type}")
+    }
+}
+
 @ColorInt
 fun Context.getColorAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()

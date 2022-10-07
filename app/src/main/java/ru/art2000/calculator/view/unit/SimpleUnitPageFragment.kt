@@ -5,6 +5,7 @@ import android.text.Editable
 import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.core.widget.ImageViewCompat
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.CopyMode
@@ -41,6 +42,9 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
         emptyValueInterpretation = DEFAULT_EMPTY_VALUE_INTERPRETATION
+
+        binding.buttonN.background = binding.buttonDot.background?.constantState?.newDrawable()
+        ImageViewCompat.setImageTintList(binding.buttonN, binding.buttonDot.textColors)
 
         setSimpleViewButtonsClickListener()
 

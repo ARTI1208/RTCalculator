@@ -2,6 +2,7 @@ package ru.art2000.calculator.view.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -24,6 +25,7 @@ import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_ZERO_DIVISION
 import ru.art2000.extensions.activities.DayNightActivity
 import ru.art2000.extensions.preferences.TimePickerPreference
 import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.getColorAttribute
 
 internal class SettingsFragment : MainScreenPreferenceFragment() {
 
@@ -234,6 +236,11 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
             }
             false
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.setBackgroundColor(requireContext().getColorAttribute(com.google.android.material.R.attr.colorSurface))
     }
 
     override fun getTitle(): Int {
