@@ -1,5 +1,6 @@
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.konan.properties.hasProperty
 import java.util.*
 import java.text.*
 
@@ -13,16 +14,27 @@ val composeVersion = "1.2.1"
 val composeMaterial3Version = "1.0.0-rc01"
 val composeCompilerVersion = "1.3.2"
 
+val major = 1
+val minor = 4
+val patch = 0
+
 android {
     signingConfigs {
         create("release") {
 
             val props = gradleLocalProperties(project.rootProject.projectDir)
 
-            storeFile = File(props.getProperty("signing.storeFile"))
-            storePassword = props.getProperty("signing.storePassword")
-            keyAlias = props.getProperty("signing.keyAlias")
-            keyPassword = props.getProperty("signing.keyPassword")
+            val fromProperties = props.hasProperty("signing.storeFile")
+
+            fun stringProperty(key: String): String {
+                return if (fromProperties) props.getProperty(key)
+                else System.getenv(key.replace('.', '_'))
+            }
+
+            storeFile = File(stringProperty("signing.storeFile"))
+            storePassword = stringProperty("signing.storePassword")
+            keyAlias = stringProperty("signing.keyAlias")
+            keyPassword = stringProperty("signing.keyPassword")
         }
     }
     compileSdkVersion = "android-33"
@@ -35,10 +47,6 @@ android {
         minSdk = 16
         targetSdk = 33
         versionCode = 12
-
-        val major = 1
-        val minor = 4
-        val patch = 0
 
         versionName = "$major.$minor.$patch"
 
@@ -119,6 +127,52 @@ android {
 
         composeOptions {
             kotlinCompilerExtensionVersion = composeCompilerVersion
+        }
+    }
+}
+
+tasks.whenTaskAdded {
+    if (name.startsWith("test") && name.endsWith("UnitTest") && project.hasProperty("excludeTime")) {
+        (this as Test).exclude {
+            it.name.contains("TimeTest")
+        }
+    }
+}
+
+val newVersion = tasks.create("newVersion") {
+
+    val version = "v${android.defaultConfig.versionName}"
+
+    val resRoot = file("src/main/res")
+
+    doLast {
+
+        resRoot
+            .walk()
+            .onEnter {
+                it == resRoot || it.name.startsWith("raw")
+            }.forEach {
+                if (it.name != "changelog.txt") return@forEach
+                it.useLines { lines ->
+                    val versionInChangelog = lines.first()
+                    check(versionInChangelog == version) {
+                        val parentName = it.parentFile.name
+                        val fileName = it.name
+                        "Version mismatch in build.gradle.kts and $parentName/$fileName"
+                    }
+                }
+            }
+
+        val taggingProcess = ProcessBuilder("git", "tag", version).start()
+        taggingProcess.waitFor()
+        check(taggingProcess.exitValue() == 0) {
+            "Tagging result: ${taggingProcess.exitValue()}. Forgot to update version?"
+        }
+
+        val pushingProcess = ProcessBuilder("git", "push", "origin", version).start()
+        pushingProcess.waitFor()
+        check(pushingProcess.exitValue() == 0) {
+            "Pushing result: ${pushingProcess.exitValue()}"
         }
     }
 }
