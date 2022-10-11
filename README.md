@@ -70,6 +70,8 @@ Android calculator app
 ## TODOs
 * Fully migrate to Kotlin
 * DI
+* CI
+* More tests
 * Bug fixes
 * Upcoming Android features support (if any useful)
 
