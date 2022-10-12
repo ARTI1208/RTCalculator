@@ -3,6 +3,10 @@ package ru.art2000.extensions.collections
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
+import java.util.Comparator
+import java.util.function.UnaryOperator
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ArrayLiveList<E> : LiveList<E> {
 
@@ -55,7 +59,7 @@ class ArrayLiveList<E> : LiveList<E> {
     ) {
         map.forEach { entry ->
             foo(entry.key)
-            entry.key.onAnyChanged(previousList)
+            entry.key.onAnyChanged(previousList, this)
         }
     }
 
@@ -81,18 +85,27 @@ class ArrayLiveList<E> : LiveList<E> {
 
     override fun setAll(collection: Collection<E>) {
 
-        val prev = buildList { addAll(arrayList) }
+        val previousList = snapshot()
 
         clearImpl()
         addAllImpl(collection)
 
+        val addedIndices = mutableListOf<Int>()
+        val removedIndices = mutableListOf<Int>()
+        val changedIndices = mutableListOf<Int>()
+
+//        repeat(min(previousList.size, size)) {
+//            if ()
+//        }
+
+
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return prev[oldItemPosition] == get(newItemPosition)
+                return previousList[oldItemPosition] == get(newItemPosition)
             }
 
             override fun getOldListSize(): Int {
-                return prev.size
+                return previousList.size
             }
 
             override fun getNewListSize(): Int {
@@ -104,70 +117,77 @@ class ArrayLiveList<E> : LiveList<E> {
             }
         })
 
-        var anyChanged = false
-
         diffResult.dispatchUpdatesTo(object : ListUpdateCallback {
             override fun onChanged(position: Int, count: Int, payload: Any?) {
-                anyChanged = true
-                val map = mutableMapOf<Int, E>()
-                for (i in position until position + count) {
-                    map[i] = get(i)
-                }
-
-                forEachObserver {
-                    it.onItemsReplaced(prev, map)
-                }
+                // TODO when this called?
+                changedIndices += List(count) { position + it }
             }
 
             override fun onMoved(fromPosition: Int, toPosition: Int) {
-                anyChanged = true
-                forEachObserver {
-                    it.onItemsReplaced(prev, mapOf(fromPosition to prev[toPosition]))
-                }
+                // TODO when this called?
+                changedIndices += fromPosition
             }
 
             override fun onInserted(position: Int, count: Int) {
-                anyChanged = true
-                forEachObserver {
-                    it.onItemsInserted(prev, subList(position, position + count), position)
+                for (i in addedIndices.indices) {
+                    if (addedIndices[i] >= position) addedIndices[i] += count
                 }
+                addedIndices += List(count) { position + it }
             }
 
             override fun onRemoved(position: Int, count: Int) {
-                anyChanged = true
-                val list = mutableListOf<Int>()
-                for (i in position until position + count) {
-                    list.add(i)
+                for (i in addedIndices.indices) {
+                    if (addedIndices[i] >= position) addedIndices[i] -= count
                 }
-                forEachObserver {
-                    it.onItemsRemoved(prev, list)
-                }
+                removedIndices += List(count) { position + it }
             }
         })
 
+        if (addedIndices.isNotEmpty()) {
+            addedIndices.sort()
+            forEachObserver {
+                it.onItemsInserted(previousList, this, addedIndices)
+            }
+        }
+        if (removedIndices.isNotEmpty()) {
+            removedIndices.sort()
+            forEachObserver {
+                it.onItemsRemoved(previousList, this, removedIndices)
+            }
+        }
+        if (changedIndices.isNotEmpty()) {
+            changedIndices.sort()
+            forEachObserver {
+                it.onItemsReplaced(previousList, this, changedIndices)
+            }
+        }
+
+        val anyChanged = addedIndices.isNotEmpty() || removedIndices.isNotEmpty()
+                || changedIndices.isNotEmpty()
+
         if (anyChanged) {
             forEachObserver {
-                it.onAnyChanged(prev)
+                it.onAnyChanged(previousList, this)
             }
         }
     }
 
     override fun addAllNew(collection: Collection<E>) {
         val s = size
-        val previousList = mutableListOf<E>().apply { addAll(this) }
+        val previousList = snapshot()
 
-        val insertedItems = mutableListOf<E>()
+        val insertedItems = mutableListOf<Int>()
 
         collection.forEach {
             if (!contains(it)) {
                 addImpl(it)
-                insertedItems.add(it)
+                insertedItems += lastIndex
             }
         }
 
         if (s < size) {
             forEachObserverAndAny(previousList) {
-                it.onItemsInserted(previousList, insertedItems, s)
+                it.onItemsInserted(previousList, this, insertedItems)
             }
         }
 
@@ -193,6 +213,24 @@ class ArrayLiveList<E> : LiveList<E> {
         return arrayList.isEmpty()
     }
 
+    // TODO compare if values really changed?
+    override fun replaceAll(operator: UnaryOperator<E>) {
+        val previousList = snapshot()
+        super.replaceAll(operator)
+        forEachObserverAndAny(previousList) { observer ->
+            observer.onItemsReplaced(previousList, this, List(size) { it })
+        }
+    }
+
+    // TODO compare if values really changed?
+    override fun sort(c: Comparator<in E>?) {
+        val previousList = snapshot()
+        super.sort(c)
+        forEachObserverAndAny(previousList) { observer ->
+            observer.onItemsReplaced(previousList, this, List(size) { it })
+        }
+    }
+
     override fun iterator(): MutableIterator<E> {
         return arrayList.iterator()
     }
@@ -202,31 +240,30 @@ class ArrayLiveList<E> : LiveList<E> {
     }
 
     override fun add(element: E): Boolean {
-        val s = size
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         val res = addImpl(element)
         if (res) {
             forEachObserverAndAny(previousList) {
-                it.onItemsInserted(previousList, listOf(element), s)
+                it.onItemsInserted(previousList, this, listOf(lastIndex))
             }
         }
         return res
     }
 
     override fun add(index: Int, element: E) {
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         addImpl(index, element)
         forEachObserverAndAny(previousList) {
-            it.onItemsInserted(previousList, listOf(element), index)
+            it.onItemsInserted(previousList, this, listOf(index))
         }
     }
 
     override fun addAll(index: Int, elements: Collection<E>): Boolean {
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         val res = addAllImpl(index, elements)
         if (res) {
-            forEachObserverAndAny(previousList) {
-                it.onItemsInserted(previousList, elements.toList(), index)
+            forEachObserverAndAny(previousList) { observer ->
+                observer.onItemsInserted(previousList, this, List(elements.size) { index + it })
             }
         }
         return res
@@ -234,24 +271,24 @@ class ArrayLiveList<E> : LiveList<E> {
 
     override fun addAll(elements: Collection<E>): Boolean {
         val s = size
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         val res = addAllImpl(elements)
         if (res) {
-            forEachObserverAndAny(previousList) {
-                it.onItemsInserted(previousList, elements.toList(), s)
+            
+            forEachObserverAndAny(previousList) { observer ->
+                observer.onItemsInserted(previousList, this, List(elements.size) { s + it })
             }
         }
         return res
     }
 
     override fun clear() {
-        if (isEmpty())
-            return
+        if (isEmpty()) return
 
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         clearImpl()
         forEachObserverAndAny(previousList) {
-            it.onItemsRemoved(previousList, List(previousList.size) { index -> index })
+            it.onItemsRemoved(previousList, this, List(previousList.size) { index -> index })
         }
     }
 
@@ -264,7 +301,7 @@ class ArrayLiveList<E> : LiveList<E> {
     }
 
     override fun remove(element: E): Boolean {
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         val from = arrayList.indexOf(element)
 
         if (from < 0)
@@ -273,27 +310,43 @@ class ArrayLiveList<E> : LiveList<E> {
         arrayList.removeAt(from)
 
         forEachObserverAndAny(previousList) {
-            it.onItemsRemoved(previousList, listOf(from))
+            it.onItemsRemoved(previousList, this, listOf(from))
         }
 
         return true
     }
 
     override fun removeAll(elements: Collection<E>): Boolean {
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
-        val removedElements = mutableListOf<Int>()
+        val previousList = snapshot()
+        val removedIndices = mutableListOf<Int>()
 
-        elements.forEachIndexed { index, e ->
-            if (remove(e)) {
-                removedElements.add(index)
+        fun List<E>.indexOf(e: E, fromIndex: Int = 0): Int {
+            for (i in fromIndex until size) {
+                if (this[i] == e) return i
             }
+            return -1
         }
 
-        val modified = removedElements.isNotEmpty()
+        elements.forEach { e ->
+            var startFrom = 0
+            do {
+                val pos = arrayList.indexOf(e, startFrom)
+                if (pos < 0) return@forEach
+                removedIndices += pos
+                startFrom = pos + 1
+            } while (true)
+        }
+
+        removedIndices.sort()
+        repeat(removedIndices.size) {
+            arrayList.removeAt(removedIndices[it] - it)
+        }
+
+        val modified = removedIndices.isNotEmpty()
 
         if (modified) {
             forEachObserverAndAny(previousList) {
-                it.onItemsRemoved(previousList, removedElements)
+                it.onItemsRemoved(previousList, this, removedIndices)
             }
         }
 
@@ -308,61 +361,61 @@ class ArrayLiveList<E> : LiveList<E> {
 
         val to = if (diff > 0) size else from + count
 
-        val removedItems = mutableListOf<Int>()
+        val previousList = snapshot()
+        val removedIndices = mutableListOf<Int>()
 
         for (i in from until to) {
             arrayList.removeAt(from)
-            removedItems.add(i)
+            removedIndices.add(i)
         }
 
-        if (removedItems.isNotEmpty()) {
-            val previousList = this
+        if (removedIndices.isNotEmpty()) {
             forEachObserverAndAny(previousList) {
-                it.onItemsRemoved(previousList, removedItems)
+                it.onItemsRemoved(previousList, this, removedIndices)
             }
         }
     }
 
     override fun removeAt(index: Int): E {
-        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         val element = arrayList.removeAt(index)
 
         forEachObserverAndAny(previousList) {
-            it.onItemsRemoved(previousList, listOf(index))
+            it.onItemsRemoved(previousList, this, listOf(index))
         }
 
         return element
     }
 
     override fun retainAll(elements: Collection<E>): Boolean {
-        val previousList = mutableListOf<E>().apply { addAll(arrayList) }
-        val removedItems = mutableListOf<Int>()
+        val previousList = snapshot()
+        val removedIndices = mutableListOf<Int>()
         val each: MutableIterator<E> = arrayList.iterator()
         var i = 0
         while (each.hasNext()) {
             val element = each.next()
             if (!elements.contains(element)) {
                 each.remove()
-                removedItems.add(i)
+                removedIndices.add(i)
             }
             ++i
         }
 
-        if (removedItems.isNotEmpty()) {
+        if (removedIndices.isNotEmpty()) {
             forEachObserverAndAny(previousList) {
-                it.onItemsRemoved(previousList, removedItems)
+                it.onItemsRemoved(previousList, this, removedIndices)
             }
         }
 
-        return removedItems.isNotEmpty()
+        return removedIndices.isNotEmpty()
     }
 
     override operator fun set(index: Int, element: E): E {
-        val previousList = mutableListOf<E>().apply { addAll(arrayList) }
+        val previousList = snapshot()
         val previousElement = arrayList.set(index, element)
         if (previousElement != element) {
             forEachObserverAndAny(previousList) {
-                it.onItemsReplaced(previousList, mapOf(index to element))
+                it.onItemsReplaced(previousList, this, listOf(index))
             }
         }
         return previousElement
@@ -376,24 +429,25 @@ class ArrayLiveList<E> : LiveList<E> {
         get() = arrayList.size
 
     override fun replaceAll(map: Map<E, E>) {
-        val previousList = mutableListOf<E>().also { it.addAll(arrayList) }
-        val replacedItems = mutableMapOf<Int, E>()
+        val previousList = snapshot()
+        val replacedItems = mutableListOf<Int>()
         for (entry in map) {
             if (entry.key == entry.value)
                 continue
 
-            val pos = indexOf(entry.key)
+            do {
+                val pos = indexOf(entry.key)
+                if (pos < 0) break
 
-            if (pos < 0)
-                continue
+                replacedItems += pos
+                arrayList[pos] = entry.value
 
-            replacedItems[pos] = entry.key
-            arrayList[pos] = entry.value
+            } while (true)
         }
 
         if (replacedItems.isNotEmpty()) {
             forEachObserverAndAny(previousList) {
-                it.onItemsReplaced(previousList, replacedItems)
+                it.onItemsReplaced(previousList, this, replacedItems)
             }
         }
 

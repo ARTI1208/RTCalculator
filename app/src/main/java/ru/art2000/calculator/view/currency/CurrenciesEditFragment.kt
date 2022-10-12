@@ -21,6 +21,7 @@ import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesEditModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
+import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
@@ -46,7 +47,7 @@ class CurrenciesEditFragment : UniqueReplaceableFragment() {
                 createTextEmptyView(ctx, emptyTextRes)
             }
             val adapter = EditCurrenciesAdapter()
-            binding.modifyCurrenciesList.setAdapter(adapter)
+            binding.modifyCurrenciesList.adapter = adapter
             val llm = LinearLayoutManager(requireContext())
             llm.orientation = RecyclerView.VERTICAL
             binding.modifyCurrenciesList.layoutManager = llm
@@ -99,24 +100,24 @@ class CurrenciesEditFragment : UniqueReplaceableFragment() {
                 object : LiveListObserver<CurrencyItem>() {
                     override fun onItemsInserted(
                         previousList: List<CurrencyItem>,
-                        insertedItems: List<CurrencyItem>,
-                        position: Int
+                        liveList: LiveList<CurrencyItem>,
+                        insertedIndices: List<Int>
                     ) {
-                        super.onItemsInserted(previousList, insertedItems, position)
-                        for (item in insertedItems) {
-                            markItem(item, true)
+                        super.onItemsInserted(previousList, liveList, insertedIndices)
+                        for (i in insertedIndices) {
+                            markItem(liveList[i], true)
                         }
                     }
 
                     override fun onItemsRemoved(
                         previousList: List<CurrencyItem>,
-                        removedItems: List<Int>
+                        removedIndices: List<Int>
                     ) {
-                        super.onItemsRemoved(previousList, removedItems)
+                        super.onItemsRemoved(previousList, removedIndices)
                         if (model.selectedVisibleItems.isEmpty()) {
                             setReorderMode()
                         }
-                        for (i in removedItems) {
+                        for (i in removedIndices) {
                             markItem(previousList[i], false)
                         }
                     }

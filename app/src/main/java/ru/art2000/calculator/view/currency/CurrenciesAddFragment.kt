@@ -18,6 +18,7 @@ import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesAddModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
+import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
@@ -99,21 +100,21 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
                 object : LiveListObserver<CurrencyItem>() {
                     override fun onItemsInserted(
                         previousList: List<CurrencyItem>,
-                        insertedItems: List<CurrencyItem>,
-                        position: Int
+                        liveList: LiveList<CurrencyItem>,
+                        insertedIndices: List<Int>
                     ) {
-                        super.onItemsInserted(previousList, insertedItems, position)
-                        for (item in insertedItems) {
-                            markItem(item, true)
+                        super.onItemsInserted(previousList, liveList, insertedIndices)
+                        for (i in insertedIndices) {
+                            markItem(liveList[i], true)
                         }
                     }
 
                     override fun onItemsRemoved(
                         previousList: List<CurrencyItem>,
-                        removedItems: List<Int>
+                        removedIndices: List<Int>
                     ) {
-                        super.onItemsRemoved(previousList, removedItems)
-                        for (i in removedItems) {
+                        super.onItemsRemoved(previousList, removedIndices)
+                        for (i in removedIndices) {
                             markItem(previousList[i], false)
                         }
                     }
