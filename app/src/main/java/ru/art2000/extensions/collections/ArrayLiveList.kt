@@ -1,6 +1,5 @@
 package ru.art2000.extensions.collections
 
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
@@ -50,6 +49,16 @@ class ArrayLiveList<E> : LiveList<E> {
         }
     }
 
+    private fun forEachObserverAndAny(
+        previousList: List<E>,
+        foo: (observer: LiveList.LiveListObserver<E>) -> Unit
+    ) {
+        map.forEach { entry ->
+            foo(entry.key)
+            entry.key.onAnyChanged(previousList)
+        }
+    }
+
     private fun clearImpl() {
         arrayList.clear()
     }
@@ -72,7 +81,7 @@ class ArrayLiveList<E> : LiveList<E> {
 
     override fun setAll(collection: Collection<E>) {
 
-        val prev = mutableListOf<E>().apply { addAll(arrayList) }
+        val prev = buildList { addAll(arrayList) }
 
         clearImpl()
         addAllImpl(collection)
@@ -95,8 +104,11 @@ class ArrayLiveList<E> : LiveList<E> {
             }
         })
 
+        var anyChanged = false
+
         diffResult.dispatchUpdatesTo(object : ListUpdateCallback {
             override fun onChanged(position: Int, count: Int, payload: Any?) {
+                anyChanged = true
                 val map = mutableMapOf<Int, E>()
                 for (i in position until position + count) {
                     map[i] = get(i)
@@ -108,19 +120,21 @@ class ArrayLiveList<E> : LiveList<E> {
             }
 
             override fun onMoved(fromPosition: Int, toPosition: Int) {
-
+                anyChanged = true
                 forEachObserver {
                     it.onItemsReplaced(prev, mapOf(fromPosition to prev[toPosition]))
                 }
             }
 
             override fun onInserted(position: Int, count: Int) {
+                anyChanged = true
                 forEachObserver {
                     it.onItemsInserted(prev, subList(position, position + count), position)
                 }
             }
 
             override fun onRemoved(position: Int, count: Int) {
+                anyChanged = true
                 val list = mutableListOf<Int>()
                 for (i in position until position + count) {
                     list.add(i)
@@ -131,14 +145,16 @@ class ArrayLiveList<E> : LiveList<E> {
             }
         })
 
-//        forEachObserver {
-//            it.onItemsReplaced(prev, collection.indexedAssociateBy { i, _ -> i })
-//        }
+        if (anyChanged) {
+            forEachObserver {
+                it.onAnyChanged(prev)
+            }
+        }
     }
 
     override fun addAllNew(collection: Collection<E>) {
         val s = size
-        val previousCopy = mutableListOf<E>().apply { addAll(this) }
+        val previousList = mutableListOf<E>().apply { addAll(this) }
 
         val insertedItems = mutableListOf<E>()
 
@@ -150,8 +166,8 @@ class ArrayLiveList<E> : LiveList<E> {
         }
 
         if (s < size) {
-            forEachObserver {
-                it.onItemsInserted(previousCopy, insertedItems, s)
+            forEachObserverAndAny(previousList) {
+                it.onItemsInserted(previousList, insertedItems, s)
             }
         }
 
@@ -187,30 +203,30 @@ class ArrayLiveList<E> : LiveList<E> {
 
     override fun add(element: E): Boolean {
         val s = size
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         val res = addImpl(element)
         if (res) {
-            forEachObserver {
-                it.onItemsInserted(previousCopy, listOf(element), s)
+            forEachObserverAndAny(previousList) {
+                it.onItemsInserted(previousList, listOf(element), s)
             }
         }
         return res
     }
 
     override fun add(index: Int, element: E) {
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         addImpl(index, element)
-        forEachObserver {
-            it.onItemsInserted(previousCopy, listOf(element), index)
+        forEachObserverAndAny(previousList) {
+            it.onItemsInserted(previousList, listOf(element), index)
         }
     }
 
     override fun addAll(index: Int, elements: Collection<E>): Boolean {
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         val res = addAllImpl(index, elements)
         if (res) {
-            forEachObserver {
-                it.onItemsInserted(previousCopy, elements.toList(), index)
+            forEachObserverAndAny(previousList) {
+                it.onItemsInserted(previousList, elements.toList(), index)
             }
         }
         return res
@@ -218,11 +234,11 @@ class ArrayLiveList<E> : LiveList<E> {
 
     override fun addAll(elements: Collection<E>): Boolean {
         val s = size
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         val res = addAllImpl(elements)
         if (res) {
-            forEachObserver {
-                it.onItemsInserted(previousCopy, elements.toList(), s)
+            forEachObserverAndAny(previousList) {
+                it.onItemsInserted(previousList, elements.toList(), s)
             }
         }
         return res
@@ -232,10 +248,10 @@ class ArrayLiveList<E> : LiveList<E> {
         if (isEmpty())
             return
 
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         clearImpl()
-        forEachObserver {
-            it.onItemsRemoved(previousCopy, previousCopy.mapIndexed { index, _ -> index })
+        forEachObserverAndAny(previousList) {
+            it.onItemsRemoved(previousList, List(previousList.size) { index -> index })
         }
     }
 
@@ -248,7 +264,7 @@ class ArrayLiveList<E> : LiveList<E> {
     }
 
     override fun remove(element: E): Boolean {
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         val from = arrayList.indexOf(element)
 
         if (from < 0)
@@ -256,15 +272,15 @@ class ArrayLiveList<E> : LiveList<E> {
 
         arrayList.removeAt(from)
 
-        forEachObserver {
-            it.onItemsRemoved(previousCopy, listOf(from))
+        forEachObserverAndAny(previousList) {
+            it.onItemsRemoved(previousList, listOf(from))
         }
 
         return true
     }
 
     override fun removeAll(elements: Collection<E>): Boolean {
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         val removedElements = mutableListOf<Int>()
 
         elements.forEachIndexed { index, e ->
@@ -276,8 +292,8 @@ class ArrayLiveList<E> : LiveList<E> {
         val modified = removedElements.isNotEmpty()
 
         if (modified) {
-            forEachObserver {
-                it.onItemsRemoved(previousCopy, removedElements)
+            forEachObserverAndAny(previousList) {
+                it.onItemsRemoved(previousList, removedElements)
             }
         }
 
@@ -300,18 +316,19 @@ class ArrayLiveList<E> : LiveList<E> {
         }
 
         if (removedItems.isNotEmpty()) {
-            forEachObserver {
-                it.onItemsRemoved(this, removedItems)
+            val previousList = this
+            forEachObserverAndAny(previousList) {
+                it.onItemsRemoved(previousList, removedItems)
             }
         }
     }
 
     override fun removeAt(index: Int): E {
-        val previousCopy = arrayListOf<E>().apply { addAll(arrayList) }
+        val previousList = arrayListOf<E>().apply { addAll(arrayList) }
         val element = arrayList.removeAt(index)
 
-        forEachObserver {
-            it.onItemsRemoved(previousCopy, listOf(index))
+        forEachObserverAndAny(previousList) {
+            it.onItemsRemoved(previousList, listOf(index))
         }
 
         return element
@@ -332,7 +349,7 @@ class ArrayLiveList<E> : LiveList<E> {
         }
 
         if (removedItems.isNotEmpty()) {
-            forEachObserver {
+            forEachObserverAndAny(previousList) {
                 it.onItemsRemoved(previousList, removedItems)
             }
         }
@@ -344,7 +361,7 @@ class ArrayLiveList<E> : LiveList<E> {
         val previousList = mutableListOf<E>().apply { addAll(arrayList) }
         val previousElement = arrayList.set(index, element)
         if (previousElement != element) {
-            forEachObserver {
+            forEachObserverAndAny(previousList) {
                 it.onItemsReplaced(previousList, mapOf(index to element))
             }
         }
@@ -375,7 +392,7 @@ class ArrayLiveList<E> : LiveList<E> {
         }
 
         if (replacedItems.isNotEmpty()) {
-            forEachObserver {
+            forEachObserverAndAny(previousList) {
                 it.onItemsReplaced(previousList, replacedItems)
             }
         }

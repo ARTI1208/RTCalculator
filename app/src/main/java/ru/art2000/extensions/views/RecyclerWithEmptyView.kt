@@ -1,5 +1,6 @@
 package ru.art2000.extensions.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -51,6 +52,7 @@ class RecyclerWithEmptyView @JvmOverloads constructor(
         setAdapter(adapter, true)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setAdapter(adapter: Adapter<*>?, useEmptyView: Boolean) {
         actualAdapter = adapter
 
@@ -78,6 +80,7 @@ class RecyclerWithEmptyView @JvmOverloads constructor(
     var emptyViewHolderBinder: Consumer<View?>? = null
 
     var emptyViewGenerator: ((Context, ViewGroup, Int) -> View)? = null
+        @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             emptyAdapter.notifyDataSetChanged()
@@ -90,6 +93,6 @@ class RecyclerWithEmptyView @JvmOverloads constructor(
         }
     }
 
-    inner class EmptyViewHolder(view: View) : ViewHolder(view)
+    class EmptyViewHolder(view: View) : ViewHolder(view)
 
 }

@@ -1,7 +1,6 @@
 package ru.art2000.calculator.view.currency
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,7 +44,7 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
                     bottomPadding
                 )
             }
-            val llm = LinearLayoutManagerWrapper(requireContext()).apply {
+            val llm = LinearLayoutManager(requireContext()).apply {
                 orientation = RecyclerView.VERTICAL
             }
             binding.modifyCurrenciesList.layoutManager = llm
@@ -54,12 +53,10 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
             }
             binding.modifyCurrenciesList.emptyViewHolderBinder = Consumer { view: View? ->
                 val emptyView = view as TextView?
-                emptyView!!.setText(emptyTextRes)
+                emptyView?.setText(emptyTextRes)
             }
-            val adapter = AddCurrenciesAdapter()
 
-            // TODO investigate bug with disappear
-            binding.modifyCurrenciesList.setAdapter(adapter, false)
+            binding.modifyCurrenciesList.adapter = AddCurrenciesAdapter()
         }
         return viewBinding!!.root
     }
@@ -86,27 +83,6 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         } else {
             R.string.empty_text_all_currencies_added
         }
-
-    private fun onListUpdate(isEmpty: Boolean) {
-        if (isEmpty) {
-            viewBinding!!.emptyView.setText(emptyTextRes)
-            viewBinding!!.emptyView.visibility = View.VISIBLE
-            viewBinding!!.modifyCurrenciesList.visibility = View.GONE
-        } else {
-            viewBinding!!.emptyView.visibility = View.GONE
-            viewBinding!!.modifyCurrenciesList.visibility = View.VISIBLE
-        }
-    }
-
-    private class LinearLayoutManagerWrapper(context: Context) : LinearLayoutManager(context) {
-        /*
-         * TODO investigate why app crashes when deleting query characters and how this prevents it
-         * Thanks to https://stackoverflow.com/a/40177879
-         */
-        override fun supportsPredictiveItemAnimations(): Boolean {
-            return false
-        }
-    }
 
     private inner class AddCurrenciesAdapter : RecyclerView.Adapter<AddCurrenciesAdapter.Holder>() {
 
@@ -142,7 +118,6 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
                         }
                     }
                 })
-            onListUpdate(model.displayedHiddenItems.isEmpty())
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -167,7 +142,6 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         }
 
         private fun dispatchListUpdate(oldData: List<CurrencyItem>, newData: List<CurrencyItem>) {
-            onListUpdate(newData.isEmpty())
             val result = calculateDiff(oldData, newData)
             result.dispatchUpdatesTo(this)
         }
@@ -181,20 +155,19 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
 
             init {
                 itemView.setOnClickListener { checkBox.performClick() }
+                checkBox.setOnClickListener {
+                    val pos = bindingAdapterPosition
+                    val item = model.displayedHiddenItems[pos]
+                    if (checkBox.isChecked != model.isHiddenItemSelected(item)) {
+                        model.setHiddenItemSelected(item, checkBox.isChecked)
+                    }
+                }
             }
 
             fun bind(currencyItem: CurrencyItem) {
                 code.text = currencyItem.code
                 name.setText(getNameIdentifierForCode(name.context, currencyItem.code))
-                checkBox.setOnCheckedChangeListener(null)
                 checkBox.isChecked = model.isHiddenItemSelected(currencyItem)
-                checkBox.setOnCheckedChangeListener { _, isChecked ->
-                    val pos = bindingAdapterPosition
-                    val item = model.displayedHiddenItems[pos]
-                    if (isChecked != model.isHiddenItemSelected(item)) {
-                        model.setHiddenItemSelected(item, isChecked)
-                    }
-                }
             }
         }
     }
