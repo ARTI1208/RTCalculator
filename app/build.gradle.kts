@@ -52,7 +52,7 @@ android {
         versionName = "$major.$minor.$patch"
 
         multiDexEnabled = true
-        buildConfigField("String", "BUILD_DATE", '"' + getBuildDate() +'"')
+        buildConfigField("long", "BUILD_TIME", "${Date().time}")
         buildConfigField("boolean", "USE_COMPOSE", "true")
 
         setProperty("archivesBaseName", "RTCalculator-$versionName")
@@ -177,8 +177,6 @@ val newVersion = tasks.create("newVersion") {
         }
     }
 }
-
-fun getBuildDate() = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(Date())
 
 val kotlinVersion = libs.versions.kotlin.get()
 

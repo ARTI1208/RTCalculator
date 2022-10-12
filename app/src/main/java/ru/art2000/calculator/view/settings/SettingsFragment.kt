@@ -26,6 +26,8 @@ import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_UNIT_VIEW
 import ru.art2000.calculator.view.settings.PreferenceKeys.KEY_ZERO_DIVISION
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.getColorAttribute
+import java.text.DateFormat
+import java.util.*
 
 internal class SettingsFragment : MainScreenPreferenceFragment() {
 
@@ -249,7 +251,11 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         /* appVersion preference */
         val appVersion = findPreference<Preference>(KEY_APP_VERSION)
-        appVersion?.summary = "${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}${if (BuildConfig.DEBUG) "-debug" else ""} (${BuildConfig.BUILD_DATE})"
+        val buildDate = DateFormat
+            .getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM)
+            .format(Date(BuildConfig.BUILD_TIME))
+        val suffix = if (BuildConfig.DEBUG) "-debug" else ""
+        appVersion?.summary = "${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}$suffix ($buildDate)"
         appVersion?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dev++
             if (dev == CLICKS_TO_OPEN_HIDDEN_INFO) {
