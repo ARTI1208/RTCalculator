@@ -16,7 +16,8 @@ val composeCompilerVersion = "1.3.2"
 
 val major = 1
 val minor = 4
-val patch = 0
+val patch = 1
+val code = 13
 
 android {
     signingConfigs {
@@ -46,7 +47,7 @@ android {
         applicationId = "ru.art2000.calculator"
         minSdk = 16
         targetSdk = 33
-        versionCode = 12
+        versionCode = code
 
         versionName = "$major.$minor.$patch"
 

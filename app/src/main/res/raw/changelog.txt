@@ -1,3 +1,7 @@
+v1.4.1
+ - Fix unit name copying in unit converter
+ - Improved stability of currencies searching in currencies' settings
+
 v1.4.0
  - Material3-based styling
  - Add support of Android 12+ (API 31+) Dynamic Colors
