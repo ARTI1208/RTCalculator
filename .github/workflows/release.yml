@@ -44,14 +44,13 @@ jobs:
         id: extract_changelog
         run: |
           changelog=$(sed -n "/^$GITHUB_REF_NAME$/,/^v/p" app/src/main/res/raw/changelog.txt | head -n -2)
-          changelog="${changelog//'%'/'%25'}"
-          changelog="${changelog//$'\n'/'%0A'}"
-          changelog="${changelog//$'\r'/'%0D'}"
-          echo "::set-output name=changelog::$changelog"
+          echo 'CHANGELOG<<EOF' >> $GITHUB_ENV
+          echo "$changelog" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           body: | 
             ## Changelog 
-            ### ${{ steps.extract_changelog.outputs.changelog }}
+            ### ${{ env.CHANGELOG }}
           artifacts: "*/*.apk"
