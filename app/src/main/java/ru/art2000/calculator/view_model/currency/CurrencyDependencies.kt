@@ -1,5 +1,6 @@
 package ru.art2000.calculator.view_model.currency
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
@@ -23,17 +24,38 @@ object CurrencyDependencies {
             Room.databaseBuilder(context.applicationContext,
                     CurrencyRoomDB::class.java, "currency.db")
                     .createFromAsset("currency.db")
-                    .addMigrations(RoomMigration())
+                    .addMigrations(V2Migration(), V3Migration())
                     .build()
 
-    private class RoomMigration : Migration(1, 2) {
+    private class V2Migration : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("drop table info")
         }
     }
 
+    private class V3Migration : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // language=sql
+            listOf(
+                """
+                    CREATE TABLE currency3(
+                        codeLetter TEXT NOT NULL PRIMARY KEY, 
+                        rate REAL NOT NULL, 
+                        position INTEGER NOT NULL
+                    );
+                """.trimIndent(),
+                "INSERT INTO currency3 SELECT * FROM currency;",
+                "DROP TABLE currency;",
+                "ALTER TABLE currency3 RENAME TO currency;",
+            ).forEach {
+                database.execSQL(it)
+            }
+        }
+    }
+
     private val codeToIdentifier = hashMapOf<String, Int>()
 
+    @SuppressLint("DiscouragedApi")
     @JvmStatic
     fun getNameIdentifierForCode(context: Context, code: String): Int {
 

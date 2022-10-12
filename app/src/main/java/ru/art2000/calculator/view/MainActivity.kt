@@ -105,11 +105,11 @@ class MainActivity : AutoThemeActivity() {
         binding.navigation.setupWithViewPager2(
             this,
             binding.pager2,
-            currencyConverterFragment, calculatorFragment, unitConverterFragment, settingsFragment,
+            currencyConverterFragment!!, calculatorFragment!!, unitConverterFragment!!, settingsFragment!!,
         )
 
         val tabId = when (intent.action) {
-            Intent.ACTION_MAIN -> PrefsHelper.getDefaultNavItem()
+            Intent.ACTION_MAIN -> PrefsHelper.defaultNavItem
             ACTION_CALCULATOR -> R.id.navigation_calc
             ACTION_CONVERTER -> R.id.navigation_unit
             ACTION_CURRENCIES -> R.id.navigation_currency
@@ -138,8 +138,8 @@ class MainActivity : AutoThemeActivity() {
         super.onPostCreate(savedInstanceState)
         CurrencyFunctions.setupCurrencyDownload(
             this,
-            PrefsHelper.getCurrencyBackgroundUpdateType(),
-            PrefsHelper.getCurrencyBackgroundUpdateInterval(),
+            PrefsHelper.currencyBackgroundUpdateType,
+            PrefsHelper.currencyBackgroundUpdateInterval,
             ExistingPeriodicWorkPolicy.KEEP,
         )
     }

@@ -25,7 +25,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
     private var pager2Mediator: TabLayoutMediator? = null
     private var binding: UnitLayoutBinding? = null
 
-    private var currentViewType: String = PrefsHelper.getUnitViewType()
+    private var currentViewType: String = PrefsHelper.unitViewType
 
     private val preferenceListener =
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
@@ -44,7 +44,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
             binding = viewBinding
             updateAdapter()
 
-            currentViewType = PrefsHelper.getUnitViewType()
+            currentViewType = PrefsHelper.unitViewType
             PreferenceManager
                     .getDefaultSharedPreferences(requireContext())
                     .registerOnSharedPreferenceChangeListener(preferenceListener)
@@ -62,7 +62,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
         binding = null
     }
 
-    private fun updateAdapter(viewType: String = PrefsHelper.getUnitViewType()) {
+    private fun updateAdapter(viewType: String = PrefsHelper.unitViewType) {
         val nonNullBinding = binding ?: return
 
         val pager2Adapter = UnitPagerAdapter(viewType)

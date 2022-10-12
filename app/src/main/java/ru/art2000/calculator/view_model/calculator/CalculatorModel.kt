@@ -56,8 +56,8 @@ class CalculatorModel(
     // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
     override val calculations: Calculations<Double> = DoubleCalculations(CalculatorFormatter)
 
-    override fun getHistoryListItems(): LiveData<List<HistoryListItem>> {
-        return Transformations.map(historyDao.getAll()) { items ->
+    override val historyListItems: LiveData<List<HistoryListItem>>
+        get() = Transformations.map(historyDao.getAll()) { items ->
             var calendar: Calendar? = null
             items.fold(mutableListOf()) { acc, historyDatabaseItem ->
                 if (!isSameDay(calendar, historyDatabaseItem.date)) {
@@ -71,7 +71,6 @@ class CalculatorModel(
                 acc
             }
         }
-    }
 
     override fun copyHistoryItemToClipboard(item: HistoryDatabaseItem, type: Int): String {
         val clip: ClipData?
@@ -283,7 +282,7 @@ class CalculatorModel(
         countStr = calculations.calculateForDisplay(expr, liveAngleType.value!!)
 
         when (countStr) {
-            Calculations.calculationDivideByZero -> countStr = context.getString(PrefsHelper.getZeroDivResult())
+            Calculations.calculationDivideByZero -> countStr = context.getString(PrefsHelper.zeroDivResult)
             Calculations.calculationError -> {
                 countStr = context.getString(R.string.error)
                 err = true
@@ -297,7 +296,7 @@ class CalculatorModel(
 
     fun formatNumberForDisplay(calculationNumber: CalculationNumber<Double>?): String {
         return when {
-            calculationNumber == null -> context.getString(PrefsHelper.getZeroDivResult())
+            calculationNumber == null -> context.getString(PrefsHelper.zeroDivResult)
             calculationNumber.isInfinite -> context.getString(R.string.error)
             else -> calculations.formatter.format(calculationNumber)
         }

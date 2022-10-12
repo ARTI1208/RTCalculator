@@ -25,7 +25,7 @@ class CurrenciesSettingsModel(application: Application) : AndroidViewModel(appli
     private val mSelectedTab = MutableLiveData(0)
 
     val liveIsFirstTimeTooltipShown: MutableLiveData<Boolean> =
-        MutableLiveData(!PrefsHelper.isDeleteTooltipShown())
+        MutableLiveData(!PrefsHelper.isDeleteTooltipShown)
 
     var selectedTab: Int
         get() = mSelectedTab.value ?: -1

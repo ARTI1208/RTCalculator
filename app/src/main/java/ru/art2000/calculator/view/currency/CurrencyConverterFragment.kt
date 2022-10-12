@@ -22,7 +22,7 @@ import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.ListenerSubscription
 import ru.art2000.extensions.views.addImeVisibilityListener
 import ru.art2000.extensions.views.createTextEmptyView
-import ru.art2000.helpers.SnackbarThemeHelper
+import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.helpers.getColorAttribute
 import java.util.*
 
@@ -161,8 +161,7 @@ class CurrencyConverterFragment : MainScreenFragment() {
             if (model.isUpdateOnFirstTabOpenEnabled()) {
                 model.loadData()
             } else {
-                updateSnackbar = SnackbarThemeHelper.createThemedSnackbar(
-                    binding!!.currencyList,
+                updateSnackbar = binding!!.currencyList.createThemedSnackbar(
                     R.string.message_manually_update,
                     Snackbar.LENGTH_INDEFINITE
                 ).apply {

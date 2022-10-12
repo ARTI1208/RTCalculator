@@ -168,7 +168,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
         val saveCurrencyConversion = findPreference<SwitchPreferenceCompat>(KEY_SAVE_CURRENCY)
         saveCurrencyConversion?.onPreferenceChangeListener =
                 Preference.OnPreferenceChangeListener { _, newValue ->
-                    PrefsHelper.setShouldSaveCurrencyConversion(newValue as Boolean)
+                    PrefsHelper.isShouldSaveCurrencyConversion = newValue as Boolean
                     true
                 }
 
@@ -190,12 +190,12 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
                         }
                     }
 
-                    PrefsHelper.setCurrencyBackgroundUpdateType(type)
+                    PrefsHelper.currencyBackgroundUpdateType = type
 
                     CurrencyFunctions.setupCurrencyDownload(
                             requireContext(),
                             type,
-                            PrefsHelper.getCurrencyBackgroundUpdateInterval(),
+                            PrefsHelper.currencyBackgroundUpdateInterval,
                             ExistingPeriodicWorkPolicy.REPLACE,
                     )
                     true
@@ -212,11 +212,11 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
                 Preference.OnPreferenceChangeListener { _, newValue ->
 
                     val interval = newValue.toString().toInt()
-                    PrefsHelper.setCurrencyBackgroundUpdateInterval(interval)
+                    PrefsHelper.currencyBackgroundUpdateInterval = interval
 
                     CurrencyFunctions.setupCurrencyDownload(
                         requireContext(),
-                        PrefsHelper.getCurrencyBackgroundUpdateType(),
+                        PrefsHelper.currencyBackgroundUpdateType,
                         interval,
                         ExistingPeriodicWorkPolicy.REPLACE,
                     )
@@ -241,7 +241,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
                             return@OnPreferenceChangeListener false
                         }
                         unitView.value = newValue.toString()
-                        PrefsHelper.setUnitViewType(newValue.toString())
+                        PrefsHelper.unitViewType = newValue.toString()
 
                         true
                     }
