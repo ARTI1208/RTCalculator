@@ -228,5 +228,5 @@ private fun myBlackColors() = myDarkColors(
     surfaceVariant = colorResource(R.color.BlackTheme_surfaceVariant),
 )
 
-private fun isBlackTheme() = PrefsHelper.getAppTheme() != R.style.RT_AppTheme_Dark &&
+private fun isBlackTheme() = PrefsHelper.appTheme != R.style.RT_AppTheme_Dark &&
         PrefsHelper.isAppAutoDarkThemeBlack
