@@ -220,7 +220,7 @@ class UnitListAdapter private constructor(
         private fun copy(copyMode: CopyMode): Boolean {
             return model.copy(
                 mContext, dimensionValueView.text,
-                dimensionValueView.text, dimensionValueView.text,
+                dimensionShortNameView.text, dimensionNameView.text,
                 copyMode
             )
         }
