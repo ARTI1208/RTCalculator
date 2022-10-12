@@ -229,4 +229,4 @@ private fun myBlackColors() = myDarkColors(
 )
 
 private fun isBlackTheme() = PrefsHelper.getAppTheme() != R.style.RT_AppTheme_Dark &&
-        PrefsHelper.isAppAutoDarkThemeBlack()
+        PrefsHelper.isAppAutoDarkThemeBlack
