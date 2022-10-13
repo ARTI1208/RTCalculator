@@ -194,6 +194,8 @@ dependencies {
 
     implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
 
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+
     val roomVersion = "2.4.3"
 
     implementation("androidx.room:room-runtime:$roomVersion")
