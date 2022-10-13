@@ -28,7 +28,6 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     private var emptyValueInterpretation: Number = 0
         set(value) {
             field = value
-            val binding = mBinding ?: return
             binding.valueOriginal.hint = GeneralHelper.resultNumberFormat.format(value)
         }
 
@@ -37,8 +36,6 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     override fun setup() {
-
-        val binding = mBinding ?: return
 
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
         emptyValueInterpretation = DEFAULT_EMPTY_VALUE_INTERPRETATION
@@ -140,9 +137,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     private fun copy(copyMode: CopyMode): Boolean {
-        val binding = mBinding ?: return true
 
-        val convertToItem = items[binding.spinnerTo.selectedItemPosition];
+        val convertToItem = items[binding.spinnerTo.selectedItemPosition]
 
         return model.copy(
                 requireContext(), binding.valueConverted.text,
@@ -152,7 +148,6 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     private fun setSimpleViewButtonsClickListener() {
-        val binding = mBinding ?: return
 
         val numberButtons = arrayOf(
             binding.button9, binding.button8, binding.button7,
@@ -193,7 +188,6 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             }
         }
 
-        val binding = mBinding ?: return
         binding.valueConverted.textValue = items[binding.spinnerTo.selectedItemPosition].displayValue
     }
 

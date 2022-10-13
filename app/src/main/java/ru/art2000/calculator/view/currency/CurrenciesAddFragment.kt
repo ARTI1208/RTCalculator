@@ -11,6 +11,8 @@ import androidx.core.util.Consumer
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.databinding.ModifyCurrenciesLayoutBinding
@@ -26,7 +28,7 @@ import ru.art2000.extensions.views.createTextEmptyView
 
 class CurrenciesAddFragment : UniqueReplaceableFragment() {
 
-    private var viewBinding: ModifyCurrenciesLayoutBinding? = null
+    private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
     private val model: CurrenciesAddModel by activityViewModels<CurrenciesSettingsModel>()
 
     @SuppressLint("InflateParams")
@@ -34,43 +36,34 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (viewBinding == null) {
-            val binding = ModifyCurrenciesLayoutBinding.inflate(inflater)
-            viewBinding = binding
-            model.recyclerViewBottomPadding.observe(viewLifecycleOwner) { bottomPadding ->
-                binding.modifyCurrenciesList.setPadding(
-                    0,
-                    0,
-                    0,
-                    bottomPadding
-                )
-            }
-            val llm = LinearLayoutManager(requireContext()).apply {
-                orientation = RecyclerView.VERTICAL
-            }
-            binding.modifyCurrenciesList.layoutManager = llm
-            binding.modifyCurrenciesList.emptyViewGenerator = { ctx, _, _ ->
-                createTextEmptyView(ctx, emptyTextRes)
-            }
-            binding.modifyCurrenciesList.emptyViewHolderBinder = Consumer { view: View? ->
-                val emptyView = view as TextView?
-                emptyView?.setText(emptyTextRes)
-            }
 
-            binding.modifyCurrenciesList.adapter = AddCurrenciesAdapter()
+        model.recyclerViewBottomPadding.observe(viewLifecycleOwner) { bottomPadding ->
+            binding.modifyCurrenciesList.setPadding(
+                0,
+                0,
+                0,
+                bottomPadding
+            )
         }
-        return viewBinding!!.root
-    }
+        val llm = LinearLayoutManager(requireContext()).apply {
+            orientation = RecyclerView.VERTICAL
+        }
+        binding.modifyCurrenciesList.layoutManager = llm
+        binding.modifyCurrenciesList.emptyViewGenerator = { ctx, _, _ ->
+            createTextEmptyView(ctx, emptyTextRes)
+        }
+        binding.modifyCurrenciesList.emptyViewHolderBinder = Consumer { view: View? ->
+            val emptyView = view as TextView?
+            emptyView?.setText(emptyTextRes)
+        }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewBinding = null
+        binding.modifyCurrenciesList.adapter = AddCurrenciesAdapter()
+
+        return binding.root
     }
 
     override fun onReselected() {
-        if (viewBinding != null) {
-            viewBinding!!.modifyCurrenciesList.smoothScrollToPosition(0)
-        }
+        binding.modifyCurrenciesList.smoothScrollToPosition(0)
     }
 
     override fun getTitle(): Int {
@@ -136,7 +129,7 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         override fun getItemCount() = model.displayedHiddenItems.size
 
         private fun markItem(currencyItem: CurrencyItem, selected: Boolean) {
-            val holder = viewBinding!!.modifyCurrenciesList.findViewHolderForAdapterPosition(
+            val holder = binding.modifyCurrenciesList.findViewHolderForAdapterPosition(
                 model.displayedHiddenItems.indexOf(currencyItem)
             ) as Holder? ?: return
             holder.checkBox.isChecked = selected

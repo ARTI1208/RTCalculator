@@ -41,8 +41,10 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         arguments?.getString("category", defaultCategory) ?: defaultCategory
     }
 
-    protected var mBinding: VB? = null
-        private set
+    protected val binding: VB
+        get() = mBinding!!
+
+    private var mBinding: VB? = null
 
     protected val model: UnitConverterModel by viewModels()
 

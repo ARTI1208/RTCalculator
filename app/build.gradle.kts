@@ -2,7 +2,6 @@ import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.hasProperty
 import java.util.*
-import java.text.*
 
 plugins {
     id("com.android.application")
@@ -192,6 +191,8 @@ dependencies {
     implementation("com.google.android.material:material:1.7.0-rc01")
     implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
+
+    implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
 
     val roomVersion = "2.4.3"
 

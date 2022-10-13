@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -53,13 +55,12 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
     private var deleteTooltip: Snackbar? = null
 
-    lateinit var binding: ActivityCurrenciesEditorBinding
-    val model: CurrenciesSettingsModel by viewModels()
+    private val binding by viewBinding<ActivityCurrenciesEditorBinding>(CreateMethod.INFLATE)
+    private val model: CurrenciesSettingsModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityCurrenciesEditorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)

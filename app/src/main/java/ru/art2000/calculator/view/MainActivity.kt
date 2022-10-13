@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.ExistingPeriodicWorkPolicy
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.shape.MaterialShapeDrawable
 import ru.art2000.calculator.R
 import ru.art2000.calculator.background.currency.CurrencyFunctions
@@ -28,12 +30,11 @@ import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.isLightTheme
 
 class MainActivity : AutoThemeActivity() {
-    private var viewBinding: ActivityMainBinding? = null
+    private val binding by viewBinding<ActivityMainBinding>(CreateMethod.INFLATE)
     private var doubleBackToExitPressedOnce = false
 
     private val currentFragment: INavigationFragment
         get() {
-            val binding = requireNotNull(viewBinding)
             val replaceable = requireNotNull(
                 binding.navigation.getReplaceable(binding.pager2.currentItem)
             )
@@ -44,10 +45,6 @@ class MainActivity : AutoThemeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         PrefsHelper.initialSetup(this)
         super.onCreate(savedInstanceState)
-
-        val binding = ActivityMainBinding.inflate(layoutInflater).also {
-            viewBinding = it
-        }
 
         setContentView(binding.root)
 

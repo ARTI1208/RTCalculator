@@ -14,8 +14,6 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
 
     override fun setup() {
 
-        val binding = mBinding ?: return
-
         binding.unitRv.layoutManager = LinearLayoutManager(requireContext())
         binding.unitRv.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 

@@ -20,8 +20,6 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
     override fun setup() {
 
-        val binding = mBinding ?: return
-
         registerForContextMenu(binding.unitRv)
 
         val adapter = UnitListAdapter(requireContext(), viewLifecycleOwner, items, model, false)
@@ -51,8 +49,6 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
     override fun onShown(previousReplaceable: IReplaceableFragment?) {
 
-        val binding = mBinding ?: return
-
         while (!binding.hpuvEt.isFocused) {
             binding.hpuvEt.requestFocus()
         }
@@ -61,7 +57,6 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
     }
 
     private fun UnitListAdapter.setValueForPosition(position: Int) {
-        val binding = mBinding ?: return
         val value = calculate(binding.hpuvEt.text.toString()) ?: 1.0
         setValue(position, value)
     }

@@ -54,8 +54,6 @@ class CurrenciesEditRecyclerTouchCallback(
             val intrinsicHeight = xMark!!.intrinsicWidth
             val xMarkLeft: Int
             val xMarkRight: Int
-            val xMarkTop: Int
-            val xMarkBottom: Int
             if (dX > 0) {
                 background!!.setBounds(itemView.left, itemView.top,
                         itemView.left + dX.toInt(), itemView.bottom)
@@ -67,8 +65,8 @@ class CurrenciesEditRecyclerTouchCallback(
                 xMarkLeft = (itemView.right - xMarkMargin - intrinsicWidth).toInt()
                 xMarkRight = (itemView.right - xMarkMargin).toInt()
             }
-            xMarkTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-            xMarkBottom = xMarkTop + intrinsicHeight
+            val xMarkTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+            val xMarkBottom = xMarkTop + intrinsicHeight
             background!!.draw(c)
             xMark!!.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom)
             xMark!!.draw(c)

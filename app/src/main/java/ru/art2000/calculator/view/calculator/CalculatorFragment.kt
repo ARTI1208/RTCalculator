@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sothree.slidinguppanel.PanelSlideListener
 import com.sothree.slidinguppanel.PanelState
@@ -34,69 +36,66 @@ import kotlin.math.abs
 class CalculatorFragment : MainScreenFragment() {
 
     private val model by viewModels<CalculatorModel>()
-    private var binding: CalculatorLayoutBinding? = null
+    private val binding by viewBinding<CalculatorLayoutBinding>(CreateMethod.INFLATE)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (binding == null) {
-            val viewBinding = CalculatorLayoutBinding.inflate(inflater, container, false)
-            binding = viewBinding
 
-            buttonsPager.adapter = CalculatorButtonsPagerAdapter(requireContext(), model)
-            inputTv.addTextChangedListener(object : SimpleTextWatcher() {
-                override fun afterTextChanged(s: Editable) {
-                    if (model.expression != s.toString()) {
-                        model.clearResult()
-                    }
-                    model.liveExpression.value = s.toString()
+        buttonsPager.adapter = CalculatorButtonsPagerAdapter(requireContext(), model)
+        inputTv.addTextChangedListener(object : SimpleTextWatcher() {
+            override fun afterTextChanged(s: Editable) {
+                if (model.expression != s.toString()) {
+                    model.clearResult()
                 }
-            })
-            viewBinding.calculatorIo.inputScrollView.autoScrollOnInput()
-            inputTv.onSelectionChangedListener =
-                CalculatorEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
-                    model.inputSelection = Pair(selStart, selEnd)
-                }
-            model.liveExpression.observe(viewLifecycleOwner) { expression: String ->
-                if (expression == Objects.requireNonNull(
-                        inputTv.text
-                    ).toString()
-                ) return@observe
-                inputTv.setText(expression)
+                model.liveExpression.value = s.toString()
             }
-            model.liveInputSelection.observe(viewLifecycleOwner) { (first, second) ->
-                inputTv.setSelection(first, second)
+        })
+        binding.calculatorIo.inputScrollView.autoScrollOnInput()
+        inputTv.onSelectionChangedListener =
+            CalculatorEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
+                model.inputSelection = Pair(selStart, selEnd)
             }
-            model.liveResult.observe(viewLifecycleOwner) { result: String? ->
-                if (result == null) {
-                    resultTV.visibility = View.INVISIBLE
-                    resultTV.text = null
-                    return@observe
-                }
-                resultTV.text = result
-                resultTV.visibility = View.VISIBLE
-            }
-            model.liveMemory.observe(viewLifecycleOwner) { memoryValue ->
-                if (abs(memoryValue) < 1e-5) {
-                    viewBinding.calculatorIo.memory.visibility = View.INVISIBLE
-                    viewBinding.calculatorIo.infoDivider.visibility = View.INVISIBLE
-                    return@observe
-                }
-                viewBinding.calculatorIo.infoDivider.visibility = View.VISIBLE
-                val newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue)
-                viewBinding.calculatorIo.memory.text = newMemoryText
-                viewBinding.calculatorIo.memory.visibility = View.VISIBLE
-            }
-            model.liveAngleType.observe(viewLifecycleOwner) { angleType: AngleType ->
-                viewBinding.calculatorIo.degRadTv.text = angleType.toString().uppercase(
-                    Locale.getDefault()
-                )
-            }
-            setupHistoryPart()
+        model.liveExpression.observe(viewLifecycleOwner) { expression: String ->
+            if (expression == Objects.requireNonNull(
+                    inputTv.text
+                ).toString()
+            ) return@observe
+            inputTv.setText(expression)
         }
-        return binding!!.root
+        model.liveInputSelection.observe(viewLifecycleOwner) { (first, second) ->
+            inputTv.setSelection(first, second)
+        }
+        model.liveResult.observe(viewLifecycleOwner) { result: String? ->
+            if (result == null) {
+                resultTV.visibility = View.INVISIBLE
+                resultTV.text = null
+                return@observe
+            }
+            resultTV.text = result
+            resultTV.visibility = View.VISIBLE
+        }
+        model.liveMemory.observe(viewLifecycleOwner) { memoryValue ->
+            if (abs(memoryValue) < 1e-5) {
+                binding.calculatorIo.memory.visibility = View.INVISIBLE
+                binding.calculatorIo.infoDivider.visibility = View.INVISIBLE
+                return@observe
+            }
+            binding.calculatorIo.infoDivider.visibility = View.VISIBLE
+            val newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue)
+            binding.calculatorIo.memory.text = newMemoryText
+            binding.calculatorIo.memory.visibility = View.VISIBLE
+        }
+        model.liveAngleType.observe(viewLifecycleOwner) { angleType: AngleType ->
+            binding.calculatorIo.degRadTv.text = angleType.toString().uppercase(
+                Locale.getDefault()
+            )
+        }
+        setupHistoryPart()
+
+        return binding.root
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -109,19 +108,13 @@ class CalculatorFragment : MainScreenFragment() {
     }
 
     override fun updateViewOnCreated(createdView: View) {
-        binding?.calculatorIoWrappper?.applyWindowTopInsets(false)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+        binding.calculatorIoWrappper.applyWindowTopInsets(false)
     }
 
     /**
      * @return true if panel was already closed, false otherwise
      */
     private fun ensureHistoryPanelClosed(): Boolean {
-        if (binding == null) return true
         if (slidingPanel.panelState == PanelState.EXPANDED ||
             slidingPanel.panelState == PanelState.ANCHORED
         ) {
@@ -134,23 +127,23 @@ class CalculatorFragment : MainScreenFragment() {
     // Private methods
     //=========================================
     private val historyPanel: HistoryLayoutBinding
-        get() = binding!!.calculatorPanel.historyPart
+        get() = binding.calculatorPanel.historyPart
     private val historyPanelHandle: RelativeLayout
-        get() = binding!!.calculatorPanel.historyPart.historyHandle
+        get() = binding.calculatorPanel.historyPart.historyHandle
     private val historyPanelHeader: RelativeLayout
-        get() = binding!!.calculatorPanel.historyPart.header
+        get() = binding.calculatorPanel.historyPart.header
     private val inputTv: CalculatorEditText
-        get() = binding!!.calculatorIo.tvInput
+        get() = binding.calculatorIo.tvInput
     private val resultTV: TextView
-        get() = binding!!.calculatorIo.tvResult
+        get() = binding.calculatorIo.tvResult
     private val historyRecyclerView: RecyclerWithEmptyView
-        get() = binding!!.calculatorPanel.historyPart.historyList
+        get() = binding.calculatorPanel.historyPart.historyList
     private val historyFloatingDate: TextView
-        get() = binding!!.calculatorPanel.historyPart.floatingDateLayout.date
+        get() = binding.calculatorPanel.historyPart.floatingDateLayout.date
     private val slidingPanel: SlidingUpPanelLayout
-        get() = binding!!.calculatorPanel.slidingPanel
+        get() = binding.calculatorPanel.slidingPanel
     private val buttonsPager: ViewPager
-        get() = binding!!.calculatorPanel.buttonPager
+        get() = binding.calculatorPanel.buttonPager
 
     private fun clearHistory() {
         model.clearHistoryDatabase()

@@ -13,6 +13,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.databinding.ItemEditCurrenciesListBinding
@@ -31,49 +33,45 @@ import ru.art2000.helpers.dip2px
 class CurrenciesEditFragment : UniqueReplaceableFragment() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
-    private var viewBinding: ModifyCurrenciesLayoutBinding? = null
+    private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
     private val model: CurrenciesEditModel by activityViewModels<CurrenciesSettingsModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (viewBinding == null) {
-            val binding = ModifyCurrenciesLayoutBinding.inflate(inflater)
-            viewBinding = binding
 
-            binding.modifyCurrenciesList.setPadding(0, 0, 0, requireContext().dip2px(20f))
-            binding.modifyCurrenciesList.emptyViewGenerator = { ctx, _, _ ->
-                createTextEmptyView(ctx, emptyTextRes)
-            }
-            val adapter = EditCurrenciesAdapter()
-            binding.modifyCurrenciesList.adapter = adapter
-            val llm = LinearLayoutManager(requireContext())
-            llm.orientation = RecyclerView.VERTICAL
-            binding.modifyCurrenciesList.layoutManager = llm
-            itemTouchHelper = ItemTouchHelper(CurrenciesEditRecyclerTouchCallback(
-                requireContext(),
-                { position ->
-                    val removedItem = model.displayedVisibleItems[position]
-                    model.databaseMarkHidden(removedItem)
-                }
-            ) { firstPosition, secondPosition ->
-                adapter.swap(firstPosition, secondPosition)
-            }).apply {
-                attachToRecyclerView(binding.modifyCurrenciesList)
-            }
+        binding.modifyCurrenciesList.setPadding(0, 0, 0, requireContext().dip2px(20f))
+        binding.modifyCurrenciesList.emptyViewGenerator = { ctx, _, _ ->
+            createTextEmptyView(ctx, emptyTextRes)
         }
-        return viewBinding!!.root
+        val adapter = EditCurrenciesAdapter()
+        binding.modifyCurrenciesList.adapter = adapter
+        val llm = LinearLayoutManager(requireContext())
+        llm.orientation = RecyclerView.VERTICAL
+        binding.modifyCurrenciesList.layoutManager = llm
+        itemTouchHelper = ItemTouchHelper(CurrenciesEditRecyclerTouchCallback(
+            requireContext(),
+            { position ->
+                val removedItem = model.displayedVisibleItems[position]
+                model.databaseMarkHidden(removedItem)
+            }
+        ) { firstPosition, secondPosition ->
+            adapter.swap(firstPosition, secondPosition)
+        }).apply {
+            attachToRecyclerView(binding.modifyCurrenciesList)
+        }
+
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         itemTouchHelper = null
-        viewBinding = null
     }
 
     override fun onReselected() {
-        viewBinding?.modifyCurrenciesList?.smoothScrollToPosition(0)
+        binding.modifyCurrenciesList.smoothScrollToPosition(0)
     }
 
     @get:StringRes
@@ -185,7 +183,7 @@ class CurrenciesEditFragment : UniqueReplaceableFragment() {
             if (curMode == REORDER_MODE) return
             curMode = REORDER_MODE
             model.isEditSelectionMode = false
-            itemTouchHelper!!.attachToRecyclerView(viewBinding!!.modifyCurrenciesList)
+            itemTouchHelper!!.attachToRecyclerView(binding.modifyCurrenciesList)
             model.selectedVisibleItems.clear()
         }
 
@@ -202,7 +200,7 @@ class CurrenciesEditFragment : UniqueReplaceableFragment() {
         }
 
         private fun markItem(currencyItem: CurrencyItem, selected: Boolean) {
-            val holder = viewBinding!!.modifyCurrenciesList.findViewHolderForAdapterPosition(
+            val holder = binding.modifyCurrenciesList.findViewHolderForAdapterPosition(
                 model.displayedVisibleItems.indexOf(currencyItem)
             ) as Holder? ?: return
             holder.checkBox?.isChecked = selected

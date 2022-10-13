@@ -37,9 +37,7 @@ sealed class InfoActivityBase : AutoThemeActivity() {
         val gapSize = width / linksCount - imageSize
         repeat(linksCount) { i ->
             val link = model.authorLinks[i]
-            val linkButton = AuthorLinkItemBinding.inflate(
-                layoutInflater
-            ).root
+            val linkButton = AuthorLinkItemBinding.inflate(layoutInflater).root
             linkButton.setImageResource(link.image)
             linkButton.setOnClickListener {
                 val url = getString(link.link)

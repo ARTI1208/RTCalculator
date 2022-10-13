@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.datepicker.*
 import com.google.android.material.snackbar.Snackbar
 import ru.art2000.calculator.R
@@ -29,7 +31,7 @@ import java.util.*
 class CurrencyConverterFragment : MainScreenFragment() {
 
     private val model by viewModels<CurrencyConverterModel>()
-    private var binding: CurrencyLayoutBinding? = null
+    private val binding by viewBinding<CurrencyLayoutBinding>(CreateMethod.INFLATE)
     private var currenciesAdapter: CurrencyListAdapter? = null
     private var keyboardListenerSubscription: ListenerSubscription<Boolean>? = null
     private var updateSnackbar: Snackbar? = null
@@ -39,78 +41,74 @@ class CurrencyConverterFragment : MainScreenFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (binding == null) {
-            val viewBinding = CurrencyLayoutBinding.inflate(inflater)
-            binding = viewBinding
 
-            viewBinding.toolbar.inflateMenu(R.menu.currencies_converter_menu)
-            currenciesAdapter = CurrencyListAdapter(requireContext(), model)
+        binding.toolbar.inflateMenu(R.menu.currencies_converter_menu)
+        currenciesAdapter = CurrencyListAdapter(requireContext(), model)
 
-            viewBinding.currencyList.apply {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = currenciesAdapter
-                emptyViewGenerator = { _: Context, _: ViewGroup, _: Int ->
-                    createTextEmptyView(
-                        requireContext(), R.string.empty_text_no_currencies_added
-                    )
-                }
+        binding.currencyList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = currenciesAdapter
+            emptyViewGenerator = { _: Context, _: ViewGroup, _: Int ->
+                createTextEmptyView(
+                    requireContext(), R.string.empty_text_no_currencies_added
+                )
             }
-
-            viewBinding.refresher.apply {
-                val colorAccent =
-                    requireContext().getColorAttribute(com.google.android.material.R.attr.colorSecondary)
-                val circleBackground =
-                    requireContext().getColorAttribute(R.attr.floatingViewBackground)
-                setProgressBackgroundColorSchemeColor(circleBackground)
-                setColorSchemeColors(colorAccent)
-                setProgressViewEndTarget(true, progressViewEndOffset)
-                setOnRefreshListener { model.loadData() }
-            }
-
-            val editMenuItem =
-                viewBinding.root.findViewById<ActionMenuItemView>(R.id.edit_currencies)
-            editMenuItem.setOnClickListener {
-                val intent = Intent(activity, CurrenciesSettingsActivity::class.java)
-                startActivity(intent)
-            }
-            val selectDateMenuItem =
-                viewBinding.root.findViewById<ActionMenuItemView>(R.id.select_date)
-            selectDateMenuItem.setOnClickListener {
-                val minValidator = DateValidatorPointForward.from(model.minDateMillis)
-                val maxValidator = DateValidatorPointBackward.before(model.maxDateMillis)
-
-                val picker = MaterialDatePicker.Builder
-                    .datePicker()
-                    .setCalendarConstraints(
-                        CalendarConstraints.Builder()
-                            .setStart(model.minDateMillis)
-                            .setEnd(model.maxDateMillis)
-                            .setValidator(
-                                CompositeDateValidator.allOf(
-                                    listOf(minValidator, maxValidator)
-                                )
-                            ).build()
-                    )
-                    .build()
-                picker.addOnPositiveButtonClickListener { selection: Long? ->
-                    val c = Calendar.getInstance()
-                    c.timeInMillis = selection!!
-                    val year = c[Calendar.YEAR]
-                    val month = c[Calendar.MONTH]
-                    val day = c[Calendar.DAY_OF_MONTH]
-                    model.loadData(year, month + 1, day)
-                }
-                picker.show(requireActivity().supportFragmentManager, "taag")
-            }
-            selectDateMenuItem.setOnLongClickListener {
-                model.loadData()
-                true
-            }
-            model.preferences
-                .registerOnSharedPreferenceChangeListener(model.preferenceListener)
         }
 
-        return binding!!.root
+        binding.refresher.apply {
+            val colorAccent =
+                requireContext().getColorAttribute(com.google.android.material.R.attr.colorSecondary)
+            val circleBackground =
+                requireContext().getColorAttribute(R.attr.floatingViewBackground)
+            setProgressBackgroundColorSchemeColor(circleBackground)
+            setColorSchemeColors(colorAccent)
+            setProgressViewEndTarget(true, progressViewEndOffset)
+            setOnRefreshListener { model.loadData() }
+        }
+
+        val editMenuItem =
+            binding.root.findViewById<ActionMenuItemView>(R.id.edit_currencies)
+        editMenuItem.setOnClickListener {
+            val intent = Intent(activity, CurrenciesSettingsActivity::class.java)
+            startActivity(intent)
+        }
+        val selectDateMenuItem =
+            binding.root.findViewById<ActionMenuItemView>(R.id.select_date)
+        selectDateMenuItem.setOnClickListener {
+            val minValidator = DateValidatorPointForward.from(model.minDateMillis)
+            val maxValidator = DateValidatorPointBackward.before(model.maxDateMillis)
+
+            val picker = MaterialDatePicker.Builder
+                .datePicker()
+                .setCalendarConstraints(
+                    CalendarConstraints.Builder()
+                        .setStart(model.minDateMillis)
+                        .setEnd(model.maxDateMillis)
+                        .setValidator(
+                            CompositeDateValidator.allOf(
+                                listOf(minValidator, maxValidator)
+                            )
+                        ).build()
+                )
+                .build()
+            picker.addOnPositiveButtonClickListener { selection: Long? ->
+                val c = Calendar.getInstance()
+                c.timeInMillis = selection!!
+                val year = c[Calendar.YEAR]
+                val month = c[Calendar.MONTH]
+                val day = c[Calendar.DAY_OF_MONTH]
+                model.loadData(year, month + 1, day)
+            }
+            picker.show(requireActivity().supportFragmentManager, "taag")
+        }
+        selectDateMenuItem.setOnLongClickListener {
+            model.loadData()
+            true
+        }
+        model.preferences
+            .registerOnSharedPreferenceChangeListener(model.preferenceListener)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,13 +129,12 @@ class CurrencyConverterFragment : MainScreenFragment() {
         model.preferences
             .unregisterOnSharedPreferenceChangeListener(model.preferenceListener)
         currenciesAdapter = null
-        binding = null
     }
 
     override fun onResume() {
         super.onResume()
         keyboardListenerSubscription =
-            binding!!.root.addImeVisibilityListener { isVisible: Boolean ->
+            binding.root.addImeVisibilityListener { isVisible: Boolean ->
                 if (!isVisible) {
                     currenciesAdapter?.removeEditText()
                 }
@@ -153,7 +150,7 @@ class CurrencyConverterFragment : MainScreenFragment() {
     }
 
     override fun onReselected() {
-        binding?.currencyList?.smoothScrollToPosition(0)
+        binding.currencyList.smoothScrollToPosition(0)
     }
 
     override fun onShown(previousReplaceable: IReplaceableFragment?) {
@@ -161,7 +158,7 @@ class CurrencyConverterFragment : MainScreenFragment() {
             if (model.isUpdateOnFirstTabOpenEnabled()) {
                 model.loadData()
             } else {
-                updateSnackbar = binding!!.currencyList.createThemedSnackbar(
+                updateSnackbar = binding.currencyList.createThemedSnackbar(
                     R.string.message_manually_update,
                     Snackbar.LENGTH_INDEFINITE
                 ).apply {
@@ -208,11 +205,11 @@ class CurrencyConverterFragment : MainScreenFragment() {
     }
 
     private fun setCurrenciesUpdateDate(date: String) {
-        binding?.toolbar?.title = model.titleUpdatedString + " " + date
+        binding.toolbar.title = model.titleUpdatedString + " " + date
     }
 
     private fun setRefreshStatus(status: Boolean) {
-        if (status && binding!!.refresher.isRefreshing) return
-        binding!!.refresher.isRefreshing = status
+        if (status && binding.refresher.isRefreshing) return
+        binding.refresher.isRefreshing = status
     }
 }
