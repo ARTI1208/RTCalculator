@@ -1,0 +1,20 @@
+name: Run Static Analysis
+
+on:
+  push:
+    branches: [master, ci]
+  pull_request:
+    branches: [master, ci]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Run static analysis
+        uses: natiginfo/action-detekt-all@1.22.0-RC1
