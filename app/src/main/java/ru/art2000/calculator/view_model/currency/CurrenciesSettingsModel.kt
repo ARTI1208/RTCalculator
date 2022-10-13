@@ -3,6 +3,7 @@ package ru.art2000.calculator.view_model.currency
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -158,21 +159,23 @@ class CurrenciesSettingsModel(application: Application) : AndroidViewModel(appli
 
     override val recyclerViewBottomPadding: MutableLiveData<Int> = MutableLiveData(0)
 
-    init {
-        hiddenItems.observeForever {
+    fun observeAndUpdateDisplayedItems(lifecycleOwner: LifecycleOwner) {
+        hiddenItems.observe(lifecycleOwner) {
             selectedHiddenItems.retainAll(it)
             filterHiddenItems(lastSearchQuery)
         }
 
-        visibleItems.observeForever {
+        visibleItems.observe(lifecycleOwner) {
             selectedVisibleItems.retainAll(it)
             displayedVisibleItems.setAll(it)
         }
 
-
-        displayedVisibleItems.observeForever(object : LiveList.LiveListObserver<CurrencyItem>() {
-            override fun onAnyChanged(previousList: List<CurrencyItem>) {
-                val copy = ArrayList(displayedVisibleItems)
+        displayedVisibleItems.observe(lifecycleOwner, object : LiveList.LiveListObserver<CurrencyItem>() {
+            override fun onAnyChanged(
+                previousList: List<CurrencyItem>,
+                liveList: LiveList<CurrencyItem>
+            ) {
+                val copy = liveList.snapshot()
                 viewModelScope.launch(Job() + Dispatchers.IO) {
                     currencyDao.updateAll(copy)
                 }

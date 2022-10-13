@@ -66,7 +66,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
+        model.observeAndUpdateDisplayedItems(this)
         model.removedItems.observe(this) {
             generateUndoSnackBar(it, false)
         }
