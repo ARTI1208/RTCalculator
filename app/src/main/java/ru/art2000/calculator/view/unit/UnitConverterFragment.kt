@@ -2,6 +2,7 @@ package ru.art2000.calculator.view.unit
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.newInstanc
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.getLocalizedArray
+import java.lang.ref.WeakReference
 import java.util.*
 
 internal class UnitConverterFragment : MainScreenFragment() {
@@ -73,7 +75,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
             private var isFirstRun = true
             override fun onPageSelected(position: Int) {
                 if (!isFirstRun) {
-                    pager2Adapter.fragments[position].onReplace(null)
+                    pager2Adapter.getFragment(position).onReplace(null)
                 }
                 isFirstRun = false
             }
@@ -101,34 +103,41 @@ internal class UnitConverterFragment : MainScreenFragment() {
 
     override fun onShown(previousReplaceable: IReplaceableFragment?) {
         val adapter = binding.pager2.adapter as? UnitPagerAdapter ?: return
-        adapter.fragments[binding.pager2.currentItem].onShown(null)
+        adapter.getFragment(binding.pager2.currentItem).onShown(null)
     }
 
     private inner class UnitPagerAdapter(
-        viewType: String,
+        private val viewType: String,
     ) : FragmentStateAdapter(this@UnitConverterFragment) {
 
         private val categoriesNames = resources.getStringArray(R.array.unit_converter_categories)
 
-        val fragments = kotlin.run {
-            val categoriesEnglish = requireContext().getLocalizedArray(
-                Locale.ENGLISH,
-                R.array.unit_converter_categories
-            )
-            Array(categoriesNames.size) {
-                newInstance(
-                    categoriesEnglish[it].lowercase(Locale.ENGLISH),
-                    viewType
-                )
-            }
-        }
+        private val categoriesEnglish = requireContext().getLocalizedArray(
+            Locale.ENGLISH,
+            R.array.unit_converter_categories
+        )
+
+        private val sparseFragments =
+            SparseArray<WeakReference<BaseUnitPageFragment<*>>>(categoriesNames.size)
 
         fun getPageTitle(position: Int): CharSequence {
             return categoriesNames[position]
         }
 
+        fun getFragment(position: Int) = createFragment(position)
+
         override fun createFragment(position: Int): BaseUnitPageFragment<*> {
-            return fragments[position]
+
+            sparseFragments[position]?.get()?.also {
+                return it
+            }
+
+            return newInstance(
+                categoriesEnglish[position].lowercase(Locale.ENGLISH),
+                viewType
+            ).also {
+                sparseFragments[position] = WeakReference(it)
+            }
         }
 
         override fun getItemCount(): Int {
