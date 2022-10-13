@@ -38,8 +38,8 @@ import kotlin.collections.ArrayList
 
 class CurrenciesSettingsActivity : AutoThemeActivity() {
 
-    private lateinit var add: CurrenciesAddFragment
-    private lateinit var edit: CurrenciesEditFragment
+    private val add by lazy { CurrenciesAddFragment() }
+    private val edit by lazy { CurrenciesEditFragment() }
 
     private var deselect: MenuItem? = null
     private var select: MenuItem? = null
@@ -97,8 +97,6 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             })
         }
 
-        // check if fragment manager already contains fragments or create new ones
-        retrieveFragments()
         binding.pager2.apply {
 
             offscreenPageLimit = 2
@@ -256,18 +254,6 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             setAction(R.string.action_tooltip_got_it) { }
             show()
         }
-    }
-
-    private fun retrieveFragments() {
-        supportFragmentManager.fragments.forEach {
-            when (it) {
-                is CurrenciesAddFragment -> add = it
-                is CurrenciesEditFragment -> edit = it
-            }
-        }
-
-        if (!this::add.isInitialized) add = CurrenciesAddFragment()
-        if (!this::edit.isInitialized) edit = CurrenciesEditFragment()
     }
 
     private fun toggleElementsVisibility() {
