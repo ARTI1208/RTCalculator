@@ -1,8 +1,8 @@
-v1.4.1
+v1.4.1 (2022-10-12)
  - Fix unit name copying in unit converter
  - Improved stability of currencies searching in currencies' settings
 
-v1.4.0
+v1.4.0 (2022-10-07)
  - Material3-based styling
  - Add support of Android 12+ (API 31+) Dynamic Colors
  - Add support of Android 13+ (API 33+) Themed Icons
@@ -19,12 +19,12 @@ v1.4.0
  - Remove toasts with copied data on Android 13+ (API 33+)
  - Use secure connection to download currencies
 
-v1.3.1
+v1.3.1 (2022-04-13)
  - Fix black theme was applied in API21-22 for Follow System, Follow Battery instead of light one
  - Fix crash on API21 caused by MyDropDownPreference
  - Fix new currencies' values were not shown after data loaded until app restart
 
-v1.3.0
+v1.3.0 (2021-10-02)
  - Split unit converter name into short and full ones
  - Added ability to copy unit value only and value with short name
  - Added auto-hide of text input field in Currency Converter screen on IME close
@@ -37,40 +37,43 @@ v1.3.0
  - Fixed currencies update on every open of tab instead of only first one
  - Fixed wrong unit conversions
 
-v1.2.1
+v1.2.1 (2021-09-23)
  - Added support of Android versions 4.1-4.2 (API 16-17)
  - Fixed crash on open of Calculator Expertise View
  - Fixed snackbar message text color
 
-v1.2.0
+v1.2.0 (2021-09-16)
  - Split version for minApi 18 and 21. Version with minApi 21 uses Compose a little
  - Added more units to unit converter
  - Added auto scrolling on input in calculator and simple unit converter
  - Fixed crash in unit converter after changing theme
  - Fixed various styling nad layout problems on API <21
 
-v1.1.5
+v1.1.5 (2021-05-31)
  - Fixed wrong lexeme type naming in debug view in release mode
 
-v1.1.4
+v1.1.4 (2021-05-31)
  - Fixed operation buttons' behaviour when result was present for locales with gamma as floating part separator
  - Fixed: Result of previous calculations was not hidden when change expression not via calculator buttons (e.g. paste or cut)
 
-v1.1.3
+v1.1.3 (2021-05-04)
  - Fixed number sign detection regression introduced in previous version
  - Fixed navigation bar color in black theme on API 21+
  - Added calculator debug view on equals button long press
 
-v1.1.2
+v1.1.2 (2021-04-25)
  - Fixed handling binary minus after closing bracket
 
-v1.1.1
+v1.1.1 (2021-01-03)
  - Fixed crash in currency converter caused by proguard rules
  - Fixed crash in currency converter caused by new versions of OkHttp
 
-v1.1.0
+v1.1.0 (2021-01-03)
  - Updated preloaded currencies database
  - Get currencies by api calls instead of html parsing
 
-v1.0
+v1.0 (2021-01-02)
  - Initial Release
+
+v0.1 (2018-06-04)
+ - Initial commit
