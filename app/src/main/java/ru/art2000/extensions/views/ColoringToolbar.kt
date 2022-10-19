@@ -7,18 +7,13 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.core.content.res.use
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.R as R
 
-class ColoringToolbar : MaterialToolbar {
-
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
-        context,
-        attrs,
-        defStyle
-    )
+class ColoringToolbar @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.toolbarStyle,
+) : MaterialToolbar(context, attrs, defStyleAttr) {
 
     override fun inflateMenu(resId: Int) {
         super.inflateMenu(resId)
@@ -41,7 +36,7 @@ class ColoringToolbar : MaterialToolbar {
             it.getResourceId(0, -1)
         }
 
-        if (toolbarTheme < 0) return -1;
+        if (toolbarTheme < 0) return -1
 
         val itemColor = context.theme.obtainStyledAttributes(
             toolbarTheme, intArrayOf(androidx.appcompat.R.attr.titleTextColor)
@@ -52,9 +47,7 @@ class ColoringToolbar : MaterialToolbar {
         return itemColor
     }
 
-    private fun Drawable.tint(
-        color: Int = getToolbarItemColor(),
-    ) {
+    private fun Drawable.tint(color: Int = getToolbarItemColor()) {
         colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
     }
 

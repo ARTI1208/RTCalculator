@@ -1,6 +1,5 @@
 package ru.art2000.extensions.views
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
@@ -11,19 +10,14 @@ import android.widget.HorizontalScrollView
 /**
  * Adopted from https://stackoverflow.com/a/20033587
  */
-class HorizontalScrollViewCompat : HorizontalScrollView {
+class HorizontalScrollViewCompat @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = android.R.attr.horizontalScrollViewStyle,
+    defStyleRes: Int = 0,
+) : HorizontalScrollView(context, attrs, defStyleAttr, defStyleRes) {
 
     private var mGravityRight = false
-
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
-        context,
-        attrs,
-        defStyle
-    )
 
     @SuppressLint("RtlHardcoded")
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -51,7 +45,7 @@ class HorizontalScrollViewCompat : HorizontalScrollView {
                     p.gravity =
                         (if (horizontalGravity == Gravity.LEFT) Gravity.RIGHT else Gravity.END) or verticalGravity
                     childView.layoutParams = p
-                    super.onLayout(changed, attr.left, top, attr.right, bottom)
+                    super.onLayout(changed, left, top, right, bottom)
                 }
             }
         }

@@ -6,17 +6,13 @@ import android.util.AttributeSet
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatEditText
 
-class CalculatorEditText(
-        context: Context, attrs: AttributeSet?, defStyleAttr: Int
+class CalculatorEditText @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = android.R.attr.editTextStyle,
 ) : AppCompatEditText(context, attrs, defStyleAttr) {
 
-    constructor(context: Context, attrs: AttributeSet?) :
-            this(context, attrs, android.R.attr.editTextStyle)
-
-    constructor(context: Context) : this(context, null)
-
-    @Suppress("RedundantVisibilityModifier")
-    public var onSelectionChangedListener: OnSelectionChangedListener? = null
+    var onSelectionChangedListener: OnSelectionChangedListener? = null
 
     init {
         setShowSoftInputOnFocusCompat(false)
