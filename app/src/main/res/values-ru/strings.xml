@@ -140,4 +140,9 @@
 
     <string name="comment_item">Комментировать</string>
     <string name="comment_item_title">Установить комментарий</string>
+
+    <string name="app_dynamic_colors">Динамические цвета</string>
+    <string name="app_dynamic_colors_on">Применены</string>
+    <string name="app_dynamic_colors_off">Не применены</string>
+
 </resources>
