@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface CalculatorHistoryDao {
@@ -14,6 +15,9 @@ interface CalculatorHistoryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(item: HistoryDatabaseItem): Long
+
+    @Update
+    fun update(item: HistoryDatabaseItem)
 
     @Query("DELETE FROM history WHERE id = :id")
     fun deleteById(id: Int): Int

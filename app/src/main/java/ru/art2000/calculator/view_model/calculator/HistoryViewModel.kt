@@ -10,6 +10,8 @@ interface HistoryViewModel {
 
     fun copyHistoryItemToClipboard(item: HistoryDatabaseItem, type: Int): String
 
+    fun updateHistoryItem(item: HistoryDatabaseItem)
+
     fun removeHistoryItem(id: Int)
 
     fun clearHistoryDatabase()
@@ -19,5 +21,6 @@ interface HistoryViewModel {
         const val COPY_EXPR = 101
         const val COPY_RES = 102
         const val DELETE = 200
+        const val COMMENT = 300
     }
 }

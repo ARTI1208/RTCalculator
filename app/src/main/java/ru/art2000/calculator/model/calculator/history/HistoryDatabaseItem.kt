@@ -10,12 +10,14 @@ class HistoryDatabaseItem(
         val expression: String,
         val result: String,
         val date: Calendar,
+        var comment: String? = null,
 ) : DiffComparable<HistoryDatabaseItem> {
-
-    val fullExpression: String get() = "$expression=$result"
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
+
+    val fullExpression: String get() = "$expression=$result"
+
     override fun isSameItem(anotherItem: HistoryDatabaseItem): Boolean {
         return id == anotherItem.id
     }

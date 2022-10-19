@@ -103,6 +103,7 @@
 
     <string name="history_clear_confirm">Вы уверены, что хотите удалить историю?</string>
     <string name="cancel">Отмена</string>
+    <string name="ok">OK</string>
 
     <string name="unit_view_simple_extra_action_title">Выберите назначение кнопки</string>
     <string name="unit_view_simple_swap">Сменить местами</string>
@@ -136,4 +137,7 @@
     <string name="currency_update_interval_8">Каждые 8 часов</string>
     <string name="currency_update_interval_12">Каждые 12 часов</string>
     <string name="currency_update_interval_24">Каждые 24 часа</string>
+
+    <string name="comment_item">Комментировать</string>
+    <string name="comment_item_title">Установить комментарий</string>
 </resources>

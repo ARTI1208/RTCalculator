@@ -26,7 +26,6 @@ import ru.art2000.helpers.GeneralHelper
 import ru.art2000.helpers.PrefsHelper
 import java.time.LocalDate
 import java.util.*
-import kotlin.concurrent.thread
 
 class CalculatorModel(
         application: Application
@@ -100,14 +99,20 @@ class CalculatorModel(
         return context.getString(R.string.copied) + " " + copiedText
     }
 
+    override fun updateHistoryItem(item: HistoryDatabaseItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            historyDao.update(item)
+        }
+    }
+
     override fun removeHistoryItem(id: Int) {
-        thread {
+        viewModelScope.launch(Dispatchers.IO) {
             historyDao.deleteById(id)
         }
     }
 
     override fun clearHistoryDatabase() {
-        thread {
+        viewModelScope.launch(Dispatchers.IO) {
             historyDao.clear()
         }
     }

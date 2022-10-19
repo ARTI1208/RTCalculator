@@ -5,19 +5,23 @@ import android.os.Build
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.View.OnCreateContextMenuListener
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemHistoryDateBinding
 import ru.art2000.calculator.databinding.ItemHistoryListBinding
+import ru.art2000.calculator.model.calculator.history.HistoryDatabaseItem
 import ru.art2000.calculator.model.calculator.history.HistoryDateItem
 import ru.art2000.calculator.model.calculator.history.HistoryListItem
 import ru.art2000.calculator.model.calculator.history.HistoryValueItem
 import ru.art2000.calculator.view.calculator.HistoryListAdapter.HistoryViewHolder
 import ru.art2000.calculator.view_model.calculator.HistoryViewModel
 import ru.art2000.extensions.collections.calculateDiff
+import ru.art2000.extensions.views.textValue
 import ru.art2000.extensions.views.toViewString
 
 class HistoryListAdapter internal constructor(
@@ -82,11 +86,18 @@ class HistoryListAdapter internal constructor(
 
     inner class ValueViewHolder internal constructor(private val binding: ItemHistoryListBinding) : HistoryViewHolder(binding.root), OnCreateContextMenuListener {
 
+        private val currentDbItem: HistoryDatabaseItem
+            get() = (historyList[bindingAdapterPosition] as HistoryValueItem).dbItem
+
         override fun bind(historyListItem: HistoryListItem) {
             require(historyListItem is HistoryValueItem)
 
-            binding.expression.text = historyListItem.dbItem.expression
-            binding.result.text = historyListItem.dbItem.result
+            historyListItem.dbItem.apply {
+                binding.expression.text = expression
+                binding.result.text = result
+                binding.comment.text = comment
+                binding.comment.visibility = if (comment.isNullOrEmpty()) View.GONE else View.VISIBLE
+            }
         }
 
         override fun onCreateContextMenu(menu: ContextMenu, v: View,
@@ -102,30 +113,48 @@ class HistoryListAdapter internal constructor(
                 onContextItemSelected(it)
             }
 
+            menu.addHistoryMenuItem(HistoryViewModel.COMMENT, R.string.comment_item)
             menu.addHistoryMenuItem(HistoryViewModel.COPY_ALL, R.string.context_menu_copy_all)
             menu.addHistoryMenuItem(HistoryViewModel.COPY_EXPR, R.string.context_menu_copy_expr)
             menu.addHistoryMenuItem(HistoryViewModel.COPY_RES, R.string.context_menu_copy_res)
             menu.addHistoryMenuItem(HistoryViewModel.DELETE, R.string.delete_record)
-//            menu.removeItem(HistoryViewModel.DELETE)
         }
 
         private fun onContextItemSelected(menuItem: MenuItem): Boolean {
             val id = menuItem.itemId
             val isCopy = id >= HistoryViewModel.COPY_ALL && id <= HistoryViewModel.COPY_RES
             val toastText = if (isCopy) {
-                val selectedItem = (historyList[bindingAdapterPosition] as HistoryValueItem).dbItem
-                model.copyHistoryItemToClipboard(selectedItem, id)
+                model.copyHistoryItemToClipboard(currentDbItem, id)
             } else if (id == HistoryViewModel.DELETE) {
-                val selectedItem = (historyList[bindingAdapterPosition] as HistoryValueItem).dbItem
+                val selectedItem = currentDbItem
                 model.removeHistoryItem(selectedItem.id)
                 context.getString(R.string.deleted) + " " + selectedItem.fullExpression
+            } else if (id == HistoryViewModel.COMMENT) {
+                showCommentDialog()
+                null
             } else return true
 
             // API 33+ features UI showing copied content, so skip toasts for them
             if (!isCopy || Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-                Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+                toastText?.also { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
             }
             return true
+        }
+
+        private fun showCommentDialog() {
+
+            val dbItem = currentDbItem
+            val editText = EditText(context)
+            editText.textValue = dbItem.comment ?: ""
+
+            MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.comment_item_title)
+                .setView(editText)
+                .setNegativeButton(R.string.cancel) { _, _ -> }
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    dbItem.comment = editText.text.toString().takeIf { it.isNotEmpty() }
+                    model.updateHistoryItem(dbItem)
+                }.show()
         }
 
         init {
