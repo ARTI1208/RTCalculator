@@ -313,10 +313,6 @@ class CalculatorFragment : MainScreenFragment() {
         return R.string.title_calc
     }
 
-    override fun onBackPressed(): Boolean {
-        return ensureHistoryPanelClosed()
-    }
-
     override fun onReselected() {
         ensureHistoryPanelClosed()
     }

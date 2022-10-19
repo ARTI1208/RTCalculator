@@ -31,16 +31,6 @@ import ru.art2000.helpers.isLightTheme
 
 class MainActivity : AutoThemeActivity() {
     private val binding by viewBinding<ActivityMainBinding>(CreateMethod.INFLATE)
-    private var doubleBackToExitPressedOnce = false
-
-    private val currentFragment: INavigationFragment
-        get() {
-            val replaceable = requireNotNull(
-                binding.navigation.getReplaceable(binding.pager2.currentItem)
-            )
-            return replaceable as? INavigationFragment
-                ?: throw IllegalStateException("Current fragment ($replaceable) is not an instance of INavigationFragment")
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         PrefsHelper.initialSetup(this)
@@ -123,12 +113,6 @@ class MainActivity : AutoThemeActivity() {
                 window.navigationBarColor = back.resolvedTintColor
             }
         }
-
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                handleBackPress()
-            }
-        })
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -139,18 +123,6 @@ class MainActivity : AutoThemeActivity() {
             PrefsHelper.currencyBackgroundUpdateInterval,
             ExistingPeriodicWorkPolicy.KEEP,
         )
-    }
-
-    private fun handleBackPress() {
-        if (currentFragment.onBackPressed()) {
-            if (doubleBackToExitPressedOnce) {
-                finish()
-                return
-            }
-            doubleBackToExitPressedOnce = true
-            Toast.makeText(this, R.string.twice_tap_exit, Toast.LENGTH_SHORT).show()
-            Handler(mainLooper).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-        }
     }
 
     private companion object {
