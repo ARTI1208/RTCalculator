@@ -9,6 +9,7 @@
         android:supportsRtl="true"
         android:allowBackup="false"
         android:name=".CalculatorApplication"
+        android:enableOnBackInvokedCallback="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity
