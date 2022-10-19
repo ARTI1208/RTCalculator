@@ -8,23 +8,16 @@
     android:paddingHorizontal="5dp"
     android:baselineAligned="false">
 
-    <HorizontalScrollView
+    <TextView
+        android:id="@+id/value"
+        android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/value"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="start|center_vertical"
-            android:textSize="25sp"
-            android:paddingHorizontal="4dp"
-            android:scrollHorizontally="true"
-            android:maxLines="1"
-            tools:text="1" />
-
-    </HorizontalScrollView>
+        android:gravity="start|center_vertical"
+        android:textSize="25sp"
+        android:paddingHorizontal="4dp"
+        android:maxLines="1"
+        tools:text="1" />
 
     <include layout="@layout/item_unit_converter_name_part" />
 

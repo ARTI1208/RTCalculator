@@ -1,6 +1,5 @@
 package ru.art2000.calculator.view.unit
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Pair
 import android.view.*
@@ -179,17 +178,10 @@ class UnitListAdapter private constructor(
 
         internal constructor(binding: ItemUnitConverterListBinding) : super(binding.root) {
             dimensionValueView = binding.value
-            val nameBinding = ItemUnitConverterNamePartBinding.bind(binding.root)
-            dimensionNameView = nameBinding.type
-            dimensionShortNameView = nameBinding.typeShort
-            init()
         }
 
         internal constructor(binding: ItemUnitConverterListPowerfulBinding) : super(binding.root) {
             dimensionValueView = binding.value
-            val nameBinding = ItemUnitConverterNamePartBinding.bind(binding.root)
-            dimensionNameView = nameBinding.type
-            dimensionShortNameView = nameBinding.typeShort
             binding.value.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) return@OnFocusChangeListener
                 currentDimension = bindingAdapterPosition
@@ -201,7 +193,13 @@ class UnitListAdapter private constructor(
                 }
             }
             binding.value.addTextChangedListener(textWatcher)
-            init()
+        }
+
+        init {
+            itemView.setOnCreateContextMenuListener(this)
+            val nameBinding = ItemUnitConverterNamePartBinding.bind(itemView)
+            dimensionNameView = nameBinding.type
+            dimensionShortNameView = nameBinding.typeShort
         }
 
         override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
@@ -230,16 +228,6 @@ class UnitListAdapter private constructor(
             dimensionShortNameView.setText(item.shortNameResourceId)
             dimensionValueView.text = doubleToString(item.currentValue)
             setTextColors(this, isSelected)
-        }
-
-        @SuppressLint("ClickableViewAccessibility")
-        private fun init() {
-            itemView.setOnCreateContextMenuListener(this)
-            dimensionValueView.isLongClickable = true
-            dimensionValueView.setOnTouchListener { v, _ ->
-                v.parent.requestDisallowInterceptTouchEvent(true)
-                false
-            }
         }
 
         fun updateValue(text: CharSequence) {
