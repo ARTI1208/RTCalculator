@@ -3,15 +3,6 @@ package ru.art2000.calculator.view
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.view.MenuItem
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.core.view.OnApplyWindowInsetsListener
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.get
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.ExistingPeriodicWorkPolicy
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -24,7 +15,6 @@ import ru.art2000.calculator.view.currency.CurrencyConverterFragment
 import ru.art2000.calculator.view.settings.SettingsFragment
 import ru.art2000.calculator.view.unit.UnitConverterFragment
 import ru.art2000.extensions.activities.AutoThemeActivity
-import ru.art2000.extensions.fragments.INavigationFragment
 import ru.art2000.extensions.views.allowDrawingUnderStatusBar
 import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.isLightTheme
@@ -40,26 +30,7 @@ class MainActivity : AutoThemeActivity() {
 
         window.allowDrawingUnderStatusBar(true)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.pager2,
-            OnApplyWindowInsetsListener { v, insets ->
-                val newInsets = ViewCompat.onApplyWindowInsets(v, insets)
-                if (newInsets.isConsumed) return@OnApplyWindowInsetsListener newInsets
-                var consumed = false
-
-                val recyclerView = binding.pager2[0] as RecyclerView
-
-                repeat(recyclerView.childCount) { i ->
-                    val child = recyclerView[i]
-                    ViewCompat.dispatchApplyWindowInsets(child, newInsets)
-                    if (newInsets.isConsumed) {
-                        consumed = true
-                    }
-                }
-
-                if (consumed) WindowInsetsCompat.CONSUMED else newInsets
-            })
-
-        binding.navigation.setOnItemSelectedListener { item: MenuItem ->
+        binding.navigation.setOnItemSelectedListener { item ->
             PrefsHelper.setDefaultTab(item.order)
             intent.action = when (item.itemId) {
                 R.id.navigation_unit -> ACTION_CONVERTER
@@ -70,29 +41,11 @@ class MainActivity : AutoThemeActivity() {
             true
         }
 
-        var currencyConverterFragment: CurrencyConverterFragment? = null
-        var calculatorFragment: CalculatorFragment? = null
-        var unitConverterFragment: UnitConverterFragment? = null
-        var settingsFragment: SettingsFragment? = null
-
-        for (fragment in supportFragmentManager.fragments) {
-            when (fragment) {
-                is CurrencyConverterFragment -> currencyConverterFragment = fragment
-                is CalculatorFragment -> calculatorFragment = fragment
-                is UnitConverterFragment -> unitConverterFragment = fragment
-                is SettingsFragment -> settingsFragment = fragment
-            }
-        }
-
-        currencyConverterFragment ?: run { currencyConverterFragment = CurrencyConverterFragment() }
-        calculatorFragment ?: run { calculatorFragment = CalculatorFragment() }
-        unitConverterFragment ?: run { unitConverterFragment = UnitConverterFragment() }
-        settingsFragment ?: run { settingsFragment = SettingsFragment() }
-
         binding.navigation.setupWithViewPager2(
             this,
             binding.pager2,
-            currencyConverterFragment!!, calculatorFragment!!, unitConverterFragment!!, settingsFragment!!,
+            CurrencyConverterFragment(), CalculatorFragment(),
+            UnitConverterFragment(), SettingsFragment(),
         )
 
         val tabId = when (intent.action) {
