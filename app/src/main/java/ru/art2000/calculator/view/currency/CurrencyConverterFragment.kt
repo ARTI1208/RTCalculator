@@ -15,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.datepicker.*
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.CurrencyLayoutBinding
 import ru.art2000.calculator.model.currency.LoadingState
@@ -28,6 +29,7 @@ import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.helpers.getColorAttribute
 import java.util.*
 
+@AndroidEntryPoint
 class CurrencyConverterFragment : MainScreenFragment() {
 
     private val model by viewModels<CurrencyConverterModel>()
@@ -105,8 +107,8 @@ class CurrencyConverterFragment : MainScreenFragment() {
             model.loadData()
             true
         }
-        model.preferences
-            .registerOnSharedPreferenceChangeListener(model.preferenceListener)
+
+        model.listenDateUpdate()
 
         return binding.root
     }
@@ -126,8 +128,7 @@ class CurrencyConverterFragment : MainScreenFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        model.preferences
-            .unregisterOnSharedPreferenceChangeListener(model.preferenceListener)
+        model.stopListeningDateUpdate()
         currenciesAdapter = null
     }
 

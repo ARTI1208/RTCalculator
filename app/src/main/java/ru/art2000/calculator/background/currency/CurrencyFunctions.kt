@@ -2,7 +2,6 @@ package ru.art2000.calculator.background.currency
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.*
@@ -11,15 +10,16 @@ import org.simpleframework.xml.convert.AnnotationStrategy
 import org.simpleframework.xml.core.Persister
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
-import ru.art2000.calculator.R
 import ru.art2000.calculator.model.currency.CurrenciesList
 import ru.art2000.calculator.model.currency.CurrencyRate
 import ru.art2000.calculator.model.currency.Valute
 import ru.art2000.calculator.view_model.currency.CbrAPI
-import ru.art2000.calculator.view_model.currency.CurrencyConverterModel
 import ru.art2000.calculator.view_model.currency.CurrencyDependencies
 import ru.art2000.extensions.platform.TLSSocketFactory
 import ru.art2000.extensions.platform.platformTrustManager
+import ru.art2000.helpers.PreferenceDefaults
+import ru.art2000.helpers.PreferenceKeys
+import ru.art2000.helpers.PreferenceValues
 import java.util.concurrent.TimeUnit
 
 object CurrencyFunctions {
@@ -36,9 +36,9 @@ object CurrencyFunctions {
         val uniqueWorkName = "downloadCurrencies"
 
         val networkType = when (downloadType) {
-            "wifi" -> NetworkType.UNMETERED
-            "any" -> NetworkType.CONNECTED
-            "no_update" -> {
+            PreferenceValues.VALUE_CURRENCY_BACKGROUND_WIFI -> NetworkType.UNMETERED
+            PreferenceValues.VALUE_CURRENCY_BACKGROUND_ANY -> NetworkType.CONNECTED
+            PreferenceValues.VALUE_CURRENCY_BACKGROUND_NO_UPDATE -> {
                 workManager.cancelUniqueWork(uniqueWorkName)
                 return
             }
@@ -54,7 +54,7 @@ object CurrencyFunctions {
                         .setRequiresBatteryNotLow(true)
                         .build()
                 ).build()
-        Log.d("CalcEnq", "enqueued for $downloadType")
+
         workManager.enqueueUniquePeriodicWork(
             uniqueWorkName,
             existingWorkPolicy,
@@ -125,7 +125,7 @@ object CurrencyFunctions {
             }
             callback.onSuccess(currencies.date)
 
-            preferences.edit { putString(CurrencyConverterModel.updateDateKey, currencies.date) }
+            preferences.edit { putString(PreferenceKeys.KEY_CURRENCY_UPDATE_DATE, currencies.date) }
 
             val currencyRates = convertToCurrencyRates(currencies.valutes)
             CurrencyDependencies.getCurrencyDatabase(context).currencyDao().update(currencyRates)
@@ -135,8 +135,8 @@ object CurrencyFunctions {
     }
 
     private fun SharedPreferences.getCurrentUpdateDate(context: Context): String = getString(
-        CurrencyConverterModel.updateDateKey,
-        context.getString(R.string.preloaded_currencies_date)
+        PreferenceKeys.KEY_CURRENCY_UPDATE_DATE,
+        context.getString(PreferenceDefaults.DEFAULT_CURRENCY_UPDATE_DATE)
     )!!
 
     private fun convertToCurrencyRates(valutes: List<Valute>): List<CurrencyRate> {

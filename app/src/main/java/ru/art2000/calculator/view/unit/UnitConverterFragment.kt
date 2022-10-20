@@ -1,42 +1,36 @@
 package ru.art2000.calculator.view.unit
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitLayoutBinding
 import ru.art2000.calculator.view.MainScreenFragment
-import ru.art2000.calculator.view.settings.PreferenceKeys
 import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.newInstance
 import ru.art2000.extensions.fragments.IReplaceableFragment
-import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.UnitPreferenceHelper
 import ru.art2000.helpers.getLocalizedArray
 import java.lang.ref.WeakReference
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 internal class UnitConverterFragment : MainScreenFragment() {
+
+    @Inject
+    lateinit var prefsHelper: UnitPreferenceHelper
 
     private var pageChangeCallback2: OnPageChangeCallback? = null
     private var pager2Mediator: TabLayoutMediator? = null
     private val binding by viewBinding<UnitLayoutBinding>(CreateMethod.INFLATE)
-
-    private var currentViewType: String = PrefsHelper.unitViewType
-
-    private val preferenceListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-            if (key == PreferenceKeys.KEY_UNIT_VIEW) {
-                updateAdapter(prefs.getString(key, "simple")!!)
-            }
-        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,25 +39,19 @@ internal class UnitConverterFragment : MainScreenFragment() {
     ): View {
 
         updateAdapter()
-
-        currentViewType = PrefsHelper.unitViewType
-        PreferenceManager
-            .getDefaultSharedPreferences(requireContext())
-            .registerOnSharedPreferenceChangeListener(preferenceListener)
+        prefsHelper.setOnViewTypeChanged(::updateAdapter)
 
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        PreferenceManager
-            .getDefaultSharedPreferences(requireContext())
-            .unregisterOnSharedPreferenceChangeListener(preferenceListener)
+        prefsHelper.setOnViewTypeChanged(null)
         pageChangeCallback2 = null
         pager2Mediator = null
     }
 
-    private fun updateAdapter(viewType: String = PrefsHelper.unitViewType) {
+    private fun updateAdapter(viewType: String = prefsHelper.unitViewType) {
 
         val pager2Adapter = UnitPagerAdapter(viewType)
         binding.pager2.adapter = pager2Adapter

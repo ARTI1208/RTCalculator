@@ -3,14 +3,27 @@ package ru.art2000.calculator
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
-import ru.art2000.helpers.PrefsHelper
+import androidx.work.ExistingPeriodicWorkPolicy
+import dagger.hilt.android.HiltAndroidApp
+import ru.art2000.calculator.background.currency.CurrencyFunctions
+import ru.art2000.helpers.PreferenceHelper
+import javax.inject.Inject
 
+@HiltAndroidApp
 class CalculatorApplication : MultiDexApplication() {
+
+    @Inject
+    lateinit var prefsHelper: PreferenceHelper
 
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        PrefsHelper.initialSetup(this)
+        CurrencyFunctions.setupCurrencyDownload(
+            this,
+            prefsHelper.currencyBackgroundUpdateType,
+            prefsHelper.currencyBackgroundUpdateInterval,
+            ExistingPeriodicWorkPolicy.KEEP,
+        )
     }
 
     companion object {

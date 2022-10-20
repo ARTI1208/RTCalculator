@@ -19,7 +19,6 @@ import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIde
 import ru.art2000.calculator.view_model.currency.CurrencyListAdapterModel
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.helpers.PrefsHelper
 import ru.art2000.helpers.getColorAttribute
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -45,12 +44,6 @@ class CurrencyListAdapter internal constructor(
         mContext.resources.getDimension(R.dimen.currency_list_item_value_normal)
     private var data: List<CurrencyItem> = emptyList()
     private var recycler: RecyclerView? = null
-
-    init {
-        if (PrefsHelper.isShouldSaveCurrencyConversion) {
-            adapterModel.lastInputItemValue = PrefsHelper.conversionValue
-        }
-    }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -83,7 +76,7 @@ class CurrencyListAdapter internal constructor(
         if (adapterModel.lastInputItemPosition == -1) {
             for (i in newData.indices) {
                 val newItem = newData[i]
-                if (newItem.code == PrefsHelper.conversionCode) {
+                if (newItem.code == adapterModel.savedInputItemCode) {
                     adapterModel.lastInputItemPosition = i
                     break
                 }
@@ -163,10 +156,7 @@ class CurrencyListAdapter internal constructor(
                 }
 
                 override fun afterTextChanged(s: Editable) {
-                    if (PrefsHelper.isShouldSaveCurrencyConversion) PrefsHelper.putConversionValues(
-                        codeView.text.toString(),
-                        adapterModel.lastInputItemValue
-                    )
+                    adapterModel.saveConversionIfNeeded(codeView.text.toString())
                 }
             })
         }

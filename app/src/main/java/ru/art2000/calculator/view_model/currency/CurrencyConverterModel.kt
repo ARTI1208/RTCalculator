@@ -3,12 +3,13 @@
 package ru.art2000.calculator.view_model.currency
 
 import android.app.Application
-import android.content.SharedPreferences
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
@@ -16,11 +17,16 @@ import ru.art2000.calculator.background.currency.CurrencyDownloadCallback
 import ru.art2000.calculator.background.currency.CurrencyFunctions
 import ru.art2000.calculator.model.currency.LoadingState
 import ru.art2000.extensions.arch.context
+import ru.art2000.helpers.CurrencyPreferenceHelper
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
 
-
-class CurrencyConverterModel(application: Application) : AndroidViewModel(application), CurrencyListAdapterModel {
+@HiltViewModel
+class CurrencyConverterModel @Inject constructor(
+    @ApplicationContext application: Context,
+    private val prefsHelper: CurrencyPreferenceHelper,
+): AndroidViewModel(application as Application), CurrencyListAdapterModel {
 
     private val db = CurrencyDependencies.getCurrencyDatabase(application)
 
@@ -28,12 +34,7 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     val loadingState: LiveData<LoadingState> = mLoadingState
 
-    val preferences = PreferenceManager.getDefaultSharedPreferences(application)!!
-
-    private val mUpdateDate by lazy {
-        MutableLiveData<String>(preferences.getString(
-                updateDateKey, context.getString(R.string.preloaded_currencies_date)))
-    }
+    private val mUpdateDate by lazy { MutableLiveData(prefsHelper.updateDate) }
 
     val updateDate: LiveData<String> by ::mUpdateDate
 
@@ -43,16 +44,19 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
 
     override var lastInputItemPosition: Int = -1
 
-    override var lastInputItemValue: Double = 1.0
+    override var lastInputItemValue: Double = savedInputItemValue
+
+    override val savedInputItemCode: String
+        get() = prefsHelper.conversionCode
+
+    override val savedInputItemValue: Double
+        get() = prefsHelper.conversionValue
+
+    override fun saveConversionIfNeeded(code: String) {
+        prefsHelper.putConversionValuesIfNeeded(code, lastInputItemValue)
+    }
 
     val titleUpdatedString: String by lazy { context.getString(R.string.currency_date) }
-
-    val preferenceListener =
-            SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-                if (key == updateDateKey) {
-                    mUpdateDate.postValue(sharedPreferences.getString(key, mUpdateDate.value))
-                }
-            }
 
     private val currencyDownloadCallback = object : CurrencyDownloadCallback {
         override fun onDownloadStarted(): Boolean {
@@ -121,8 +125,15 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun isUpdateOnFirstTabOpenEnabled() =
-            preferences.getBoolean(updateCurrenciesOnTabOpenKey, updateCurrenciesOnTabOpenDefault)
+    fun isUpdateOnFirstTabOpenEnabled() = prefsHelper.updateOnFirstTabOpen
+
+    fun listenDateUpdate() {
+        prefsHelper.updateDateProperty.listen { mUpdateDate.postValue(it) }
+    }
+
+    fun stopListeningDateUpdate() {
+        prefsHelper.updateDateProperty.stopListening()
+    }
 
     private fun millisFromString(date: String): Long {
         val day = date.takeWhile { it != '.' }.toInt()
@@ -146,15 +157,5 @@ class CurrencyConverterModel(application: Application) : AndroidViewModel(applic
     private fun millisFromDate(): Long {
         val c = Calendar.getInstance()
         return c.timeInMillis
-    }
-
-    companion object {
-
-        const val updateDateKey = "currency_update_date"
-
-        private const val updateCurrenciesOnTabOpenKey = "update_currencies_on_tab_open"
-
-        private const val updateCurrenciesOnTabOpenDefault = true
-
     }
 }

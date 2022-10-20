@@ -1,3 +1,7 @@
+plugins {
+    id("com.google.dagger.hilt.android") version "2.44" apply false
+}
+
 buildscript {
     val kotlinVersion = libs.versions.kotlin.get()
 
@@ -6,7 +10,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("com.android.tools.build:gradle:7.3.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }

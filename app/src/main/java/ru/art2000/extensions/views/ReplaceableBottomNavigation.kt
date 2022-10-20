@@ -40,7 +40,6 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
             onNavigationItemSelected(item)
             true
         }
-        setOnItemReselectedListener { item -> onNavigationItemReselected(item) }
     }
 
     fun getReplaceable(position: Int): IReplaceableFragment? {

@@ -4,11 +4,11 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
-import ru.art2000.calculator.CalculatorApplication
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
-import ru.art2000.calculator.view.settings.PreferenceKeys
-import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.PreferenceKeys
 
+@AndroidEntryPoint
 open class AutoThemeActivity : DayNightActivity() {
     private val listener =
         OnSharedPreferenceChangeListener { _, key ->
@@ -36,11 +36,11 @@ open class AutoThemeActivity : DayNightActivity() {
     }
 
     private fun applyTheming() {
-        if (CalculatorApplication.DYNAMIC_COLORS_AVAILABLE && PrefsHelper.areDynamicColorsEnabled()) {
+        if (generalPrefsHelper.areDynamicColorsEnabled) {
             setTheme(R.style.RT_AppTheme_System)
             DynamicColors.applyToActivityIfAvailable(this)
         } else {
-            setTheme(PrefsHelper.appTheme)
+            setTheme(generalPrefsHelper.appTheme)
         }
     }
 }

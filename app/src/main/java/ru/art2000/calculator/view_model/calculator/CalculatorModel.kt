@@ -5,6 +5,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
@@ -22,14 +24,17 @@ import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFlo
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
 import ru.art2000.extensions.arch.context
 import ru.art2000.extensions.language.dotSafeToDouble
+import ru.art2000.helpers.CalculatorPreferenceHelper
 import ru.art2000.helpers.GeneralHelper
-import ru.art2000.helpers.PrefsHelper
 import java.time.LocalDate
 import java.util.*
+import javax.inject.Inject
 
-class CalculatorModel(
-        application: Application
-) : AndroidViewModel(application), HistoryViewModel, ExpressionInputViewModel {
+@HiltViewModel
+class CalculatorModel @Inject constructor(
+    @ApplicationContext application: Context,
+    private val prefsHelper: CalculatorPreferenceHelper,
+) : AndroidViewModel(application as Application), HistoryViewModel, ExpressionInputViewModel {
 
     private val historyDao = CalculatorDependencies.getHistoryDatabase(application).historyDao()
 
@@ -287,7 +292,7 @@ class CalculatorModel(
         countStr = calculations.calculateForDisplay(expr, liveAngleType.value!!)
 
         when (countStr) {
-            Calculations.calculationDivideByZero -> countStr = context.getString(PrefsHelper.zeroDivResult)
+            Calculations.calculationDivideByZero -> countStr = context.getString(prefsHelper.zeroDivResult)
             Calculations.calculationError -> {
                 countStr = context.getString(R.string.error)
                 err = true
@@ -301,7 +306,7 @@ class CalculatorModel(
 
     fun formatNumberForDisplay(calculationNumber: CalculationNumber<Double>?): String {
         return when {
-            calculationNumber == null -> context.getString(PrefsHelper.zeroDivResult)
+            calculationNumber == null -> context.getString(prefsHelper.zeroDivResult)
             calculationNumber.isInfinite -> context.getString(R.string.error)
             else -> calculations.formatter.format(calculationNumber)
         }

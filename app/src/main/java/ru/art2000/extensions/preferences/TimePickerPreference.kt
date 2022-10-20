@@ -8,6 +8,7 @@ import android.util.TypedValue
 import androidx.preference.DialogPreference
 import androidx.preference.Preference
 import ru.art2000.extensions.fragments.ExtendedPreferenceFragment
+import ru.art2000.helpers.PreferenceHelper
 import androidx.preference.R as PreferenceR
 
 
@@ -34,7 +35,7 @@ sealed class TimePickerPreference @JvmOverloads constructor(
             updateSummary()
         }
 
-    val timeString: String
+    private val timeString: String
         get() = String.format("%02d", hour) + ":" + String.format("%02d", minute)
 
     companion object {
@@ -51,22 +52,6 @@ sealed class TimePickerPreference @JvmOverloads constructor(
         private const val DEFAULT_HOUR = 0
 
         private const val DEFAULT_MINUTE = 0
-
-        @JvmStatic
-        fun parseStringTime(time: String): Pair<Int, Int> {
-            val parts = time.split(':')
-            if (parts.size != 2) return DEFAULT_HOUR to DEFAULT_MINUTE
-
-            val hour = (parts.first().toIntOrNull() ?: DEFAULT_HOUR)
-                .coerceAtLeast(0)
-                .coerceAtMost(23)
-
-            val minute = (parts.last().toIntOrNull() ?: DEFAULT_MINUTE)
-                .coerceAtLeast(0)
-                .coerceAtMost(59)
-
-            return hour to minute
-        }
 
         fun newPickerDialog(preference: Preference): ExtendedPreferenceFragment.DialogShower {
             val fragment = TimePickerPreferenceDialog()
@@ -92,14 +77,10 @@ sealed class TimePickerPreference @JvmOverloads constructor(
             defaultValue?.toString()
         } ?: DEFAULT_VALUE
 
-        val timePair = parseStringTime(value)
+        val timePair = PreferenceHelper.parseStringTime(value)
 
         hour = timePair.first
         minute = timePair.second
-    }
-
-    public override fun persistString(value: String?): Boolean {
-        return super.persistString(value)
     }
 
     fun onTimeSelected(hour: Int, minute: Int) {

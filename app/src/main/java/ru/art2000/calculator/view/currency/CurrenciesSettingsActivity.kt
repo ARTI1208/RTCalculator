@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
@@ -33,9 +34,11 @@ import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.extensions.writeAndUpdateUi
-import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.CurrencyPreferenceHelper
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class CurrenciesSettingsActivity : AutoThemeActivity() {
 
     private val add by lazy { CurrenciesAddFragment() }
@@ -57,6 +60,9 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
     private val binding by viewBinding<ActivityCurrenciesEditorBinding>(CreateMethod.INFLATE)
     private val model: CurrenciesSettingsModel by viewModels()
+
+    @Inject
+    lateinit var prefsHelper: CurrencyPreferenceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -239,7 +245,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
 
             addCallback(object : Snackbar.Callback() {
                 override fun onShown(sb: Snackbar) {
-                    PrefsHelper.setDeleteTooltipShown()
+                    prefsHelper.setDeleteTooltipShown()
                 }
 
                 override fun onDismissed(transientBottomBar: Snackbar, event: Int) {

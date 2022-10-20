@@ -20,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sothree.slidinguppanel.PanelSlideListener
 import com.sothree.slidinguppanel.PanelState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding
 import ru.art2000.calculator.databinding.HistoryLayoutBinding
@@ -33,6 +34,7 @@ import ru.art2000.helpers.GeneralHelper
 import java.util.*
 import kotlin.math.abs
 
+@AndroidEntryPoint
 class CalculatorFragment : MainScreenFragment() {
 
     private val model by viewModels<CalculatorModel>()

@@ -4,11 +4,29 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import ru.art2000.calculator.R
 import androidx.appcompat.app.AppCompatDelegate
-import ru.art2000.helpers.PrefsHelper
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import ru.art2000.helpers.GeneralPreferenceHelper
 import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
+@AndroidEntryPoint
 open class DayNightActivity : AppCompatActivity() {
+
+    val generalPrefsHelper: GeneralPreferenceHelper by lazy {
+        val holder = EntryPointAccessors.fromApplication<PreferenceHelperHolder>(this)
+        holder.prefsHelper
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface PreferenceHelperHolder {
+        val prefsHelper: GeneralPreferenceHelper
+    }
+
     override fun onResume() {
         super.onResume()
         if (isResumeNightModeChangeEnabled) {
@@ -25,13 +43,13 @@ open class DayNightActivity : AppCompatActivity() {
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
-            if (PrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_DayNightBlack
+            if (generalPrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_DayNightBlack
         } else if (actualResId == R.style.RT_AppTheme_System) {
             newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            if (PrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_SystemBlack
+            if (generalPrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_SystemBlack
         } else if (actualResId == R.style.RT_AppTheme_Battery) {
             newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-            if (PrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_BatteryBlack
+            if (generalPrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_BatteryBlack
         } else if (actualResId == R.style.RT_AppTheme_Dark || actualResId == R.style.RT_AppTheme_Black) {
             newMode = AppCompatDelegate.MODE_NIGHT_YES
         } else {
@@ -60,8 +78,8 @@ open class DayNightActivity : AppCompatActivity() {
         val minute = calendar[Calendar.MINUTE]
         val second = calendar[Calendar.SECOND]
         val seconds = (hour * 60 + minute) * 60 + second
-        val startSeconds = PrefsHelper.darkThemeActivationTime
-        val endSeconds = PrefsHelper.darkThemeDeactivationTime
+        val startSeconds = generalPrefsHelper.darkThemeActivationTime
+        val endSeconds = generalPrefsHelper.darkThemeDeactivationTime
         return if (startSeconds < endSeconds) {
             seconds in startSeconds until endSeconds
         } else {
@@ -76,8 +94,8 @@ open class DayNightActivity : AppCompatActivity() {
         }
 
     protected fun requestThemeCheck() {
-        var theme = PrefsHelper.appTheme
-        if (PrefsHelper.areDynamicColorsEnabled()) {
+        var theme = generalPrefsHelper.appTheme
+        if (generalPrefsHelper.areDynamicColorsEnabled) {
             theme = R.style.RT_AppTheme_System
         }
         if (theme == R.style.RT_AppTheme_DayNight) {

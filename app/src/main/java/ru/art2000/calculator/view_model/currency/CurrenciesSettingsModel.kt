@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -15,18 +17,22 @@ import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIde
 import ru.art2000.extensions.collections.ArrayLiveList
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.writeAndUpdateUi
-import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.CurrencyPreferenceHelper
 import ru.art2000.helpers.getLocalizedString
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class CurrenciesSettingsModel(application: Application) : AndroidViewModel(application),
-    CurrenciesAddModel, CurrenciesEditModel {
+@HiltViewModel
+class CurrenciesSettingsModel @Inject constructor(
+    @ApplicationContext application: Context,
+    prefsHelper: CurrencyPreferenceHelper,
+) : AndroidViewModel(application as Application), CurrenciesAddModel, CurrenciesEditModel {
 
     private val mSelectedTab = MutableLiveData(0)
 
     val liveIsFirstTimeTooltipShown: MutableLiveData<Boolean> =
-        MutableLiveData(!PrefsHelper.isDeleteTooltipShown)
+        MutableLiveData(!prefsHelper.isDeleteTooltipShown)
 
     var selectedTab: Int
         get() = mSelectedTab.value ?: -1

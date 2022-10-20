@@ -7,6 +7,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 val composeVersion = "1.2.1"
@@ -193,6 +194,11 @@ dependencies {
     implementation("org.apache.commons:commons-math3:3.6.1")
 
     implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
+
+    implementation("com.google.dagger:hilt-android:2.44")
+    implementation("androidx.lifecycle:lifecycle-process:2.5.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("androidx.fragment:fragment-ktx:1.5.3")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
 
