@@ -14,18 +14,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import ru.art2000.calculator.R
-import ru.art2000.helpers.PrefsHelper
+import ru.art2000.helpers.GeneralPreferenceHelper
 
 @Composable
-fun AutoThemed(content: @Composable () -> Unit) {
+fun AutoThemed(
+    prefsHelper: GeneralPreferenceHelper,
+    content: @Composable () -> Unit,
+) {
 
-    val colors = when (PrefsHelper.areDynamicColorsEnabled()) {
+    val colors = when (prefsHelper.areDynamicColorsEnabled) {
         true -> when (isSystemInDarkTheme()) {
             true -> darkCalculatorColors(dynamicDarkColorScheme(LocalContext.current))
             false -> lightCalculatorColors(dynamicLightColorScheme(LocalContext.current))
         }
         false -> when (isSystemInDarkTheme()) {
-            true -> if (isBlackTheme()) blackCalculatorColors() else darkCalculatorColors()
+            true -> {
+                val blackTheme = prefsHelper.appTheme != R.style.RT_AppTheme_Dark &&
+                        prefsHelper.isAppAutoDarkThemeBlack
+
+                if (blackTheme) blackCalculatorColors() else darkCalculatorColors()
+            }
             false -> lightCalculatorColors()
         }
     }
@@ -227,6 +235,3 @@ private fun myBlackColors() = myDarkColors(
     surface = colorResource(R.color.BlackTheme_surface),
     surfaceVariant = colorResource(R.color.BlackTheme_surfaceVariant),
 )
-
-private fun isBlackTheme() = PrefsHelper.appTheme != R.style.RT_AppTheme_Dark &&
-        PrefsHelper.isAppAutoDarkThemeBlack

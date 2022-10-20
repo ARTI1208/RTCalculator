@@ -32,8 +32,8 @@ import ru.art2000.calculator.view_model.settings.IInfoViewModel
 
 class InfoActivity : InfoActivityBase() {
 
-    public override fun onCreate(savedInstance: Bundle?) {
-        super.onCreate(savedInstance)
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         if (BuildConfig.USE_COMPOSE) {
             setupCompose()
@@ -46,7 +46,7 @@ class InfoActivity : InfoActivityBase() {
 
     private fun setupCompose() {
         setContent {
-            AutoThemed {
+            AutoThemed(generalPrefsHelper) {
                 InfoScreenRoot(model)
             }
         }
