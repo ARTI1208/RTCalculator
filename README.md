@@ -60,17 +60,18 @@ Android calculator app
   * Last opened
 
 ## Used technologies, patterns, ...
-* Started in Java, migrating to Kotlin
+* Started in Java, migrated to Kotlin
 * MVVM
 * Room
 * Retrofit
 * Part of UI uses Jetpack Compose in minApi21 version
 * JUnit
+* CI (unit testing and publishing releases)
+* DI (started)
 
 ## TODOs
-* Fully migrate to Kotlin
-* DI
-* CI
+* DI (continue)
+* CI (code style)
 * More tests
 * Bug fixes
 * Upcoming Android features support (if any useful)
