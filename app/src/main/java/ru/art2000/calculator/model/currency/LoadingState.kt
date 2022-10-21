@@ -1,11 +1,11 @@
 package ru.art2000.calculator.model.currency
 
-enum class LoadingState {
+enum class LoadingState(val finishesLoading: Boolean) {
 
-    UNINITIALISED,
-    LOADING_STARTED,
-    LOADING_ENDED,
-    UNKNOWN_ERROR,
-    NETWORK_ERROR
+    UNINITIALISED(false),
+    LOADING_STARTED(false),
+    LOADING_ENDED(true),
+    UNKNOWN_ERROR(true),
+    NETWORK_ERROR(true)
 
 }

@@ -6,10 +6,14 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.widget.ImageViewCompat
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.CopyMode
 import ru.art2000.calculator.model.unit.UnitConverterItem
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.*
 import ru.art2000.helpers.GeneralHelper
 
@@ -45,26 +49,36 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         setSimpleViewButtonsClickListener()
 
-        binding.valueOriginal.addTextChangedListener(object : SimpleTextWatcher() {
+        val textWatcher = object : SimpleTextWatcher() {
 
             override fun afterTextChanged(s: Editable) {
                 model.liveExpression.value = s.toString()
             }
-        })
+        }
+        binding.valueOriginal.addTextChangedListener(textWatcher)
 
-        binding.orHsv.autoScrollOnInput()
+        binding.orHsv.autoScrollOnInput(viewLifecycleOwner.lifecycle)
 
-        model.liveExpression.observe(viewLifecycleOwner) { expression: String ->
-            if (expression != binding.valueOriginal.text?.toString()) {
-                binding.valueOriginal.setText(expression)
+        launchRepeatOnStarted {
+            launchAndCollect(model.liveExpression) { expression ->
+                if (expression != binding.valueOriginal.text?.toString()) {
+                    binding.valueOriginal.setText(expression)
+                }
+
+                updateResult(binding.spinnerFrom.selectedItemPosition, expression)
             }
 
-            updateResult(binding.spinnerFrom.selectedItemPosition, expression)
+            launchAndCollect(model.liveInputSelection) { (first, second) ->
+                binding.valueOriginal.setSelection(first, second)
+            }
         }
 
-        model.liveInputSelection.observe(viewLifecycleOwner) { (first, second) ->
-            binding.valueOriginal.setSelection(first, second)
-        }
+        viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
+                binding.valueOriginal.onSelectionChangedListener = null
+                binding.valueOriginal.removeTextChangedListener(textWatcher)
+            }
+        })
 
         binding.valueOriginal.onSelectionChangedListener = CalculatorEditText.OnSelectionChangedListener { selStart, selEnd ->
             model.inputSelection = Pair(selStart, selEnd)

@@ -1,17 +1,16 @@
 package ru.art2000.calculator.model.calculator.history
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CalculatorHistoryDao {
 
     @Query("SELECT * FROM history")
-    fun getAll(): LiveData<List<HistoryDatabaseItem>>
+    fun getAll(): Flow<List<HistoryDatabaseItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: HistoryDatabaseItem): Long

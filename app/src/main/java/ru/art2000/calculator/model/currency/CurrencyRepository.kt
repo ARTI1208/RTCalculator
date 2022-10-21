@@ -1,14 +1,14 @@
 package ru.art2000.calculator.model.currency
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import ru.art2000.calculator.background.currency.CurrencyDownloadCallback
 import java.util.Calendar
 
 interface CurrencyRepository {
 
-    fun getVisibleItems(): LiveData<List<CurrencyItem>>
+    fun getVisibleItems(): Flow<List<CurrencyItem>>
 
-    fun getHiddenItems(): LiveData<List<CurrencyItem>>
+    fun getHiddenItems(): Flow<List<CurrencyItem>>
 
     suspend fun updateRates(items: List<CurrencyRate>): Int
 

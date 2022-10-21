@@ -8,9 +8,9 @@ import android.view.View.OnCreateContextMenuListener
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.flow.Flow
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemHistoryDateBinding
 import ru.art2000.calculator.databinding.ItemHistoryListBinding
@@ -20,15 +20,17 @@ import ru.art2000.calculator.model.calculator.history.HistoryListItem
 import ru.art2000.calculator.model.calculator.history.HistoryValueItem
 import ru.art2000.calculator.view.calculator.HistoryListAdapter.HistoryViewHolder
 import ru.art2000.calculator.view_model.calculator.HistoryViewModel
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.views.textValue
 import ru.art2000.extensions.views.toViewString
 
 class HistoryListAdapter internal constructor(
         private val context: Context,
-        lifecycleOwner: LifecycleOwner?,
+        lifecycleOwner: LifecycleOwner,
         private val model: HistoryViewModel,
-        items: LiveData<List<HistoryListItem>>
+        items: Flow<List<HistoryListItem>>
 ) : RecyclerView.Adapter<HistoryViewHolder>() {
 
     var historyList: List<HistoryListItem> = listOf()
@@ -46,8 +48,6 @@ class HistoryListAdapter internal constructor(
             result.dispatchUpdatesTo(this)
         }
     }
-
-
 
     override fun getItemViewType(position: Int): Int {
         return when(historyList[position]) {
@@ -172,7 +172,9 @@ class HistoryListAdapter internal constructor(
     }
 
     init {
-        items.observe(lifecycleOwner!!) { setNewData(it) }
+        lifecycleOwner.launchRepeatOnStarted {
+            launchAndCollect(items) { setNewData(it) }
+        }
     }
 
     companion object {

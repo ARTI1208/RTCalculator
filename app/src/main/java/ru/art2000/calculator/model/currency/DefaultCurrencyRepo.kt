@@ -1,6 +1,6 @@
 package ru.art2000.calculator.model.currency
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import ru.art2000.calculator.background.currency.CurrencyDownloadCallback
 import ru.art2000.helpers.CurrencyPreferenceHelper
 import java.util.*
@@ -12,11 +12,11 @@ class DefaultCurrencyRepo @Inject constructor(
     private val prefsHelper: CurrencyPreferenceHelper,
 ) : CurrencyRepository {
 
-    override fun getVisibleItems(): LiveData<List<CurrencyItem>> {
+    override fun getVisibleItems(): Flow<List<CurrencyItem>> {
         return currencyDao.getVisibleItems()
     }
 
-    override fun getHiddenItems(): LiveData<List<CurrencyItem>> {
+    override fun getHiddenItems(): Flow<List<CurrencyItem>> {
         return currencyDao.getHiddenItems()
     }
 

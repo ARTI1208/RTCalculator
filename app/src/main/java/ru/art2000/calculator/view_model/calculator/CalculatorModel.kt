@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
@@ -34,18 +35,18 @@ class CalculatorModel @Inject constructor(
     private val historyRepository: HistoryRepository,
 ) : AndroidViewModel(application as Application), HistoryViewModel, ExpressionInputViewModel {
 
-    override val liveExpression: MutableLiveData<String> = createExpressionLiveData()
+    override val liveExpression = createLiveExpression()
 
-    override val liveInputSelection: MutableLiveData<Pair<Int, Int>> = createInputLiveData()
+    override val liveInputSelection = createLiveInput()
 
-    private val mLiveResult: MutableLiveData<String?> = MutableLiveData(null)
-    val liveResult: LiveData<String?> get() = mLiveResult
+    private val mLiveResult: MutableStateFlow<String?> = MutableStateFlow(null)
+    val liveResult: StateFlow<String?> get() = mLiveResult
 
-    private val mLiveMemory: MutableLiveData<Double> = MutableLiveData(0.0)
-    val liveMemory: LiveData<Double> = mLiveMemory
+    private val mLiveMemory: MutableStateFlow<Double> = MutableStateFlow(0.0)
+    val liveMemory: StateFlow<Double> = mLiveMemory
 
-    private val mLiveAngleType: MutableLiveData<AngleType> = MutableLiveData(AngleType.DEGREES)
-    val liveAngleType: LiveData<AngleType> = mLiveAngleType
+    private val mLiveAngleType: MutableStateFlow<AngleType> = MutableStateFlow(AngleType.DEGREES)
+    val liveAngleType: StateFlow<AngleType> = mLiveAngleType
 
     private var result: String?
         get() = mLiveResult.value
@@ -56,21 +57,20 @@ class CalculatorModel @Inject constructor(
     // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
     override val calculations: Calculations<Double> = DoubleCalculations(CalculatorFormatter)
 
-    override val historyListItems: LiveData<List<HistoryListItem>>
-        get() = Transformations.map(historyRepository.getAll()) { items ->
-            var calendar: Calendar? = null
-            items.fold(mutableListOf()) { acc, historyDatabaseItem ->
-                if (!isSameDay(calendar, historyDatabaseItem.date)) {
-                    val date = historyDatabaseItem.date.let {
-                        LocalDate.ofYearDay(it[Calendar.YEAR], it[Calendar.DAY_OF_YEAR])
-                    }
-                    acc += HistoryDateItem(date)
-                    calendar = historyDatabaseItem.date
+    override val historyListItems = historyRepository.getAll().map { items ->
+        var calendar: Calendar? = null
+        items.fold(mutableListOf<HistoryListItem>()) { acc, historyDatabaseItem ->
+            if (!isSameDay(calendar, historyDatabaseItem.date)) {
+                val date = historyDatabaseItem.date.let {
+                    LocalDate.ofYearDay(it[Calendar.YEAR], it[Calendar.DAY_OF_YEAR])
                 }
-                acc += HistoryValueItem(historyDatabaseItem)
-                acc
+                acc += HistoryDateItem(date)
+                calendar = historyDatabaseItem.date
             }
+            acc += HistoryValueItem(historyDatabaseItem)
+            acc
         }
+    }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
 
     override fun copyHistoryItemToClipboard(item: HistoryDatabaseItem, type: Int): String {
         val clip: ClipData?
@@ -282,7 +282,7 @@ class CalculatorModel @Inject constructor(
         }
         setExpression(expr)
 
-        countStr = calculations.calculateForDisplay(expr, liveAngleType.value!!)
+        countStr = calculations.calculateForDisplay(expr, liveAngleType.value)
 
         when (countStr) {
             Calculations.calculationDivideByZero -> countStr = context.getString(prefsHelper.zeroDivResult)
@@ -306,7 +306,7 @@ class CalculatorModel @Inject constructor(
     }
 
     fun handleMemoryOperation(operation: CharSequence) {
-        var memory = mLiveMemory.value ?: 0.0
+        var memory = mLiveMemory.value
         when (operation.last()) {
             '+' -> {
                 onResult()

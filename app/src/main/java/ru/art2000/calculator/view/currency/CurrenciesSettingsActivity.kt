@@ -30,6 +30,8 @@ import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.activities.AutoThemeActivity
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
 import ru.art2000.extensions.views.createThemedSnackbar
@@ -73,12 +75,10 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         model.observeAndUpdateDisplayedItems(this)
-        model.removedItems.observe(this) {
-            generateUndoSnackBar(it, false)
-        }
 
-        model.liveIsFirstTimeTooltipShown.observe(this) {
-            deleteTooltip?.dismiss()
+        launchRepeatOnStarted {
+            launchAndCollect(model.removedItems) { generateUndoSnackBar(it, false) }
+            launchAndCollect(model.liveIsFirstTimeTooltipShown) { deleteTooltip?.dismiss() }
         }
 
         binding.floatingActionButton.apply {
@@ -230,9 +230,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
     }
 
     private fun showDeleteTip() {
-        if (!model.liveIsFirstTimeTooltipShown.value!!) {
-            return
-        }
+        if (!model.liveIsFirstTimeTooltipShown.value) return
 
         deleteTooltip?.also {
             if (!it.isShown) it.show()
@@ -274,7 +272,7 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             select?.isVisible = selectedCount < displayedCount
             deselect?.isVisible = selectedCount > 0
 
-            val totalCount = model.hiddenItems.value?.size ?: 0
+            val totalCount = model.hiddenItems.value.size
             binding.searchViewLayout.visibility = if (totalCount > 0) View.VISIBLE else View.GONE
         } else {
             val selectedCount = model.selectedVisibleItems.size

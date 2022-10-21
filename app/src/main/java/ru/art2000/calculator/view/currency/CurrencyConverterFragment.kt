@@ -21,6 +21,8 @@ import ru.art2000.calculator.databinding.CurrencyLayoutBinding
 import ru.art2000.calculator.model.currency.LoadingState
 import ru.art2000.calculator.view.MainScreenFragment
 import ru.art2000.calculator.view_model.currency.CurrencyConverterModel
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.ListenerSubscription
 import ru.art2000.extensions.views.addImeVisibilityListener
@@ -112,14 +114,10 @@ class CurrencyConverterFragment : MainScreenFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        model.loadingState.observe(viewLifecycleOwner) {
-            applyLoadingState(it)
-        }
-        model.updateDate.observe(viewLifecycleOwner) {
-            setCurrenciesUpdateDate(it)
-        }
-        model.visibleList.observe(viewLifecycleOwner) {
-            currenciesAdapter?.setNewData(it)
+        launchRepeatOnStarted {
+            launchAndCollect(model.loadingState) { applyLoadingState(it) }
+            launchAndCollect(model.updateDate) { setCurrenciesUpdateDate(it) }
+            launchAndCollect(model.visibleList) { currenciesAdapter?.setNewData(it) }
         }
     }
 

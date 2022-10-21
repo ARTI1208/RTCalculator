@@ -1,10 +1,10 @@
 package ru.art2000.calculator.view_model.currency
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.StateFlow
 
 interface CurrencyModificationModel {
 
     val currentQuery: String
 
-    val recyclerViewBottomPadding: LiveData<Int>
+    val recyclerViewBottomPadding: StateFlow<Int>
 }

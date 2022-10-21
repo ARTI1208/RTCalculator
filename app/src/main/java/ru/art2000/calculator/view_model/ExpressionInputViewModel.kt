@@ -1,6 +1,6 @@
 package ru.art2000.calculator.view_model
 
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.art2000.calculator.view_model.calculator.Calculations
 import ru.art2000.calculator.view_model.calculator.isBinaryOperationSymbol
 
@@ -21,18 +21,18 @@ interface ExpressionInputViewModel {
         val floatingPointZero = zero + floatingPointSymbolString
     }
 
-    val liveExpression: MutableLiveData<String>
+    val liveExpression: MutableStateFlow<String>
 
     var expression: String
-        get() = liveExpression.value!!
+        get() = liveExpression.value
         set(value) {
             liveExpression.value = value
         }
 
-    val liveInputSelection: MutableLiveData<Pair<Int, Int>>
+    val liveInputSelection: MutableStateFlow<Pair<Int, Int>>
 
     var inputSelection: Pair<Int, Int>
-        get() = liveInputSelection.value!!
+        get() = liveInputSelection.value
         set(value) {
             liveInputSelection.value = value
         }
@@ -135,16 +135,16 @@ interface ExpressionInputViewModel {
         inputSelection = newSelection to newSelection
     }
 
-    fun createExpressionLiveData(initialValue: String? = null): MutableLiveData<String> {
-        return MutableLiveData(initialValue ?: "")
+    fun createLiveExpression(initialValue: String? = null): MutableStateFlow<String> {
+        return MutableStateFlow(initialValue ?: "")
     }
 
     /*
      * Moves selection caret to initial expression end. Call only after
      * liveExpression is assigned a value
      */
-    fun createInputLiveData(): MutableLiveData<Pair<Int, Int>> {
+    fun createLiveInput(): MutableStateFlow<Pair<Int, Int>> {
         val selection = expression.length
-        return MutableLiveData(selection to selection)
+        return MutableStateFlow(selection to selection)
     }
 }

@@ -1,12 +1,12 @@
 package ru.art2000.calculator.view_model.calculator
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import ru.art2000.calculator.model.calculator.history.HistoryListItem
 import ru.art2000.calculator.model.calculator.history.HistoryDatabaseItem
 
 interface HistoryViewModel {
 
-    val historyListItems: LiveData<List<HistoryListItem>>
+    val historyListItems: Flow<List<HistoryListItem>>
 
     fun copyHistoryItemToClipboard(item: HistoryDatabaseItem, type: Int): String
 

@@ -126,22 +126,13 @@ class CalculatorButtonsPagerAdapter(
 
             binding.expertiseIo.tvInput.setText(expr)
 
-            val debugView = model.calculations.createDebugView(mContext, expr, model.liveAngleType.value!!)
+            val debugView = model.calculations.createDebugView(mContext, expr, model.liveAngleType.value)
             binding.root.addView(debugView)
 
-            val result = model.calculations.calculate(expr, model.liveAngleType.value!!)
+            val result = model.calculations.calculate(expr, model.liveAngleType.value)
             val calculationNumberResult = result?.let { model.calculations.field.toCalculationNumber(it) }
 
             binding.expertiseIo.tvResult.text = model.formatNumberForDisplay(calculationNumberResult)
-
-//            val ioBackground = ContextCompat.getDrawable(
-//                    mContext,
-//                    R.drawable.calculator_input_bg_debug
-//            ) as GradientDrawable
-//            val inputBackgroundColor = mContext.getColorAttribute(com.google.android.material.R.attr.colorSurfaceVariant)
-//            ioBackground.setColor(inputBackgroundColor)
-
-//            binding.expertiseIoWrapper.background = ioBackground
 
             return@setOnLongClickListener true
         }

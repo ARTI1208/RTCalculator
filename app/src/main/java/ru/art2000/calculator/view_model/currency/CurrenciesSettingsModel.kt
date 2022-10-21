@@ -4,16 +4,20 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.model.currency.CurrencyRepository
 import ru.art2000.calculator.model.currency.getNameIdentifier
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.ArrayLiveList
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.writeAndUpdateUi
@@ -30,19 +34,17 @@ class CurrenciesSettingsModel @Inject constructor(
     private val repository: CurrencyRepository,
 ) : AndroidViewModel(application as Application), CurrenciesAddModel, CurrenciesEditModel {
 
-    private val mSelectedTab = MutableLiveData(0)
+    private val mSelectedTab = MutableStateFlow(0)
 
-    val liveIsFirstTimeTooltipShown: MutableLiveData<Boolean> =
-        MutableLiveData(!prefsHelper.isDeleteTooltipShown)
+    val liveIsFirstTimeTooltipShown = MutableStateFlow(!prefsHelper.isDeleteTooltipShown)
 
     var selectedTab: Int
-        get() = mSelectedTab.value ?: -1
+        get() = mSelectedTab.value
         set(value) {
             mSelectedTab.value = value
         }
 
-
-    val removedItems: MutableLiveData<List<CurrencyItem>> = MutableLiveData(emptyList())
+    val removedItems = MutableStateFlow(emptyList<CurrencyItem>())
 
     suspend fun makeItemsVisible(items: List<CurrencyItem>) {
         repository.makeItemsVisible(items)
@@ -71,7 +73,7 @@ class CurrenciesSettingsModel @Inject constructor(
             val newList: List<CurrencyItem>
 
             if (query.isEmpty()) {
-                newList = hiddenItems.value ?: listOf()
+                newList = hiddenItems.value
             } else {
                 newList = ArrayList()
 
@@ -79,7 +81,7 @@ class CurrenciesSettingsModel @Inject constructor(
 
                 val lowerQuery = query.lowercase(mainLocale)
 
-                val allItems = hiddenItems.value ?: listOf()
+                val allItems = hiddenItems.value
 
                 val context: Context = getApplication()
 
@@ -106,6 +108,7 @@ class CurrenciesSettingsModel @Inject constructor(
     }
 
     override val hiddenItems = repository.getHiddenItems()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     override val selectedHiddenItems: LiveList<CurrencyItem> = ArrayLiveList()
 
@@ -155,22 +158,23 @@ class CurrenciesSettingsModel @Inject constructor(
     override var isEditSelectionMode: Boolean = false
 
 
-    val liveQuery: MutableLiveData<String> = MutableLiveData("")
+    val liveQuery = MutableStateFlow("")
 
     override val currentQuery: String
-        get() = liveQuery.value!!
+        get() = liveQuery.value
 
-    override val recyclerViewBottomPadding: MutableLiveData<Int> = MutableLiveData(0)
+    override val recyclerViewBottomPadding = MutableStateFlow(0)
 
     fun observeAndUpdateDisplayedItems(lifecycleOwner: LifecycleOwner) {
-        hiddenItems.observe(lifecycleOwner) {
-            selectedHiddenItems.retainAll(it)
-            filterHiddenItems(lastSearchQuery)
-        }
-
-        visibleItems.observe(lifecycleOwner) {
-            selectedVisibleItems.retainAll(it)
-            displayedVisibleItems.setAll(it)
+        lifecycleOwner.launchRepeatOnStarted {
+            launchAndCollect(hiddenItems) {
+                selectedHiddenItems.retainAll(it)
+                filterHiddenItems(lastSearchQuery)
+            }
+            launchAndCollect(visibleItems) {
+                selectedVisibleItems.retainAll(it)
+                displayedVisibleItems.setAll(it)
+            }
         }
 
         displayedVisibleItems.observe(lifecycleOwner, object : LiveList.LiveListObserver<CurrencyItem>() {

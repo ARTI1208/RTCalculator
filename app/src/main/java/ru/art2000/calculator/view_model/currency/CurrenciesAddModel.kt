@@ -1,12 +1,12 @@
 package ru.art2000.calculator.view_model.currency
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.StateFlow
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.extensions.collections.LiveList
 
 interface CurrenciesAddModel : CurrencyModificationModel {
 
-    val hiddenItems: LiveData<List<CurrencyItem>>
+    val hiddenItems: StateFlow<List<CurrencyItem>>
 
     val selectedHiddenItems: LiveList<CurrencyItem>
 

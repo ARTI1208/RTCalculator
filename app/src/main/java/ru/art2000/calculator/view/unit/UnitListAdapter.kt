@@ -9,8 +9,8 @@ import android.view.View.OnFocusChangeListener
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemUnitConverterListBinding
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding
@@ -19,6 +19,7 @@ import ru.art2000.calculator.model.unit.CopyMode
 import ru.art2000.calculator.model.unit.UnitConverterItem
 import ru.art2000.calculator.view.unit.UnitListAdapter.UnitItemHolder
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.SimpleTextWatcher
 import ru.art2000.helpers.getColorAttribute
 
@@ -31,12 +32,12 @@ class UnitListAdapter private constructor(
     position: Int,
 ) : RecyclerView.Adapter<UnitItemHolder>() {
 
-    private val selectedPosition = MutableLiveData(Pair(0, 0))
+    private val selectedPosition = MutableStateFlow(Pair(0, 0))
 
     private var currentDimension: Int
-        get() = selectedPosition.value!!.second
+        get() = selectedPosition.value.second
         set(dimension) {
-            val oldValue = selectedPosition.value!!.second
+            val oldValue = selectedPosition.value.second
             if (oldValue == dimension) return
             val newPair = Pair(oldValue, dimension)
             selectedPosition.value = newPair
@@ -109,16 +110,18 @@ class UnitListAdapter private constructor(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recycler = recyclerView
-        selectedPosition.observe(lifecycleOwner) { pair: Pair<Int, Int> ->
-            if (pair.first == pair.second) return@observe
-            setTextColors(
-                recycler?.findViewHolderForAdapterPosition(pair.first) as UnitItemHolder?,
-                false
-            )
-            setTextColors(
-                recycler?.findViewHolderForAdapterPosition(pair.second) as UnitItemHolder?,
-                true
-            )
+        lifecycleOwner.launchRepeatOnStarted {
+            selectedPosition.collect { pair ->
+                if (pair.first == pair.second) return@collect
+                setTextColors(
+                    recycler?.findViewHolderForAdapterPosition(pair.first) as UnitItemHolder?,
+                    false
+                )
+                setTextColors(
+                    recycler?.findViewHolderForAdapterPosition(pair.second) as UnitItemHolder?,
+                    true
+                )
+            }
         }
     }
 

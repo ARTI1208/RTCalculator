@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.unit.CopyMode
@@ -15,9 +14,9 @@ import ru.art2000.calculator.view_model.calculator.DoubleCalculations
 
 class UnitConverterModel : ViewModel(), ExpressionInputViewModel {
 
-    override val liveExpression: MutableLiveData<String> = createExpressionLiveData(one)
+    override val liveExpression = createLiveExpression(one)
 
-    override val liveInputSelection: MutableLiveData<Pair<Int, Int>> = createInputLiveData()
+    override val liveInputSelection = createLiveInput()
 
     override val calculations = DoubleCalculations(UnitConverterFormatter)
 

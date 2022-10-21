@@ -24,11 +24,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.CalculatorLayoutBinding
 import ru.art2000.calculator.databinding.HistoryLayoutBinding
-import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.model.calculator.history.HistoryDateItem
 import ru.art2000.calculator.model.calculator.history.HistoryValueItem
 import ru.art2000.calculator.view.MainScreenFragment
 import ru.art2000.calculator.view_model.calculator.CalculatorModel
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.*
 import ru.art2000.helpers.GeneralHelper
 import java.util.*
@@ -55,45 +56,44 @@ class CalculatorFragment : MainScreenFragment() {
                 model.liveExpression.value = s.toString()
             }
         })
-        binding.calculatorIo.inputScrollView.autoScrollOnInput()
+        binding.calculatorIo.inputScrollView.autoScrollOnInput(viewLifecycleOwner.lifecycle)
         inputTv.onSelectionChangedListener =
             CalculatorEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
                 model.inputSelection = Pair(selStart, selEnd)
             }
-        model.liveExpression.observe(viewLifecycleOwner) { expression: String ->
-            if (expression == Objects.requireNonNull(
-                    inputTv.text
-                ).toString()
-            ) return@observe
-            inputTv.setText(expression)
-        }
-        model.liveInputSelection.observe(viewLifecycleOwner) { (first, second) ->
-            inputTv.setSelection(first, second)
-        }
-        model.liveResult.observe(viewLifecycleOwner) { result: String? ->
-            if (result == null) {
-                resultTV.visibility = View.INVISIBLE
-                resultTV.text = null
-                return@observe
+
+        launchRepeatOnStarted {
+            launchAndCollect(model.liveExpression) { expression ->
+                if (expression == inputTv.text?.toString()) return@launchAndCollect
+                inputTv.setText(expression)
             }
-            resultTV.text = result
-            resultTV.visibility = View.VISIBLE
-        }
-        model.liveMemory.observe(viewLifecycleOwner) { memoryValue ->
-            if (abs(memoryValue) < 1e-5) {
-                binding.calculatorIo.memory.visibility = View.INVISIBLE
-                binding.calculatorIo.infoDivider.visibility = View.INVISIBLE
-                return@observe
+            launchAndCollect(model.liveInputSelection) { (first, second) ->
+                inputTv.setSelection(first, second)
             }
-            binding.calculatorIo.infoDivider.visibility = View.VISIBLE
-            val newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue)
-            binding.calculatorIo.memory.text = newMemoryText
-            binding.calculatorIo.memory.visibility = View.VISIBLE
-        }
-        model.liveAngleType.observe(viewLifecycleOwner) { angleType: AngleType ->
-            binding.calculatorIo.degRadTv.text = angleType.toString().uppercase(
-                Locale.getDefault()
-            )
+            launchAndCollect(model.liveResult) { result ->
+                if (result == null) {
+                    resultTV.visibility = View.INVISIBLE
+                    resultTV.text = null
+                    return@launchAndCollect
+                }
+                resultTV.text = result
+                resultTV.visibility = View.VISIBLE
+            }
+            launchAndCollect(model.liveMemory) { memoryValue ->
+                if (abs(memoryValue) < 1e-5) {
+                    binding.calculatorIo.memory.visibility = View.INVISIBLE
+                    binding.calculatorIo.infoDivider.visibility = View.INVISIBLE
+                    return@launchAndCollect
+                }
+                binding.calculatorIo.infoDivider.visibility = View.VISIBLE
+                val newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue)
+                binding.calculatorIo.memory.text = newMemoryText
+                binding.calculatorIo.memory.visibility = View.VISIBLE
+            }
+            launchAndCollect(model.liveAngleType) { angleType ->
+                binding.calculatorIo.degRadTv.text =
+                    angleType.toString().uppercase(Locale.getDefault())
+            }
         }
         setupHistoryPart()
 
@@ -203,11 +203,13 @@ class CalculatorFragment : MainScreenFragment() {
         historyPanel.scrollBottom.setOnClickListener {
             historyRecyclerView.smoothScrollToPosition(adapter.itemCount)
         }
-        model.historyListItems.observe(viewLifecycleOwner) { data ->
-            val visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
-            historyPanel.clearHistory.visibility = visibility
-            historyPanel.scrollUp.visibility = visibility
-            historyPanel.scrollBottom.visibility = visibility
+        launchRepeatOnStarted {
+            launchAndCollect(model.historyListItems) { data ->
+                val visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
+                historyPanel.clearHistory.visibility = visibility
+                historyPanel.scrollUp.visibility = visibility
+                historyPanel.scrollBottom.visibility = visibility
+            }
         }
     }
 
@@ -242,9 +244,11 @@ class CalculatorFragment : MainScreenFragment() {
         historyRecyclerView.addItemDecoration(
             DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         )
-        model.historyListItems.observe(viewLifecycleOwner) { data ->
-            if (data.isNotEmpty()) {
-                historyRecyclerView.scrollToPosition(adapter.itemCount - 1)
+        launchRepeatOnStarted {
+            launchAndCollect(model.historyListItems) { data ->
+                if (data.isNotEmpty()) {
+                    historyRecyclerView.scrollToPosition(adapter.itemCount - 1)
+                }
             }
         }
         historyFloatingDate.visibility = View.GONE

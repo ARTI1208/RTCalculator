@@ -4,10 +4,12 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Build
 import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.TextView
@@ -15,7 +17,9 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.util.Consumer
 import androidx.core.view.*
-import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 
 operator fun TextView.plusAssign(text: CharSequence) {
     append(text)
@@ -41,50 +45,66 @@ fun createTextEmptyView(context: Context, @StringRes text: Int): TextView {
     return emptyView
 }
 
-fun HorizontalScrollView.autoScrollOnInput() {
+fun HorizontalScrollView.autoScrollOnInput(lifecycle: Lifecycle) {
     val childEditText = getChildAt(0) as? EditText ?: return
 
-    var textChanged = false
-    childEditText.addTextChangedListener {
-        textChanged = true
-    }
+    lifecycle.addObserver(object : DefaultLifecycleObserver {
 
-    childEditText.viewTreeObserver.addOnPreDrawListener {
-        if (textChanged) {
-            textChanged = false
-            val layout = childEditText.layout ?: return@addOnPreDrawListener true
-            val (first, second) = childEditText.selectionStart to childEditText.selectionEnd
-            if (first != second) return@addOnPreDrawListener true
-            var xCoordinate = layout.getPrimaryHorizontal(first).toInt()
-            val xCoordinate2 = layout.getSecondaryHorizontal(first).toInt()
+        private var textChanged = false
 
-            val totalPadding: Int
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                xCoordinate = if (childEditText.layoutDirection == View.LAYOUT_DIRECTION_LTR)
-                    xCoordinate
-                else
-                    xCoordinate2
-                totalPadding = paddingStart + paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
-            } else {
-                totalPadding = paddingLeft + paddingRight + childEditText.paddingLeft + childEditText.paddingRight
-            }
-
-            var scrollToX = if (xCoordinate > width) xCoordinate - width + totalPadding else xCoordinate
-            var isOutOfScreenToStart = false
-            if (first > 0) {
-                val previousX = layout.getPrimaryHorizontal(first - 1).toInt()
-                isOutOfScreenToStart = previousX - scrollX < 0
-                if (isOutOfScreenToStart) {
-                    scrollToX = scrollToX - xCoordinate + previousX
-                }
-            }
-            val isOutOfScreenToEnd = xCoordinate - scrollX > width - totalPadding
-            if (isOutOfScreenToStart || isOutOfScreenToEnd) {
-                scrollTo(scrollToX, 0)
+        private val textWatcher = object : SimpleTextWatcher() {
+            override fun afterTextChanged(s: Editable) {
+                textChanged = true
             }
         }
-        true
-    }
+
+        private val onPreDrawListener = OnPreDrawListener {
+            if (textChanged) {
+                textChanged = false
+                val layout = childEditText.layout ?: return@OnPreDrawListener true
+                val (first, second) = childEditText.selectionStart to childEditText.selectionEnd
+                if (first != second) return@OnPreDrawListener true
+                var xCoordinate = layout.getPrimaryHorizontal(first).toInt()
+                val xCoordinate2 = layout.getSecondaryHorizontal(first).toInt()
+
+                val totalPadding: Int
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    xCoordinate = if (childEditText.layoutDirection == View.LAYOUT_DIRECTION_LTR)
+                        xCoordinate
+                    else
+                        xCoordinate2
+                    totalPadding = paddingStart + paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
+                } else {
+                    totalPadding = paddingLeft + paddingRight + childEditText.paddingLeft + childEditText.paddingRight
+                }
+
+                var scrollToX = if (xCoordinate > width) xCoordinate - width + totalPadding else xCoordinate
+                var isOutOfScreenToStart = false
+                if (first > 0) {
+                    val previousX = layout.getPrimaryHorizontal(first - 1).toInt()
+                    isOutOfScreenToStart = previousX - scrollX < 0
+                    if (isOutOfScreenToStart) {
+                        scrollToX = scrollToX - xCoordinate + previousX
+                    }
+                }
+                val isOutOfScreenToEnd = xCoordinate - scrollX > width - totalPadding
+                if (isOutOfScreenToStart || isOutOfScreenToEnd) {
+                    scrollTo(scrollToX, 0)
+                }
+            }
+            true
+        }
+
+        override fun onCreate(owner: LifecycleOwner) {
+            childEditText.addTextChangedListener(textWatcher)
+            childEditText.viewTreeObserver.addOnPreDrawListener(onPreDrawListener)
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            childEditText.removeTextChangedListener(textWatcher)
+            childEditText.viewTreeObserver.removeOnPreDrawListener(onPreDrawListener)
+        }
+    })
 }
 
 fun View.addImeVisibilityListener(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {

@@ -1,13 +1,13 @@
 package ru.art2000.calculator.model.calculator.history
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RoomHistoryRepository @Inject constructor(
     private val historyDao: CalculatorHistoryDao,
 ) : HistoryRepository {
 
-    override fun getAll(): LiveData<List<HistoryDatabaseItem>> {
+    override fun getAll(): Flow<List<HistoryDatabaseItem>> {
         return historyDao.getAll()
     }
 

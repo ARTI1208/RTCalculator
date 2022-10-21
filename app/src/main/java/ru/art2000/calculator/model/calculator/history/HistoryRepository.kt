@@ -1,10 +1,10 @@
 package ru.art2000.calculator.model.calculator.history
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {
 
-    fun getAll(): LiveData<List<HistoryDatabaseItem>>
+    fun getAll(): Flow<List<HistoryDatabaseItem>>
 
     suspend fun add(item: HistoryDatabaseItem)
 

@@ -5,12 +5,11 @@ package ru.art2000.calculator.view_model.currency
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
 import ru.art2000.calculator.background.currency.CurrencyDownloadCallback
@@ -32,13 +31,13 @@ class CurrencyConverterModel @Inject constructor(
     private val repository: CurrencyRepository,
 ): AndroidViewModel(application as Application), CurrencyListAdapterModel {
 
-    private val mLoadingState = MutableLiveData(LoadingState.UNINITIALISED)
+    private val mLoadingState = MutableStateFlow(LoadingState.UNINITIALISED)
 
-    val loadingState: LiveData<LoadingState> = mLoadingState
+    val loadingState: StateFlow<LoadingState> = mLoadingState
 
-    private val mUpdateDate by lazy { MutableLiveData(updateDateString(prefsHelper.updateDateMillis)) }
+    private val mUpdateDate by lazy { MutableStateFlow(updateDateString(prefsHelper.updateDateMillis)) }
 
-    val updateDate: LiveData<String> by ::mUpdateDate
+    val updateDate: StateFlow<String> by ::mUpdateDate
 
     val visibleList = repository.getVisibleItems()
 
@@ -64,7 +63,7 @@ class CurrencyConverterModel @Inject constructor(
         override fun onDownloadStarted(): Boolean {
             if (mLoadingState.value == LoadingState.LOADING_STARTED) return true
 
-            mLoadingState.postValue(LoadingState.LOADING_STARTED)
+            mLoadingState.value = LoadingState.LOADING_STARTED
             return false
         }
 
@@ -73,7 +72,7 @@ class CurrencyConverterModel @Inject constructor(
         }
 
         override fun onDownloadFinished() {
-            mLoadingState.postValue(LoadingState.LOADING_ENDED)
+            mLoadingState.value = LoadingState.LOADING_ENDED
         }
 
         override fun onException(exception: Exception) {
@@ -82,15 +81,17 @@ class CurrencyConverterModel @Inject constructor(
                 is IOException -> LoadingState.NETWORK_ERROR
                 else -> LoadingState.UNKNOWN_ERROR
             }
-            mLoadingState.postValue(loadingState)
+            mLoadingState.value = loadingState
         }
     }
 
     init {
-        mLoadingState.observeForever {
-            if (it != LoadingState.LOADING_STARTED && it != LoadingState.UNINITIALISED) {
+        viewModelScope.launch {
+            mLoadingState.collect {
+                if (!it.finishesLoading) return@collect
+
                 isFirstUpdateDone = true
-                mLoadingState.postValue(LoadingState.UNINITIALISED)
+                mLoadingState.value = LoadingState.UNINITIALISED
             }
         }
     }
@@ -121,7 +122,7 @@ class CurrencyConverterModel @Inject constructor(
     fun isUpdateOnFirstTabOpenEnabled() = prefsHelper.updateOnFirstTabOpen
 
     fun listenDateUpdate() {
-        prefsHelper.updateDateMillisProperty.listen { mUpdateDate.postValue(updateDateString(it)) }
+        prefsHelper.updateDateMillisProperty.listen { mUpdateDate.value = updateDateString(it) }
     }
 
     fun stopListeningDateUpdate() {

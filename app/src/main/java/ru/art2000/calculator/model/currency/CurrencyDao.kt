@@ -1,19 +1,19 @@
 package ru.art2000.calculator.model.currency
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CurrencyDao {
 
     @Query("SELECT * FROM currency WHERE position >= 0 ORDER BY position")
-    fun getVisibleItems(): LiveData<List<CurrencyItem>>
+    fun getVisibleItems(): Flow<List<CurrencyItem>>
 
     @Query("SELECT COUNT(*) FROM currency WHERE position >= 0")
     suspend fun countVisibleItems(): Int
 
     @Query("SELECT * FROM currency WHERE position < 0 ORDER BY codeLetter")
-    fun getHiddenItems(): LiveData<List<CurrencyItem>>
+    fun getHiddenItems(): Flow<List<CurrencyItem>>
 
     @Query("SELECT * FROM currency WHERE codeLetter = :code ")
     suspend fun getByCode(code: String): CurrencyItem?

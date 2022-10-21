@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.util.Consumer
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,8 @@ import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.model.currency.getNameIdentifier
 import ru.art2000.calculator.view_model.currency.CurrenciesAddModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
+import ru.art2000.extensions.arch.launchAndCollect
+import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
@@ -37,14 +40,12 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        model.recyclerViewBottomPadding.observe(viewLifecycleOwner) { bottomPadding ->
-            binding.modifyCurrenciesList.setPadding(
-                0,
-                0,
-                0,
-                bottomPadding
-            )
+        launchRepeatOnStarted {
+            launchAndCollect(model.recyclerViewBottomPadding) { bottomPadding ->
+                binding.modifyCurrenciesList.updatePadding(bottom = bottomPadding)
+            }
         }
+
         val llm = LinearLayoutManager(requireContext()).apply {
             orientation = RecyclerView.VERTICAL
         }
@@ -72,7 +73,7 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
 
     @get:StringRes
     private val emptyTextRes: Int
-        get() = if (model.currentQuery.isNotEmpty() && model.hiddenItems.value!!.isNotEmpty()) {
+        get() = if (model.currentQuery.isNotEmpty() && model.hiddenItems.value.isNotEmpty()) {
             R.string.empty_text_no_currencies_found
         } else {
             R.string.empty_text_all_currencies_added
