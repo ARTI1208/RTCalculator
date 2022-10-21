@@ -200,12 +200,17 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.fragment:fragment-ktx:1.5.3")
 
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+
+
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
 
     val roomVersion = "2.4.3"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")

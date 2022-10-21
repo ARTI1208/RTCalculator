@@ -11,10 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
-import ru.art2000.calculator.model.calculator.history.HistoryDatabaseItem
-import ru.art2000.calculator.model.calculator.history.HistoryDateItem
-import ru.art2000.calculator.model.calculator.history.HistoryListItem
-import ru.art2000.calculator.model.calculator.history.HistoryValueItem
+import ru.art2000.calculator.model.calculator.history.*
 import ru.art2000.calculator.model.calculator.numbers.CalculationNumber
 import ru.art2000.calculator.model.calculator.parts.BinaryOperation
 import ru.art2000.calculator.model.calculator.parts.PostfixOperation
@@ -34,9 +31,8 @@ import javax.inject.Inject
 class CalculatorModel @Inject constructor(
     @ApplicationContext application: Context,
     private val prefsHelper: CalculatorPreferenceHelper,
+    private val historyRepository: HistoryRepository,
 ) : AndroidViewModel(application as Application), HistoryViewModel, ExpressionInputViewModel {
-
-    private val historyDao = CalculatorDependencies.getHistoryDatabase(application).historyDao()
 
     override val liveExpression: MutableLiveData<String> = createExpressionLiveData()
 
@@ -61,7 +57,7 @@ class CalculatorModel @Inject constructor(
     override val calculations: Calculations<Double> = DoubleCalculations(CalculatorFormatter)
 
     override val historyListItems: LiveData<List<HistoryListItem>>
-        get() = Transformations.map(historyDao.getAll()) { items ->
+        get() = Transformations.map(historyRepository.getAll()) { items ->
             var calendar: Calendar? = null
             items.fold(mutableListOf()) { acc, historyDatabaseItem ->
                 if (!isSameDay(calendar, historyDatabaseItem.date)) {
@@ -106,28 +102,25 @@ class CalculatorModel @Inject constructor(
 
     override fun updateHistoryItem(item: HistoryDatabaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            historyDao.update(item)
+            historyRepository.add(item)
         }
     }
 
-    override fun removeHistoryItem(id: Int) {
+    override fun removeHistoryItem(item: HistoryDatabaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            historyDao.deleteById(id)
+            historyRepository.remove(item)
         }
     }
 
     override fun clearHistoryDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            historyDao.clear()
+            historyRepository.clear()
         }
     }
 
     private fun saveCalculationResult(expression: String, result: String) {
         viewModelScope.launch(Dispatchers.IO) {
-//            historyDao.insert(HistoryItem(expression, result, Date()))
-            historyDao.insert(HistoryDatabaseItem(expression, result
-                    , Calendar.getInstance()
-            ))
+            historyRepository.add(HistoryDatabaseItem(expression, result, Calendar.getInstance()))
         }
     }
 

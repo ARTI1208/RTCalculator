@@ -147,11 +147,14 @@ object IntStringMapping : StringMapping<Int>() {
 fun SharedPreferences.stringPreference(key: String, defaultValue: String) =
     PreferenceDelegate(this, key, defaultValue, { getString(key, defaultValue)!! }, { putString(key, it) })
 
-fun SharedPreferences.nullableStringPreference(key: String, defaultValue: String?) =
+fun SharedPreferences.nullableStringPreference(key: String, defaultValue: String? = null) =
     PreferenceDelegate(this, key, defaultValue, { getString(key, defaultValue) }, { putString(key, it) })
 
 fun SharedPreferences.intPreference(key: String, defaultValue: Int) =
     PreferenceDelegate(this, key, defaultValue, { getInt(key, defaultValue) }, { putInt(key, it) })
+
+fun SharedPreferences.longPreference(key: String, defaultValue: Long) =
+    PreferenceDelegate(this, key, defaultValue, { getLong(key, defaultValue) }, { putLong(key, it) })
 
 fun SharedPreferences.booleanPreference(key: String, defaultValue: Boolean, onUpdate: SharedPreferences.Editor.(Boolean) -> Unit = {}) =
     PreferenceDelegate(this, key, defaultValue, { getBoolean(key, defaultValue) }, {

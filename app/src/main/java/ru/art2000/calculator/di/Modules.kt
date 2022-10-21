@@ -20,26 +20,6 @@ abstract class GeneralModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class CalculatorModule {
-
-    @Binds
-    abstract fun bindPreferenceHelper(
-        prefsHelper: PreferenceHelper
-    ): CalculatorPreferenceHelper
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class CurrencyModule {
-
-    @Binds
-    abstract fun bindPreferenceHelper(
-        prefsHelper: PreferenceHelper
-    ): CurrencyPreferenceHelper
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
 abstract class UnitModule {
 
     @Binds

@@ -77,31 +77,28 @@ class CurrencyConverterFragment : MainScreenFragment() {
         val selectDateMenuItem =
             binding.root.findViewById<ActionMenuItemView>(R.id.select_date)
         selectDateMenuItem.setOnClickListener {
-            val minValidator = DateValidatorPointForward.from(model.minDateMillis)
-            val maxValidator = DateValidatorPointBackward.before(model.maxDateMillis)
+            model.loadTimeIntervals { minDateMillis, maxDateMillis ->
+                val minValidator = DateValidatorPointForward.from(minDateMillis)
+                val maxValidator = DateValidatorPointBackward.before(maxDateMillis)
 
-            val picker = MaterialDatePicker.Builder
-                .datePicker()
-                .setCalendarConstraints(
-                    CalendarConstraints.Builder()
-                        .setStart(model.minDateMillis)
-                        .setEnd(model.maxDateMillis)
-                        .setValidator(
-                            CompositeDateValidator.allOf(
-                                listOf(minValidator, maxValidator)
-                            )
-                        ).build()
-                )
-                .build()
-            picker.addOnPositiveButtonClickListener { selection: Long? ->
-                val c = Calendar.getInstance()
-                c.timeInMillis = selection!!
-                val year = c[Calendar.YEAR]
-                val month = c[Calendar.MONTH]
-                val day = c[Calendar.DAY_OF_MONTH]
-                model.loadData(year, month + 1, day)
+                val picker = MaterialDatePicker.Builder
+                    .datePicker()
+                    .setCalendarConstraints(
+                        CalendarConstraints.Builder()
+                            .setStart(minDateMillis)
+                            .setEnd(maxDateMillis)
+                            .setValidator(
+                                CompositeDateValidator.allOf(
+                                    listOf(minValidator, maxValidator)
+                                )
+                            ).build()
+                    )
+                    .build()
+                picker.addOnPositiveButtonClickListener { selection ->
+                    model.loadData(selection)
+                }
+                picker.show(requireActivity().supportFragmentManager, "CurrencyDatePicker")
             }
-            picker.show(requireActivity().supportFragmentManager, "taag")
         }
         selectDateMenuItem.setOnLongClickListener {
             model.loadData()

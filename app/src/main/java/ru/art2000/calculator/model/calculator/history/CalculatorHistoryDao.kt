@@ -13,15 +13,12 @@ interface CalculatorHistoryDao {
     @Query("SELECT * FROM history")
     fun getAll(): LiveData<List<HistoryDatabaseItem>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(item: HistoryDatabaseItem): Long
-
-    @Update
-    fun update(item: HistoryDatabaseItem)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: HistoryDatabaseItem): Long
 
     @Query("DELETE FROM history WHERE id = :id")
-    fun deleteById(id: Int): Int
+    suspend fun deleteById(id: Int): Int
 
     @Query("DELETE FROM history")
-    fun clear(): Int
+    suspend fun clear(): Int
 }

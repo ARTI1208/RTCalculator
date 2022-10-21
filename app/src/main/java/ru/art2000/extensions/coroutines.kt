@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 inline fun writeAndUpdateUi(
-    crossinline compute: () -> Unit,
+    crossinline compute: suspend () -> Unit,
     crossinline update: () -> Unit
 ) {
     CoroutineScope(Dispatchers.IO).launch {

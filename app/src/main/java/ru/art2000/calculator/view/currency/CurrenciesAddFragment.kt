@@ -17,9 +17,9 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.databinding.ModifyCurrenciesLayoutBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
+import ru.art2000.calculator.model.currency.getNameIdentifier
 import ru.art2000.calculator.view_model.currency.CurrenciesAddModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
@@ -160,7 +160,7 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
 
             fun bind(currencyItem: CurrencyItem) {
                 code.text = currencyItem.code
-                name.setText(getNameIdentifierForCode(name.context, currencyItem.code))
+                name.setText(currencyItem.getNameIdentifier(name.context))
                 checkBox.isChecked = model.isHiddenItemSelected(currencyItem)
             }
         }

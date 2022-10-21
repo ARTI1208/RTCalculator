@@ -5,16 +5,16 @@ import java.lang.Exception
 interface CurrencyDownloadCallback {
 
     /**
-     * @return whether download should continue
+     * @return whether processing should stop
      */
-    fun onDownloadStarted(): Boolean = true
+    fun onDownloadStarted(): Boolean = false
 
     /**
-     * @return whether download should continue
+     * @return whether processing should stop
      */
-    fun onDataOfSameDate(): Boolean = false
+    fun onDateFetched(date: Long): Boolean = false
 
-    fun onSuccess(date: String) {}
+    fun onDownloadFinished() {}
 
     fun onException(exception: Exception) {}
 

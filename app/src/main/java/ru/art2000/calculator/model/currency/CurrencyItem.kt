@@ -1,10 +1,11 @@
 package ru.art2000.calculator.model.currency
 
+import android.annotation.SuppressLint
+import android.content.Context
 import ru.art2000.calculator.model.common.DiffComparable
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 
 @Entity(tableName = "currency")
 data class CurrencyItem(
@@ -26,4 +27,15 @@ data class CurrencyItem(
     override fun isSameItem(anotherItem: CurrencyItem) = code == anotherItem.code
 
     override fun isContentSame(anotherItem: CurrencyItem) = position == anotherItem.position
+}
+
+private val codeToIdentifier = hashMapOf<String, Int>()
+
+@SuppressLint("DiscouragedApi")
+fun CurrencyItem.getNameIdentifier(context: Context) = codeToIdentifier.getOrPut(code) {
+    context.resources.getIdentifier(
+        "currency_$code",
+        "string",
+        context.packageName
+    )
 }

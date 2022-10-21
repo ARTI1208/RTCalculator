@@ -6,9 +6,9 @@ interface CurrencyPreferenceHelper {
 
     val updateOnFirstTabOpen: Boolean
 
-    val updateDateProperty: ReadOnlyPreferenceDelegate<String>
+    val updateDateMillisProperty: ReadOnlyPreferenceDelegate<Long>
 
-    val updateDate: String
+    var updateDateMillis: Long
 
     val conversionCode: String
 

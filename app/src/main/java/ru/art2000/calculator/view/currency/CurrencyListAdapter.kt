@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemCurrencyConverterListBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
+import ru.art2000.calculator.model.currency.getNameIdentifier
 import ru.art2000.calculator.view_model.currency.CurrencyListAdapterModel
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.views.SimpleTextWatcher
@@ -165,7 +165,7 @@ class CurrencyListAdapter internal constructor(
             value.text =
                 dot2dig.format(adapterModel.lastInputItemValue * currencyItem.rate)
             codeView.text = currencyItem.code
-            nameView.setText(getNameIdentifierForCode(mContext, currencyItem.code))
+            nameView.setText(currencyItem.getNameIdentifier(mContext))
         }
 
         fun highlightElements() {

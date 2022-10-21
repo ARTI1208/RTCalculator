@@ -127,7 +127,7 @@ class HistoryListAdapter internal constructor(
                 model.copyHistoryItemToClipboard(currentDbItem, id)
             } else if (id == HistoryViewModel.DELETE) {
                 val selectedItem = currentDbItem
-                model.removeHistoryItem(selectedItem.id)
+                model.removeHistoryItem(selectedItem)
                 context.getString(R.string.deleted) + " " + selectedItem.fullExpression
             } else if (id == HistoryViewModel.COMMENT) {
                 showCommentDialog()

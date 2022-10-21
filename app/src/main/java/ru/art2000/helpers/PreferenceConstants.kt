@@ -17,7 +17,7 @@ object PreferenceKeys {
     const val KEY_CURRENCIES_INTERVAL = "currency_update_interval"
     const val KEY_CURRENCY_DELETE_TOOLTIP_SHOWN = "delete_tooltip_shown"
     const val KEY_CURRENCY_UPDATE_ON_TAB_OPEN = "update_currencies_on_tab_open"
-    const val KEY_CURRENCY_UPDATE_DATE = "currency_update_date"
+    const val KEY_CURRENCY_UPDATE_DATE_MILLIS = "currency_update_date_millis"
 }
 
 object PreferenceDefaults {

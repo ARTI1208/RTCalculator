@@ -234,7 +234,7 @@ class CalculatorFragment : MainScreenFragment() {
             ) { position ->
                 // Cast is safe due to filtering in previous lambda
                 val historyListItem = adapter.historyList[position] as HistoryValueItem
-                model.removeHistoryItem(historyListItem.dbItem.id)
+                model.removeHistoryItem(historyListItem.dbItem)
             }
         )
         itemTouchHelper.attachToRecyclerView(historyRecyclerView)

@@ -12,7 +12,7 @@ interface HistoryViewModel {
 
     fun updateHistoryItem(item: HistoryDatabaseItem)
 
-    fun removeHistoryItem(id: Int)
+    fun removeHistoryItem(item: HistoryDatabaseItem)
 
     fun clearHistoryDatabase()
 

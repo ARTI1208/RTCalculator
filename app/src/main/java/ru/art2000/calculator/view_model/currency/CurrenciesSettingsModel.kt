@@ -12,8 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.model.currency.CurrencyItem
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getCurrencyDatabase
-import ru.art2000.calculator.view_model.currency.CurrencyDependencies.getNameIdentifierForCode
+import ru.art2000.calculator.model.currency.CurrencyRepository
+import ru.art2000.calculator.model.currency.getNameIdentifier
 import ru.art2000.extensions.collections.ArrayLiveList
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.writeAndUpdateUi
@@ -27,6 +27,7 @@ import kotlin.collections.ArrayList
 class CurrenciesSettingsModel @Inject constructor(
     @ApplicationContext application: Context,
     prefsHelper: CurrencyPreferenceHelper,
+    private val repository: CurrencyRepository,
 ) : AndroidViewModel(application as Application), CurrenciesAddModel, CurrenciesEditModel {
 
     private val mSelectedTab = MutableLiveData(0)
@@ -43,14 +44,12 @@ class CurrenciesSettingsModel @Inject constructor(
 
     val removedItems: MutableLiveData<List<CurrencyItem>> = MutableLiveData(emptyList())
 
-    private val currencyDao = getCurrencyDatabase(application).currencyDao()
-
-    fun makeItemsVisible(items: List<CurrencyItem>) {
-        currencyDao.makeItemsVisible(items)
+    suspend fun makeItemsVisible(items: List<CurrencyItem>) {
+        repository.makeItemsVisible(items)
     }
 
-    fun makeItemsHidden(items: List<CurrencyItem>) {
-        currencyDao.makeItemsHidden(items)
+    suspend fun makeItemsHidden(items: List<CurrencyItem>) {
+        repository.makeItemsHidden(items)
     }
 
     fun completeSelectedHiddenItems() {
@@ -86,16 +85,14 @@ class CurrenciesSettingsModel @Inject constructor(
 
                 for (item in allItems) {
                     val lowerCode = item.code.lowercase(mainLocale)
-                    val itemNameResourceId = getNameIdentifierForCode(context, item.code)
-                    val lowerName: String = context.getString(itemNameResourceId)
-                        .lowercase(mainLocale)
-                    if (lowerCode.contains(lowerQuery) || lowerName.contains(lowerQuery)
-                        || (mainLocale != Locale.ENGLISH
-                                && context.getLocalizedString(
+                    val itemNameResourceId = item.getNameIdentifier(context)
+                    val lowerName = context.getString(itemNameResourceId).lowercase(mainLocale)
+                    if (lowerCode.contains(lowerQuery)
+                        || lowerName.contains(lowerQuery)
+                        || (mainLocale != Locale.ENGLISH && context.getLocalizedString(
                             Locale.ENGLISH,
                             itemNameResourceId
-                        )
-                            .lowercase(Locale.ENGLISH).contains(lowerQuery))
+                        ).lowercase(Locale.ENGLISH).contains(lowerQuery))
                     ) {
                         newList.add(item)
                     }
@@ -108,7 +105,7 @@ class CurrenciesSettingsModel @Inject constructor(
         }
     }
 
-    override val hiddenItems = currencyDao.getHiddenItems()
+    override val hiddenItems = repository.getHiddenItems()
 
     override val selectedHiddenItems: LiveList<CurrencyItem> = ArrayLiveList()
 
@@ -126,7 +123,7 @@ class CurrenciesSettingsModel @Inject constructor(
 
     override val displayedHiddenItems: LiveList<CurrencyItem> = ArrayLiveList()
 
-    override val visibleItems = currencyDao.getVisibleItems()
+    override val visibleItems = repository.getVisibleItems()
 
     override val selectedVisibleItems: LiveList<CurrencyItem> = ArrayLiveList()
 
@@ -144,7 +141,7 @@ class CurrenciesSettingsModel @Inject constructor(
 
     override fun databaseMarkHidden(item: CurrencyItem) {
         writeAndUpdateUi(
-            compute = { currencyDao.removeFromVisible(item.code) },
+            compute = { repository.removeFromVisible(item.code) },
             update = { removedItems.value = listOf(item) }
         )
     }
@@ -183,7 +180,7 @@ class CurrenciesSettingsModel @Inject constructor(
             ) {
                 val copy = liveList.snapshot()
                 viewModelScope.launch(Job() + Dispatchers.IO) {
-                    currencyDao.updateAll(copy)
+                    repository.updateAll(copy)
                 }
             }
         })

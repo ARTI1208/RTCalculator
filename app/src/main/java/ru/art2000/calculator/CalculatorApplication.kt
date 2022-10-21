@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import androidx.work.ExistingPeriodicWorkPolicy
 import dagger.hilt.android.HiltAndroidApp
-import ru.art2000.calculator.background.currency.CurrencyFunctions
+import ru.art2000.calculator.background.currency.CurrencyDownloadWorker
 import ru.art2000.helpers.PreferenceHelper
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class CalculatorApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        CurrencyFunctions.setupCurrencyDownload(
+        CurrencyDownloadWorker.setupCurrencyDownload(
             this,
             prefsHelper.currencyBackgroundUpdateType,
             prefsHelper.currencyBackgroundUpdateInterval,

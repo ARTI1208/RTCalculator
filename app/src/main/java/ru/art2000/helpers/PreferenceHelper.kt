@@ -6,7 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.art2000.calculator.CalculatorApplication
 import ru.art2000.calculator.R
-import ru.art2000.calculator.background.currency.CurrencyFunctions
+import ru.art2000.calculator.background.currency.CurrencyDownloadWorker
 import ru.art2000.extensions.preferences.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -114,12 +114,12 @@ class PreferenceHelper @Inject constructor(
         PreferenceDefaults.DEFAULT_CURRENCY_UPDATE_ON_TAB_OPEN
     )
 
-    override val updateDateProperty = preferences.stringPreference(
-        PreferenceKeys.KEY_CURRENCY_UPDATE_DATE,
-        context.getString(PreferenceDefaults.DEFAULT_CURRENCY_UPDATE_DATE)
+    override val updateDateMillisProperty = preferences.longPreference(
+        PreferenceKeys.KEY_CURRENCY_UPDATE_DATE_MILLIS,
+        context.getString(PreferenceDefaults.DEFAULT_CURRENCY_UPDATE_DATE).toLong()
     )
 
-    override val updateDate by updateDateProperty
+    override var updateDateMillis by updateDateMillisProperty
 
     override var conversionCode by preferences.stringPreference(
         "last_conversion_code", PreferenceDefaults.DEFAULT_CONVERSION_CODE
@@ -146,7 +146,7 @@ class PreferenceHelper @Inject constructor(
     }
 
     private fun setCurrencyUpdateTypeInterval(type: String, interval: Int) =
-        CurrencyFunctions.setupCurrencyDownload(
+        CurrencyDownloadWorker.setupCurrencyDownload(
             context, type, interval, ExistingPeriodicWorkPolicy.REPLACE,
         )
 
