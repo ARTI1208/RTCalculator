@@ -9,6 +9,6 @@ interface CalculatorPreferenceHelper {
 
     var lastExpressionWasCalculated: Boolean
 
-    var lastMemory: Double
+    var lastMemory: String
 
 }

@@ -24,7 +24,6 @@ import ru.art2000.extensions.arch.context
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.language.dotSafeToDouble
 import ru.art2000.helpers.CalculatorPreferenceHelper
-import ru.art2000.helpers.GeneralHelper
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
@@ -40,11 +39,16 @@ class CalculatorModel @Inject constructor(
 
     override val liveInputSelection = createLiveInput()
 
+    // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
+    override val calculations: Calculations<*> = DoubleCalculations(CalculatorFormatter)
+
     private val mLiveResult: MutableStateFlow<String?> = MutableStateFlow(null)
     val liveResult: StateFlow<String?> get() = mLiveResult
 
-    private val mLiveMemory: MutableStateFlow<Double> = MutableStateFlow(prefsHelper.lastMemory)
-    val liveMemory: StateFlow<Double> = mLiveMemory
+    private val mLiveMemory: MutableStateFlow<String> = MutableStateFlow(
+        calculations.calculateForDisplay(prefsHelper.lastMemory) // apply formatting
+    )
+    val liveMemory: StateFlow<String> = mLiveMemory
 
     private val mLiveAngleType: MutableStateFlow<AngleType> = MutableStateFlow(AngleType.DEGREES)
     val liveAngleType: StateFlow<AngleType> = mLiveAngleType
@@ -54,9 +58,6 @@ class CalculatorModel @Inject constructor(
         set(value) {
             mLiveResult.value = value
         }
-
-    // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
-    override val calculations: Calculations<*> = DoubleCalculations(CalculatorFormatter)
 
     override val historyListItems = historyRepository.getAll().map { items ->
         var calendar: Calendar? = null
@@ -321,21 +322,24 @@ class CalculatorModel @Inject constructor(
 
     fun handleMemoryOperation(operation: CharSequence) {
         var memory = mLiveMemory.value
-        when (operation.last()) {
+        when (val char = operation.last()) {
             '+' -> {
                 onResult()
-                memory += result?.dotSafeToDouble() ?: 0.0
+                result?.also {
+                    memory = calculations.calculateForDisplay("$memory$char$it")
+                }
             }
             '-' -> {
                 onResult()
-                memory -= result?.dotSafeToDouble() ?: 0.0
+                result?.also {
+                    memory = calculations.calculateForDisplay("$memory$char$it")
+                }
             }
-            'R' -> if (memory != 0.0) {
+            'R' -> if (calculations.field.isZeroOrClose(memory)) {
                 if (result != null) result = null
-                val memoryValue = GeneralHelper.resultNumberFormat.format(memory)
-                insertInExpression(memoryValue)
+                insertInExpression(memory)
             }
-            'C' -> memory = 0.0
+            'C' -> memory = "0"
         }
 
         mLiveMemory.value = memory

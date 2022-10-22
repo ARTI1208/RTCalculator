@@ -31,9 +31,7 @@ import ru.art2000.calculator.view_model.calculator.CalculatorModel
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.*
-import ru.art2000.helpers.GeneralHelper
 import java.util.*
-import kotlin.math.abs
 
 @AndroidEntryPoint
 class CalculatorFragment : MainScreenFragment() {
@@ -82,13 +80,13 @@ class CalculatorFragment : MainScreenFragment() {
                 resultTV.visibility = View.VISIBLE
             }
             launchAndCollect(model.liveMemory) { memoryValue ->
-                if (abs(memoryValue) < 1e-5) {
+                if (memoryValue.isEmpty() || model.calculations.field.isZeroOrClose(memoryValue)) {
                     binding.calculatorIo.memory.visibility = View.INVISIBLE
                     binding.calculatorIo.infoDivider.visibility = View.INVISIBLE
                     return@launchAndCollect
                 }
                 binding.calculatorIo.infoDivider.visibility = View.VISIBLE
-                val newMemoryText = "M" + GeneralHelper.resultNumberFormat.format(memoryValue)
+                val newMemoryText = "M$memoryValue"
                 binding.calculatorIo.memory.text = newMemoryText
                 binding.calculatorIo.memory.visibility = View.VISIBLE
             }

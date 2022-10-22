@@ -18,4 +18,5 @@ interface NumberField<T> {
 
     fun isNumberPart(c: Char): Boolean
 
+    fun isZeroOrClose(fieldNumber: String): Boolean
 }

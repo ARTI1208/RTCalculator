@@ -2,6 +2,7 @@ package ru.art2000.calculator.model.calculator.numbers
 
 import org.apache.commons.math3.special.Gamma
 import ru.art2000.calculator.model.calculator.parts.*
+import ru.art2000.extensions.language.dotSafeToDouble
 import kotlin.math.*
 
 object DoubleField : FloatingPointField<Double> {
@@ -119,4 +120,7 @@ object DoubleField : FloatingPointField<Double> {
         return c in '0'..'9'
     }
 
+    override fun isZeroOrClose(fieldNumber: String): Boolean {
+        return fieldNumber.dotSafeToDouble() == 0.0
+    }
 }

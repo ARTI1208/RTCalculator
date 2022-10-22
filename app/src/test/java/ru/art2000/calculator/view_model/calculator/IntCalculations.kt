@@ -49,6 +49,10 @@ class IntCalculations(
             return c in '0'..'9'
         }
 
+        override fun isZeroOrClose(fieldNumber: String): Boolean {
+            return fieldNumber.toInt() == 0
+        }
+
     }
 
     private val config = object : ParserConfiguration<Int>, LexerConfiguration<Int> {

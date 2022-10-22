@@ -7,9 +7,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import kotlin.system.TimingKt;
-import ru.art2000.helpers.GeneralHelper;
+import java.util.List;
 
 public class OldCalculationClass {
 
@@ -26,10 +24,10 @@ public class OldCalculationClass {
         afterUnaryOperations = new ArrayList<>(Arrays.asList("%", "!"));
         preUnaryOperations = new ArrayList<>(
                 Arrays.asList("√", "lg", "ln", "cos", "sin", "ctg", "tan"));
-        String order = GeneralHelper.joinToString(
+        String order = joinToString(
                 afterUnaryOperations, ";", "", ";_;")
                 + "^;_;*;×;÷;/;:;_;+;-;"
-                + GeneralHelper.joinToString(
+                + joinToString(
                 preUnaryOperations, ";", "_;", ";");
         int o = 1;
         int p;
@@ -43,6 +41,19 @@ public class OldCalculationClass {
             order = order.substring(p + 1);
         }
         priorityLevels = o;
+    }
+
+    private static String joinToString(List<?> list, String separator, String prefix, String postfix) {
+        StringBuilder builder = new StringBuilder(prefix);
+        int count = 0;
+        for (Object obj : list) {
+            if (++count > 1) {
+                builder.append(separator);
+            }
+            builder.append(obj);
+        }
+        builder.append(postfix);
+        return builder.toString();
     }
 
     private static boolean isOperation(String toCheck) {

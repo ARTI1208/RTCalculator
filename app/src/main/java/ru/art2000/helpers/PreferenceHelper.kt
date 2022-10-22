@@ -106,8 +106,8 @@ class PreferenceHelper @Inject constructor(
     override var lastExpressionWasCalculated by preferences.booleanPreference(
         "lastExpressionWasCalculated", false
     )
-    override var lastMemory by preferences.doublePreference(
-        "lastMemory", 0.0
+    override var lastMemory by preferences.stringPreference(
+        "lastMemory", "0"
     )
 
 
