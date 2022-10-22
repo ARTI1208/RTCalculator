@@ -99,6 +99,17 @@ class PreferenceHelper @Inject constructor(
         PreferenceKeys.KEY_ZERO_DIVISION, PreferenceDefaults.DEFAULT_ZERO_DIVISION
     ).getAs { if (it) R.string.infinity else R.string.error }
 
+    override var lastExpression by preferences.nullableStringPreference(
+        "lastExpression"
+    )
+
+    override var lastExpressionWasCalculated by preferences.booleanPreference(
+        "lastExpressionWasCalculated", false
+    )
+    override var lastMemory by preferences.doublePreference(
+        "lastMemory", 0.0
+    )
+
 
     // Currency ==========================================================
 

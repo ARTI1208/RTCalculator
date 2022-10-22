@@ -57,6 +57,8 @@ class CalculatorFragment : MainScreenFragment() {
             }
         })
         binding.calculatorIo.inputScrollView.autoScrollOnInput(viewLifecycleOwner.lifecycle)
+        // Set text before listener so model.selection is not wrongly updated
+        inputTv.setText(model.expression)
         inputTv.onSelectionChangedListener =
             CalculatorEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
                 model.inputSelection = Pair(selStart, selEnd)

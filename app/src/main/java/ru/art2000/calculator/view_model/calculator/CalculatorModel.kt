@@ -21,6 +21,7 @@ import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.float
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
 import ru.art2000.extensions.arch.context
+import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.language.dotSafeToDouble
 import ru.art2000.helpers.CalculatorPreferenceHelper
 import ru.art2000.helpers.GeneralHelper
@@ -35,14 +36,14 @@ class CalculatorModel @Inject constructor(
     private val historyRepository: HistoryRepository,
 ) : AndroidViewModel(application as Application), HistoryViewModel, ExpressionInputViewModel {
 
-    override val liveExpression = createLiveExpression()
+    override val liveExpression = createLiveExpression(prefsHelper.lastExpression)
 
     override val liveInputSelection = createLiveInput()
 
     private val mLiveResult: MutableStateFlow<String?> = MutableStateFlow(null)
     val liveResult: StateFlow<String?> get() = mLiveResult
 
-    private val mLiveMemory: MutableStateFlow<Double> = MutableStateFlow(0.0)
+    private val mLiveMemory: MutableStateFlow<Double> = MutableStateFlow(prefsHelper.lastMemory)
     val liveMemory: StateFlow<Double> = mLiveMemory
 
     private val mLiveAngleType: MutableStateFlow<AngleType> = MutableStateFlow(AngleType.DEGREES)
@@ -71,6 +72,17 @@ class CalculatorModel @Inject constructor(
             acc
         }
     }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
+
+    init {
+        if (prefsHelper.lastExpressionWasCalculated) {
+            onResult(false)
+        }
+        viewModelScope.launch {
+            launchAndCollect(mLiveMemory) { prefsHelper.lastMemory = it  }
+            launchAndCollect(liveExpression) { prefsHelper.lastExpression = it  }
+            launchAndCollect(liveResult) { prefsHelper.lastExpressionWasCalculated = it != null  }
+        }
+    }
 
     override fun copyHistoryItemToClipboard(item: HistoryDatabaseItem, type: Int): String {
         val clip: ClipData?
@@ -269,7 +281,7 @@ class CalculatorModel @Inject constructor(
         }
     }
 
-    fun onResult() {
+    private fun onResult(saveIfNoError: Boolean) {
         val countStr = expression
         if (countStr.isEmpty()) return
 
@@ -283,11 +295,13 @@ class CalculatorModel @Inject constructor(
 
         val (calculated, err) = calculateAndFormatForDisplay(expr, liveAngleType.value)
 
-        if (!err) {
-            saveCalculationResult(expr, countStr)
+        if (!err && saveIfNoError) {
+            saveCalculationResult(expr, calculated)
         }
         result = calculated
     }
+
+    fun onResult() = onResult(true)
 
     fun calculateAndFormatForDisplay(expression: String, angleType: AngleType): Pair<String, Boolean> {
         var countStr = calculations.calculateForDisplay(expression, angleType)
