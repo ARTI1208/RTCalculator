@@ -71,7 +71,7 @@ class MainActivity : AutoThemeActivity() {
             ACTION_SETTINGS -> R.id.navigation_settings
             else -> R.id.navigation_calc
         }
-        binding.navigation.selectedItemId = tabId
+        binding.navigation.setSelectedItemId(tabId, false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
             && (!isLightTheme() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)

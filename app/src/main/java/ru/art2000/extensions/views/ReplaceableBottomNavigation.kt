@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.animation.AccelerateInterpolator
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -35,6 +36,8 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
     private var attachedPager2: ViewPager2? = null
     private var mFragmentManager: FragmentManager? = null
 
+    private var smoothScrollNext: Boolean = true
+
     init {
         super.setOnItemSelectedListener { item ->
             onNavigationItemSelected(item)
@@ -42,7 +45,17 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
         }
     }
 
-    fun getReplaceable(position: Int): IReplaceableFragment? {
+    fun setSelectedItemId(@IdRes itemId: Int, smoothScroll: Boolean) {
+        smoothScrollNext = smoothScroll
+        super.setSelectedItemId(itemId)
+        smoothScrollNext = true
+    }
+
+    override fun setSelectedItemId(itemId: Int) {
+        setSelectedItemId(itemId, true)
+    }
+
+    private fun getReplaceable(position: Int): IReplaceableFragment? {
         return replaceables[position, null]
     }
 
@@ -52,7 +65,7 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
             val position = replaceables.indexOfValue(replaceable)
             if (attachedPager2 != null) {
                 sendReplaceCallback(replaceable)
-                attachedPager2!!.currentItem = position
+                attachedPager2!!.setCurrentItem(position, smoothScrollNext)
             }
             if (mFragmentManager != null) {
                 beginFragmentReplace(replaceable)
