@@ -4,6 +4,6 @@ interface UnitPreferenceHelper {
 
     val unitViewType: String
 
-    fun setOnViewTypeChanged(onChanged: ((String) -> Unit)?)
+    fun setOnViewTypeChangedListener(onChanged: ((String) -> Unit)?)
 
 }

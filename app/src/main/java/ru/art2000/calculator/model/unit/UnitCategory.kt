@@ -13,6 +13,8 @@ enum class UnitCategory {
 
         private val cached = values()
 
+        val count = cached.size
+
         fun ofOrdinal(ordinal: Int) = cached[ordinal]
     }
 }

@@ -9,7 +9,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitLayoutBinding
@@ -17,6 +16,7 @@ import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view.MainScreenFragment
 import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.newInstance
 import ru.art2000.extensions.fragments.IReplaceableFragment
+import ru.art2000.extensions.views.MyTabLayoutMediator
 import ru.art2000.helpers.UnitPreferenceHelper
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -28,7 +28,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
     lateinit var prefsHelper: UnitPreferenceHelper
 
     private var pageChangeCallback2: OnPageChangeCallback? = null
-    private var pager2Mediator: TabLayoutMediator? = null
+    private var pager2Mediator: MyTabLayoutMediator? = null
     private val binding by viewBinding<UnitLayoutBinding>(CreateMethod.INFLATE)
 
     override fun onCreateView(
@@ -38,14 +38,14 @@ internal class UnitConverterFragment : MainScreenFragment() {
     ): View {
 
         updateAdapter()
-        prefsHelper.setOnViewTypeChanged(::updateAdapter)
+        prefsHelper.setOnViewTypeChangedListener(::updateAdapter)
 
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        prefsHelper.setOnViewTypeChanged(null)
+        prefsHelper.setOnViewTypeChangedListener(null)
         pageChangeCallback2 = null
         pager2Mediator = null
     }
@@ -69,8 +69,11 @@ internal class UnitConverterFragment : MainScreenFragment() {
         }
         binding.pager2.registerOnPageChangeCallback(pageChangeCallback2!!)
         pager2Mediator?.detach()
-        pager2Mediator = TabLayoutMediator(binding.tabs, binding.pager2) { tab, position ->
-            tab.text = pager2Adapter.getPageTitle(position)
+
+        val titles = resources.getStringArray(R.array.unit_converter_categories)
+
+        pager2Mediator = MyTabLayoutMediator(binding.tabs, binding.pager2) { tab, position ->
+            tab.text = titles[position]
         }.apply {
             attach()
         }
@@ -97,14 +100,8 @@ internal class UnitConverterFragment : MainScreenFragment() {
         private val viewType: String,
     ) : FragmentStateAdapter(this@UnitConverterFragment) {
 
-        private val categoriesNames = resources.getStringArray(R.array.unit_converter_categories)
-
         private val sparseFragments =
-            SparseArray<WeakReference<BaseUnitPageFragment<*>>>(categoriesNames.size)
-
-        fun getPageTitle(position: Int): CharSequence {
-            return categoriesNames[position]
-        }
+            SparseArray<WeakReference<BaseUnitPageFragment<*>>>(UnitCategory.count)
 
         fun getFragment(position: Int) = createFragment(position)
 
@@ -122,7 +119,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
         }
 
         override fun getItemCount(): Int {
-            return categoriesNames.size
+            return UnitCategory.count
         }
     }
 }

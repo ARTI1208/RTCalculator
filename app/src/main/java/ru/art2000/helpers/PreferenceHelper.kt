@@ -195,7 +195,7 @@ class PreferenceHelper @Inject constructor(
 
     override val unitViewType by unitViewTypeProperty
 
-    override fun setOnViewTypeChanged(onChanged: ((String) -> Unit)?) {
+    override fun setOnViewTypeChangedListener(onChanged: ((String) -> Unit)?) {
         if (onChanged != null) {
             unitViewTypeProperty.listen(onChanged)
         } else {
