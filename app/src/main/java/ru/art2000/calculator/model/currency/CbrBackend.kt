@@ -35,7 +35,8 @@ class CbrBackend @Inject constructor(): CurrencyRemoteBackend {
         retrofit.create(CbrAPI::class.java)
     }
 
-    private val dateRegex = Regex("(?<day>\\d{2})[.](?<month>\\d{2})[.](?<year>\\d{4})")
+    // Named groups are available on API23+ only
+    private val dateRegex = Regex("(\\d{2})[.](\\d{2})[.](\\d{4})")
 
     private var maxDate = Calendar.getInstance()
 
@@ -66,9 +67,9 @@ class CbrBackend @Inject constructor(): CurrencyRemoteBackend {
         val match = dateRegex.matchEntire(date)
             ?: throw IllegalStateException("Wrong date format: $date")
 
-        val day = match.groups["day"]!!.value.toInt()
-        val month = match.groups["month"]!!.value.toInt()
-        val year = match.groups["year"]!!.value.toInt()
+        val day = match.groups[1]!!.value.toInt()
+        val month = match.groups[2]!!.value.toInt()
+        val year = match.groups[3]!!.value.toInt()
 
         val calendar = Calendar.getInstance().apply { set(year, month - 1, day) }
         val date = calendar.timeInMillis

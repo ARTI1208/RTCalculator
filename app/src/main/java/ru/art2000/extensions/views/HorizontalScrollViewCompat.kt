@@ -6,6 +6,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.HorizontalScrollView
+import androidx.annotation.RequiresApi
 
 /**
  * Adopted from https://stackoverflow.com/a/20033587
@@ -14,8 +15,7 @@ class HorizontalScrollViewCompat @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = android.R.attr.horizontalScrollViewStyle,
-    defStyleRes: Int = 0,
-) : HorizontalScrollView(context, attrs, defStyleAttr, defStyleRes) {
+) : HorizontalScrollView(context, attrs, defStyleAttr) {
 
     private var mGravityRight = false
 
