@@ -13,13 +13,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitLayoutBinding
+import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view.MainScreenFragment
 import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.newInstance
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.helpers.UnitPreferenceHelper
-import ru.art2000.helpers.getLocalizedArray
 import java.lang.ref.WeakReference
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -100,11 +99,6 @@ internal class UnitConverterFragment : MainScreenFragment() {
 
         private val categoriesNames = resources.getStringArray(R.array.unit_converter_categories)
 
-        private val categoriesEnglish = requireContext().getLocalizedArray(
-            Locale.ENGLISH,
-            R.array.unit_converter_categories
-        )
-
         private val sparseFragments =
             SparseArray<WeakReference<BaseUnitPageFragment<*>>>(categoriesNames.size)
 
@@ -121,8 +115,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
             }
 
             return newInstance(
-                categoriesEnglish[position].lowercase(Locale.ENGLISH),
-                viewType
+                UnitCategory.ofOrdinal(position), viewType
             ).also {
                 sparseFragments[position] = WeakReference(it)
             }

@@ -6,6 +6,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.art2000.calculator.model.unit.ConverterFunctionsProvider
+import ru.art2000.calculator.model.unit.DoubleFunctionsProvider
 import ru.art2000.helpers.*
 
 @Module
@@ -26,4 +28,9 @@ abstract class UnitModule {
     abstract fun bindPreferenceHelper(
         prefsHelper: PreferenceHelper
     ): UnitPreferenceHelper
+
+    @Binds
+    abstract fun bindFunctionsProvider(
+        provider: DoubleFunctionsProvider
+    ): ConverterFunctionsProvider
 }

@@ -37,7 +37,7 @@ interface ExpressionInputViewModel {
             liveInputSelection.value = value
         }
 
-    val calculations: Calculations<Double>
+    val calculations: Calculations<*>
 
     fun clearInput() {
         setExpression("")

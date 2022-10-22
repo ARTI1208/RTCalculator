@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityAllUnitsBinding
-import ru.art2000.calculator.view_model.unit.UnitConverterDependencies.getCategoryInt
-import ru.art2000.calculator.view_model.unit.UnitConverterDependencies.getCategoryItems
+import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
 import ru.art2000.extensions.activities.AutoThemeActivity
+import ru.art2000.extensions.activities.getEnumExtra
 
 class AllUnitsActivity : AutoThemeActivity() {
 
@@ -22,13 +22,13 @@ class AllUnitsActivity : AutoThemeActivity() {
         val binding = ActivityAllUnitsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val category = intent.getStringExtra("category")!!
+        val category = intent.getEnumExtra<UnitCategory>("category")!!
         val pos = intent.getIntExtra("highlightPosition", 0)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val title =
-            resources.getStringArray(R.array.unit_converter_categories)[getCategoryInt(category)]
+            resources.getStringArray(R.array.unit_converter_categories)[category.ordinal]
         supportActionBar?.title = title
 
         val list = binding.allUnitsList
@@ -38,7 +38,8 @@ class AllUnitsActivity : AutoThemeActivity() {
         }
 
         val adapter = UnitListAdapter(
-            this, this, getCategoryItems(category), model, pos
+            this, this,
+            model.getConverterFunctions(category), model::copy, pos,
         )
         list.adapter = adapter
     }

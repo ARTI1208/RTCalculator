@@ -8,10 +8,12 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.databinding.UnitFragHalfBinding
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.SimpleTextWatcher
 
+@AndroidEntryPoint
 class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() {
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragHalfBinding {
@@ -22,7 +24,10 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
         registerForContextMenu(binding.unitRv)
 
-        val adapter = UnitListAdapter(requireContext(), viewLifecycleOwner, items, model, false)
+        val adapter = UnitListAdapter(
+            requireContext(), viewLifecycleOwner,
+            converterFunctions, model::copy, false,
+        )
 
         binding.unitRv.adapter = adapter
         binding.unitRv.layoutManager = LinearLayoutManager(requireContext())
@@ -57,7 +62,6 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
     }
 
     private fun UnitListAdapter.setValueForPosition(position: Int) {
-        val value = calculate(binding.hpuvEt.text.toString()) ?: 1.0
-        setValue(position, value)
+        setValue(position, binding.hpuvEt.text)
     }
 }

@@ -4,12 +4,9 @@ import org.apache.commons.math3.special.Gamma
 import ru.art2000.calculator.model.calculator.parts.*
 import kotlin.math.*
 
-object DoubleField : NumberField<Double> {
+object DoubleField : FloatingPointField<Double> {
 
     private const val PRECISION = 1e-7
-
-    override val precision: Double
-        get() = PRECISION
 
     override val constants: List<Constant<Double>>
         get() = listOf(
@@ -122,7 +119,4 @@ object DoubleField : NumberField<Double> {
         return c in '0'..'9'
     }
 
-    override fun isFloatingPointSymbol(c: Char): Boolean {
-        return c == '.' || c == ','
-    }
 }

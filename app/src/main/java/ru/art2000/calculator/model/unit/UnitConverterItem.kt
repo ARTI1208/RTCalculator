@@ -2,15 +2,13 @@ package ru.art2000.calculator.model.unit
 
 import ru.art2000.calculator.model.common.DiffComparable
 
-interface UnitConverterItem<T> : DiffComparable<UnitConverterItem<T>> {
+interface UnitConverterItem<T> : UnitItem, DiffComparable<UnitConverterItem<T>> {
+
+    val isSet: Boolean
 
     val currentValue: T
 
     val absoluteValue: T
-
-    val nameResourceId: Int
-
-    val shortNameResourceId: Int
 
     fun setValue(value: T)
 

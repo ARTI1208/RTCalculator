@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.databinding.CalculatorLexemeItemBinding
 import ru.art2000.calculator.model.calculator.parts.ExpressionPart
 import ru.art2000.calculator.model.calculator.parts.ExpressionValue
-import ru.art2000.calculator.view_model.calculator.Calculations
 
 class LexemeListAdapter<CN>(
         private val mContext: Context,
-        private val lexemes: List<ExpressionPart<*>>,
-        private val calculations: Calculations<CN>,
+        private val lexemes: List<ExpressionPart<CN>>,
+        private val numberFormatter: (CN) -> String,
 ) : RecyclerView.Adapter<LexemeListAdapter.LexemeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LexemeViewHolder {
@@ -27,9 +26,8 @@ class LexemeListAdapter<CN>(
     override fun onBindViewHolder(holder: LexemeViewHolder, position: Int) {
         val lexeme = lexemes[position]
 
-        holder.lexemeTextView.text = if (lexeme is ExpressionValue<*>)
-            @Suppress("UNCHECKED_CAST")
-            calculations.format(lexeme.value as CN)
+        holder.lexemeTextView.text = if (lexeme is ExpressionValue<CN>)
+            numberFormatter(lexeme.value)
         else
             lexeme.partAsString()
         holder.lexemeTypeView.text = "[${lexeme.javaClass.simpleName}]"

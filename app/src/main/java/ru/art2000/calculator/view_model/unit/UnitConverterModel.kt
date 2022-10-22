@@ -1,24 +1,34 @@
 package ru.art2000.calculator.view_model.unit
 
+import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.art2000.calculator.R
-import ru.art2000.calculator.model.unit.CopyMode
+import ru.art2000.calculator.model.unit.*
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.one
-import ru.art2000.calculator.view_model.calculator.DoubleCalculations
+import ru.art2000.extensions.arch.context
+import javax.inject.Inject
 
-class UnitConverterModel : ViewModel(), ExpressionInputViewModel {
+@HiltViewModel
+class UnitConverterModel @Inject constructor(
+    @ApplicationContext application: Context,
+    private val functionsProvider: ConverterFunctionsProvider,
+) : AndroidViewModel(application as Application), ExpressionInputViewModel {
 
     override val liveExpression = createLiveExpression(one)
 
     override val liveInputSelection = createLiveInput()
 
-    override val calculations = DoubleCalculations(UnitConverterFormatter)
+    override val calculations = functionsProvider.calculations
+
+    fun getConverterFunctions(category: UnitCategory) = functionsProvider.getConverterFunctions(category)
 
     fun onMinusClick() {
         val input = expression
@@ -33,7 +43,6 @@ class UnitConverterModel : ViewModel(), ExpressionInputViewModel {
     }
 
     fun copy(
-            context: Context,
             value: CharSequence,
             shortName: CharSequence,
             fullName: CharSequence,

@@ -9,36 +9,14 @@ class RatioConverterItem<T>(
         val multiply: (T, T) -> T,
         val divide: (T, T) -> T,
         zero: T,
-) : UnitConverterItem<T> {
+) : UnitConverterItemBase<T>(zero) {
 
-    private var mCurrentValue = zero
+    override fun absoluteToCurrent(absoluteValue: T) = absoluteValue * ratio
 
-    private var mAbsoluteValue = zero
-
-    override val currentValue: T
-        get() = mCurrentValue
-
-    override val absoluteValue: T
-        get() = mAbsoluteValue
-
-    override fun setValue(value: T) {
-        mCurrentValue = value
-        mAbsoluteValue = value / ratio
-    }
-
-    override fun convert(from: UnitConverterItem<T>): T {
-        if (this !== from) {
-            mAbsoluteValue = from.absoluteValue
-            mCurrentValue = from.absoluteValue * ratio
-        }
-
-        return mCurrentValue
-    }
+    override fun currentToAbsolute(currentValue: T) = currentValue / ratio
 
     override fun isSameItem(anotherItem: UnitConverterItem<T>): Boolean {
-        if (anotherItem !is RatioConverterItem) {
-            return false
-        }
+        if (anotherItem !is RatioConverterItem) return false
 
         return super.isSameItem(anotherItem) && ratio == anotherItem.ratio
     }

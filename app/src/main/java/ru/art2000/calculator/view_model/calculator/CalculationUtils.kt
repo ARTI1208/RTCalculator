@@ -74,27 +74,25 @@ private fun getLastUnclosedBracket(open: IntArray, close: IntArray): Int {
 }
 
 fun Calculations<*>.isBinaryOperationSymbol(operation: String): Boolean {
-    return findTypedOperation<BinaryOperation<Double>>(operation) != null
+    return findTypedOperation<BinaryOperation<*>>(operation) != null
 }
 
 fun Calculations<*>.isBinaryOperationSymbol(c: Char): Boolean {
     return isBinaryOperationSymbol(c.toString())
 }
 
-private inline fun <reified T : Operation<Double>> Calculations<*>.findTypedOperation(textRepresentation: String): T? {
+private inline fun <reified T : Operation<*>> Calculations<*>.findTypedOperation(textRepresentation: String): T? {
     return field.operations.filterIsInstance(T::class.java).find { it.textRepresentations.contains(textRepresentation) }
 }
 
 fun Calculations<*>.hasSignsInExpression(expr: String): Boolean {
     for (c in expr.toCharArray()) {
-        if (isBinaryOperationSymbol(c)) {
-            return true
-        }
+        if (isBinaryOperationSymbol(c)) return true
     }
     return false
 }
 
-inline fun <reified T : Operation<Double>> Calculations<*>.startsWithOperation(text: String): Boolean {
+inline fun <reified T : Operation<*>> Calculations<*>.startsWithOperation(text: String): Boolean {
     return field.operations.filterIsInstance(T::class.java).any { operation ->
         operation.textRepresentations.any { text.startsWith(it) }
     }

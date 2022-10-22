@@ -5,11 +5,11 @@ import android.view.View
 import ru.art2000.calculator.model.calculator.AngleType
 import ru.art2000.calculator.model.calculator.numbers.NumberField
 
-interface Calculations<T> {
+abstract class Calculations<T> {
 
-    val field: NumberField<T>
+    abstract val field: NumberField<T>
 
-    val formatter: CalculationNumberFormatter<T>
+    protected abstract val formatter: CalculationNumberFormatter<T>
 
     fun format(number: T): String = formatter.format(field.toCalculationNumber(number))
 
@@ -25,14 +25,14 @@ interface Calculations<T> {
 
     fun calculateForDisplay(expression: String): String = calculateForDisplay(expression, AngleType.RADIANS)
 
-    fun calculate(expression: String, angleType: AngleType): T?
+    abstract fun calculate(expression: String, angleType: AngleType): T?
 
     fun calculate(expression: String): T? = calculate(expression, AngleType.RADIANS)
 
-    fun createDebugView(
-            context: Context,
-            expression: String,
-            angleType: AngleType,
+    abstract fun createDebugView(
+        context: Context,
+        expression: String,
+        angleType: AngleType,
     ): View
 
     companion object {

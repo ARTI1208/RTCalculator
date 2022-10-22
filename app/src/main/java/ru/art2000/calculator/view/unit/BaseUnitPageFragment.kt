@@ -10,20 +10,19 @@ import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.viewbinding.ViewBinding
-import ru.art2000.calculator.view_model.unit.UnitConverterDependencies
+import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
+import ru.art2000.extensions.activities.getEnum
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 
 abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment() {
 
     companion object {
 
-        private const val defaultCategory = "area"
-
         private const val categoryKey = "category"
 
         @JvmStatic
-        fun newInstance(category: String, viewType: String): BaseUnitPageFragment<*> {
+        fun newInstance(category: UnitCategory, viewType: String): BaseUnitPageFragment<*> {
             return when (viewType) {
                 "simple" -> SimpleUnitPageFragment()
                 "powerful" -> PowerfulUnitPageFragment()
@@ -31,14 +30,14 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
             }.passCategoryToFragment(category)
         }
 
-        private fun BaseUnitPageFragment<*>.passCategoryToFragment(category: String): BaseUnitPageFragment<*> {
+        private fun BaseUnitPageFragment<*>.passCategoryToFragment(category: UnitCategory): BaseUnitPageFragment<*> {
             arguments = bundleOf(categoryKey to category)
             return this
         }
     }
 
-    protected val category: String by lazy {
-        arguments?.getString("category", defaultCategory) ?: defaultCategory
+    protected val category by lazy {
+        requireArguments().getEnum<UnitCategory>(categoryKey)!!
     }
 
     protected val binding: VB
@@ -70,7 +69,9 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         mBinding = null
     }
 
-    protected val items by lazy { UnitConverterDependencies.getCategoryItems(category) }
+    protected val converterFunctions by lazy { model.getConverterFunctions(category) }
+
+    protected val items by lazy { converterFunctions.items }
 
     protected fun createSpinnerAdapter(): SpinnerAdapter {
         val adapter = ArrayAdapter(
@@ -83,6 +84,4 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
 
         return adapter
     }
-
-    protected fun calculate(expression: String): Double? = model.calculations.calculate(expression)
 }

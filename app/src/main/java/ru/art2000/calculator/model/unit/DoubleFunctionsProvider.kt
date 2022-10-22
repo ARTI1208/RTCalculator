@@ -1,60 +1,54 @@
-package ru.art2000.calculator.view_model.unit
+package ru.art2000.calculator.model.unit
 
 import ru.art2000.calculator.R
-import ru.art2000.calculator.model.unit.*
+import ru.art2000.calculator.view_model.calculator.DoubleCalculations
+import ru.art2000.calculator.view_model.unit.UnitConverterFormatter
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.pow
 
-@Suppress("RemoveExplicitTypeArguments")
-object UnitConverterDependencies {
+@Singleton
+class DoubleFunctionsProvider @Inject constructor(): ConverterFunctionsProvider {
 
-    @JvmStatic
-    fun getCategoryItems(str: String): Array<UnitConverterItem<Double>> {
-        return when (str) {
-            "velocity" -> velocityItems
-            "distance" -> distanceItems
-            "area" -> areaItems
-            "volume" -> volumeItems
-            "mass" -> massItems
-            "pressure" -> pressureItems
-            "temperature" -> temperatureItems
-            else -> throw IllegalArgumentException("Unknown unit category '$str'")
+    override val calculations = DoubleCalculations(UnitConverterFormatter)
+
+    override fun getConverterFunctions(category: UnitCategory): ConverterFunctions {
+        val items = UnitConverterDependencies.getCategoryItems(category)
+        val defaultValue = 1.0
+        return CategoryFunctions(calculations, items, defaultValue).also { functions ->
+            if (items.isNotEmpty() && !items.first().isSet) {
+                functions.setValue(0, functions.defaultValueString)
+            }
         }
     }
 
-    @JvmStatic
-    fun getCategoryInt(str: String?): Int {
-        return when (str) {
-            "velocity" -> VELOCITY
-            "distance" -> DISTANCE
-            "area" -> AREA
-            "volume" -> VOLUME
-            "mass" -> MASS
-            "pressure" -> PRESSURE
-            "temperature" -> TEMPERATURE
-            else -> VELOCITY
+    private object UnitConverterDependencies {
+
+        @JvmStatic
+        fun getCategoryItems(category: UnitCategory): List<UnitConverterItem<Double>> {
+            return when (category) {
+                UnitCategory.VELOCITY -> velocityItems
+                UnitCategory.DISTANCE -> distanceItems
+                UnitCategory.AREA -> areaItems
+                UnitCategory.VOLUME -> volumeItems
+                UnitCategory.MASS -> massItems
+                UnitCategory.PRESSURE -> pressureItems
+                UnitCategory.TEMPERATURE -> temperatureItems
+            }
         }
-    }
 
-    private const val VELOCITY = 0
-    private const val DISTANCE = 1
-    private const val AREA = 2
-    private const val VOLUME = 3
-    private const val MASS = 4
-    private const val PRESSURE = 5
-    private const val TEMPERATURE = 6
+        private const val MM = 1e3
+        private const val CM = 1e2
+        private const val DM = 1e1
+        private const val METER = 1.0
+        private const val KM = 1e-3
+        private const val IN = 39.37
+        private const val FT = 3.2808
+        private const val YD = 1.0936
 
-    private const val MM = 1e3
-    private const val CM = 1e2
-    private const val DM = 1e1
-    private const val METER = 1.0
-    private const val KM = 1e-3
-    private const val IN = 39.37
-    private const val FT = 3.2808
-    private const val YD = 1.0936
+        private const val PA = 101325.0
 
-    private const val PA = 101325.0
-
-    private val velocityItems = arrayOf<UnitConverterItem<Double>>(
+        private val velocityItems = listOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.velocity_mpers, R.string.short_velocity_mpers, 1.0),
             DoubleRatioConverterItem(R.string.velocity_mpermin, R.string.short_velocity_mpermin, 60.0),
             DoubleRatioConverterItem(R.string.velocity_kmpermin, R.string.short_velocity_kmpermin, 60.0 / 1000.0),
@@ -63,9 +57,9 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.velocity_miperh, R.string.short_velocity_miperh, 2.2369),
             DoubleRatioConverterItem(R.string.velocity_mach, R.string.short_velocity_mach, 0.003),
             DoubleRatioConverterItem(R.string.velocity_kn, R.string.short_velocity_kn, 1.9438),
-    )
+        )
 
-    private val distanceItems = arrayOf<UnitConverterItem<Double>>(
+        private val distanceItems = listOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.distance_mm, R.string.short_distance_mm, MM),
             DoubleRatioConverterItem(R.string.distance_cm, R.string.short_distance_cm, CM),
             DoubleRatioConverterItem(R.string.distance_dm, R.string.short_distance_dm, DM),
@@ -78,9 +72,9 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.distance_nmi, R.string.short_distance_nmi, 0.0005399568),
             DoubleRatioConverterItem(R.string.distance_ly, R.string.short_distance_ly, 1 / 946000000.0),
             DoubleRatioConverterItem(R.string.distance_arshin, R.string.short_distance_arshin, 1 / 0.71),
-    )
+        )
 
-    private val areaItems = arrayOf<UnitConverterItem<Double>>(
+        private val areaItems = listOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.area_mm2, R.string.short_area_mm2, MM.pow(2)),
             DoubleRatioConverterItem(R.string.area_cm2, R.string.short_area_cm2, CM.pow(2)),
             DoubleRatioConverterItem(R.string.area_dm2, R.string.short_area_dm2, DM.pow(2)),
@@ -92,11 +86,11 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.area_ft2, R.string.short_area_ft2, FT.pow(2)),
             DoubleRatioConverterItem(R.string.area_yd2, R.string.short_area_yd2, YD.pow(2)),
             DoubleRatioConverterItem(R.string.area_acre, R.string.short_area_acre, 2.471053814671653E-4),
-    )
+        )
 
-    private val GAL_UK = DM.pow(3) / 4.5461
+        private val GAL_UK = DM.pow(3) / 4.5461
 
-    private val volumeItems = arrayOf<UnitConverterItem<Double>>(
+        private val volumeItems = listOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.volume_mm3, R.string.short_volume_mm3, MM.pow(3)),
             DoubleRatioConverterItem(R.string.volume_cm3, R.string.short_volume_cm3, CM.pow(3)),
             DoubleRatioConverterItem(R.string.volume_dm3, R.string.short_volume_dm3, DM.pow(3)),
@@ -109,9 +103,9 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.volume_qt_uk, R.string.short_volume_qt_uk, 4 * GAL_UK),
             DoubleRatioConverterItem(R.string.volume_pt_uk, R.string.short_volume_pt_uk, 8 * GAL_UK),
             DoubleRatioConverterItem(R.string.volume_bbl, R.string.short_volume_bbl, CM.pow(3) / 158.988),
-    )
+        )
 
-    private val massItems = arrayOf<UnitConverterItem<Double>>(
+        private val massItems = listOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.mass_mg, R.string.short_mass_mg, 1e6),
             DoubleRatioConverterItem(R.string.mass_g, R.string.short_mass_g, 1e3),
             DoubleRatioConverterItem(R.string.mass_kg, R.string.short_mass_kg, 1.0),
@@ -122,9 +116,9 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.mass_lb, R.string.short_mass_lb, 1 / 0.45359237),
             DoubleRatioConverterItem(R.string.mass_ct, R.string.short_mass_ct, 1e3 / 0.2),
             DoubleRatioConverterItem(R.string.mass_u, R.string.short_mass_u, 1 / 1.660539066605e-27),
-    )
+        )
 
-    private val pressureItems = arrayOf<UnitConverterItem<Double>>(
+        private val pressureItems = listOf<UnitConverterItem<Double>>(
             DoubleRatioConverterItem(R.string.pressure_atm, R.string.short_pressure_atm, 1.0),
             DoubleRatioConverterItem(R.string.pressure_at, R.string.short_pressure_at, 1.03323),
             DoubleRatioConverterItem(R.string.pressure_pa, R.string.short_pressure_pa, PA),
@@ -136,14 +130,15 @@ object UnitConverterDependencies {
             DoubleRatioConverterItem(R.string.pressure_in_hg, R.string.short_pressure_in_hg, PA / 3386.389),
             DoubleRatioConverterItem(R.string.pressure_in_wg, R.string.short_pressure_in_wg, 1 / 0.002456),
             DoubleRatioConverterItem(R.string.pressure_psi, R.string.short_pressure_psi, 14.696),
-    )
+        )
 
-    private val temperatureItems = arrayOf<UnitConverterItem<Double>>(
+        private val temperatureItems = listOf<UnitConverterItem<Double>>(
             DoubleFormulaConverterItem(R.string.temperature_celsius, R.string.short_temperature_celsius, { it - 273.15 }, { it + 273.15 }),
             DoubleFormulaConverterItem(R.string.temperature_fahrenheit, R.string.short_temperature_fahrenheit, { (it * 9 / 5) - 459.67 }, { (it + 459.67) * 5 / 9 }),
             DoubleRatioConverterItem(R.string.temperature_kelvin, R.string.short_temperature_kelvin, 1.0),
             DoubleRatioConverterItem(R.string.temperature_rankin, R.string.short_temperature_rankin, 1.8),
             DoubleFormulaConverterItem(R.string.temperature_réaumur, R.string.short_temperature_réaumur, { 0.8 * (it - 273.15) }, { 1.25 * it + 273.15 }),
-    )
+        )
 
+    }
 }

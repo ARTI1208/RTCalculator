@@ -6,8 +6,6 @@ import ru.art2000.calculator.model.calculator.parts.PrefixOperation
 
 interface NumberField<T> {
 
-    val precision: T
-
     val operations: List<Operation<T>>
 
     val constants: List<Constant<T>>
@@ -20,5 +18,4 @@ interface NumberField<T> {
 
     fun isNumberPart(c: Char): Boolean
 
-    fun isFloatingPointSymbol(c: Char): Boolean
 }

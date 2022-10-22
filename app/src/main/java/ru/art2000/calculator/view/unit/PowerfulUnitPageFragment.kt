@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.databinding.UnitFragBinding
 
+@AndroidEntryPoint
 class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragBinding {
@@ -18,7 +20,8 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
         binding.unitRv.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         binding.unitRv.adapter = UnitListAdapter(
-            requireContext(), viewLifecycleOwner, items, model, true
+            requireContext(), viewLifecycleOwner,
+            converterFunctions, model::copy, true,
         )
     }
 }

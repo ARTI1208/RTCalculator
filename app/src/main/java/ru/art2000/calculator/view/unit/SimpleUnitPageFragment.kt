@@ -8,32 +8,26 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.widget.ImageViewCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
+import ru.art2000.calculator.model.unit.ConverterFunctions
 import ru.art2000.calculator.model.unit.CopyMode
-import ru.art2000.calculator.model.unit.UnitConverterItem
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.*
-import ru.art2000.helpers.GeneralHelper
 
+@AndroidEntryPoint
 class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     companion object {
 
         const val MENU_ITEM_COPY = 0
 
-        private const val DEFAULT_EMPTY_VALUE_INTERPRETATION = 1
     }
 
     private var spinnerFromPosition = 0
     private var spinnerToPosition = 1
-
-    private var emptyValueInterpretation: Number = 0
-        set(value) {
-            field = value
-            binding.valueOriginal.hint = GeneralHelper.resultNumberFormat.format(value)
-        }
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragSimpleBinding {
         return UnitFragSimpleBinding.inflate(inflater, container, false)
@@ -42,7 +36,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     override fun setup() {
 
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
-        emptyValueInterpretation = DEFAULT_EMPTY_VALUE_INTERPRETATION
+        binding.valueOriginal.hint = converterFunctions.defaultValueString
 
         binding.buttonN.background = binding.buttonDot.background?.constantState?.newDrawable()
         ImageViewCompat.setImageTintList(binding.buttonN, binding.buttonDot.textColors)
@@ -106,7 +100,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             ) {
                 binding.originalDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)?.toString()
                 if (selectedItemPosition == spinnerToPosition) {
-                    model.setExpression(items[selectedItemPosition].displayValue)
+                    model.setExpression(converterFunctions.displayValue(selectedItemPosition))
                     binding.spinnerTo.setSelection(spinnerFromPosition)
                 }
                 spinnerFromPosition = selectedItemPosition
@@ -155,9 +149,10 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         val convertToItem = items[binding.spinnerTo.selectedItemPosition]
 
         return model.copy(
-                requireContext(), binding.valueConverted.text,
-                getString(convertToItem.shortNameResourceId), getString(convertToItem.nameResourceId),
-                copyMode
+            binding.valueConverted.text,
+            getString(convertToItem.shortNameResourceId),
+            getString(convertToItem.nameResourceId),
+            copyMode,
         )
     }
 
@@ -190,22 +185,11 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     private fun updateResult(position: Int, value: String) {
-        val from = items[position]
+        converterFunctions.setValue(position, value, object : ConverterFunctions.ValueCallback {
+            override fun shouldSkip(i: Int) = i == position
+        })
 
-        val inputValue = calculate(value) ?: emptyValueInterpretation.toDouble()
-
-        from.setValue(inputValue)
-
-        for (i in items.indices) {
-            if (i != position) {
-                items[i].convert(from)
-            }
-        }
-
-        binding.valueConverted.textValue = items[binding.spinnerTo.selectedItemPosition].displayValue
+        binding.valueConverted.textValue = converterFunctions.displayValue(binding.spinnerTo.selectedItemPosition)
     }
-
-    private val UnitConverterItem<Double>.displayValue
-        get() = model.calculations.format(currentValue)
 
 }

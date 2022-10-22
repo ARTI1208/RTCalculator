@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
 import ru.art2000.calculator.model.calculator.history.*
-import ru.art2000.calculator.model.calculator.numbers.CalculationNumber
+import ru.art2000.calculator.model.calculator.numbers.isFloatingPointSymbol
 import ru.art2000.calculator.model.calculator.parts.BinaryOperation
 import ru.art2000.calculator.model.calculator.parts.PostfixOperation
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
@@ -55,7 +55,7 @@ class CalculatorModel @Inject constructor(
         }
 
     // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
-    override val calculations: Calculations<Double> = DoubleCalculations(CalculatorFormatter)
+    override val calculations: Calculations<*> = DoubleCalculations(CalculatorFormatter)
 
     override val historyListItems = historyRepository.getAll().map { items ->
         var calendar: Calendar? = null
@@ -270,10 +270,9 @@ class CalculatorModel @Inject constructor(
     }
 
     fun onResult() {
-        var countStr: String = expression
+        val countStr = expression
         if (countStr.isEmpty()) return
 
-        var err = false
         val last = countStr.last()
         if (last.isFloatingPointSymbol || calculations.isBinaryOperationSymbol(last) || result != null) return
         var expr = addRemoveBrackets(countStr)
@@ -282,27 +281,28 @@ class CalculatorModel @Inject constructor(
         }
         setExpression(expr)
 
-        countStr = calculations.calculateForDisplay(expr, liveAngleType.value)
+        val (calculated, err) = calculateAndFormatForDisplay(expr, liveAngleType.value)
 
-        when (countStr) {
-            Calculations.calculationDivideByZero -> countStr = context.getString(prefsHelper.zeroDivResult)
-            Calculations.calculationError -> {
-                countStr = context.getString(R.string.error)
-                err = true
-            }
-        }
         if (!err) {
             saveCalculationResult(expr, countStr)
         }
-        result = countStr
+        result = calculated
     }
 
-    fun formatNumberForDisplay(calculationNumber: CalculationNumber<Double>?): String {
-        return when {
-            calculationNumber == null -> context.getString(prefsHelper.zeroDivResult)
-            calculationNumber.isInfinite -> context.getString(R.string.error)
-            else -> calculations.formatter.format(calculationNumber)
+    fun calculateAndFormatForDisplay(expression: String, angleType: AngleType): Pair<String, Boolean> {
+        var countStr = calculations.calculateForDisplay(expression, angleType)
+
+        var err = false
+        countStr = when (countStr) {
+            Calculations.calculationDivideByZero -> context.getString(prefsHelper.zeroDivResult)
+            Calculations.calculationError -> {
+                err = true
+                context.getString(R.string.error)
+            }
+            else -> countStr
         }
+
+        return countStr to err
     }
 
     fun handleMemoryOperation(operation: CharSequence) {

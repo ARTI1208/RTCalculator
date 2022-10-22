@@ -15,22 +15,21 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ItemUnitConverterListBinding
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding
 import ru.art2000.calculator.databinding.ItemUnitConverterNamePartBinding
-import ru.art2000.calculator.model.unit.CopyMode
-import ru.art2000.calculator.model.unit.UnitConverterItem
-import ru.art2000.calculator.view.unit.UnitListAdapter.UnitItemHolder
-import ru.art2000.calculator.view_model.unit.UnitConverterModel
+import ru.art2000.calculator.model.unit.*
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.SimpleTextWatcher
 import ru.art2000.helpers.getColorAttribute
 
+typealias CopyFunction = (CharSequence, CharSequence, CharSequence, CopyMode) -> Boolean
+
 class UnitListAdapter private constructor(
     private val mContext: Context,
     private val lifecycleOwner: LifecycleOwner,
-    private val data: Array<UnitConverterItem<Double>>,
-    private val model: UnitConverterModel,
+    private val converterFunctions: ConverterFunctions,
+    private val copy: CopyFunction,
     private val powerfulConverter: Boolean,
     position: Int,
-) : RecyclerView.Adapter<UnitItemHolder>() {
+) : RecyclerView.Adapter<UnitListAdapter.UnitItemHolder>() {
 
     private val selectedPosition = MutableStateFlow(Pair(0, 0))
 
@@ -55,20 +54,18 @@ class UnitListAdapter private constructor(
     internal constructor(
         ctx: Context,
         lifecycleOwner: LifecycleOwner,
-        items: Array<UnitConverterItem<Double>>,
-        model: UnitConverterModel,
-        isPowerfulConverter: Boolean
-    ) : this(ctx, lifecycleOwner, items, model, isPowerfulConverter, 0) {
-        if (data.isNotEmpty() && data[0].currentValue == 0.0) setValue(0, 1.0)
-    }
+        converterFunctions: ConverterFunctions,
+        copy: CopyFunction,
+        isPowerfulConverter: Boolean,
+    ) : this(ctx, lifecycleOwner, converterFunctions, copy, isPowerfulConverter, 0)
 
     internal constructor(
         ctx: Context,
         lifecycleOwner: LifecycleOwner,
-        items: Array<UnitConverterItem<Double>>,
-        model: UnitConverterModel,
-        pos: Int
-    ) : this(ctx, lifecycleOwner, items, model, false, pos)
+        converterFunctions: ConverterFunctions,
+        copy: CopyFunction,
+        pos: Int,
+    ) : this(ctx, lifecycleOwner, converterFunctions, copy, false, pos)
 
     init {
         currentDimension = position
@@ -79,48 +76,41 @@ class UnitListAdapter private constructor(
             mContext.getColorAttribute(com.google.android.material.R.attr.colorOnSurface)
     }
 
-    fun setValue(position: Int, value: Double, updatePosition: Boolean) {
-        if (updatePosition) {
-            currentDimension = position
-        }
-        val from = data[position]
-        from.setValue(value)
-        repeat(itemCount) { i ->
-            if (powerfulConverter && i == position) // don't skip for half-powerful to correctly recalculate
-                return@repeat
-            val convertedValue = data[i].convert(from)
-            if (recycler == null) return@repeat
-            val holder = recycler!!.findViewHolderForAdapterPosition(i) as UnitItemHolder?
-            if (holder != null) {
-                val v = doubleToString(convertedValue)
-                holder.dimensionValueView.text = v
+    fun setValue(position: Int, value: CharSequence) {
+        currentDimension = position
+
+        val callback = object : ConverterFunctions.ValueCallback {
+
+            override fun shouldSkip(i: Int) = powerfulConverter && i == position
+
+            override fun onValueUpdated(i: Int, newValueGetter: () -> String) {
+                val holder = recycler?.findViewHolderForAdapterPosition(i) as UnitItemHolder?
+                    ?: return
+
+                holder.dimensionValueView.text = newValueGetter()
             }
+
         }
-    }
 
-    fun setValue(position: Int, value: Double) {
-        setValue(position, value, true)
-    }
-
-    fun setValue(position: Int, value: String) {
-        val result = model.calculations.calculate(value)
-        setValue(position, result ?: 1.0)
+        if (value.isEmpty()) {
+            converterFunctions.setValue(position, converterFunctions.defaultValueString, callback)
+        } else {
+            converterFunctions.setValue(position, value.toString(), callback)
+        }
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recycler = recyclerView
+
+        fun getItemHolder(position: Int) = recycler?.findViewHolderForAdapterPosition(position)
+                as UnitListAdapter.UnitItemHolder?
+
         lifecycleOwner.launchRepeatOnStarted {
             selectedPosition.collect { pair ->
                 if (pair.first == pair.second) return@collect
-                setTextColors(
-                    recycler?.findViewHolderForAdapterPosition(pair.first) as UnitItemHolder?,
-                    false
-                )
-                setTextColors(
-                    recycler?.findViewHolderForAdapterPosition(pair.second) as UnitItemHolder?,
-                    true
-                )
+                setTextColors(getItemHolder(pair.first), false)
+                setTextColors(getItemHolder(pair.second), true)
             }
         }
     }
@@ -157,22 +147,17 @@ class UnitListAdapter private constructor(
         }
     }
 
-    private fun doubleToString(d: Double): String {
-        return model.calculations.format(d)
-    }
-
     override fun onBindViewHolder(holder: UnitItemHolder, position: Int) {
-        holder.bind(data[position], position == currentDimension)
+        holder.bind(position, position == currentDimension)
     }
 
     override fun onViewAttachedToWindow(holder: UnitItemHolder) {
         super.onViewAttachedToWindow(holder)
         val position = holder.absoluteAdapterPosition
         setTextColors(holder, position == currentDimension)
-        setValue(position, data[position].currentValue, false)
     }
 
-    override fun getItemCount() = data.size
+    override fun getItemCount() = converterFunctions.items.size
 
     inner class UnitItemHolder : RecyclerView.ViewHolder, OnCreateContextMenuListener {
         val dimensionValueView: TextView
@@ -192,7 +177,7 @@ class UnitListAdapter private constructor(
             val textWatcher = object : SimpleTextWatcher() {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (!binding.value.hasFocus()) return
-                    updateValue(s)
+                    setValue(bindingAdapterPosition, s)
                 }
             }
             binding.value.addTextChangedListener(textWatcher)
@@ -219,26 +204,19 @@ class UnitListAdapter private constructor(
         }
 
         private fun copy(copyMode: CopyMode): Boolean {
-            return model.copy(
-                mContext, dimensionValueView.text,
+            return copy(
+                dimensionValueView.text,
                 dimensionShortNameView.text, dimensionNameView.text,
                 copyMode
             )
         }
 
-        fun bind(item: UnitConverterItem<Double>, isSelected: Boolean) {
+        fun bind(position: Int, isSelected: Boolean) {
+            val item = converterFunctions.items[position]
             dimensionNameView.setText(item.nameResourceId)
             dimensionShortNameView.setText(item.shortNameResourceId)
-            dimensionValueView.text = doubleToString(item.currentValue)
+            dimensionValueView.text = converterFunctions.displayValue(position)
             setTextColors(this, isSelected)
-        }
-
-        fun updateValue(text: CharSequence) {
-            if (text.isEmpty()) {
-                setValue(bindingAdapterPosition, 1.0)
-            } else {
-                setValue(bindingAdapterPosition, text.toString())
-            }
         }
     }
 }
