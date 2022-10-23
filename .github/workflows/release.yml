@@ -18,6 +18,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+          cache: 'gradle'
       - run: chmod +x gradlew
       - name: Build ${{ matrix.variant }}-release
         id: build_release
