@@ -4,17 +4,12 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.util.SparseArray
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.animation.AccelerateInterpolator
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.transition.Slide
-import androidx.transition.Transition
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.R
@@ -32,9 +27,7 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
     private val replaceables = SparseArray<IReplaceableFragment>()
     private var currentReplaceable: IReplaceableFragment? = null
     private var firstReplaceDone = false
-    private var isTransitionRunning = false
     private var attachedPager2: ViewPager2? = null
-    private var mFragmentManager: FragmentManager? = null
 
     private var smoothScrollNext: Boolean = true
 
@@ -60,17 +53,9 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
     }
 
     private fun onNavigationItemSelected(item: MenuItem) {
-        val replaceable = getReplaceable(item.order)
-        if (replaceable != null) {
-            val position = replaceables.indexOfValue(replaceable)
-            if (attachedPager2 != null) {
-                sendReplaceCallback(replaceable)
-                attachedPager2!!.setCurrentItem(position, smoothScrollNext)
-            }
-            if (mFragmentManager != null) {
-                beginFragmentReplace(replaceable)
-            }
-        }
+        val replaceable = getReplaceable(item.order) ?: return
+        sendReplaceCallback(replaceable)
+        attachedPager2?.setCurrentItem(replaceables.indexOfValue(replaceable), smoothScrollNext)
     }
 
     private fun onNavigationItemReselected(item: MenuItem) {
@@ -97,19 +82,20 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
             val value = listener.onNavigationItemSelected(item)
             onNavigationItemSelected(item)
             firstReplaceDone = true
-            value && !isTransitionRunning
+            value
         }
     }
 
     fun setupWithViewPager2(
-        parentActivity: AppCompatActivity?,
+        parentActivity: FragmentActivity,
         pager2: ViewPager2,
-        vararg replaceableFragments: INavigationFragment
+        vararg replaceableFragments: INavigationFragment,
     ) {
+        attachedPager2 = pager2
         setReplaceableFragments(*replaceableFragments)
-        pager2.offscreenPageLimit = replaceableFragments.size - 1
+        pager2.offscreenPageLimit = replaceableFragments.size
         pager2.isUserInputEnabled = false
-        pager2.adapter = object : FragmentStateAdapter(parentActivity!!) {
+        pager2.adapter = object : FragmentStateAdapter(parentActivity) {
             override fun createFragment(position: Int): Fragment {
                 return replaceableFragments[position] as Fragment
             }
@@ -118,66 +104,6 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
                 return replaceableFragments.size
             }
         }
-        attachedPager2 = pager2
-    }
-
-    @Suppress("unused")
-    fun setupWithFragments(
-        parentActivity: AppCompatActivity,
-        containerId: Int,
-        vararg replaceableFragments: INavigationFragment
-    ) {
-        setReplaceableFragments(*replaceableFragments)
-        mFragmentManager = parentActivity.supportFragmentManager
-        val fragmentTransaction = mFragmentManager!!.beginTransaction()
-        for (navigationFragment in replaceableFragments) {
-            val fragment = navigationFragment as Fragment
-            val tag = fragment.javaClass.simpleName
-            if (mFragmentManager!!.findFragmentByTag(tag) == null) {
-                fragmentTransaction
-                    .add(containerId, fragment, tag)
-                    .hide(fragment)
-            }
-        }
-        fragmentTransaction.commitNow()
-    }
-
-    private fun beginFragmentReplace(replaceable: IReplaceableFragment) {
-        if (isTransitionRunning) {
-            return
-        }
-        val previousFragment = currentReplaceable as Fragment?
-        val nextFragment = replaceable as Fragment
-        val previousPosition = replaceables.indexOfValue(currentReplaceable)
-        val nextPosition = replaceables.indexOfValue(replaceable)
-        val fragmentTransaction = mFragmentManager!!.beginTransaction()
-        nextFragment.enterTransition = getEnterTransition(previousPosition, nextPosition)
-            .addTarget(nextFragment.requireView())
-            .addListener(object : Transition.TransitionListener {
-                override fun onTransitionStart(transition: Transition) {
-                    isTransitionRunning = true
-                }
-
-                override fun onTransitionEnd(transition: Transition) {
-                    isTransitionRunning = false
-                }
-
-                override fun onTransitionCancel(transition: Transition) {
-                    isTransitionRunning = false
-                }
-
-                override fun onTransitionPause(transition: Transition) {}
-                override fun onTransitionResume(transition: Transition) {}
-            })
-        if (previousFragment != null) {
-            previousFragment.exitTransition = getExitTransition(previousPosition, nextPosition)
-                .addTarget(previousFragment.requireView())
-            fragmentTransaction.hide(previousFragment)
-        }
-        fragmentTransaction
-            .show(nextFragment)
-            .runOnCommit { sendReplaceCallback(nextPosition) }
-            .commitNow()
     }
 
     private fun setReplaceableFragments(vararg replaceableFragments: INavigationFragment) {
@@ -215,32 +141,8 @@ class ReplaceableBottomNavigation @JvmOverloads constructor(
             }
             replaceable.onReplace(currentReplaceable)
         }
-        if (currentReplaceable != null) {
-            currentReplaceable!!.onReplaced(replaceable)
-        }
+        currentReplaceable?.onReplaced(replaceable)
         currentReplaceable = replaceable
     }
 
-    private fun sendReplaceCallback(position: Int) {
-        val replaceable = replaceables.valueAt(position)
-        sendReplaceCallback(replaceable)
-    }
-
-    private fun getEnterTransition(fromPosition: Int, toPosition: Int): Transition {
-        val transition = if (fromPosition < toPosition) {
-            Slide(Gravity.END)
-        } else {
-            Slide(Gravity.START)
-        }
-        return transition.setInterpolator(AccelerateInterpolator())
-    }
-
-    private fun getExitTransition(fromPosition: Int, toPosition: Int): Transition {
-        val transition = if (fromPosition < toPosition) {
-            Slide(Gravity.START)
-        } else {
-            Slide(Gravity.END)
-        }
-        return transition.setInterpolator(AccelerateInterpolator())
-    }
 }
