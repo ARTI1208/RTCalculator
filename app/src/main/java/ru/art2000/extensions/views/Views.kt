@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Build
 import android.text.Editable
-import android.view.*
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.EditText
 import android.widget.HorizontalScrollView
@@ -12,7 +15,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.util.Consumer
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -35,7 +41,7 @@ fun createTextEmptyView(context: Context, @StringRes text: Int): TextView {
     val emptyView = TextView(context)
     emptyView.setText(text)
     emptyView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
     )
     emptyView.gravity = Gravity.CENTER
     return emptyView
@@ -69,12 +75,15 @@ fun HorizontalScrollView.autoScrollOnInput(lifecycle: Lifecycle) {
                         xCoordinate
                     else
                         xCoordinate2
-                    totalPadding = paddingStart + paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
+                    totalPadding =
+                        paddingStart + paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
                 } else {
-                    totalPadding = paddingLeft + paddingRight + childEditText.paddingLeft + childEditText.paddingRight
+                    totalPadding =
+                        paddingLeft + paddingRight + childEditText.paddingLeft + childEditText.paddingRight
                 }
 
-                var scrollToX = if (xCoordinate > width) xCoordinate - width + totalPadding else xCoordinate
+                var scrollToX =
+                    if (xCoordinate > width) xCoordinate - width + totalPadding else xCoordinate
                 var isOutOfScreenToStart = false
                 if (first > 0) {
                     val previousX = layout.getPrimaryHorizontal(first - 1).toInt()
@@ -135,13 +144,13 @@ private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): Lis
             // keyboard is opened
             if (!keyboardVisible) {
                 keyboardVisible = true
-                listener.accept(keyboardVisible)
+                listener.accept(true)
             }
         } else {
             // keyboard is closed
             if (keyboardVisible) {
                 keyboardVisible = false
-                listener.accept(keyboardVisible)
+                listener.accept(false)
             }
         }
     }
@@ -173,9 +182,9 @@ private fun View.addImeVisibilityListenerApi21(listener: Consumer<Boolean>): Lis
 }
 
 private fun attachImeListener(
-        viewTreeObserver: ViewTreeObserver,
-        layoutListener: ViewTreeObserver.OnGlobalLayoutListener,
-        imeListener: Consumer<Boolean>
+    viewTreeObserver: ViewTreeObserver,
+    layoutListener: ViewTreeObserver.OnGlobalLayoutListener,
+    imeListener: Consumer<Boolean>
 ): ListenerSubscription<Boolean> {
     viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
     return ListenerSubscription {
@@ -235,7 +244,7 @@ private fun View.applyWindowTopInsetsApi21(margin: Boolean) {
     }
 }
 
-private fun View.addTop(originalTop: Int, insets: WindowInsetsCompat, margin : Boolean = false) {
+private fun View.addTop(originalTop: Int, insets: WindowInsetsCompat, margin: Boolean = false) {
     val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
     if (margin) {
