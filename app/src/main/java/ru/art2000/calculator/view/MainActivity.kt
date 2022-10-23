@@ -14,7 +14,7 @@ import ru.art2000.calculator.view.currency.CurrencyConverterFragment
 import ru.art2000.calculator.view.settings.SettingsFragment
 import ru.art2000.calculator.view.unit.UnitConverterFragment
 import ru.art2000.extensions.activities.AutoThemeActivity
-import ru.art2000.extensions.views.allowDrawingUnderStatusBar
+import ru.art2000.extensions.views.isDrawingUnderStatusBarAllowed
 import ru.art2000.helpers.isLightTheme
 
 @AndroidEntryPoint
@@ -26,7 +26,9 @@ class MainActivity : AutoThemeActivity() {
 
         setContentView(binding.root)
 
-        window.allowDrawingUnderStatusBar(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.isDrawingUnderStatusBarAllowed = true
+        }
 
         binding.navigation.setOnItemSelectedListener { item ->
             generalPrefsHelper.defaultNavItemId = item.itemId
