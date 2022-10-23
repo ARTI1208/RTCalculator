@@ -3,8 +3,6 @@ package ru.art2000.calculator.view
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.core.view.*
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -29,21 +27,6 @@ class MainActivity : AutoThemeActivity() {
         setContentView(binding.root)
 
         window.allowDrawingUnderStatusBar(true)
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.pager2,
-            OnApplyWindowInsetsListener { v, insets ->
-                val newInsets = ViewCompat.onApplyWindowInsets(v, insets)
-                if (newInsets.isConsumed) return@OnApplyWindowInsetsListener newInsets
-
-                val recyclerView = binding.pager2[0] as RecyclerView
-
-                val consumed = recyclerView.children.fold(false) { acc, view ->
-                    ViewCompat.dispatchApplyWindowInsets(view, newInsets)
-                    acc || newInsets.isConsumed
-                }
-
-                if (consumed) WindowInsetsCompat.CONSUMED else newInsets
-            })
 
         binding.navigation.setOnItemSelectedListener { item ->
             generalPrefsHelper.defaultNavItemId = item.itemId

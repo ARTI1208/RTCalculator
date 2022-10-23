@@ -4,11 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Build
 import android.text.Editable
-import android.text.TextWatcher
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.EditText
 import android.widget.HorizontalScrollView
@@ -203,6 +199,7 @@ fun View.applyWindowTopInsets(margin: Boolean = true) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun View.applyWindowTopInsetsApi21(margin: Boolean) {
     val originalTop by lazy {
         if (margin) {
@@ -212,21 +209,42 @@ private fun View.applyWindowTopInsetsApi21(margin: Boolean) {
         }
     }
 
-    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
-        val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+    fun onAttachedToParent() {
+        val rootInsets = ViewCompat.getRootWindowInsets(this)!!
+        addTop(originalTop, rootInsets, margin)
+    }
 
-        if (margin) {
-            updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = originalTop + systemInsets.top
+    if (isAttachedToWindow) {
+        onAttachedToParent()
+    } else {
+        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                v.removeOnAttachStateChangeListener(this)
+                onAttachedToParent()
             }
-        } else {
-            setPadding(
-                    paddingLeft,
-                    originalTop + systemInsets.top,
-                    paddingRight,
-                    paddingBottom,
-            )
-        }
+
+            override fun onViewDetachedFromWindow(v: View) {
+
+            }
+        })
+    }
+
+    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+        addTop(originalTop, insets, margin)
         WindowInsetsCompat.CONSUMED
+    }
+}
+
+private fun View.addTop(originalTop: Int, insets: WindowInsetsCompat, margin : Boolean = false) {
+    val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+    if (margin) {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = originalTop + systemInsets.top
+        }
+    } else {
+        updatePadding(
+            top = originalTop + systemInsets.top,
+        )
     }
 }
