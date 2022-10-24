@@ -9,11 +9,14 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.update
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.unit.*
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.one
+import ru.art2000.calculator.view_model.calculator.CalculationLexer
 import ru.art2000.extensions.arch.context
+import java.text.DecimalFormatSymbols
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +30,29 @@ class UnitConverterModel @Inject constructor(
     override val liveInputSelection = createLiveInput()
 
     override val calculations = functionsProvider.calculations
+
+    override var decimalSeparator: Char = DecimalFormatSymbols.getInstance().decimalSeparator
+        private set(value) {
+            val oldValue = decimalSeparator
+            if (oldValue == value) return
+
+            field = value
+            liveExpression.update { localizeExpression(it, value) }
+        }
+
+    private fun localizeExpression(
+        expression: String,
+        decimalSeparator: Char = this.decimalSeparator,
+    ): String {
+        return CalculationLexer.supportedDecimalSeparators.fold(expression) { acc, sep ->
+            if (sep != decimalSeparator) acc.replace(sep, decimalSeparator) else acc
+        }
+    }
+
+    override fun updateLocaleSpecific() {
+        val symbols = DecimalFormatSymbols.getInstance()
+        decimalSeparator = symbols.decimalSeparator
+    }
 
     fun getConverterFunctions(category: UnitCategory) = functionsProvider.getConverterFunctions(category)
 

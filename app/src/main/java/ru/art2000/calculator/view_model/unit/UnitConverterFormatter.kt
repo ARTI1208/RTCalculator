@@ -7,8 +7,11 @@ import kotlin.math.absoluteValue
 
 object UnitConverterFormatter : CalculationNumberFormatter<Double> {
 
-    private val actualFormatter = DecimalFormat("#.#######")
-    private val scientificFormatter = DecimalFormat("#.#####E0")
+    private val actualFormatter
+        get() = DecimalFormat("#.#######")
+
+    private val scientificFormatter
+        get() = DecimalFormat("#.#####E0")
 
     override fun format(number: CalculationNumber<Double>): String {
 

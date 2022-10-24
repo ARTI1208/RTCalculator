@@ -35,8 +35,11 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     override fun setup() {
 
+        model.updateLocaleSpecific()
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
         binding.valueOriginal.hint = converterFunctions.defaultValueString
+
+        binding.buttonDot.text = model.decimalSeparator.toString()
 
         binding.buttonN.background = binding.buttonDot.background?.constantState?.newDrawable()
         ImageViewCompat.setImageTintList(binding.buttonN, binding.buttonDot.textColors)
@@ -50,6 +53,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             }
         }
         binding.valueOriginal.addTextChangedListener(textWatcher)
+        binding.valueOriginal.isSaveEnabled = false
 
         binding.orHsv.autoScrollOnInput(viewLifecycleOwner.lifecycle)
 
