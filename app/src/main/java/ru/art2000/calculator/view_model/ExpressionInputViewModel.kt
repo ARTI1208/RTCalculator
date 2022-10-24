@@ -1,24 +1,18 @@
 package ru.art2000.calculator.view_model
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.art2000.calculator.view_model.calculator.CalculationLexer.Companion.isFloatingPointSymbol
 import ru.art2000.calculator.view_model.calculator.Calculations
 import ru.art2000.calculator.view_model.calculator.isBinaryOperationSymbol
+import java.text.DecimalFormatSymbols
 
 interface ExpressionInputViewModel {
 
     companion object {
 
-        val Char.isFloatingPointSymbol: Boolean
-            get() = this == '.' || this == ','
-
-        private val floatingPointSymbolString: String
-            get() = ","
-
         const val zero = "0"
 
         const val one = "1"
-
-        val floatingPointZero = zero + floatingPointSymbolString
     }
 
     val liveExpression: MutableStateFlow<String>
@@ -37,7 +31,15 @@ interface ExpressionInputViewModel {
             liveInputSelection.value = value
         }
 
+    val decimalSeparator: Char
+        get() = DecimalFormatSymbols.getInstance().decimalSeparator
+
+    val floatingPointZero
+        get() = zero + decimalSeparator
+
     val calculations: Calculations<*>
+
+    fun updateLocaleSpecific() {}
 
     fun clearInput() {
         setExpression("")
@@ -90,7 +92,7 @@ interface ExpressionInputViewModel {
     fun handleFloatingPointSymbol() {
         val last = expressionLastChar ?: return
 
-        var toAdd = floatingPointSymbolString
+        var toAdd = decimalSeparator.toString()
         var lastSign = 0
 
         val inputText: String = expression

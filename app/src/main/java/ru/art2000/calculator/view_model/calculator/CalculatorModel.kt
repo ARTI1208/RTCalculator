@@ -13,17 +13,16 @@ import kotlinx.coroutines.launch
 import ru.art2000.calculator.R
 import ru.art2000.calculator.model.calculator.*
 import ru.art2000.calculator.model.calculator.history.*
-import ru.art2000.calculator.model.calculator.numbers.isFloatingPointSymbol
 import ru.art2000.calculator.model.calculator.parts.BinaryOperation
 import ru.art2000.calculator.model.calculator.parts.PostfixOperation
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
-import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.floatingPointZero
-import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.isFloatingPointSymbol
 import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
+import ru.art2000.calculator.view_model.calculator.CalculationLexer.Companion.isFloatingPointSymbol
 import ru.art2000.extensions.arch.context
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.language.dotSafeToDouble
 import ru.art2000.helpers.CalculatorPreferenceHelper
+import java.text.DecimalFormatSymbols
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
@@ -35,12 +34,30 @@ class CalculatorModel @Inject constructor(
     private val historyRepository: HistoryRepository,
 ) : AndroidViewModel(application as Application), HistoryViewModel, ExpressionInputViewModel {
 
-    override val liveExpression = createLiveExpression(prefsHelper.lastExpression)
+    override var decimalSeparator: Char = DecimalFormatSymbols.getInstance().decimalSeparator
+        private set(value) {
+            val oldValue = decimalSeparator
+            if (oldValue == value) return
+
+            field = value
+            mLiveResult.update { it?.let { calculations.calculateForDisplay(it) } }
+            mLiveMemory.update { calculations.calculateForDisplay(it) }
+            liveExpression.update { localizeExpression(it, value) }
+        }
+
+    override val liveExpression = createLiveExpression(
+        prefsHelper.lastExpression?.let { localizeExpression(it) }
+    )
 
     override val liveInputSelection = createLiveInput()
 
     // TODO Use scientific formatting when come up with what to do with cos90 != 0 problem
     override val calculations: Calculations<*> = DoubleCalculations(CalculatorFormatter)
+
+    override fun updateLocaleSpecific() {
+        val symbols = DecimalFormatSymbols.getInstance()
+        decimalSeparator = symbols.decimalSeparator
+    }
 
     private val mLiveResult: MutableStateFlow<String?> = MutableStateFlow(null)
     val liveResult: StateFlow<String?> get() = mLiveResult
@@ -59,6 +76,23 @@ class CalculatorModel @Inject constructor(
             mLiveResult.value = value
         }
 
+    private fun localizeExpression(
+        expression: String,
+        decimalSeparator: Char = this.decimalSeparator,
+    ): String {
+        return CalculationLexer.supportedDecimalSeparators.fold(expression) { acc, sep ->
+            if (sep != decimalSeparator) acc.replace(sep, decimalSeparator) else acc
+        }
+    }
+
+    private fun HistoryDatabaseItem.localized(): HistoryDatabaseItem {
+        val localizedExpr = localizeExpression(expression)
+        val localizedResult = result.let { calculations.calculateForDisplay(it) }
+        return copy(expression = localizedExpr, result = localizedResult).also {
+            it.id = id
+        }
+    }
+
     override val historyListItems = historyRepository.getAll().map { items ->
         var calendar: Calendar? = null
         items.fold(mutableListOf<HistoryListItem>()) { acc, historyDatabaseItem ->
@@ -69,7 +103,7 @@ class CalculatorModel @Inject constructor(
                 acc += HistoryDateItem(date)
                 calendar = historyDatabaseItem.date
             }
-            acc += HistoryValueItem(historyDatabaseItem)
+            acc += HistoryValueItem(historyDatabaseItem.localized())
             acc
         }
     }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
@@ -81,7 +115,7 @@ class CalculatorModel @Inject constructor(
         viewModelScope.launch {
             launchAndCollect(mLiveMemory) { prefsHelper.lastMemory = it  }
             launchAndCollect(liveExpression) { prefsHelper.lastExpression = it  }
-            launchAndCollect(liveResult) { prefsHelper.lastExpressionWasCalculated = it != null  }
+            launchAndCollect(liveResult) { prefsHelper.lastExpressionWasCalculated = it != null }
         }
     }
 
@@ -148,7 +182,7 @@ class CalculatorModel @Inject constructor(
 
         val extraAppend = when {
             last == null -> ""
-            calculations.field.isFloatingPointSymbol(last) -> "0×"
+            last.isFloatingPointSymbol -> "0×"
             calculations.field.isNumberPart(last) -> "×"
             else -> ""
         }
@@ -161,7 +195,7 @@ class CalculatorModel @Inject constructor(
         val last = expressionLastChar ?: return
 
         val extraAppend = when {
-            calculations.field.isFloatingPointSymbol(last) -> zero
+            last.isFloatingPointSymbol -> zero
             else -> ""
         }
 

@@ -97,6 +97,7 @@ class CalculatorButtonsPagerAdapter(
     }
 
     private fun setDotButtonClickListener(page1Binding: CalculatorPage1Binding) {
+        page1Binding.buttonDot.text = model.decimalSeparator.toString()
         page1Binding.buttonDot.setOnClickListener { model.handleFloatingPointSymbol() }
     }
 

@@ -45,7 +45,10 @@ class CalculatorFragment : MainScreenFragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        model.updateLocaleSpecific()
+
         buttonsPager.adapter = CalculatorButtonsPagerAdapter(requireContext(), model)
+        inputTv.isSaveEnabled = false
         inputTv.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable) {
                 if (model.expression != s.toString()) {

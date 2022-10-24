@@ -6,11 +6,11 @@ import ru.art2000.calculator.model.common.DiffComparable
 import java.util.*
 
 @Entity(tableName = "history")
-class HistoryDatabaseItem(
-        val expression: String,
-        val result: String,
-        val date: Calendar,
-        var comment: String? = null,
+data class HistoryDatabaseItem(
+    val expression: String,
+    val result: String,
+    val date: Calendar,
+    var comment: String? = null,
 ) : DiffComparable<HistoryDatabaseItem> {
 
     @PrimaryKey(autoGenerate = true)

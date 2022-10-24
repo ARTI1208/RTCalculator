@@ -5,7 +5,7 @@ import ru.art2000.calculator.model.calculator.parts.*
 import ru.art2000.extensions.language.dotSafeToDouble
 import kotlin.math.*
 
-object DoubleField : FloatingPointField<Double> {
+object DoubleField : NumberField<Double> {
 
     private const val PRECISION = 1e-7
 

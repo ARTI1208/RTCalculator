@@ -188,9 +188,6 @@ class CalculationLexer<CalculationNumber>(
     private inline val Char.isNumberSign: Boolean
         get() = this == '-' || this == '+'
 
-    private inline val Char.isFloatingPointSymbol: Boolean
-        get() = this == '.' || this == ','
-
     private inline val Char.isScientific: Boolean
         get() = this == 'e' || this == 'E'
 
@@ -295,4 +292,11 @@ class CalculationLexer<CalculationNumber>(
     }
 
     private inline val CharArray.length get() = size
+
+    companion object {
+        inline val Char.isFloatingPointSymbol: Boolean
+            get() = this in supportedDecimalSeparators
+
+        val supportedDecimalSeparators = arrayOf('.', ',', '٫')
+    }
 }
