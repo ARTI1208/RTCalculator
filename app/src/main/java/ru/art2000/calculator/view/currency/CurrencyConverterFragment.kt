@@ -200,8 +200,10 @@ class CurrencyConverterFragment : MainScreenFragment() {
         Toast.makeText(requireContext(), messageId, Toast.LENGTH_SHORT).show()
     }
 
+    private val titleUpdatedString by lazy { requireContext().getString(R.string.currency_date) }
+
     private fun setCurrenciesUpdateDate(date: String) {
-        binding.toolbar.title = model.titleUpdatedString + " " + date
+        binding.toolbar.title = "$titleUpdatedString $date"
     }
 
     private fun setRefreshStatus(status: Boolean) {

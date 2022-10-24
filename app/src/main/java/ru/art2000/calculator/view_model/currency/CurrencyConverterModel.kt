@@ -11,11 +11,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import ru.art2000.calculator.R
 import ru.art2000.calculator.background.currency.CurrencyDownloadCallback
 import ru.art2000.calculator.model.currency.CurrencyRepository
 import ru.art2000.calculator.model.currency.LoadingState
-import ru.art2000.extensions.arch.context
 import ru.art2000.helpers.CurrencyPreferenceHelper
 import java.io.IOException
 import java.time.Instant
@@ -56,8 +54,6 @@ class CurrencyConverterModel @Inject constructor(
     override fun saveConversionIfNeeded(code: String) {
         prefsHelper.putConversionValuesIfNeeded(code, lastInputItemValue)
     }
-
-    val titleUpdatedString: String by lazy { context.getString(R.string.currency_date) }
 
     private val currencyDownloadCallback = object : CurrencyDownloadCallback {
         override fun onDownloadStarted(): Boolean {
