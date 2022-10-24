@@ -137,7 +137,8 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         }
 
         private fun dispatchListUpdate(oldData: List<CurrencyItem>, newData: List<CurrencyItem>) {
-            val result = calculateDiff(oldData, newData)
+            val result = calculateDiff(oldData, newData,
+                { code == it.code }, { position == it.position })
             result.dispatchUpdatesTo(this)
         }
 

@@ -17,7 +17,15 @@ fun <E> MutableCollection<E>.extendedRemoveIf(filter: (E) -> Boolean, action: (E
     return removed
 }
 
-fun <T : DiffComparable<T>> calculateDiff(oldData: List<T>, newData: List<T>): DiffUtil.DiffResult {
+fun <T : DiffComparable<T>> calculateDiff(oldData: List<T>, newData: List<T>) =
+    calculateDiff(oldData, newData, DiffComparable<T>::isSameItem, DiffComparable<T>::isContentSame)
+
+fun <T> calculateDiff(
+    oldData: List<T>,
+    newData: List<T>,
+    isSameItem: T.(T) -> Boolean,
+    isContentSame: T.(T) -> Boolean,
+): DiffUtil.DiffResult {
     return DiffUtil.calculateDiff(object : DiffUtil.Callback() {
         override fun getOldListSize(): Int {
             return oldData.size

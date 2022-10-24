@@ -86,7 +86,8 @@ class CurrencyListAdapter internal constructor(
             data = newData
             notifyItemRangeInserted(0, newData.size)
         } else {
-            val result = calculateDiff(data, newData)
+            val result = calculateDiff(data, newData,
+                { code == it.code }, { position == it.position && rate == it.rate })
             data = newData
             result.dispatchUpdatesTo(this)
         }
