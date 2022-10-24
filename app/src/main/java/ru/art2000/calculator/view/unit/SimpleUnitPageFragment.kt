@@ -2,20 +2,28 @@ package ru.art2000.calculator.view.unit
 
 import android.content.Intent
 import android.text.Editable
-import android.view.*
+import android.view.ContextMenu
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.Spinner
 import androidx.core.widget.ImageViewCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
+import ru.art2000.calculator.databinding.SimpleKeyboardBinding
 import ru.art2000.calculator.databinding.UnitFragSimpleBinding
 import ru.art2000.calculator.model.unit.ConverterFunctions
 import ru.art2000.calculator.model.unit.CopyMode
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
-import ru.art2000.extensions.views.*
+import ru.art2000.extensions.views.CalculatorEditText
+import ru.art2000.extensions.views.SimpleTextWatcher
+import ru.art2000.extensions.views.autoScrollOnInput
+import ru.art2000.extensions.views.textValue
 
 @AndroidEntryPoint
 class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
@@ -35,15 +43,20 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     override fun setup() {
 
+        val keyboardBinding = binding.keyboard
+
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
         binding.valueOriginal.hint = converterFunctions.defaultValueString
 
-        binding.buttonDot.text = model.decimalSeparator.toString()
+        keyboardBinding.buttonDot.text = model.decimalSeparator.toString()
 
-        binding.buttonN.background = binding.buttonDot.background?.constantState?.newDrawable()
-        ImageViewCompat.setImageTintList(binding.buttonN, binding.buttonDot.textColors)
+        keyboardBinding.buttonExtra.apply {
+            setImageResource(R.drawable.ic_list_all)
+            background = keyboardBinding.buttonDot.background?.constantState?.newDrawable()
+            ImageViewCompat.setImageTintList(this, keyboardBinding.buttonDot.textColors)
+        }
 
-        setSimpleViewButtonsClickListener()
+        setSimpleViewButtonsClickListener(keyboardBinding, binding.spinnerFrom)
 
         val textWatcher = object : SimpleTextWatcher() {
 
@@ -77,9 +90,10 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             }
         })
 
-        binding.valueOriginal.onSelectionChangedListener = CalculatorEditText.OnSelectionChangedListener { selStart, selEnd ->
-            model.inputSelection = Pair(selStart, selEnd)
-        }
+        binding.valueOriginal.onSelectionChangedListener =
+            CalculatorEditText.OnSelectionChangedListener { selStart, selEnd ->
+                model.inputSelection = Pair(selStart, selEnd)
+            }
 
         binding.swapButton.setOnClickListener {
             val newScaleX = if (it.scaleX >= 0) -1f else 1f
@@ -101,7 +115,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
                 selectedItemPosition: Int,
                 selectedId: Long
             ) {
-                binding.originalDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)?.toString()
+                binding.originalDimensionHint.text =
+                    spinnerAdapter.getItem(selectedItemPosition)?.toString()
                 if (selectedItemPosition == spinnerToPosition) {
                     model.setExpression(converterFunctions.displayValue(selectedItemPosition))
                     binding.spinnerTo.setSelection(spinnerFromPosition)
@@ -119,8 +134,11 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
                 selectedItemPosition: Int,
                 selectedId: Long
             ) {
-                binding.convertedDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)?.toString()
-                if (selectedItemPosition == spinnerFromPosition) binding.spinnerFrom.setSelection(spinnerToPosition)
+                binding.convertedDimensionHint.text =
+                    spinnerAdapter.getItem(selectedItemPosition)?.toString()
+                if (selectedItemPosition == spinnerFromPosition) {
+                    binding.spinnerFrom.setSelection(spinnerToPosition)
+                }
                 spinnerToPosition = selectedItemPosition
                 updateResult()
             }
@@ -131,19 +149,26 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         registerForContextMenu(binding.valueConverted)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
 
-        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_value).setOnMenuItemClickListener {
-            copy(CopyMode.VALUE_ONLY)
-        }
+        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_value)
+            .setOnMenuItemClickListener {
+                copy(CopyMode.VALUE_ONLY)
+            }
 
-        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_with_short_name).setOnMenuItemClickListener {
-            copy(CopyMode.VALUE_AND_SHORT_NAME)
-        }
+        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_with_short_name)
+            .setOnMenuItemClickListener {
+                copy(CopyMode.VALUE_AND_SHORT_NAME)
+            }
 
-        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_with_full_name).setOnMenuItemClickListener {
-            copy(CopyMode.VALUE_AND_FULL_NAME)
-        }
+        menu.add(0, MENU_ITEM_COPY, 0, R.string.context_menu_copy_with_full_name)
+            .setOnMenuItemClickListener {
+                copy(CopyMode.VALUE_AND_FULL_NAME)
+            }
 
     }
 
@@ -159,7 +184,10 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         )
     }
 
-    private fun setSimpleViewButtonsClickListener() {
+    private fun setSimpleViewButtonsClickListener(
+        binding: SimpleKeyboardBinding,
+        spinnerFrom: Spinner,
+    ) {
 
         val numberButtons = arrayOf(
             binding.button9, binding.button8, binding.button7,
@@ -179,9 +207,9 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         binding.buttonDot.setOnClickListener { model.handleFloatingPointSymbol() }
 
-        binding.buttonN.setOnClickListener {
+        binding.buttonExtra.setOnClickListener {
             val intent = Intent(requireContext(), AllUnitsActivity::class.java)
-            intent.putExtra("highlightPosition", binding.spinnerFrom.selectedItemPosition)
+            intent.putExtra("highlightPosition", spinnerFrom.selectedItemPosition)
             intent.putExtra("category", category)
             requireContext().startActivity(intent)
         }
@@ -193,7 +221,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             override fun shouldSkip(i: Int) = i == position
         })
 
-        binding.valueConverted.textValue = converterFunctions.displayValue(binding.spinnerTo.selectedItemPosition)
+        binding.valueConverted.textValue =
+            converterFunctions.displayValue(binding.spinnerTo.selectedItemPosition)
     }
 
 }

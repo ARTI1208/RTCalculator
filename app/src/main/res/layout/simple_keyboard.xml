@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/buttons_unit"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:gravity="bottom"
+    android:layout_weight="1.0"
+    android:layout_gravity="bottom"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button7"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/button8"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/button9"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/buttonClear"
+            android:layout_weight="1.0"
+            style="@style/RT.Widget.Button"
+            android:text="C" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button4"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/button5"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/button6"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/buttonDel"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="DEL" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button1"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/button3"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/buttonMinus"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="+/-" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button0"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="0" />
+
+        <Button
+            android:id="@+id/buttonDot"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="." />
+
+        <Button
+            android:id="@+id/button00"
+            style="@style/RT.Widget.Button"
+            android:layout_weight="1.0"
+            android:text="00" />
+
+        <ImageButton
+            android:id="@+id/buttonExtra"
+            style="@style/RT.Widget.ImageButton"
+            android:layout_weight="1.0" />
+    </LinearLayout>
+</LinearLayout>
