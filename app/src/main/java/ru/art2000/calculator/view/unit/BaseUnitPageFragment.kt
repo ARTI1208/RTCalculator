@@ -8,12 +8,13 @@ import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
 import androidx.viewbinding.ViewBinding
 import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
 import ru.art2000.extensions.activities.getEnum
+import ru.art2000.extensions.arch.assistedViewModel
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
+import javax.inject.Inject
 
 abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment() {
 
@@ -45,7 +46,10 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
 
     private var mBinding: VB? = null
 
-    protected val model: UnitConverterModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: UnitConverterModel.Factory
+
+    protected val model by assistedViewModel { viewModelFactory.create(category) }
 
     abstract fun inflate(inflater: LayoutInflater, container: ViewGroup?): VB
 
@@ -58,6 +62,8 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         savedInstanceState: Bundle?
     ): View {
 
+        model.updateLocaleSpecific()
+
         return (mBinding ?: inflate(inflater, container).also {
             mBinding = it
             setup()
@@ -69,7 +75,7 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
         mBinding = null
     }
 
-    protected val converterFunctions by lazy { model.getConverterFunctions(category) }
+    protected val converterFunctions by lazy { model.converterFunctions }
 
     protected val items by lazy { converterFunctions.items }
 

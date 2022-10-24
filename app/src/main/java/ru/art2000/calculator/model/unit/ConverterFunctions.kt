@@ -6,6 +6,8 @@ interface ConverterFunctions {
 
     val defaultValueString: String
 
+    fun isSet(position: Int): Boolean
+
     fun setValue(position: Int, value: String, callback: ValueCallback? = null)
 
     fun displayValue(position: Int): String

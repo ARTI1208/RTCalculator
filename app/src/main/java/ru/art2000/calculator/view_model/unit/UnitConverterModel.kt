@@ -7,25 +7,45 @@ import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
 import ru.art2000.calculator.R
-import ru.art2000.calculator.model.unit.*
+import ru.art2000.calculator.model.unit.ConverterFunctionsProvider
+import ru.art2000.calculator.model.unit.CopyMode
+import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
-import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.one
 import ru.art2000.calculator.view_model.calculator.CalculationLexer
 import ru.art2000.extensions.arch.context
 import java.text.DecimalFormatSymbols
-import javax.inject.Inject
 
-@HiltViewModel
-class UnitConverterModel @Inject constructor(
+class UnitConverterModel @AssistedInject constructor(
     @ApplicationContext application: Context,
-    private val functionsProvider: ConverterFunctionsProvider,
+    functionsProvider: ConverterFunctionsProvider,
+    @Assisted category: UnitCategory,
 ) : AndroidViewModel(application as Application), ExpressionInputViewModel {
 
-    override val liveExpression = createLiveExpression(one)
+    @AssistedFactory
+    interface Factory {
+        fun create(category: UnitCategory): UnitConverterModel
+    }
+
+    val converterFunctions = functionsProvider.getConverterFunctions(category)
+
+    override val liveExpression = createLiveExpression(run {
+        var value = ""
+
+        if (converterFunctions.items.isNotEmpty() && converterFunctions.isSet(0)) {
+            value = when (val v = converterFunctions.displayValue(0)) {
+                converterFunctions.defaultValueString -> ""
+                else -> v
+            }
+        }
+
+        value
+    })
 
     override val liveInputSelection = createLiveInput()
 
@@ -54,8 +74,6 @@ class UnitConverterModel @Inject constructor(
         decimalSeparator = symbols.decimalSeparator
     }
 
-    fun getConverterFunctions(category: UnitCategory) = functionsProvider.getConverterFunctions(category)
-
     fun onMinusClick() {
         val input = expression
         if (input != "") {
@@ -69,10 +87,10 @@ class UnitConverterModel @Inject constructor(
     }
 
     fun copy(
-            value: CharSequence,
-            shortName: CharSequence,
-            fullName: CharSequence,
-            copyMode: CopyMode
+        value: CharSequence,
+        shortName: CharSequence,
+        fullName: CharSequence,
+        copyMode: CopyMode,
     ): Boolean {
         val cmg = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val copiedText = when (copyMode) {

@@ -35,7 +35,6 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
     override fun setup() {
 
-        model.updateLocaleSpecific()
         binding.valueOriginal.setText(model.expression) // required to correctly place selection
         binding.valueOriginal.hint = converterFunctions.defaultValueString
 
@@ -63,7 +62,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
                     binding.valueOriginal.setText(expression)
                 }
 
-                updateResult(binding.spinnerFrom.selectedItemPosition, expression)
+                updateResult(expression)
             }
 
             launchAndCollect(model.liveInputSelection) { (first, second) ->
@@ -108,7 +107,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
                     binding.spinnerTo.setSelection(spinnerFromPosition)
                 }
                 spinnerFromPosition = selectedItemPosition
-                updateResult(binding.spinnerFrom.selectedItemPosition, binding.valueOriginal.text.toString())
+                updateResult()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -123,7 +122,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
                 binding.convertedDimensionHint.text = spinnerAdapter.getItem(selectedItemPosition)?.toString()
                 if (selectedItemPosition == spinnerFromPosition) binding.spinnerFrom.setSelection(spinnerToPosition)
                 spinnerToPosition = selectedItemPosition
-                updateResult(binding.spinnerFrom.selectedItemPosition, binding.valueOriginal.text.toString())
+                updateResult()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -188,7 +187,8 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         }
     }
 
-    private fun updateResult(position: Int, value: String) {
+    private fun updateResult(value: String = binding.valueOriginal.text.toString()) {
+        val position = binding.spinnerFrom.selectedItemPosition
         converterFunctions.setValue(position, value, object : ConverterFunctions.ValueCallback {
             override fun shouldSkip(i: Int) = i == position
         })

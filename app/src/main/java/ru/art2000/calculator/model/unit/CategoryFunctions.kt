@@ -11,6 +11,10 @@ class CategoryFunctions<T>(
     override val defaultValueString: String
         get() = calculations.format(defaultValue)
 
+    override fun isSet(position: Int): Boolean {
+        return items[position].isSet
+    }
+
     override fun setValue(
         position: Int,
         value: String,

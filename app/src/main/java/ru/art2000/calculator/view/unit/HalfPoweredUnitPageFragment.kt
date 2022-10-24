@@ -35,6 +35,9 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
             DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         )
 
+        val inputText = model.expression
+        binding.hpuvEt.setText(inputText)
+        binding.hpuvEt.setSelection(inputText.length)
         binding.hpuvEt.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable) {
                 adapter.setValueForPosition(binding.hpuvSpinner.selectedItemPosition)
