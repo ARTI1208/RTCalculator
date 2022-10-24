@@ -21,7 +21,6 @@ import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.views.SimpleTextWatcher
 import ru.art2000.helpers.getColorAttribute
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import com.google.android.material.R as MaterialR
 
 class CurrencyListAdapter internal constructor(
@@ -44,6 +43,8 @@ class CurrencyListAdapter internal constructor(
         mContext.resources.getDimension(R.dimen.currency_list_item_value_normal)
     private var data: List<CurrencyItem> = emptyList()
     private var recycler: RecyclerView? = null
+
+    private val dot2dig = DecimalFormat("#.##")
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -198,7 +199,4 @@ class CurrencyListAdapter internal constructor(
         }
     }
 
-    companion object {
-        private val dot2dig: NumberFormat = DecimalFormat("#.##")
-    }
 }
