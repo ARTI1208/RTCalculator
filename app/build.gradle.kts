@@ -10,8 +10,8 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-val composeVersion = "1.2.1"
-val composeMaterial3Version = "1.0.0-rc01"
+val composeVersion = "1.3.0"
+val composeMaterial3Version = "1.0.0"
 val composeCompilerVersion = "1.3.2"
 
 val major = 1
@@ -183,54 +183,55 @@ val kotlinVersion = libs.versions.kotlin.get()
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
+
+    val androidxHiltVersion = "1.0.0"
+    val daggerHiltVersion = "2.44"
+    val lifecycleVersion = "2.5.1"
+    val multidexVersion = "2.0.1"
+    val roomVersion = "2.4.3"
+
     implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.fragment:fragment-ktx:1.5.3")
+    implementation("androidx.hilt:hilt-work:$androidxHiltVersion")
+    kapt("androidx.hilt:hilt-compiler:$androidxHiltVersion")
+    implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.multidex:multidex:$multidexVersion")
     implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.work:work-runtime-ktx:2.7.1")
-    implementation("com.google.android.material:material:1.7.0-rc01")
-    implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
-    implementation("org.apache.commons:commons-math3:3.6.1")
 
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
+
+    implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
     implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    implementation("androidx.lifecycle:lifecycle-process:2.5.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    implementation("androidx.fragment:fragment-ktx:1.5.3")
+    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
 
-    implementation("androidx.hilt:hilt-work:1.0.0")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("org.apache.commons:commons-math3:3.6.1")
 
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
 
-    val roomVersion = "2.4.3"
+    testImplementation("junit:junit:4.13.2")
 
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
-
-
-    val multidexVersion = "2.0.1"
-    implementation("androidx.multidex:multidex:$multidexVersion")
 
 
     val okhttpVersionMinApi16 = "3.12.13"
+    val retrofitVersionMinApi16 = "2.6.4"
+
     //noinspection GradleDependency
     "minApi16Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi16")
     //noinspection GradleDependency
     "minApi16Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi16")
-
-    val okhttpVersionMinApi21 = "4.10.0"
-    "minApi21Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi21")
-    "minApi21Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi21")
-
-    val retrofitVersionMinApi16 = "2.6.4"
     //noinspection GradleDependency
     "minApi16Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi16")
     //noinspection GradleDependency
@@ -240,13 +241,22 @@ dependencies {
         exclude(group = "xpp3", module = "xpp3")
     }
 
+
+
+    val okhttpVersionMinApi21 = "4.10.0"
     val retrofitVersionMinApi21 = "2.9.0"
+
+    "minApi21Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi21")
+    "minApi21Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi21")
+
     "minApi21Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi21")
     "minApi21Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi21") {
         exclude(group = "stax", module = "stax-api")
         exclude(group = "stax", module = "stax")
         exclude(group = "xpp3", module = "xpp3")
     }
+
+    "minApi21Implementation"("androidx.activity:activity-compose:1.6.1")
 
     "minApi21Implementation"("androidx.compose.ui:ui:$composeVersion")
     // Tooling support (Previews, etc.)
@@ -263,7 +273,4 @@ dependencies {
     "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
     "minApi21Implementation"("androidx.compose.compiler:compiler:$composeCompilerVersion")
 
-    "minApi21Implementation"("androidx.activity:activity-compose:1.6.0")
-
-    testImplementation("junit:junit:4.13.2")
 }
