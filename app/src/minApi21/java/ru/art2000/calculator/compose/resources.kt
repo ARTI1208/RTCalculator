@@ -1,17 +1,16 @@
 package ru.art2000.calculator.compose
 
 import android.content.res.Resources
-import androidx.annotation.AttrRes
 import androidx.annotation.DimenRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.*
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import java.lang.IllegalArgumentException
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 
 @Composable
 @ReadOnlyComposable
