@@ -1,6 +1,5 @@
 package ru.art2000.calculator.view.currency
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -29,7 +28,6 @@ import ru.art2000.extensions.views.addImeVisibilityListener
 import ru.art2000.extensions.views.createTextEmptyView
 import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.helpers.getColorAttribute
-import java.util.*
 
 @AndroidEntryPoint
 class CurrencyConverterFragment : MainScreenFragment() {
@@ -184,15 +182,10 @@ class CurrencyConverterFragment : MainScreenFragment() {
         return R.string.title_currency
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun applyLoadingState(loadingState: LoadingState) {
         setRefreshStatus(loadingState === LoadingState.LOADING_STARTED)
-        if (loadingState === LoadingState.UNINITIALISED) return
-        if (loadingState === LoadingState.LOADING_ENDED) {
-            currenciesAdapter?.notifyDataSetChanged()
-            return
-        }
         val messageId = when (loadingState) {
+            LoadingState.UNINITIALISED, LoadingState.LOADING_ENDED -> return
             LoadingState.LOADING_STARTED -> R.string.currencies_update_toast
             LoadingState.NETWORK_ERROR -> R.string.currencies_no_internet
             else -> R.string.currencies_update_failed
