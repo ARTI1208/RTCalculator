@@ -10,6 +10,7 @@
         android:allowBackup="false"
         android:name=".CalculatorApplication"
         android:enableOnBackInvokedCallback="true"
+        android:theme="@style/RT.AppTheme.Light"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity
