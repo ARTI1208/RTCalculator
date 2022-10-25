@@ -1,7 +1,10 @@
 package ru.art2000.extensions.views
 
 import android.content.Context
+import android.content.res.Configuration
+import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Editable
 import android.view.Gravity
@@ -11,6 +14,7 @@ import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.EditText
 import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
@@ -22,6 +26,10 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import kotlin.math.roundToInt
 
 operator fun TextView.plusAssign(text: CharSequence) {
     append(text)
@@ -202,6 +210,67 @@ fun interface ListenerSubscription<T> {
 }
 
 @JvmOverloads
+fun View.applyWindowBottomInsets(margin: Boolean = true) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        applyWindowBottomInsetsApi21(margin)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+private fun View.applyWindowBottomInsetsApi21(margin: Boolean) {
+    val originalBottom by lazy {
+        if (margin) {
+            (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+        } else {
+            paddingBottom
+        }
+    }
+
+    fun onAttachedToParent() {
+        val rootInsets = ViewCompat.getRootWindowInsets(this)!!
+        addBottom(originalBottom, rootInsets, margin)
+    }
+
+    if (isAttachedToWindow) {
+        onAttachedToParent()
+    } else {
+        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                v.removeOnAttachStateChangeListener(this)
+                onAttachedToParent()
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {
+
+            }
+        })
+    }
+
+    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+        addBottom(originalBottom, insets, margin)
+        WindowInsetsCompat.CONSUMED
+    }
+}
+
+private fun View.addBottom(
+    originalBottom: Int,
+    insets: WindowInsetsCompat,
+    margin: Boolean = false
+) {
+    val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+    if (margin) {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = originalBottom + systemInsets.bottom
+        }
+    } else {
+        updatePadding(
+            bottom = originalBottom + systemInsets.bottom,
+        )
+    }
+}
+
+@JvmOverloads
 fun View.applyWindowTopInsets(margin: Boolean = true) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         applyWindowTopInsetsApi21(margin)
@@ -255,5 +324,147 @@ private fun View.addTop(originalTop: Int, insets: WindowInsetsCompat, margin: Bo
         updatePadding(
             top = originalTop + systemInsets.top,
         )
+    }
+}
+
+inline val Context.isLandscape: Boolean
+    get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+fun RecyclerView.addOrientationItemDecoration(drawForLastInRow: Boolean = false) {
+    if (context.isLandscape) {
+        addItemDecoration(FixedDividerItemDecoration(
+            context, FixedDividerItemDecoration.HORIZONTAL, drawForLastInRow,
+        ))
+    }
+}
+
+/**
+ * Copy of FixedDividerItemDecoration.
+ * Draws divider of the same size as recycler item.
+ * Also can skip drawing for last item in row.
+ */
+private class FixedDividerItemDecoration(
+    context: Context,
+    private var mOrientation: Int,
+    private val drawForLastInRow: Boolean,
+) : ItemDecoration() {
+
+    companion object {
+
+        const val HORIZONTAL = LinearLayout.HORIZONTAL
+        const val VERTICAL = LinearLayout.VERTICAL
+
+        private val attrs = intArrayOf(android.R.attr.listDivider)
+    }
+
+    private val mDivider: Drawable
+
+    private val mBounds = Rect()
+
+    init {
+        val a = context.obtainStyledAttributes(attrs)
+        val divider = a.getDrawable(0)
+        mDivider = checkNotNull(divider) {
+            a.recycle()
+            "@android:attr/listDivider was not set in the theme used for this " +
+                    "DividerItemDecoration. Please set that attribute all call setDrawable()"
+        }
+        a.recycle()
+    }
+
+    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        if (parent.layoutManager == null) {
+            return
+        }
+        if (mOrientation == VERTICAL) {
+            drawVertical(c, parent)
+        } else {
+            drawHorizontal(c, parent)
+        }
+    }
+
+    private fun drawVertical(canvas: Canvas, parent: RecyclerView) {
+        canvas.save()
+
+        if (parent.clipToPadding) {
+            val left = parent.paddingLeft
+            val right = parent.width - parent.paddingRight
+            canvas.clipRect(
+                left, parent.paddingTop, right,
+                parent.height - parent.paddingBottom
+            )
+        }
+
+        val childCount = parent.childCount
+        for (i in 0 until childCount) {
+            val child = parent.getChildAt(i)
+
+            if (!drawForLastInRow && isLastInRow(parent, child) == true) continue
+
+            parent.getDecoratedBoundsWithMargins(child, mBounds)
+            val bottom = mBounds.bottom + child.translationY.roundToInt()
+            val top = bottom - mDivider.intrinsicHeight
+            mDivider.setBounds(child.x.toInt(), top, (child.x + child.width).toInt(), bottom)
+            mDivider.draw(canvas)
+        }
+        canvas.restore()
+    }
+
+    private fun isLastInRow(recyclerView: RecyclerView, view: View): Boolean? {
+        val manager = recyclerView.layoutManager as? GridLayoutManager ?: return null
+        val params = view.layoutParams as? GridLayoutManager.LayoutParams ?: return null
+
+        return params.spanIndex + params.spanSize == manager.spanCount
+    }
+
+    private fun drawHorizontal(canvas: Canvas, parent: RecyclerView) {
+        canvas.save()
+
+        if (parent.clipToPadding) {
+            val top = parent.paddingTop
+            val bottom = parent.height - parent.paddingBottom
+            canvas.clipRect(
+                parent.paddingLeft, top,
+                parent.width - parent.paddingRight, bottom
+            )
+        }
+
+        val childCount = parent.childCount
+        for (i in 0 until childCount) {
+
+            val child = parent.getChildAt(i)
+
+            if (!drawForLastInRow && isLastInRow(parent, child) == true) continue
+
+            parent.layoutManager!!.getDecoratedBoundsWithMargins(child, mBounds)
+            val right = mBounds.right + child.translationX.roundToInt()
+            val left = right - mDivider.intrinsicWidth
+            mDivider.setBounds(left, child.y.toInt(), right, (child.y + child.height).toInt())
+            mDivider.draw(canvas)
+        }
+        canvas.restore()
+    }
+
+    override fun getItemOffsets(
+        outRect: Rect, view: View, parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        if (mOrientation == VERTICAL) {
+            outRect.set(0, 0, 0, mDivider.intrinsicHeight)
+        } else {
+            outRect.set(0, 0, mDivider.intrinsicWidth, 0)
+        }
+    }
+}
+
+@Suppress("FunctionName")
+fun OrientationManger(context: Context, isFullSpan: (Int) -> Boolean = { false }): GridLayoutManager {
+    val spanCount = if (context.isLandscape) 2 else 1
+    return GridLayoutManager(context, spanCount).apply {
+        spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (isFullSpan(position)) spanCount else 1
+            }
+        }
     }
 }

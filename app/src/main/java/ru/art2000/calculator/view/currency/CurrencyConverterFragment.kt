@@ -1,6 +1,5 @@
 package ru.art2000.calculator.view.currency
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.datepicker.*
@@ -23,10 +21,7 @@ import ru.art2000.calculator.view_model.currency.CurrencyConverterModel
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.fragments.IReplaceableFragment
-import ru.art2000.extensions.views.ListenerSubscription
-import ru.art2000.extensions.views.addImeVisibilityListener
-import ru.art2000.extensions.views.createTextEmptyView
-import ru.art2000.extensions.views.createThemedSnackbar
+import ru.art2000.extensions.views.*
 import ru.art2000.helpers.getColorAttribute
 
 @AndroidEntryPoint
@@ -48,9 +43,11 @@ class CurrencyConverterFragment : MainScreenFragment() {
         currenciesAdapter = CurrencyListAdapter(requireContext(), model)
 
         binding.currencyList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = OrientationManger(requireContext()) {
+                currenciesAdapter?.itemCount.let { it == null || it == 0 }
+            }
             adapter = currenciesAdapter
-            emptyViewGenerator = { _: Context, _: ViewGroup, _: Int ->
+            emptyViewGenerator = { _, _, _ ->
                 createTextEmptyView(
                     requireContext(), R.string.empty_text_no_currencies_added
                 )

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/unit_view_simple_row_height"
+            android:layout_weight="1">
+
+            <ru.art2000.extensions.views.HorizontalScrollViewCompat
+                android:id="@+id/or_hsv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/unit_view_simple_row_height"
+                android:layout_gravity="end|center"
+                android:background="?attr/colorSurfaceVariant"
+                android:scrollbars="none">
+
+                <ru.art2000.extensions.views.CalculatorEditText
+                    android:id="@+id/value_original"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center"
+                    android:gravity="end|center"
+                    android:maxLines="1"
+                    android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
+                    android:textSize="@dimen/calc_text_size"
+                    tools:text="0" />
+            </ru.art2000.extensions.views.HorizontalScrollViewCompat>
+
+            <!--
+                layout_width="wrap_content" produces wrong width sometimes for some unknown reason
+            -->
+            <TextView
+                android:id="@+id/original_dimension_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:gravity="end"
+                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
+                android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
+                android:visibility="gone"
+                tools:text="m/s" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?attr/colorSurfaceVariant"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin">
+
+            <Spinner
+                android:id="@+id/spinner_from"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/swap_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:padding="8dp"
+                app:srcCompat="@drawable/ic_horizontal_swap"
+                app:tint="?colorSecondary"
+                tools:ignore="ContentDescription" />
+
+            <Spinner
+                android:id="@+id/spinner_to"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/unit_view_simple_row_height"
+            android:layout_weight="1">
+
+            <ru.art2000.extensions.views.HorizontalScrollViewCompat
+                android:id="@+id/converted_hsv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/unit_view_simple_row_height"
+                android:layout_gravity="end|center"
+                android:background="?attr/colorSurfaceVariant"
+                android:scrollbars="none">
+
+                <TextView
+                    android:id="@+id/value_converted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center"
+                    android:gravity="end|center"
+                    android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
+                    android:textColor="?colorSecondary"
+                    android:textSize="@dimen/calc_text_size"
+                    tools:text="0" />
+            </ru.art2000.extensions.views.HorizontalScrollViewCompat>
+
+            <!--
+                layout_width="wrap_content" produces wrong width sometimes for some unknown reason
+            -->
+            <TextView
+                android:id="@+id/converted_dimension_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:gravity="end"
+                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
+                android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
+                android:textColor="?colorSecondary"
+                android:visibility="gone"
+                tools:text="km/h" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/keyboard"
+        layout="@layout/simple_keyboard" />
+
+
+</LinearLayout>

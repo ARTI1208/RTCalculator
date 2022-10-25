@@ -2,10 +2,10 @@ package ru.art2000.calculator.view.unit
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.databinding.UnitFragBinding
+import ru.art2000.extensions.views.OrientationManger
+import ru.art2000.extensions.views.addOrientationItemDecoration
 
 @AndroidEntryPoint
 class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
@@ -16,12 +16,14 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
 
     override fun setup() {
 
-        binding.unitRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.unitRv.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.unitRv.apply {
+            layoutManager = OrientationManger(requireContext())
+            addOrientationItemDecoration()
 
-        binding.unitRv.adapter = UnitListAdapter(
-            requireContext(), viewLifecycleOwner,
-            converterFunctions, model::copy, true,
-        )
+            adapter = UnitListAdapter(
+                requireContext(), viewLifecycleOwner,
+                converterFunctions, model::copy, true,
+            )
+        }
     }
 }

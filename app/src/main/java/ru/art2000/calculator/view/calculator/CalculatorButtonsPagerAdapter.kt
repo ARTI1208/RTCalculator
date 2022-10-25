@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.viewpager.widget.PagerAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.CalculatorExpertiseViewBinding
@@ -110,15 +111,24 @@ class CalculatorButtonsPagerAdapter(
         page1Binding.buttonEQ.setOnLongClickListener {
             if (model.expression.isEmpty()) return@setOnLongClickListener false
 
-            val bottomSheetDialog = BottomSheetDialog(mContext)
-            bottomSheetDialog.behavior.disableShapeAnimations()
-
             val binding = CalculatorExpertiseViewBinding.inflate(LayoutInflater.from(mContext))
-            bottomSheetDialog.setContentView(binding.root)
-            bottomSheetDialog.show()
+
+
+            BottomSheetDialog(mContext).apply {
+                setContentView(binding.root)
+                setOnShowListener { dialog ->
+                    val d = dialog as BottomSheetDialog
+                    val bottomSheet =
+                        d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)!!
+                    BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
+                }
+                behavior.disableShapeAnimations()
+                show()
+            }
 
             binding.expertiseIo.tvInput.isFocusable = false
             binding.expertiseIo.tvResult.visibility = View.VISIBLE
+            binding.expertiseIo.resultHsv.visibility = View.VISIBLE
 
             val expr = addRemoveBrackets(model.expression)
 

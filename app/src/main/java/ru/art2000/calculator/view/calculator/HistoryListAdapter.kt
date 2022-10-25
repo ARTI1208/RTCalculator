@@ -80,6 +80,8 @@ class HistoryListAdapter internal constructor(
 
     override fun getItemCount() = historyList.size
 
+    fun isDateItem(position: Int): Boolean = historyList.getOrNull(position) is HistoryDateItem
+
     abstract inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         abstract fun bind(historyListItem: HistoryListItem)
     }

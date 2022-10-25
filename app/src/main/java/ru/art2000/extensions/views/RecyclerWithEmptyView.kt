@@ -33,10 +33,9 @@ class RecyclerWithEmptyView @JvmOverloads constructor(
         }
 
         override fun getItemCount(): Int {
-            return if (emptyViewGenerator != null && actualAdapter?.itemCount in listOf(
-                    0,
-                    null
-                )
+            return if (emptyViewGenerator != null && actualAdapter?.itemCount.let {
+                    it == null || it == 0
+                }
             ) 1 else 0
         }
 

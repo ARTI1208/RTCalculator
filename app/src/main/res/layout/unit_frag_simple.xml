@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,8 +14,8 @@
             android:id="@+id/or_hsv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
-            android:background="?attr/colorSurfaceVariant"
             android:layout_gravity="end|center"
+            android:background="?attr/colorSurfaceVariant"
             android:scrollbars="none">
 
             <ru.art2000.extensions.views.CalculatorEditText
@@ -24,10 +24,10 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
-                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
                 android:maxLines="1"
-                tools:text="0"
-                android:textSize="40sp" />
+                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
+                android:textSize="@dimen/calc_text_size"
+                tools:text="0" />
         </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
         <!--
@@ -41,7 +41,7 @@
             android:gravity="end"
             android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
-            tools:text="m/s"/>
+            tools:text="m/s" />
     </FrameLayout>
 
     <FrameLayout
@@ -60,11 +60,11 @@
                 android:id="@+id/value_converted"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
-                android:textSize="40sp"
                 android:layout_gravity="end|center"
                 android:gravity="end|center"
+                android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
                 android:textColor="?colorSecondary"
+                android:textSize="@dimen/calc_text_size"
                 tools:text="0" />
         </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
@@ -80,37 +80,40 @@
             android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
             android:textColor="?colorSecondary"
-            tools:text="km/h"/>
+            tools:text="km/h" />
     </FrameLayout>
 
-    <include android:id="@+id/keyboard" layout="@layout/simple_keyboard" />
+    <include
+        android:id="@+id/keyboard"
+        layout="@layout/simple_keyboard" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin">
 
         <Spinner
             android:id="@+id/spinner_from"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <ImageButton
+            android:id="@+id/swap_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="?selectableItemBackground"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_horizontal_swap"
-            android:id="@+id/swap_button"
             app:tint="?colorSecondary"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            tools:ignore="ContentDescription" />
 
         <Spinner
             android:id="@+id/spinner_to"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
 </LinearLayout>

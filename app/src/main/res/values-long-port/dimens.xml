@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="calc_field_min_height">180dp</dimen>
+    <dimen name="calc_field_vertical_padding">14dp</dimen>
+    <dimen name="calc_text_size">50sp</dimen>
+</resources>

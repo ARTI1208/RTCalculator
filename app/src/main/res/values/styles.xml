@@ -108,17 +108,18 @@
 
     <style name="Base.RT.AppTheme.Black" parent="Base.RT.v18.AppTheme.Black" />
 
-    <style name="Base.RT.Widget.Button" parent="Widget.Material3.Button.TextButton">
-        <item name="android:layout_height">90dp</item>
+    <style name="Base.RT.Widget.KeyboardButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center|center</item>
         <item name="android:layout_gravity">center|center</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">@dimen/keyboard_button_text_size</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:scrollbars">none</item>
     </style>
 
-    <style name="RT.Widget.ImageButton" parent="">
-        <item name="android:layout_height">90dp</item>
+    <style name="RT.Widget.KeyboardImageButton" parent="">
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center|center</item>
         <item name="android:layout_gravity">center|center</item>
@@ -153,7 +154,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="RT.Widget.Button" parent="Base.RT.Widget.Button">
+    <style name="RT.Widget.KeyboardButton" parent="Base.RT.Widget.KeyboardButton">
     </style>
 
     <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.Material3.Button.TextButton.Dialog">

@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.databinding.UnitFragHalfBinding
 import ru.art2000.extensions.fragments.IReplaceableFragment
+import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.SimpleTextWatcher
+import ru.art2000.extensions.views.addOrientationItemDecoration
 
 @AndroidEntryPoint
 class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() {
@@ -22,36 +22,41 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
     override fun setup() {
 
-        registerForContextMenu(binding.unitRv)
-
-        val adapter = UnitListAdapter(
+        val unitListAdapter = UnitListAdapter(
             requireContext(), viewLifecycleOwner,
             converterFunctions, model::copy, false,
         )
 
-        binding.unitRv.adapter = adapter
-        binding.unitRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.unitRv.addItemDecoration(
-            DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        )
+        binding.unitRv.apply {
+            adapter = unitListAdapter
+            layoutManager = OrientationManger(requireContext())
+            addOrientationItemDecoration()
+
+            registerForContextMenu(this)
+        }
 
         val inputText = model.expression
         binding.hpuvEt.setText(inputText)
         binding.hpuvEt.setSelection(inputText.length)
         binding.hpuvEt.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable) {
-                adapter.setValueForPosition(binding.hpuvSpinner.selectedItemPosition)
+                unitListAdapter.setValueForPosition(binding.hpuvSpinner.selectedItemPosition)
             }
         })
 
         binding.hpuvSpinner.adapter = createSpinnerAdapter()
 
         binding.hpuvSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                adapter.setValueForPosition(position)
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+                unitListAdapter.setValueForPosition(position)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
 

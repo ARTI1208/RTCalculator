@@ -15,7 +15,6 @@ import ru.art2000.calculator.databinding.UnitLayoutBinding
 import ru.art2000.calculator.model.unit.UnitCategory
 import ru.art2000.calculator.view.MainScreenFragment
 import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.newInstance
-import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.MyTabLayoutMediator
 import ru.art2000.helpers.UnitPreferenceHelper
 import java.lang.ref.WeakReference
@@ -59,12 +58,17 @@ internal class UnitConverterFragment : MainScreenFragment() {
             binding.pager2.unregisterOnPageChangeCallback(it)
         }
         pageChangeCallback2 = object : OnPageChangeCallback() {
-            private var isFirstRun = true
+
+            var previousPosition = -1
+
+            val previousFragment: BaseUnitPageFragment<*>?
+                get() = if (previousPosition in 0 until pager2Adapter.itemCount) {
+                    pager2Adapter.getFragment(previousPosition)
+                } else null
+
             override fun onPageSelected(position: Int) {
-                if (!isFirstRun) {
-                    pager2Adapter.getFragment(position).onReplace(null)
-                }
-                isFirstRun = false
+                pager2Adapter.getFragment(position).onReplace(previousFragment)
+                previousPosition = position
             }
         }
         binding.pager2.registerOnPageChangeCallback(pageChangeCallback2!!)
@@ -89,11 +93,6 @@ internal class UnitConverterFragment : MainScreenFragment() {
 
     override fun getReplaceableId(): Int {
         return R.id.navigation_unit
-    }
-
-    override fun onShown(previousReplaceable: IReplaceableFragment?) {
-        val adapter = binding.pager2.adapter as? UnitPagerAdapter ?: return
-        adapter.getFragment(binding.pager2.currentItem).onShown(null)
     }
 
     private inner class UnitPagerAdapter(

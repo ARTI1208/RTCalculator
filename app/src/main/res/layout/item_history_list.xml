@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/parent"
-    android:paddingHorizontal="6dp"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="6dp">
 
     <TextView
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
+        android:layout_gravity="end"
+        android:gravity="end"
         android:textColor="?colorOnSurfaceVariant"
-        android:gravity="start"
         android:textSize="16sp"
         tools:text="Comment" />
 
@@ -20,9 +22,9 @@
         android:id="@+id/expression"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
+        android:layout_gravity="end"
+        android:gravity="end"
         android:textColor="?colorOnSurfaceVariant"
-        android:gravity="start"
         android:textSize="24sp"
         tools:text="Expression" />
 

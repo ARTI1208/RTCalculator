@@ -1,5 +1,6 @@
 package ru.art2000.calculator.view.calculator
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -9,9 +10,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import by.kirich1409.viewbindingdelegate.CreateMethod
@@ -74,6 +73,14 @@ class CalculatorFragment : MainScreenFragment() {
                 inputTv.setSelection(first, second)
             }
             launchAndCollect(model.liveResult) { result ->
+
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    binding.calculatorIo.resultHsv.visibility = if (result == null)
+                        View.GONE
+                    else
+                        View.VISIBLE
+                }
+
                 if (result == null) {
                     resultTV.visibility = View.INVISIBLE
                     resultTV.text = null
@@ -227,7 +234,9 @@ class CalculatorFragment : MainScreenFragment() {
             model.historyListItems
         )
         historyRecyclerView.adapter = adapter
-        val linearLayoutManager = LinearLayoutManager(requireContext())
+        val linearLayoutManager = OrientationManger(requireContext()) { position ->
+            adapter.itemCount == 0 || adapter.isDateItem(position)
+        }
         historyRecyclerView.layoutManager = linearLayoutManager
         val itemTouchHelper = ItemTouchHelper(
             HistoryItemTouchHelperCallback(
@@ -244,16 +253,7 @@ class CalculatorFragment : MainScreenFragment() {
         )
         itemTouchHelper.attachToRecyclerView(historyRecyclerView)
         historyRecyclerView.addItemDecoration(HistoryItemDecoration())
-        historyRecyclerView.addItemDecoration(
-            DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        )
-        launchRepeatOnStarted {
-            launchAndCollect(model.historyListItems) { data ->
-                if (data.isNotEmpty()) {
-                    historyRecyclerView.scrollToPosition(adapter.itemCount - 1)
-                }
-            }
-        }
+        historyRecyclerView.addOrientationItemDecoration()
         historyFloatingDate.visibility = View.GONE
         historyRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 

@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
@@ -14,7 +15,8 @@ import ru.art2000.calculator.view.currency.CurrencyConverterFragment
 import ru.art2000.calculator.view.settings.SettingsFragment
 import ru.art2000.calculator.view.unit.UnitConverterFragment
 import ru.art2000.extensions.activities.AutoThemeActivity
-import ru.art2000.extensions.views.isDrawingUnderStatusBarAllowed
+import ru.art2000.extensions.fragments.INavigationFragment
+import ru.art2000.extensions.views.*
 import ru.art2000.helpers.isLightTheme
 
 @AndroidEntryPoint
@@ -30,7 +32,9 @@ class MainActivity : AutoThemeActivity() {
             window.isDrawingUnderStatusBarAllowed = true
         }
 
-        binding.navigation.setOnItemSelectedListener { item ->
+        val navigation = binding.navigation as NavigationBarView
+
+        navigation.setMyOnItemSelectedListener { item ->
             generalPrefsHelper.defaultNavItemId = item.itemId
             intent.action = when (item.itemId) {
                 R.id.navigation_unit -> ACTION_CONVERTER
@@ -38,14 +42,19 @@ class MainActivity : AutoThemeActivity() {
                 R.id.navigation_settings -> ACTION_SETTINGS
                 else -> ACTION_CALCULATOR
             }
+
             true
         }
 
-        binding.navigation.setupWithViewPager2(
-            this,
-            binding.pager2,
+        val replaceableFragments: Array<INavigationFragment> = arrayOf(
             CurrencyConverterFragment(), CalculatorFragment(),
             UnitConverterFragment(), SettingsFragment(),
+        )
+
+        navigation.setupWithViewPager2(
+            this,
+            binding.pager2,
+            *replaceableFragments,
         )
 
         val tabId = when (intent.action) {
@@ -56,7 +65,7 @@ class MainActivity : AutoThemeActivity() {
             ACTION_SETTINGS -> R.id.navigation_settings
             else -> R.id.navigation_calc
         }
-        binding.navigation.setSelectedItemId(tabId, false)
+        navigation.setSelectedItemId(tabId, false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
             && (!isLightTheme() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
@@ -65,6 +74,10 @@ class MainActivity : AutoThemeActivity() {
             if (back is MaterialShapeDrawable) {
                 window.navigationBarColor = back.resolvedTintColor
             }
+        }
+
+        if (isLandscape) {
+            binding.pager2.applyWindowBottomInsets()
         }
     }
 

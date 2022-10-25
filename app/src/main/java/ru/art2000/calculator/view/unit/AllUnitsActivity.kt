@@ -1,9 +1,6 @@
 package ru.art2000.calculator.view.unit
 
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityAllUnitsBinding
@@ -12,6 +9,8 @@ import ru.art2000.calculator.view_model.unit.UnitConverterModel
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.activities.getEnumExtra
 import ru.art2000.extensions.arch.assistedViewModel
+import ru.art2000.extensions.views.OrientationManger
+import ru.art2000.extensions.views.addOrientationItemDecoration
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,17 +39,16 @@ class AllUnitsActivity : AutoThemeActivity() {
             resources.getStringArray(R.array.unit_converter_categories)[category.ordinal]
         supportActionBar?.title = title
 
-        val list = binding.allUnitsList
-        list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        list.layoutManager = LinearLayoutManager(this).apply {
-            orientation = RecyclerView.VERTICAL
-        }
-
-        val adapter = UnitListAdapter(
+        val unitListAdapter = UnitListAdapter(
             this, this,
             model.converterFunctions, model::copy, pos,
         )
-        list.adapter = adapter
+
+        binding.allUnitsList.apply {
+            layoutManager = OrientationManger(this@AllUnitsActivity)
+            addOrientationItemDecoration()
+            adapter = unitListAdapter
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -1,164 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/buttons"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:ignore="HardcodedText">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/buttonClear"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_clear"
+        app:layout_constraintBottom_toTopOf="@+id/button7"
+        app:layout_constraintEnd_toStartOf="@+id/buttonLeftBracket"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/buttonClear"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="C" />
+    <Button
+        android:id="@+id/buttonLeftBracket"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_bracket_left"
+        app:layout_constraintBottom_toTopOf="@+id/button8"
+        app:layout_constraintEnd_toStartOf="@+id/buttonRightBracket"
+        app:layout_constraintStart_toEndOf="@+id/buttonClear"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/buttonLeftBracket"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="(" />
+    <Button
+        android:id="@+id/buttonRightBracket"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_bracket_right"
+        app:layout_constraintBottom_toTopOf="@+id/button9"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDel"
+        app:layout_constraintStart_toEndOf="@+id/buttonLeftBracket"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/buttonRightBracket"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text=")" />
+    <Button
+        android:id="@+id/buttonDel"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_delete"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDiv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonRightBracket"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/buttonDel"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="DEL" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/button7"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_7"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
+        app:layout_constraintEnd_toEndOf="@+id/buttonClear"
+        app:layout_constraintStart_toStartOf="@+id/buttonClear"
+        app:layout_constraintTop_toBottomOf="@+id/buttonClear" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/button8"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_8"
+        app:layout_constraintBottom_toTopOf="@+id/button5"
+        app:layout_constraintEnd_toEndOf="@+id/buttonLeftBracket"
+        app:layout_constraintStart_toStartOf="@+id/buttonLeftBracket"
+        app:layout_constraintTop_toBottomOf="@+id/buttonLeftBracket" />
 
-        <Button
-            android:id="@+id/button7"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="7" />
+    <Button
+        android:id="@+id/button9"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_9"
+        app:layout_constraintBottom_toTopOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="@+id/buttonRightBracket"
+        app:layout_constraintStart_toStartOf="@+id/buttonRightBracket"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRightBracket" />
 
-        <Button
-            android:id="@+id/button8"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="8" />
+    <Button
+        android:id="@+id/buttonDiv"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_div"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMult"
+        app:layout_constraintEnd_toEndOf="@+id/buttonDel"
+        app:layout_constraintStart_toStartOf="@+id/buttonDel"
+        app:layout_constraintTop_toBottomOf="@+id/buttonDel" />
 
-        <Button
-            android:id="@+id/button9"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="9" />
+    <Button
+        android:id="@+id/button4"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_4"
+        app:layout_constraintBottom_toTopOf="@+id/button1"
+        app:layout_constraintEnd_toEndOf="@+id/button7"
+        app:layout_constraintStart_toStartOf="@+id/button7"
+        app:layout_constraintTop_toBottomOf="@+id/button7" />
 
-        <Button
-            android:id="@+id/buttonDiv"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="÷" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/button5"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_5"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="@+id/button8"
+        app:layout_constraintStart_toStartOf="@+id/button8"
+        app:layout_constraintTop_toBottomOf="@+id/button8" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/button6"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_6"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="@+id/button9"
+        app:layout_constraintStart_toStartOf="@+id/button9"
+        app:layout_constraintTop_toBottomOf="@+id/button9" />
 
-        <Button
-            android:id="@+id/button4"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="4" />
+    <Button
+        android:id="@+id/buttonMult"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_mult"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMinus"
+        app:layout_constraintEnd_toEndOf="@+id/buttonDiv"
+        app:layout_constraintStart_toStartOf="@+id/buttonDiv"
+        app:layout_constraintTop_toBottomOf="@+id/buttonDiv" />
 
-        <Button
-            android:id="@+id/button5"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="5" />
+    <Button
+        android:id="@+id/button1"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_1"
+        app:layout_constraintBottom_toTopOf="@+id/button0"
+        app:layout_constraintEnd_toEndOf="@+id/button4"
+        app:layout_constraintStart_toStartOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/button4" />
 
-        <Button
-            android:id="@+id/button6"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="6" />
+    <Button
+        android:id="@+id/button2"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_2"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDot"
+        app:layout_constraintEnd_toEndOf="@+id/button5"
+        app:layout_constraintStart_toStartOf="@+id/button5"
+        app:layout_constraintTop_toBottomOf="@+id/button5" />
 
-        <Button
-            android:id="@+id/buttonMult"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="×" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/button3"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_3"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEQ"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintTop_toBottomOf="@+id/button6" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/buttonMinus"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_minus"
+        app:layout_constraintBottom_toTopOf="@+id/buttonPlus"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMult"
+        app:layout_constraintStart_toStartOf="@+id/buttonMult"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMult" />
 
-        <Button
-            android:id="@+id/button1"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="1" />
+    <Button
+        android:id="@+id/button0"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button1"
+        app:layout_constraintStart_toStartOf="@+id/button1"
+        app:layout_constraintTop_toBottomOf="@+id/button1" />
 
-        <Button
-            android:id="@+id/button2"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="2" />
+    <Button
+        android:id="@+id/buttonDot"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_decimal_separator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button2"
+        app:layout_constraintStart_toStartOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-        <Button
-            android:id="@+id/button3"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="3" />
+    <Button
+        android:id="@+id/buttonEQ"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_eq"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button3"
+        app:layout_constraintStart_toStartOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/button3" />
 
-        <Button
-            android:id="@+id/buttonMinus"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="-" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/buttonPlus"
+        style="@style/RT.Widget.KeyboardButton"
+        android:text="@string/keyboard_plus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMinus"
+        app:layout_constraintStart_toStartOf="@+id/buttonMinus"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMinus" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button0"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="0" />
-
-        <Button
-            android:id="@+id/buttonDot"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="." />
-
-        <Button
-            android:id="@+id/buttonEQ"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="=" />
-
-        <Button
-            android:id="@+id/buttonPlus"
-            style="@style/RT.Widget.Button"
-            android:layout_weight="1.0"
-            android:text="+" />
-    </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
