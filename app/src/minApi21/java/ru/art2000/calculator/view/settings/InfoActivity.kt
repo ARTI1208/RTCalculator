@@ -1,7 +1,6 @@
 package ru.art2000.calculator.view.settings
 
-import android.content.Intent
-import android.net.Uri
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -9,16 +8,21 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnitType
@@ -76,6 +80,30 @@ class InfoActivity : InfoActivityBase() {
         }
     }
 
+    @Preview
+    @Composable
+    private fun LightThemePreviewShort() {
+        LightTheme {
+            InfoScreenRoot(PreviewInfoViewModelShort)
+        }
+    }
+
+    @Preview(device = Devices.TABLET)
+    @Composable
+    private fun LightThemePreviewLandscape() {
+        LightTheme {
+            InfoScreenRoot(PreviewInfoViewModel)
+        }
+    }
+
+    @Preview(device = Devices.TABLET)
+    @Composable
+    private fun LightThemePreviewShortLandscape() {
+        LightTheme {
+            InfoScreenRoot(PreviewInfoViewModelShort)
+        }
+    }
+
     private object PreviewInfoViewModel : IInfoViewModel {
 
         override val authorLinks = listOf(
@@ -95,30 +123,85 @@ class InfoActivity : InfoActivityBase() {
 
     }
 
+    private object PreviewInfoViewModelShort : IInfoViewModel {
+
+        override val authorLinks = listOf(
+            AuthorLink(R.drawable.github, R.string.link_url_github),
+            AuthorLink(R.drawable.gitlab, R.string.link_url_gitlab),
+            AuthorLink(R.drawable.kde, R.string.link_url_kde),
+        )
+
+        private val line = """
+            
+            v1.0
+             - Initial Release
+             
+        """.trimIndent()
+
+        override val changeLogText = line.repeat(2)
+
+    }
+
     @Composable
     private fun InfoScreenRoot(
         model: IInfoViewModel
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
         ) {
 
             CalculatorAppBar(titleText = stringResource(R.string.info),
                 onBackPressed = { finish() }
             )
 
-            SectionHeader(stringRes = R.string.changelog, marginBottom = 8.dp)
-            ChangeLogText(
-                text = model.changeLogText ?: stringResource(R.string.changelog_load_failed),
-                textColor = MaterialTheme.colorScheme.onSurface,
-                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-            )
-
-            SectionHeader(stringRes = R.string.dev)
-            DevAvatar()
-            DevLinks(links = model.authorLinks)
+            if (isLandscape) {
+                HorizontalInfoContent(model = model)
+            } else {
+                VerticalInfoContent(model = model)
+            }
         }
+    }
+
+    @Composable
+    private fun ColumnScope.VerticalInfoContent(model: IInfoViewModel) {
+        ChangelogLayout(model = model)
+        DevLayout(model = model)
+    }
+
+    @Composable
+    private fun HorizontalInfoContent(model: IInfoViewModel) {
+
+        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+            Column(modifier = Modifier.weight(1f)) {
+                ChangelogLayout(model = model)
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.weight(1f),
+            ) {
+                DevLayout(model = model)
+            }
+        }
+    }
+
+    @Composable
+    private fun ColumnScope.ChangelogLayout(model: IInfoViewModel) {
+        SectionHeader(stringRes = R.string.changelog, marginBottom = 8.dp)
+        ChangeLogText(
+            text = model.changeLogText ?: stringResource(R.string.changelog_load_failed),
+            textColor = MaterialTheme.colorScheme.onSurface,
+            backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
+
+    @Composable
+    private fun ColumnScope.DevLayout(model: IInfoViewModel) {
+        SectionHeader(stringRes = R.string.dev)
+        DevAvatar()
+        DevLinks(links = model.authorLinks)
     }
 
     @Composable
@@ -174,32 +257,37 @@ class InfoActivity : InfoActivityBase() {
     }
 
     @Composable
-    private fun DevAvatar() {
+    private fun ColumnScope.DevAvatar() {
         val avatarPadding = dimensionResource(R.dimen.author_avatar_padding)
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                .padding(top = avatarPadding) // margin
-                .border(
-                    1.dp,
-                    MaterialTheme.calculatorColors.strokeColor,
-                    RoundedCornerShape(10.dp)
-                )
-                .padding(avatarPadding) // padding
-        ) {
 
-            CompositionLocalProvider(LocalContentAlpha provides LocalContentAlpha.current) {
-                Image(
-                    painter = painterResource(R.drawable.dev_avatar),
-                    contentDescription = "Dev avatar",
-                    modifier = Modifier.size(dimensionResource(R.dimen.author_avatar_image_size)),
+        val modifier = if (isLandscape) Modifier.weight(1f) else Modifier
+
+        Box(contentAlignment = Alignment.Center, modifier = modifier) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                    .padding(top = avatarPadding) // margin
+                    .border(
+                        1.dp,
+                        MaterialTheme.calculatorColors.strokeColor,
+                        RoundedCornerShape(10.dp)
+                    )
+                    .padding(avatarPadding) // padding
+            ) {
+
+                CompositionLocalProvider(LocalContentAlpha provides LocalContentAlpha.current) {
+                    Image(
+                        painter = painterResource(R.drawable.dev_avatar),
+                        contentDescription = "Dev avatar",
+                        modifier = Modifier.size(dimensionResource(R.dimen.author_avatar_image_size)),
+                    )
+                }
+
+                Text(
+                    text = stringResource(R.string.author_nick),
+                    fontSize = textUnitResource(R.dimen.author_nick_text_size, TextUnitType.Sp),
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
-
-            Text(
-                text = stringResource(R.string.author_nick),
-                fontSize = textUnitResource(R.dimen.author_nick_text_size, TextUnitType.Sp),
-                color = MaterialTheme.colorScheme.onSurface,
-            )
         }
     }
 
@@ -212,10 +300,8 @@ class InfoActivity : InfoActivityBase() {
             Arrangement.SpaceAround,
         ) {
             links.forEach {
-                val url = stringResource(it.link)
                 IconButton(onClick = {
-                    val githubIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(githubIntent)
+                    onLinkClick(it)
                 }, modifier = Modifier.size(40.dp)) {
                     Image(
                         painter = painterResource(id = it.image),
@@ -226,4 +312,9 @@ class InfoActivity : InfoActivityBase() {
             }
         }
     }
+
+    private val isLandscape
+        @Composable
+        get() = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
 }

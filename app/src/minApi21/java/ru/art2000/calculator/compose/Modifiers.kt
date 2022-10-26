@@ -3,6 +3,7 @@ package ru.art2000.calculator.compose
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -10,10 +11,8 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.android.material.R as MaterialR
 
 fun Modifier.verticalScrollBar(
     state: ScrollState,
@@ -31,8 +30,7 @@ fun Modifier.verticalScrollBar(
         animationSpec = tween(durationMillis = duration)
     )
 
-    val actualColor =
-        color ?: LocalContext.current.getColorFromAttribute(MaterialR.attr.colorControlNormal)
+    val actualColor = color ?: MaterialTheme.calculatorColors.strokeColor
 
     drawWithContent {
         drawContent()
