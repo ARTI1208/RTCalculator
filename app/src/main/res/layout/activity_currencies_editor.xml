@@ -97,6 +97,7 @@
         app:layout_behavior="ru.art2000.extensions.views.FloatingActionButtonScrollingBehaviour"
         app:layout_dodgeInsetEdges="top"
         app:srcCompat="@drawable/ic_currencies_done"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        tools:ignore="ContentDescription" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

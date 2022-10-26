@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -27,7 +26,10 @@ import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
+import ru.art2000.extensions.views.OrientationManger
+import ru.art2000.extensions.views.addOrientationItemDecoration
 import ru.art2000.extensions.views.createTextEmptyView
+import ru.art2000.extensions.views.isLandscape
 import ru.art2000.helpers.dip2px
 
 class CurrenciesEditFragment : UniqueReplaceableFragment() {
@@ -41,25 +43,27 @@ class CurrenciesEditFragment : UniqueReplaceableFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding.modifyCurrenciesList.setPadding(0, 0, 0, requireContext().dip2px(20f))
-        binding.modifyCurrenciesList.emptyViewGenerator = { ctx, _, _ ->
-            createTextEmptyView(ctx, emptyTextRes)
-        }
-        val adapter = EditCurrenciesAdapter()
-        binding.modifyCurrenciesList.adapter = adapter
-        val llm = LinearLayoutManager(requireContext())
-        llm.orientation = RecyclerView.VERTICAL
-        binding.modifyCurrenciesList.layoutManager = llm
-        itemTouchHelper = ItemTouchHelper(CurrenciesEditRecyclerTouchCallback(
-            requireContext(),
-            { position ->
-                val removedItem = model.displayedVisibleItems[position]
-                model.databaseMarkHidden(removedItem)
+        binding.modifyCurrenciesList.apply {
+            setPadding(0, 0, 0, requireContext().dip2px(20f))
+            emptyViewGenerator = { ctx, _, _ ->
+                createTextEmptyView(ctx, emptyTextRes)
             }
-        ) { firstPosition, secondPosition ->
-            adapter.swap(firstPosition, secondPosition)
-        }).apply {
-            attachToRecyclerView(binding.modifyCurrenciesList)
+            val editCurrenciesAdapter = EditCurrenciesAdapter()
+            adapter = editCurrenciesAdapter
+            layoutManager = OrientationManger(requireContext())
+            addOrientationItemDecoration()
+            itemTouchHelper = ItemTouchHelper(CurrenciesEditRecyclerTouchCallback(
+                requireContext(),
+                requireContext().isLandscape,
+                { position ->
+                    val removedItem = model.displayedVisibleItems[position]
+                    model.databaseMarkHidden(removedItem)
+                }
+            ) { firstPosition, secondPosition ->
+                editCurrenciesAdapter.swap(firstPosition, secondPosition)
+            }).also {
+                it.attachToRecyclerView(this)
+            }
         }
 
         return binding.root

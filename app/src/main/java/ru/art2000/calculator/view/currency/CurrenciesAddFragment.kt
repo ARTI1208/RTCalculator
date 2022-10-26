@@ -10,7 +10,6 @@ import androidx.annotation.StringRes
 import androidx.core.util.Consumer
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -27,6 +26,8 @@ import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
+import ru.art2000.extensions.views.OrientationManger
+import ru.art2000.extensions.views.addOrientationItemDecoration
 import ru.art2000.extensions.views.createTextEmptyView
 
 class CurrenciesAddFragment : UniqueReplaceableFragment() {
@@ -46,19 +47,19 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
             }
         }
 
-        val llm = LinearLayoutManager(requireContext()).apply {
-            orientation = RecyclerView.VERTICAL
-        }
-        binding.modifyCurrenciesList.layoutManager = llm
-        binding.modifyCurrenciesList.emptyViewGenerator = { ctx, _, _ ->
-            createTextEmptyView(ctx, emptyTextRes)
-        }
-        binding.modifyCurrenciesList.emptyViewHolderBinder = Consumer { view: View? ->
-            val emptyView = view as TextView?
-            emptyView?.setText(emptyTextRes)
-        }
+        binding.modifyCurrenciesList.apply {
+            layoutManager = OrientationManger(requireContext())
+            addOrientationItemDecoration()
+            emptyViewGenerator = { ctx, _, _ ->
+                createTextEmptyView(ctx, emptyTextRes)
+            }
+            emptyViewHolderBinder = Consumer { view: View? ->
+                val emptyView = view as TextView?
+                emptyView?.setText(emptyTextRes)
+            }
 
-        binding.modifyCurrenciesList.adapter = AddCurrenciesAdapter()
+            adapter = AddCurrenciesAdapter()
+        }
 
         return binding.root
     }
