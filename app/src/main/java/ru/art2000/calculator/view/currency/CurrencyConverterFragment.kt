@@ -52,6 +52,7 @@ class CurrencyConverterFragment : MainScreenFragment() {
                     requireContext(), R.string.empty_text_no_currencies_added
                 )
             }
+            addOrientationItemDecoration()
         }
 
         binding.refresher.apply {
