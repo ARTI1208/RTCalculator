@@ -17,6 +17,18 @@ fun <E> MutableCollection<E>.extendedRemoveIf(filter: (E) -> Boolean, action: (E
     return removed
 }
 
+fun <E> List<E>.indexOf(e: E, fromIndex: Int = 0): Int {
+    return indexOfFirst(fromIndex) { it == e }
+}
+
+inline fun <E> List<E>.indexOfFirst(fromIndex: Int = 0, predicate: (E) -> Boolean): Int {
+    val index = fromIndex.coerceAtLeast(0)
+    for (i in index until size) {
+        if (predicate(this[i])) return i
+    }
+    return -1
+}
+
 fun <T : DiffComparable<T>> calculateDiff(oldData: List<T>, newData: List<T>) =
     calculateDiff(oldData, newData, DiffComparable<T>::isSameItem, DiffComparable<T>::isContentSame)
 

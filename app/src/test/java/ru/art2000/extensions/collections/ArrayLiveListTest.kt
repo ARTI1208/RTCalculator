@@ -553,6 +553,50 @@ class ArrayLiveListTest {
     }
 
     @Test
+    fun checkReplaceAllSwap() {
+
+        list.addAll(listOf(1, 2, 3, 4, 5, 4))
+        clearCalled()
+
+        list.observeForever(object : LiveList.LiveListObserver<Int>() {
+
+            override fun onItemsReplaced(previousList: List<Int>, replacedIndices: List<Int>) {
+                Assert.assertEquals(6, previousList.size)
+                Assert.assertEquals(1, previousList[0])
+                Assert.assertEquals(2, previousList[1])
+                Assert.assertEquals(3, previousList[2])
+                Assert.assertEquals(4, previousList[3])
+                Assert.assertEquals(5, previousList[4])
+                Assert.assertEquals(4, previousList[5])
+
+                Assert.assertEquals(3, replacedIndices.size)
+                Assert.assertEquals(3, replacedIndices[0])
+                Assert.assertEquals(5, replacedIndices[1])
+                Assert.assertEquals(1, replacedIndices[2])
+            }
+        })
+
+        list.replaceAll(
+            buildMap {
+                this[4] = 2
+                this[2] = 4
+            }
+        )
+
+        Assert.assertEquals(6, list.size)
+        Assert.assertEquals(1, list[0])
+        Assert.assertEquals(4, list[1])
+        Assert.assertEquals(3, list[2])
+        Assert.assertEquals(2, list[3])
+        Assert.assertEquals(5, list[4])
+        Assert.assertEquals(2, list[5])
+        Assert.assertTrue(anyCalled)
+        Assert.assertFalse(insertCalled)
+        Assert.assertFalse(removedCalled)
+        Assert.assertTrue(replacedCalled)
+    }
+
+    @Test
     fun checkReplaceAllOp() {
 
         list.addAll(listOf(1, 2, 3, 4, 5, 4))

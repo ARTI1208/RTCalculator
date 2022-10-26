@@ -435,9 +435,12 @@ class ArrayLiveList<E> : LiveList<E> {
             if (entry.key == entry.value)
                 continue
 
+            var lastPos = -1
+
             do {
-                val pos = indexOf(entry.key)
+                val pos = previousList.indexOf(entry.key, lastPos)
                 if (pos < 0) break
+                lastPos = pos + 1
 
                 replacedItems += pos
                 arrayList[pos] = entry.value
