@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.Insets
+import androidx.core.text.TextUtilsCompat
 import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import ru.art2000.extensions.views.*
+import java.util.*
 
 interface EdgeToEdgeScreen {
 
@@ -44,32 +46,7 @@ interface IEdgeToEdgeFragment : EdgeToEdgeScreen {
         get() = false
 
     fun Fragment.applyEdgeToEdgeIfAvailable() {
-        val top = topViews
-        val bottom = bottomViews
-        val left = leftViews
-        val right = rightViews
-
-        if (top.isEmpty() && bottom.isEmpty() && left.isEmpty() && right.isEmpty()) return
-
-        if (insetAsPadding) {
-            applyEdgeToEdgePaddingIfAvailable(
-                clearStatusBar = clearStatusBar,
-                clearNavigationBar = clearNavigationBar,
-                topViews = top,
-                bottomViews = bottom,
-                leftViews = left,
-                rightViews = right,
-            )
-        } else {
-            applyEdgeToEdgeMarginIfAvailable(
-                clearStatusBar = clearStatusBar,
-                clearNavigationBar = clearNavigationBar,
-                topViews = top,
-                bottomViews = bottom,
-                leftViews = left,
-                rightViews = right,
-            )
-        }
+        applyEdgeToEdgeIfAvailable(requireActivity())
     }
 }
 
@@ -82,35 +59,48 @@ interface IEdgeToEdgeActivity : EdgeToEdgeScreen {
         get() = true
 
     fun FragmentActivity.applyEdgeToEdgeIfAvailable() {
-        val top = topViews
-        val bottom = bottomViews
-        val left = leftViews
-        val right = rightViews
-
-        if (top.isEmpty() && bottom.isEmpty() && left.isEmpty() && right.isEmpty()) return
-
-        if (insetAsPadding) {
-            applyEdgeToEdgePaddingIfAvailable(
-                clearStatusBar = clearStatusBar,
-                clearNavigationBar = clearNavigationBar,
-                topViews = top,
-                bottomViews = bottom,
-                leftViews = left,
-                rightViews = right,
-            )
-        } else {
-            applyEdgeToEdgeMarginIfAvailable(
-                clearStatusBar = clearStatusBar,
-                clearNavigationBar = clearNavigationBar,
-                topViews = top,
-                bottomViews = bottom,
-                leftViews = left,
-                rightViews = right,
-            )
-        }
+        applyEdgeToEdgeIfAvailable(this)
     }
 }
 
+private fun EdgeToEdgeScreen.applyEdgeToEdgeIfAvailable(activity: FragmentActivity) {
+    val top = topViews
+    val bottom = bottomViews
+    var left = leftViews
+    var right = rightViews
+
+    if (top.isEmpty() && bottom.isEmpty() && left.isEmpty() && right.isEmpty()) return
+
+    if (!isLtr) {
+        left = right.also { right = left }
+    }
+
+    if (insetAsPadding) {
+        activity.applyEdgeToEdgePaddingIfAvailable(
+            clearStatusBar = clearStatusBar,
+            clearNavigationBar = clearNavigationBar,
+            topViews = top,
+            bottomViews = bottom,
+            leftViews = left,
+            rightViews = right,
+        )
+    } else {
+        activity.applyEdgeToEdgeMarginIfAvailable(
+            clearStatusBar = clearStatusBar,
+            clearNavigationBar = clearNavigationBar,
+            topViews = top,
+            bottomViews = bottom,
+            leftViews = left,
+            rightViews = right,
+        )
+    }
+}
+
+
+val isLtr: Boolean
+    get() = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR
+
+@Suppress("unused")
 fun Fragment.applyEdgeToEdgePaddingIfAvailable(
     clearStatusBar: Boolean = false,
     clearNavigationBar: Boolean = false,
@@ -152,6 +142,7 @@ fun FragmentActivity.applyEdgeToEdgePaddingIfAvailable(
     }
 }
 
+@Suppress("unused")
 fun Fragment.applyEdgeToEdgeMarginIfAvailable(
     clearStatusBar: Boolean = false,
     clearNavigationBar: Boolean = false,

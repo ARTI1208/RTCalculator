@@ -20,6 +20,5 @@
         android:id="@+id/all_units_list"
         style="@style/RT.Widget.ListView.TopIndicator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false" />
+        android:layout_height="match_parent" />
 </LinearLayout>

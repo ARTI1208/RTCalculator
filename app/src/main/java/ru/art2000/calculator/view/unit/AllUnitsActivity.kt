@@ -60,6 +60,12 @@ class AllUnitsActivity : AppActivity() {
     override val bottomViews: List<View>
         get() = listOf(binding.allUnitsList)
 
+    override val leftViews: List<View>
+        get() = listOf(binding.root)
+
+    override val rightViews: List<View>
+        get() = listOf(binding.root)
+
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true

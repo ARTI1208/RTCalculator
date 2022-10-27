@@ -27,6 +27,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import ru.art2000.extensions.activities.isLtr
 import kotlin.math.roundToInt
 
 operator fun TextView.plusAssign(text: CharSequence) {
@@ -334,6 +335,8 @@ private class FixedDividerItemDecoration(
             )
         }
 
+        val ltr = isLtr
+
         val childCount = parent.childCount
         for (i in 0 until childCount) {
 
@@ -342,7 +345,7 @@ private class FixedDividerItemDecoration(
             if (!drawForLastInRow && isLastInRow(parent, child) == true) continue
 
             parent.layoutManager!!.getDecoratedBoundsWithMargins(child, mBounds)
-            val right = mBounds.right + child.translationX.roundToInt()
+            val right = if (ltr) mBounds.right else mBounds.left + child.translationX.roundToInt()
             val left = right - mDivider.intrinsicWidth
             mDivider.setBounds(left, child.y.toInt(), right, (child.y + child.height).toInt())
             mDivider.draw(canvas)

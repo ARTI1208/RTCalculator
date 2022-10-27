@@ -7,11 +7,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.*
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.*
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -29,6 +30,7 @@ import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view.AppActivity
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
+import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
@@ -37,7 +39,6 @@ import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.CurrencyPreferenceHelper
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class CurrenciesSettingsActivity : AppActivity() {
@@ -80,16 +81,19 @@ class CurrenciesSettingsActivity : AppActivity() {
             launchAndCollect(model.liveIsFirstTimeTooltipShown) { deleteTooltip?.dismiss() }
         }
 
+        val ltr = isLtr
+
         binding.floatingActionButton.apply {
 
             addOnShowAnimationListener(object : AnimatorListenerAdapter() {
 
                 override fun onAnimationStart(animator: Animator) {
-                    val marginEnd = binding.coordinator.right - binding.floatingActionButton.x.toInt()
                     binding.searchViewLayout.updateLayoutParams<MarginLayoutParams> {
-                        rightMargin = marginEnd
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            this.marginEnd = marginEnd
+                        if (ltr) {
+                            rightMargin = binding.coordinator.right -
+                                    binding.floatingActionButton.x.toInt()
+                        } else {
+                            leftMargin = binding.floatingActionButton.right
                         }
                     }
                     setImageResource(currentDrawable)
@@ -105,11 +109,11 @@ class CurrenciesSettingsActivity : AppActivity() {
                     if (currentDrawable == deleteDrawable) {
                         showDeleteTip()
                     } else {
-                        val marginEnd = 0
                         binding.searchViewLayout.updateLayoutParams<MarginLayoutParams> {
-                            rightMargin = marginEnd
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                this.marginEnd = marginEnd
+                            if (ltr) {
+                                rightMargin = 0
+                            } else {
+                                leftMargin = 0
                             }
                         }
                     }
@@ -128,7 +132,7 @@ class CurrenciesSettingsActivity : AppActivity() {
 
                     val maxScroll = measuredWidth
                     val currentScroll = maxScroll * position + positionOffsetPixels
-                    binding.searchViewLayout.translationX = -currentScroll.toFloat()
+                    binding.searchViewLayout.translationX = currentScroll * if (ltr) -1f else 1f
                     deleteTooltip?.view?.translationX = maxScroll - currentScroll.toFloat()
                 }
             })
@@ -175,6 +179,9 @@ class CurrenciesSettingsActivity : AppActivity() {
     }
 
     override val clearStatusBar: Boolean
+        get() = false
+
+    override val insetAsPadding: Boolean
         get() = false
 
     override val topViews: List<View>
