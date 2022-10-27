@@ -3,14 +3,18 @@ package ru.art2000.calculator.view.settings
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.children
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
+import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.CalculatorApplication
 import ru.art2000.calculator.R
 import ru.art2000.calculator.view.MainScreenPreferenceFragment
+import ru.art2000.extensions.views.isLandscape
 import ru.art2000.helpers.PreferenceKeys.KEY_APP_THEME
 import ru.art2000.helpers.PreferenceKeys.KEY_AUTO_DARK_THEME
 import ru.art2000.helpers.PreferenceKeys.KEY_CURRENCIES_BACKGROUND
@@ -190,6 +194,24 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(requireContext().getColorAttribute(com.google.android.material.R.attr.colorSurface))
+    }
+
+    override val topViews: List<View>
+        get() = listOf(findRecyclerView(view as ViewGroup)!!)
+
+    override val bottomViews: List<View>
+        get() = if (requireContext().isLandscape) topViews else emptyList()
+
+    private fun findRecyclerView(group: ViewGroup): RecyclerView? {
+        for (v in group.children) {
+            if (v is RecyclerView) return v
+            if (v is ViewGroup) {
+                val res = findRecyclerView(v)
+                if (res != null) return res
+            }
+        }
+
+        return null
     }
 
     override fun getTitle(): Int {

@@ -1,12 +1,11 @@
 package ru.art2000.calculator.view
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
+import android.view.View
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityMainBinding
@@ -14,23 +13,17 @@ import ru.art2000.calculator.view.calculator.CalculatorFragment
 import ru.art2000.calculator.view.currency.CurrencyConverterFragment
 import ru.art2000.calculator.view.settings.SettingsFragment
 import ru.art2000.calculator.view.unit.UnitConverterFragment
-import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.fragments.INavigationFragment
 import ru.art2000.extensions.views.*
-import ru.art2000.helpers.isLightTheme
 
 @AndroidEntryPoint
-class MainActivity : AutoThemeActivity() {
+class MainActivity : AppActivity() {
     private val binding by viewBinding<ActivityMainBinding>(CreateMethod.INFLATE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.isDrawingUnderStatusBarAllowed = true
-        }
 
         val navigation = binding.navigation as NavigationBarView
 
@@ -66,20 +59,16 @@ class MainActivity : AutoThemeActivity() {
             else -> R.id.navigation_calc
         }
         navigation.setSelectedItemId(tabId, false)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-            && (!isLightTheme() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
-        ) {
-            val back = binding.navigation.background
-            if (back is MaterialShapeDrawable) {
-                window.navigationBarColor = back.resolvedTintColor
-            }
-        }
-
-        if (isLandscape) {
-            binding.pager2.applyWindowBottomInsets()
-        }
     }
+
+    override val bottomViews: List<View>
+        get() = if (isLandscape) emptyList() else listOf(binding.navigation)
+
+    override val leftViews: List<View>
+        get() = listOf(binding.root)
+
+    override val rightViews: List<View>
+        get() = if (isLandscape) listOf(binding.navigation) else listOf(binding.root)
 
     private companion object {
 

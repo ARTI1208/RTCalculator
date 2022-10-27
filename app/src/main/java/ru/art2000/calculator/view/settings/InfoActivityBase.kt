@@ -9,10 +9,12 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityAppInfoBinding
 import ru.art2000.calculator.databinding.AuthorLinkItemBinding
 import ru.art2000.calculator.model.settings.AuthorLink
+import ru.art2000.calculator.view.AppActivity
 import ru.art2000.calculator.view_model.settings.InfoViewModel
-import ru.art2000.extensions.activities.AutoThemeActivity
+import ru.art2000.extensions.activities.applyEdgeToEdgePaddingIfAvailable
+import ru.art2000.extensions.views.isLandscape
 
-sealed class InfoActivityBase : AutoThemeActivity() {
+sealed class InfoActivityBase : AppActivity() {
 
     protected val model by viewModels<InfoViewModel>()
 
@@ -28,6 +30,16 @@ sealed class InfoActivityBase : AutoThemeActivity() {
         binding.linksBlock.post {
             addLinks(binding.linksBlock)
         }
+
+        val bottomViews = if (isLandscape) listOf(binding.changelogScrollview, binding.linksBlock)
+        else listOf(binding.root)
+
+        applyEdgeToEdgePaddingIfAvailable(
+            topViews = listOf(binding.appBarLayout),
+            bottomViews = bottomViews,
+            leftViews = listOf(binding.root),
+            rightViews = listOf(binding.root),
+        )
     }
 
     private fun addLinks(linksRoot: ViewGroup) {

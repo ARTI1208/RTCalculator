@@ -4,45 +4,30 @@ import android.animation.Animator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.ViewCompat
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.LinearInterpolator
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
 
 class FloatingActionButtonScrollingBehaviour(context: Context, attrs: AttributeSet?) :
-    FloatingActionButton.Behavior(context, attrs) {
+    CoordinatorLayout.Behavior<View>(context, attrs) {
 
     private var state = SHOWN
-    private var isListenerAdded = false
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
-        child: FloatingActionButton,
+        child: View,
         directTargetChild: View,
         target: View,
         axes: Int,
         type: Int
     ): Boolean {
-        if (!isListenerAdded) {
-            isListenerAdded = true
-            child.addOnShowAnimationListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animator: Animator) {
-                    child.translationY = 0f
-                    state = SHOWN
-                }
-
-                override fun onAnimationEnd(animator: Animator) {}
-                override fun onAnimationCancel(animator: Animator) {}
-                override fun onAnimationRepeat(animator: Animator) {}
-            })
-        }
         return axes == ViewCompat.SCROLL_AXIS_VERTICAL
     }
 
     override fun onNestedScroll(
         coordinatorLayout: CoordinatorLayout,
-        child: FloatingActionButton,
+        child: View,
         target: View,
         dxConsumed: Int, dyConsumed: Int,
         dxUnconsumed: Int, dyUnconsumed: Int,
@@ -58,7 +43,7 @@ class FloatingActionButtonScrollingBehaviour(context: Context, attrs: AttributeS
 
     override fun onNestedPreScroll(
         coordinatorLayout: CoordinatorLayout,
-        child: FloatingActionButton,
+        child: View,
         target: View,
         dx: Int, dy: Int,
         consumed: IntArray,
@@ -68,12 +53,12 @@ class FloatingActionButtonScrollingBehaviour(context: Context, attrs: AttributeS
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
     }
 
-    private fun setupAnimation(child: FloatingActionButton, dy: Int) {
+    private fun setupAnimation(child: View, dy: Int) {
         if (dy > SCROLL_OFFSET && state == SHOWN) {
             state = ANIMATING_DOWN
             val layoutParams = child.layoutParams as MarginLayoutParams
             child.animate()
-                .translationY((child.height + layoutParams.bottomMargin).toFloat())
+                .translationY((child.height + layoutParams.bottomMargin + 8).toFloat())
                 .setInterpolator(LinearInterpolator())
                 .setDuration(ANIMATION_DURATION)
                 .setListener(object : Animator.AnimatorListener {

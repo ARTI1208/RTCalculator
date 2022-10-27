@@ -20,10 +20,7 @@ import ru.art2000.calculator.model.unit.ConverterFunctions
 import ru.art2000.calculator.model.unit.CopyMode
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
-import ru.art2000.extensions.views.CalculatorEditText
-import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.extensions.views.autoScrollOnInput
-import ru.art2000.extensions.views.textValue
+import ru.art2000.extensions.views.*
 
 @AndroidEntryPoint
 class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
@@ -148,6 +145,9 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         registerForContextMenu(binding.valueConverted)
     }
+
+    override val bottomViews: List<View>
+        get() = if (requireContext().isLandscape) listOf(binding.root) else emptyList()
 
     override fun onCreateContextMenu(
         menu: ContextMenu,

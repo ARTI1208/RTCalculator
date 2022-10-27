@@ -37,30 +37,15 @@ fun Context.getLocalizedString(
         @StringRes resId: Int
 )= getLocalizedResource(desiredLocale) { it.getString(resId) }
 
-fun Context.getLocalizedArray(
-        desiredLocale: Locale,
-        @ArrayRes resId: Int
-): Array<String> = getLocalizedResource(desiredLocale) { it.getStringArray(resId) }
-
-fun Context.isLightTheme(): Boolean {
-    return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_NO
-}
-
-fun Context.getBooleanAttribute(@AttrRes attribute: Int): Boolean {
-    val typedValue = TypedValue()
-    theme.resolveAttribute(attribute, typedValue, true)
-    return when (typedValue.type) {
-        TypedValue.TYPE_ATTRIBUTE -> resources.getBoolean(typedValue.resourceId)
-        TypedValue.TYPE_INT_BOOLEAN -> typedValue.data == 1
-        else -> throw Exception("Unsupported boolean attribute type: ${typedValue.type}")
-    }
-}
-
 @ColorInt
 fun Context.getColorAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(attribute, typedValue, true)
-    return ContextCompat.getColor(this, typedValue.resourceId)
+    return when (typedValue.type) {
+        TypedValue.TYPE_ATTRIBUTE -> ContextCompat.getColor(this, typedValue.resourceId)
+        in TypedValue.TYPE_FIRST_COLOR_INT..TypedValue.TYPE_LAST_COLOR_INT -> typedValue.data
+        else -> throw Exception("Unsupported color attribute type: ${typedValue.type}")
+    }
 }
 
 @Dimension

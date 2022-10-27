@@ -1,6 +1,5 @@
 package ru.art2000.extensions.activities
 
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import ru.art2000.calculator.R
 import androidx.appcompat.app.AppCompatDelegate
@@ -36,29 +35,14 @@ open class DayNightActivity : AppCompatActivity() {
 
     override fun setTheme(resId: Int) {
         var actualResId = resId
-        val newMode: Int
         if (actualResId == R.style.RT_AppTheme_DayNight && isSetThemeNightModeChangeEnabled) {
-            newMode = if (nightModeCondition()) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
             if (generalPrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_DayNightBlack
         } else if (actualResId == R.style.RT_AppTheme_System) {
-            newMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             if (generalPrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_SystemBlack
         } else if (actualResId == R.style.RT_AppTheme_Battery) {
-            newMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
             if (generalPrefsHelper.isAppAutoDarkThemeBlack) actualResId = R.style.RT_AppTheme_BatteryBlack
-        } else if (actualResId == R.style.RT_AppTheme_Dark || actualResId == R.style.RT_AppTheme_Black) {
-            newMode = AppCompatDelegate.MODE_NIGHT_YES
-        } else {
-            newMode = AppCompatDelegate.MODE_NIGHT_NO
         }
-        if (AppCompatDelegate.getDefaultNightMode() != newMode) {
-            onSetThemeNightModeChanged(newMode)
-            AppCompatDelegate.setDefaultNightMode(newMode)
-        }
+
         super.setTheme(actualResId)
     }
 
@@ -86,12 +70,6 @@ open class DayNightActivity : AppCompatActivity() {
             seconds >= startSeconds || seconds < endSeconds
         }
     }
-
-    val isDarkThemeApplied: Boolean
-        get() {
-            val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-        }
 
     protected fun requestThemeCheck() {
         var theme = generalPrefsHelper.appTheme

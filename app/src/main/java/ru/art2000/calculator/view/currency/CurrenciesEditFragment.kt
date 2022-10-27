@@ -20,6 +20,7 @@ import ru.art2000.calculator.databinding.ItemEditCurrenciesListBinding
 import ru.art2000.calculator.databinding.ModifyCurrenciesLayoutBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.model.currency.getNameIdentifier
+import ru.art2000.calculator.view.AppFragmentMixin
 import ru.art2000.calculator.view_model.currency.CurrenciesEditModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.collections.LiveList
@@ -32,7 +33,7 @@ import ru.art2000.extensions.views.createTextEmptyView
 import ru.art2000.extensions.views.isLandscape
 import ru.art2000.helpers.dip2px
 
-class CurrenciesEditFragment : UniqueReplaceableFragment() {
+class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
 
     private var itemTouchHelper: ItemTouchHelper? = null
     private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
@@ -67,6 +68,14 @@ class CurrenciesEditFragment : UniqueReplaceableFragment() {
         }
 
         return binding.root
+    }
+
+    override val bottomViews: List<View>
+        get() = listOf(binding.modifyCurrenciesList)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateViewOnCreated(view)
     }
 
     override fun onDestroyView() {

@@ -5,7 +5,7 @@ import android.view.Window
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 
-var Window.isDrawingUnderStatusBarAllowed: Boolean
+var Window.isDrawingUnderSystemBarsAllowed: Boolean
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     get() = !decorView.fitsSystemWindows
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

@@ -9,7 +9,7 @@
 
     <style name="Base.RT.v23.AppTheme.Light" parent="Base.RT.v21.AppTheme.Light">
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v23.AppTheme.Light" />

@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
+import ru.art2000.extensions.views.isDarkThemeApplied
 import ru.art2000.helpers.PreferenceKeys
 
 @AndroidEntryPoint
@@ -13,7 +14,8 @@ open class AutoThemeActivity : DayNightActivity() {
     private val listener =
         OnSharedPreferenceChangeListener { _, key ->
             when (key) {
-                PreferenceKeys.KEY_DYNAMIC_COLORS, PreferenceKeys.KEY_APP_THEME -> recreate()
+                PreferenceKeys.KEY_DYNAMIC_COLORS, PreferenceKeys.KEY_APP_THEME ->
+                    recreate()
                 PreferenceKeys.KEY_AUTO_DARK_THEME -> if (isDarkThemeApplied) {
                     recreate()
                 }

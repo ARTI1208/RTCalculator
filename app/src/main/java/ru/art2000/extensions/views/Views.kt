@@ -21,8 +21,6 @@ import androidx.annotation.StringRes
 import androidx.core.util.Consumer
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -209,126 +207,33 @@ fun interface ListenerSubscription<T> {
     operator fun invoke() = invoke(null)
 }
 
-@JvmOverloads
-fun View.applyWindowBottomInsets(margin: Boolean = true) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        applyWindowBottomInsetsApi21(margin)
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-private fun View.applyWindowBottomInsetsApi21(margin: Boolean) {
-    val originalBottom by lazy {
-        if (margin) {
-            (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
-        } else {
-            paddingBottom
-        }
-    }
-
-    fun onAttachedToParent() {
-        val rootInsets = ViewCompat.getRootWindowInsets(this)!!
-        addBottom(originalBottom, rootInsets, margin)
-    }
-
-    if (isAttachedToWindow) {
-        onAttachedToParent()
-    } else {
-        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(v: View) {
-                v.removeOnAttachStateChangeListener(this)
-                onAttachedToParent()
-            }
-
-            override fun onViewDetachedFromWindow(v: View) {
-
-            }
-        })
-    }
-
-    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
-        addBottom(originalBottom, insets, margin)
-        WindowInsetsCompat.CONSUMED
-    }
-}
-
-private fun View.addBottom(
-    originalBottom: Int,
-    insets: WindowInsetsCompat,
-    margin: Boolean = false
-) {
-    val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-    if (margin) {
-        updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            bottomMargin = originalBottom + systemInsets.bottom
-        }
-    } else {
-        updatePadding(
-            bottom = originalBottom + systemInsets.bottom,
-        )
-    }
-}
-
-@JvmOverloads
-fun View.applyWindowTopInsets(margin: Boolean = true) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        applyWindowTopInsetsApi21(margin)
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-private fun View.applyWindowTopInsetsApi21(margin: Boolean) {
-    val originalTop by lazy {
-        if (margin) {
-            (layoutParams as ViewGroup.MarginLayoutParams).topMargin
-        } else {
-            paddingTop
-        }
-    }
-
-    fun onAttachedToParent() {
-        val rootInsets = ViewCompat.getRootWindowInsets(this)!!
-        addTop(originalTop, rootInsets, margin)
-    }
-
-    if (isAttachedToWindow) {
-        onAttachedToParent()
-    } else {
-        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(v: View) {
-                v.removeOnAttachStateChangeListener(this)
-                onAttachedToParent()
-            }
-
-            override fun onViewDetachedFromWindow(v: View) {
-
-            }
-        })
-    }
-
-    ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
-        addTop(originalTop, insets, margin)
-        WindowInsetsCompat.CONSUMED
-    }
-}
-
-private fun View.addTop(originalTop: Int, insets: WindowInsetsCompat, margin: Boolean = false) {
-    val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-    if (margin) {
-        updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            topMargin = originalTop + systemInsets.top
-        }
-    } else {
-        updatePadding(
-            top = originalTop + systemInsets.top,
-        )
-    }
-}
-
 inline val Context.isLandscape: Boolean
     get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+val Context.isDarkThemeApplied: Boolean
+    get() {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+    }
+
+@RequiresApi(Build.VERSION_CODES.KITKAT)
+fun <T : View> T.whenAttachedToWindow(callback: (T) -> Unit) {
+    if (isAttachedToWindow) {
+        callback(this)
+    } else {
+        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                v.removeOnAttachStateChangeListener(this)
+                @Suppress("UNCHECKED_CAST")
+                callback(v as T)
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {
+
+            }
+        })
+    }
+}
 
 fun RecyclerView.addOrientationItemDecoration(drawForLastInRow: Boolean = false) {
     if (context.isLandscape) {

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import ru.art2000.extensions.fragments.NavigationFragment
 
-abstract class MainScreenFragment : NavigationFragment(), MainScreenPage {
+abstract class MainScreenFragment : NavigationFragment(), AppFragmentMixin {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

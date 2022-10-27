@@ -119,9 +119,11 @@ class CalculatorFragment : MainScreenFragment() {
         }
     }
 
-    override fun updateViewOnCreated(createdView: View) {
-        binding.calculatorIoWrappper.applyWindowTopInsets(false)
-    }
+    override val topViews: List<View>
+        get() = listOf(binding.calculatorIoWrappper)
+
+    override val bottomViews: List<View>
+        get() = if (requireContext().isLandscape) listOf(binding.root) else emptyList()
 
     /**
      * @return true if panel was already closed, false otherwise

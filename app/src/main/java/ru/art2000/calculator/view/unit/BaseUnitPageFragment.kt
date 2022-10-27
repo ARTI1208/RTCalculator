@@ -10,13 +10,14 @@ import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.viewbinding.ViewBinding
 import ru.art2000.calculator.model.unit.UnitCategory
+import ru.art2000.calculator.view.AppFragmentMixin
 import ru.art2000.calculator.view_model.unit.UnitConverterModel
 import ru.art2000.extensions.activities.getEnum
 import ru.art2000.extensions.arch.assistedViewModel
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import javax.inject.Inject
 
-abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment() {
+abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment(), AppFragmentMixin {
 
     companion object {
 
@@ -68,6 +69,11 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
             mBinding = it
             setup()
         }).root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateViewOnCreated(view)
     }
 
     override fun onDestroyView() {

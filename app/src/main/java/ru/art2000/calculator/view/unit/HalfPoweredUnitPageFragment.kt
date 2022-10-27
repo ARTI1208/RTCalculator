@@ -12,6 +12,7 @@ import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.SimpleTextWatcher
 import ru.art2000.extensions.views.addOrientationItemDecoration
+import ru.art2000.extensions.views.isLandscape
 
 @AndroidEntryPoint
 class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() {
@@ -59,6 +60,9 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
+
+    override val bottomViews: List<View>
+        get() = if (requireContext().isLandscape) listOf(binding.unitRv) else emptyList()
 
     override fun onShown(previousReplaceable: IReplaceableFragment?) {
 

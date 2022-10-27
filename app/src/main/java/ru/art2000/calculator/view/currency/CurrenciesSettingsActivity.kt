@@ -11,8 +11,7 @@ import android.view.ViewGroup.*
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -28,8 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.R
 import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
+import ru.art2000.calculator.view.AppActivity
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
-import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
@@ -41,7 +40,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class CurrenciesSettingsActivity : AutoThemeActivity() {
+class CurrenciesSettingsActivity : AppActivity() {
 
     private val add by lazy { CurrenciesAddFragment() }
     private val edit by lazy { CurrenciesEditFragment() }
@@ -86,6 +85,13 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
             addOnShowAnimationListener(object : AnimatorListenerAdapter() {
 
                 override fun onAnimationStart(animator: Animator) {
+                    val marginEnd = binding.coordinator.right - binding.floatingActionButton.x.toInt()
+                    binding.searchViewLayout.updateLayoutParams<MarginLayoutParams> {
+                        rightMargin = marginEnd
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            this.marginEnd = marginEnd
+                        }
+                    }
                     setImageResource(currentDrawable)
                 }
 
@@ -98,6 +104,14 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
                 override fun onAnimationEnd(animator: Animator) {
                     if (currentDrawable == deleteDrawable) {
                         showDeleteTip()
+                    } else {
+                        val marginEnd = 0
+                        binding.searchViewLayout.updateLayoutParams<MarginLayoutParams> {
+                            rightMargin = marginEnd
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                this.marginEnd = marginEnd
+                            }
+                        }
                     }
                 }
             })
@@ -160,15 +174,23 @@ class CurrenciesSettingsActivity : AutoThemeActivity() {
         })
     }
 
+    override val clearStatusBar: Boolean
+        get() = false
+
+    override val topViews: List<View>
+        get() = listOf(binding.appBar)
+
+    override val bottomViews: List<View>
+        get() = listOf(binding.searchViewLayout, binding.floatingActionButton)
+
+    override val leftViews: List<View>
+        get() = listOf(binding.root)
+
+    override val rightViews: List<View>
+        get() = listOf(binding.root)
+
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-
-        binding.searchViewLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        model.recyclerViewBottomPadding.value = binding.searchViewLayout.measuredHeight
-
-        binding.floatingActionButton.updateLayoutParams<MarginLayoutParams> {
-            bottomMargin = binding.searchViewLayout.measuredHeight
-        }
 
         model.selectedTab = binding.tabs.selectedTabPosition
         modifyVisualElements(binding.tabs.selectedTabPosition)

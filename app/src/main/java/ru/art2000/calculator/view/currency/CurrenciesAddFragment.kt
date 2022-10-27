@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.util.Consumer
-import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.CreateMethod
@@ -18,10 +17,9 @@ import ru.art2000.calculator.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.databinding.ModifyCurrenciesLayoutBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.model.currency.getNameIdentifier
+import ru.art2000.calculator.view.AppFragmentMixin
 import ru.art2000.calculator.view_model.currency.CurrenciesAddModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
-import ru.art2000.extensions.arch.launchAndCollect
-import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
@@ -30,7 +28,7 @@ import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.addOrientationItemDecoration
 import ru.art2000.extensions.views.createTextEmptyView
 
-class CurrenciesAddFragment : UniqueReplaceableFragment() {
+class CurrenciesAddFragment : UniqueReplaceableFragment(), AppFragmentMixin {
 
     private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
     private val model: CurrenciesAddModel by activityViewModels<CurrenciesSettingsModel>()
@@ -40,12 +38,6 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        launchRepeatOnStarted {
-            launchAndCollect(model.recyclerViewBottomPadding) { bottomPadding ->
-                binding.modifyCurrenciesList.updatePadding(bottom = bottomPadding)
-            }
-        }
 
         binding.modifyCurrenciesList.apply {
             layoutManager = OrientationManger(requireContext())
@@ -62,6 +54,14 @@ class CurrenciesAddFragment : UniqueReplaceableFragment() {
         }
 
         return binding.root
+    }
+
+    override val bottomViews: List<View>
+        get() = listOf(binding.modifyCurrenciesList)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateViewOnCreated(view)
     }
 
     override fun onReselected() {

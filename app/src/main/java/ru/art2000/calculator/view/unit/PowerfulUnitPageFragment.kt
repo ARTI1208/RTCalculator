@@ -1,11 +1,13 @@
 package ru.art2000.calculator.view.unit
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.databinding.UnitFragBinding
 import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.addOrientationItemDecoration
+import ru.art2000.extensions.views.isLandscape
 
 @AndroidEntryPoint
 class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
@@ -26,4 +28,7 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
             )
         }
     }
+
+    override val bottomViews: List<View>
+        get() = if (requireContext().isLandscape) listOf(binding.unitRv) else emptyList()
 }

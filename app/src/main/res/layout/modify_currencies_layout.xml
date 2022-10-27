@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
     <ru.art2000.extensions.views.RecyclerWithEmptyView
-        android:clipToPadding="false"
         android:id="@+id/modify_currencies_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

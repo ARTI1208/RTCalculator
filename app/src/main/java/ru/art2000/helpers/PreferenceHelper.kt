@@ -58,7 +58,7 @@ class PreferenceHelper @Inject constructor(
         CalculatorApplication.DYNAMIC_COLORS_AVAILABLE && it
     }
 
-    override val appTheme by preferences.stringPreference(
+    override val appThemeProperty: ReadOnlyPreferenceDelegate<Int> = preferences.stringPreference(
         PreferenceKeys.KEY_APP_THEME, PreferenceDefaults.DEFAULT_THEME
     ).getAs {
         when (it) {
@@ -71,6 +71,8 @@ class PreferenceHelper @Inject constructor(
             else -> R.style.RT_AppTheme_Light
         }
     }
+
+    override val appTheme by appThemeProperty
 
     override val isAppAutoDarkThemeBlack by preferences.booleanPreference(
         PreferenceKeys.KEY_AUTO_DARK_THEME, PreferenceDefaults.DEFAULT_DARK_THEME_IS_BLACK

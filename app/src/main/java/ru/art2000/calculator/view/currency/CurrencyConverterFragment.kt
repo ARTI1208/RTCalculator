@@ -108,6 +108,12 @@ class CurrencyConverterFragment : MainScreenFragment() {
         return binding.root
     }
 
+    override val topViews: List<View>
+        get() = listOf(binding.root)
+
+    override val bottomViews: List<View>
+        get() = listOf(binding.currencyList)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         launchRepeatOnStarted {

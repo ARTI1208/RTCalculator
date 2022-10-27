@@ -42,6 +42,9 @@ internal class UnitConverterFragment : MainScreenFragment() {
         return binding.root
     }
 
+    override val topViews: List<View>
+        get() = listOf(binding.root)
+
     override fun onDestroyView() {
         super.onDestroyView()
         prefsHelper.setOnViewTypeChangedListener(null)
