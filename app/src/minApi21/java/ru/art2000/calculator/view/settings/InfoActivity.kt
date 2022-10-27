@@ -35,8 +35,8 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.compose.*
 import ru.art2000.calculator.model.settings.AuthorLink
 import ru.art2000.calculator.view_model.settings.IInfoViewModel
+import ru.art2000.extensions.activities.clearSystemBars
 import ru.art2000.extensions.views.isDarkThemeApplied
-import ru.art2000.extensions.views.isDrawingUnderSystemBarsAllowed
 
 class InfoActivity : InfoActivityBase() {
 
@@ -54,8 +54,7 @@ class InfoActivity : InfoActivityBase() {
 
     private fun setupCompose() {
         if (isFullscreen) {
-            window.isDrawingUnderSystemBarsAllowed = true
-            window.navigationBarColor = android.graphics.Color.TRANSPARENT
+            clearSystemBars()
         }
         setContent {
             AutoThemed(generalPrefsHelper) {

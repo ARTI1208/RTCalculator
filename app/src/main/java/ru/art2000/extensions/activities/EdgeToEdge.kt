@@ -198,13 +198,7 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || isDarkThemeApplied) {
-        window.isDrawingUnderSystemBarsAllowed = true
-        if (clearStatusBar) {
-            window.statusBarColor = Color.TRANSPARENT
-        }
-        if (clearNavigationBar) {
-            window.navigationBarColor = Color.TRANSPARENT
-        }
+        clearSystemBars(clearStatusBar, clearNavigationBar)
 
         topViews.forEach {
             it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
@@ -229,6 +223,21 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
                 it.consumer(left, top, right + insets.right, bottom)
             }
         }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+fun FragmentActivity.clearSystemBars(
+    clearStatusBar: Boolean = true,
+    clearNavigationBar: Boolean = true,
+) {
+    window.isDrawingUnderSystemBarsAllowed = true
+    if (clearStatusBar) {
+//      window.statusBarColor = ColorUtils.setAlphaComponent(window.statusBarColor, 200)
+        window.statusBarColor = Color.TRANSPARENT
+    }
+    if (clearNavigationBar) {
+        window.navigationBarColor = Color.TRANSPARENT
     }
 }
 
