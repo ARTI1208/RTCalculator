@@ -11,7 +11,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 fun Modifier.verticalScrollBar(
@@ -31,6 +33,7 @@ fun Modifier.verticalScrollBar(
     )
 
     val actualColor = color ?: MaterialTheme.calculatorColors.strokeColor
+    val ltr = LocalLayoutDirection.current == LayoutDirection.Ltr
 
     drawWithContent {
         drawContent()
@@ -48,9 +51,11 @@ fun Modifier.verticalScrollBar(
             val scrollbarOffsetY =
                 ((state.value.toFloat() / state.maxValue) * (visibleHeight - scrollbarHeight)) + state.value
 
+            val scrollbarOffsetX = if (ltr) this.size.width - width.toPx() else 0f
+
             drawRect(
                 color = actualColor,
-                topLeft = Offset(this.size.width - width.toPx(), scrollbarOffsetY),
+                topLeft = Offset(scrollbarOffsetX, scrollbarOffsetY),
                 size = Size(width.toPx(), scrollbarHeight),
                 alpha = alpha
             )
