@@ -6,9 +6,13 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -23,14 +27,13 @@ import ru.art2000.calculator.model.currency.getNameIdentifier
 import ru.art2000.calculator.view.AppFragmentMixin
 import ru.art2000.calculator.view_model.currency.CurrenciesEditModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
+import ru.art2000.extensions.activities.consumeInsetsForMargin
+import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.UniqueReplaceableFragment
-import ru.art2000.extensions.views.OrientationManger
-import ru.art2000.extensions.views.addOrientationItemDecoration
-import ru.art2000.extensions.views.createTextEmptyView
-import ru.art2000.extensions.views.isLandscape
+import ru.art2000.extensions.views.*
 import ru.art2000.helpers.dip2px
 
 class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
@@ -220,6 +223,8 @@ class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
             holder.checkBox?.isChecked = selected
         }
 
+        private val ltr = isLtr
+
         inner class Holder private constructor(
             root: View,
             val code: TextView,
@@ -259,6 +264,21 @@ class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
                 binding.root.setOnLongClickListener {
                     setSelectionMode(this)
                     false
+                }
+
+                binding.handle.consumeInsetsForMargin { windowInsetsCompat, left, top, right, bottom ->
+                    val gestureInsets = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemGestures())
+                    updateLayoutParams<MarginLayoutParams> {
+                        if (ltr) {
+                            updateMargins(
+                                right = right + gestureInsets.right,
+                            )
+                        } else {
+                            updateMargins(
+                                left = left + gestureInsets.left,
+                            )
+                        }
+                    }
                 }
             }
 

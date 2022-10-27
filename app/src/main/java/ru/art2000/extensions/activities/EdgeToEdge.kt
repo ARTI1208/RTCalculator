@@ -232,6 +232,7 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
     }
 }
 
+@Suppress("NAME_SHADOWING")
 @RequiresApi(Build.VERSION_CODES.KITKAT)
 private fun <T : View> T.consumeSystemInsets(
     left: T.() -> Int,
@@ -239,6 +240,19 @@ private fun <T : View> T.consumeSystemInsets(
     right: T.() -> Int,
     bottom: T.() -> Int,
     consumer: T.(Insets, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+)  = consumeInsets(left, top, right, bottom) { windowInsetsCompat, left, top, right, bottom ->
+    consumer(
+        windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()),
+        left, top, right, bottom,
+    )
+}
+
+fun <T : View> T.consumeInsets(
+    left: T.() -> Int,
+    top: T.() -> Int,
+    right: T.() -> Int,
+    bottom: T.() -> Int,
+    consumer: T.(WindowInsetsCompat, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
 ) {
     val topLazy by lazy { top() }
     val bottomLazy by lazy { bottom() }
@@ -246,8 +260,7 @@ private fun <T : View> T.consumeSystemInsets(
     val rightLazy by lazy { right() }
 
     fun consume(insets: WindowInsetsCompat) {
-        val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        consumer(systemInsets, leftLazy, topLazy, rightLazy, bottomLazy)
+        consumer(insets, leftLazy, topLazy, rightLazy, bottomLazy)
     }
 
     whenAttachedToWindow {
@@ -259,3 +272,18 @@ private fun <T : View> T.consumeSystemInsets(
         WindowInsetsCompat.CONSUMED
     }
 }
+
+@Suppress("unused")
+fun <T : View> T.consumeInsetsForPadding(
+    consumer: T.(WindowInsetsCompat, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+) = consumeInsets({ paddingLeft }, { paddingTop }, { paddingRight }, { paddingBottom }, consumer)
+
+fun <T : View> T.consumeInsetsForMargin(
+    consumer: T.(WindowInsetsCompat, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+) = consumeInsets(
+    left = { (layoutParams as MarginLayoutParams).leftMargin },
+    top = { (layoutParams as MarginLayoutParams).topMargin },
+    right = { (layoutParams as MarginLayoutParams).rightMargin },
+    bottom = { (layoutParams as MarginLayoutParams).bottomMargin },
+    consumer,
+)
