@@ -1,6 +1,7 @@
 package ru.art2000.calculator.view.settings
 
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
@@ -33,6 +35,8 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.compose.*
 import ru.art2000.calculator.model.settings.AuthorLink
 import ru.art2000.calculator.view_model.settings.IInfoViewModel
+import ru.art2000.extensions.views.isDarkThemeApplied
+import ru.art2000.extensions.views.isDrawingUnderSystemBarsAllowed
 
 class InfoActivity : InfoActivityBase() {
 
@@ -49,6 +53,10 @@ class InfoActivity : InfoActivityBase() {
     //Compose version
 
     private fun setupCompose() {
+        if (isFullscreen) {
+            window.isDrawingUnderSystemBarsAllowed = true
+            window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        }
         setContent {
             AutoThemed(generalPrefsHelper) {
                 InfoScreenRoot(model)
@@ -173,7 +181,10 @@ class InfoActivity : InfoActivityBase() {
     @Composable
     private fun HorizontalInfoContent(model: IInfoViewModel) {
 
-        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.navigationBarsPaddingIfNeeded { only(WindowInsetsSides.Horizontal) },
+        ) {
             Column(modifier = Modifier.weight(1f)) {
                 ChangelogLayout(model = model)
             }
@@ -237,22 +248,28 @@ class InfoActivity : InfoActivityBase() {
                 .fillMaxWidth()
                 .height(0.dp)
                 .weight(1.0f)
-                .padding(dimensionResource(R.dimen.changelog_padding))
                 .verticalScroll(scrollState)
-                .verticalScrollBar(scrollState)
-                .background(backgroundColor, shape = RoundedCornerShape(8.dp)),
         ) {
-            Text(
-                text = text,
+
+            Box(
                 modifier = Modifier
-                    .padding(6.dp)
-                    .fillMaxSize(),
-                style = TextStyle(
-                    color = textColor,
-                    fontSize = 14.sp,
-                    letterSpacing = 0.15.sp
-                ),
-            )
+                    .padding(dimensionResource(R.dimen.changelog_padding))
+                    .navigationBarsPaddingIfLandscape { only(WindowInsetsSides.Bottom) }
+                    .verticalScrollBar(scrollState)
+                    .background(backgroundColor, shape = RoundedCornerShape(8.dp)),
+            ) {
+                Text(
+                    text = text,
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .fillMaxSize(),
+                    style = TextStyle(
+                        color = textColor,
+                        fontSize = 14.sp,
+                        letterSpacing = 0.15.sp
+                    ),
+                )
+            }
         }
     }
 
@@ -296,7 +313,8 @@ class InfoActivity : InfoActivityBase() {
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(0.dp, dimensionResource(R.dimen.author_info_link_block_margin)),
+                .padding(0.dp, dimensionResource(R.dimen.author_info_link_block_margin))
+                .navigationBarsPaddingIfNeeded { only(WindowInsetsSides.Bottom) },
             Arrangement.SpaceAround,
         ) {
             links.forEach {
@@ -316,5 +334,17 @@ class InfoActivity : InfoActivityBase() {
     private val isLandscape
         @Composable
         get() = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    private val isFullscreen: Boolean
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 ||
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isDarkThemeApplied)
+
+    private fun Modifier.navigationBarsPaddingIfNeeded(foo: WindowInsets.() -> WindowInsets = { this }) = composed {
+        if (isFullscreen) windowInsetsPadding(WindowInsets.navigationBars.foo()) else this
+    }
+
+    private fun Modifier.navigationBarsPaddingIfLandscape(foo: WindowInsets.() -> WindowInsets = { this }) = composed {
+        if (isLandscape) navigationBarsPaddingIfNeeded(foo) else this
+    }
 
 }
