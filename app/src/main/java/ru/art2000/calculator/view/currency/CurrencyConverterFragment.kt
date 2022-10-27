@@ -112,7 +112,7 @@ class CurrencyConverterFragment : MainScreenFragment() {
         get() = listOf(binding.root)
 
     override val bottomViews: List<View>
-        get() = listOf(binding.currencyList)
+        get() = if (requireContext().isLandscape) listOf(binding.currencyList) else emptyList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

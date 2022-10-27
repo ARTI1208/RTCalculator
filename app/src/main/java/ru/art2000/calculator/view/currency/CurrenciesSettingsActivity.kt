@@ -11,6 +11,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ import ru.art2000.calculator.databinding.ActivityCurrenciesEditorBinding
 import ru.art2000.calculator.model.currency.CurrencyItem
 import ru.art2000.calculator.view.AppActivity
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
+import ru.art2000.extensions.activities.consumeInsetsForMargin
 import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
@@ -185,7 +187,7 @@ class CurrenciesSettingsActivity : AppActivity() {
         get() = false
 
     override val topViews: List<View>
-        get() = listOf(binding.appBar)
+        get() = listOf(binding.root)
 
     override val bottomViews: List<View>
         get() = listOf(binding.searchViewLayout, binding.floatingActionButton)
@@ -348,6 +350,15 @@ class CurrenciesSettingsActivity : AppActivity() {
                     right = rightMargin,
                     bottom = bottomMargin,
                 )
+            }
+
+            view.consumeInsetsForMargin { windowInsetsCompat, _, _, _, bottom ->
+                updateLayoutParams<MarginLayoutParams> {
+                    val systemInsets = windowInsetsCompat.getInsets(
+                        WindowInsetsCompat.Type.systemBars()
+                    )
+                    updateMargins(bottom = bottom + systemInsets.bottom)
+                }
             }
 
             return this
