@@ -28,6 +28,7 @@ import ru.art2000.calculator.view.AppFragmentMixin
 import ru.art2000.calculator.view_model.currency.CurrenciesEditModel
 import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.activities.consumeInsetsForMargin
+import ru.art2000.extensions.activities.getInt
 import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
@@ -51,8 +52,7 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
                 createTextEmptyView(ctx, emptyTextRes)
             }
             val editCurrenciesAdapter = EditCurrenciesAdapter(
-                savedInstanceState?.getInt(ADAPTER_MODE_KEY, REORDER_MODE)
-                    ?: REORDER_MODE
+                savedInstanceState.getInt(ADAPTER_MODE_KEY, REORDER_MODE)
             )
             adapter = editCurrenciesAdapter
             layoutManager = OrientationManger(requireContext()) {

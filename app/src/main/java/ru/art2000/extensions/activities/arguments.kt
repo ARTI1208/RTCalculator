@@ -19,3 +19,5 @@ inline fun <reified E : Enum<*>> Bundle.getEnum(name: String) =
         @Suppress("DEPRECATION")
         getSerializable(name) as E
     }
+
+fun Bundle?.getInt(key: String, defaultValue: Int) = this?.getInt(key, defaultValue) ?: defaultValue
