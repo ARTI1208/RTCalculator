@@ -15,21 +15,21 @@ val AndroidViewModel.context: Context get() = getApplication()
 // TODO refactor once Hilt support @AssistedInject constructor for @HiltViewModel
 // https://github.com/google/dagger/issues/2287
 inline fun <reified VM : ViewModel> Fragment.assistedViewModel(
-    crossinline viewModelProducer: () -> VM,
+    crossinline viewModelProducer: (SavedStateHandle) -> VM,
 ) = viewModels<VM> {
     object : AbstractSavedStateViewModelFactory(this, arguments) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle) =
-            viewModelProducer() as VM
+            viewModelProducer(handle) as VM
     }
 }
 
 inline fun <reified T : ViewModel> ComponentActivity.assistedViewModel(
-    crossinline viewModelProducer: () -> T,
+    crossinline viewModelProducer: (SavedStateHandle) -> T,
 ) = viewModels<T> {
     object : AbstractSavedStateViewModelFactory(this, intent.extras) {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle) =
-            viewModelProducer() as T
+            viewModelProducer(handle) as T
     }
 }
