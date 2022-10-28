@@ -34,7 +34,6 @@ import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.extensions.views.*
-import ru.art2000.helpers.dip2px
 
 class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
 
@@ -48,7 +47,6 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
     ): View {
 
         binding.modifyCurrenciesList.apply {
-            setPadding(0, 0, 0, requireContext().dip2px(20f))
             emptyViewGenerator = { ctx, _, _ ->
                 createTextEmptyView(ctx, emptyTextRes)
             }
