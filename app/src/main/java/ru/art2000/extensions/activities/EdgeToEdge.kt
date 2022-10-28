@@ -195,33 +195,37 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
     consumer: View.(left: Int, top: Int, right: Int, bottom: Int,) -> Unit,
 ) {
     // dark statusbar and navigationbar
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || isDarkThemeApplied) {
-        clearSystemBars(clearStatusBar, clearNavigationBar)
+    val clearStatusBarReally = clearStatusBar &&
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || isDarkThemeApplied)
 
-        topViews.forEach {
-            it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
-                it.consumer(left, top + insets.top, right, bottom)
-            }
+    val clearNavigationBarReally = clearNavigationBar &&
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || isDarkThemeApplied)
+
+    clearSystemBars(clearStatusBarReally, clearNavigationBarReally)
+
+    topViews.forEach {
+        it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
+            it.consumer(left, top + insets.top, right, bottom)
         }
+    }
 
-        bottomViews.forEach {
-            it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
-                it.consumer(left, top, right, bottom + insets.bottom)
-            }
+    bottomViews.forEach {
+        it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
+            it.consumer(left, top, right, bottom + insets.bottom)
         }
+    }
 
-        leftViews.forEach {
-            it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
-                it.consumer(left + insets.left, top, right, bottom)
-            }
+    leftViews.forEach {
+        it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
+            it.consumer(left + insets.left, top, right, bottom)
         }
+    }
 
-        rightViews.forEach {
-            it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
-                it.consumer(left, top, right + insets.right, bottom)
-            }
+    rightViews.forEach {
+        it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
+            it.consumer(left, top, right + insets.right, bottom)
         }
     }
 }
@@ -278,7 +282,7 @@ fun <T : View> T.consumeInsets(
 
     ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
         consume(insets)
-        WindowInsetsCompat.CONSUMED
+        insets
     }
 }
 
