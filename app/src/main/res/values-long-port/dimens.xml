@@ -3,4 +3,6 @@
     <dimen name="calc_field_min_height">180dp</dimen>
     <dimen name="calc_field_vertical_padding">14dp</dimen>
     <dimen name="calc_text_size">50sp</dimen>
+
+    <dimen name="unit_view_simple_row_height">100dp</dimen>
 </resources>
