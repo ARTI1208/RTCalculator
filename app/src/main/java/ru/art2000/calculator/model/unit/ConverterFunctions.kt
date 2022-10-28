@@ -19,4 +19,8 @@ interface ConverterFunctions {
         fun onValueUpdated(i: Int, newValueGetter: () -> String) {}
 
     }
+
+    fun storeInt(key: String, value: Int)
+
+    fun getInt(key: String, defaultValue: Int): Int
 }

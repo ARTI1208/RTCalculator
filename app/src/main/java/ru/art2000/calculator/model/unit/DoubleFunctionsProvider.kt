@@ -12,10 +12,13 @@ class DoubleFunctionsProvider @Inject constructor(): ConverterFunctionsProvider 
 
     override val calculations = DoubleCalculations(UnitConverterFormatter)
 
+    private val store = hashMapOf<UnitCategory, MutableMap<String, Any>>()
+
     override fun getConverterFunctions(category: UnitCategory): ConverterFunctions {
         val items = UnitConverterDependencies.getCategoryItems(category)
         val defaultValue = 1.0
-        return CategoryFunctions(calculations, items, defaultValue).also { functions ->
+        val categoryStore = store.getOrPut(category) { hashMapOf() }
+        return CategoryFunctions(calculations, items, defaultValue, categoryStore).also { functions ->
             if (items.isNotEmpty() && !items.first().isSet) {
                 functions.setValue(0, functions.defaultValueString)
             }

@@ -59,9 +59,11 @@ abstract class MyFragmentStateAdapter<T : Fragment>(
         shouldRestore = false
     }
 
-    private val onCreateOrRestoreListeners = mutableSetOf<OnCreateOrRestoreListener<T>>()
+    private val onCreateOrRestoreListeners = mutableListOf<OnCreateOrRestoreListener<T>>()
 
     fun addOnCreateOrRestoreListener(listener: OnCreateOrRestoreListener<T>) {
+        if (listener in onCreateOrRestoreListeners) return
+
         onCreateOrRestoreListeners += listener
     }
 
@@ -72,7 +74,9 @@ abstract class MyFragmentStateAdapter<T : Fragment>(
     fun getFragment(position: Int): T? = fragments[getItemId(position)]
 
     private fun onFragmentFetched(position: Int, fragment: T) {
-        onCreateOrRestoreListeners.forEach { it.onFragment(position, fragment) }
+        for (i in onCreateOrRestoreListeners.indices.reversed()) {
+            onCreateOrRestoreListeners[i].onFragment(position, fragment)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FragmentViewHolder {

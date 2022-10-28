@@ -16,6 +16,7 @@ import ru.art2000.calculator.R
 import ru.art2000.calculator.model.unit.ConverterFunctionsProvider
 import ru.art2000.calculator.model.unit.CopyMode
 import ru.art2000.calculator.model.unit.UnitCategory
+import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.CONVERT_FROM_KEY
 import ru.art2000.calculator.view_model.ExpressionInputViewModel
 import ru.art2000.calculator.view_model.calculator.CalculationLexer
 import ru.art2000.extensions.arch.context
@@ -37,8 +38,10 @@ class UnitConverterModel @AssistedInject constructor(
     override val liveExpression = createLiveExpression(run {
         var value = ""
 
-        if (converterFunctions.items.isNotEmpty() && converterFunctions.isSet(0)) {
-            value = when (val v = converterFunctions.displayValue(0)) {
+        val index = converterFunctions.getInt(CONVERT_FROM_KEY, 0)
+
+        if (converterFunctions.items.isNotEmpty() && converterFunctions.isSet(index)) {
+            value = when (val v = converterFunctions.displayValue(index)) {
                 converterFunctions.defaultValueString -> ""
                 else -> v
             }

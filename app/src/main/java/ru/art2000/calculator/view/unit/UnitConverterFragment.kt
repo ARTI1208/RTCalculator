@@ -52,6 +52,8 @@ internal class UnitConverterFragment : MainScreenFragment() {
 
     private fun updateAdapter(viewType: String = prefsHelper.unitViewType, clear: Boolean = false) {
 
+        val previousItem = binding.pager2.currentItem
+
         val pager2Adapter = UnitPagerAdapter(viewType)
         if (clear) pager2Adapter.clearState()
 
@@ -59,8 +61,11 @@ internal class UnitConverterFragment : MainScreenFragment() {
 
         pager2Mediator?.detach()
 
+        binding.pager2.setCurrentItem(previousItem, false)
+
         val titles = resources.getStringArray(R.array.unit_converter_categories)
 
+        binding.tabs.clearOnTabSelectedListeners()
         binding.tabs.addOnTabSelectedListener(pager2Adapter.createOnTabSelectedListener())
         pager2Mediator = MyTabLayoutMediator(binding.tabs, binding.pager2) { tab, position ->
             tab.text = titles[position]

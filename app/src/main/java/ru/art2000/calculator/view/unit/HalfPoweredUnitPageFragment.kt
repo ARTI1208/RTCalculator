@@ -59,6 +59,10 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+        binding.hpuvSpinner.setSelection(
+            model.converterFunctions.getInt(CONVERT_FROM_KEY, 0)
+        )
     }
 
     override val bottomViews: List<View>

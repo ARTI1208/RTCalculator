@@ -21,6 +21,8 @@ abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragmen
 
     companion object {
 
+        const val CONVERT_FROM_KEY = "from"
+
         private const val categoryKey = "category"
 
         @JvmStatic

@@ -29,10 +29,20 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
 
         const val MENU_ITEM_COPY = 0
 
+        private const val CONVERT_TO_KEY = "to"
+
     }
 
     private var spinnerFromPosition = 0
+        set(value) {
+            model.converterFunctions.storeInt(CONVERT_FROM_KEY, value)
+            field = value
+        }
     private var spinnerToPosition = 1
+        set(value) {
+            model.converterFunctions.storeInt(CONVERT_TO_KEY, value)
+            field = value
+        }
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragSimpleBinding {
         return UnitFragSimpleBinding.inflate(inflater, container, false)
@@ -102,8 +112,12 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         binding.spinnerFrom.adapter = spinnerAdapter
         binding.spinnerTo.adapter = spinnerAdapter
 
-        binding.spinnerFrom.setSelection(spinnerFromPosition)
-        binding.spinnerTo.setSelection(spinnerToPosition)
+        binding.spinnerFrom.setSelection(
+            model.converterFunctions.getInt(CONVERT_FROM_KEY, 0)
+        )
+        binding.spinnerTo.setSelection(
+            model.converterFunctions.getInt(CONVERT_TO_KEY, 1)
+        )
 
         binding.spinnerFrom.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
@@ -216,13 +230,14 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
     }
 
     private fun updateResult(value: String = binding.valueOriginal.text.toString()) {
-        val position = binding.spinnerFrom.selectedItemPosition
-        converterFunctions.setValue(position, value, object : ConverterFunctions.ValueCallback {
-            override fun shouldSkip(i: Int) = i == position
+        val fromPosition = binding.spinnerFrom.selectedItemPosition
+        val toPosition = binding.spinnerTo.selectedItemPosition
+
+        converterFunctions.setValue(fromPosition, value, object : ConverterFunctions.ValueCallback {
+            override fun shouldSkip(i: Int) = i == fromPosition
         })
 
-        binding.valueConverted.textValue =
-            converterFunctions.displayValue(binding.spinnerTo.selectedItemPosition)
+        binding.valueConverted.textValue = converterFunctions.displayValue(toPosition)
     }
 
 }

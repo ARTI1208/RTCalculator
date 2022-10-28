@@ -1,7 +1,6 @@
 package ru.art2000.calculator.view.unit
 
 import android.content.Context
-import android.util.Pair
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.View.OnCreateContextMenuListener
@@ -16,9 +15,12 @@ import ru.art2000.calculator.databinding.ItemUnitConverterListBinding
 import ru.art2000.calculator.databinding.ItemUnitConverterListPowerfulBinding
 import ru.art2000.calculator.databinding.ItemUnitConverterNamePartBinding
 import ru.art2000.calculator.model.unit.*
+import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.CONVERT_FROM_KEY
+import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.SimpleTextWatcher
 import ru.art2000.helpers.getColorAttribute
+import com.google.android.material.R as MaterialR
 
 typealias CopyFunction = (CharSequence, CharSequence, CharSequence, CopyMode) -> Boolean
 
@@ -31,7 +33,11 @@ class UnitListAdapter private constructor(
     position: Int,
 ) : RecyclerView.Adapter<UnitListAdapter.UnitItemHolder>() {
 
-    private val selectedPosition = MutableStateFlow(Pair(0, 0))
+    private val selectedPosition = MutableStateFlow(run {
+        val initialValue = if (position >= 0) position
+        else converterFunctions.getInt(CONVERT_FROM_KEY, 0)
+        Pair(initialValue, initialValue)
+    })
 
     private var currentDimension: Int
         get() = selectedPosition.value.second
@@ -43,11 +49,13 @@ class UnitListAdapter private constructor(
         }
 
     @ColorInt
-    private val colorAccent: Int
+    private val colorAccent = mContext.getColorAttribute(MaterialR.attr.colorSecondary)
+
     @ColorInt
-    private val colorDefaultBright: Int
+    private val colorDefaultBright = mContext.getColorAttribute(MaterialR.attr.colorOnBackground)
+
     @ColorInt
-    private var colorDefaultDimmed: Int
+    private var colorDefaultDimmed = mContext.getColorAttribute(MaterialR.attr.colorOnSurface)
 
     private var recycler: RecyclerView? = null
 
@@ -57,7 +65,7 @@ class UnitListAdapter private constructor(
         converterFunctions: ConverterFunctions,
         copy: CopyFunction,
         isPowerfulConverter: Boolean,
-    ) : this(ctx, lifecycleOwner, converterFunctions, copy, isPowerfulConverter, 0)
+    ) : this(ctx, lifecycleOwner, converterFunctions, copy, isPowerfulConverter, -1)
 
     internal constructor(
         ctx: Context,
@@ -68,12 +76,11 @@ class UnitListAdapter private constructor(
     ) : this(ctx, lifecycleOwner, converterFunctions, copy, false, pos)
 
     init {
-        currentDimension = position
-        colorAccent = mContext.getColorAttribute(com.google.android.material.R.attr.colorSecondary)
-        colorDefaultBright =
-            mContext.getColorAttribute(com.google.android.material.R.attr.colorOnBackground)
-        colorDefaultDimmed =
-            mContext.getColorAttribute(com.google.android.material.R.attr.colorOnSurface)
+        lifecycleOwner.launchRepeatOnStarted {
+            launchAndCollect(selectedPosition) { (_, dimension) ->
+                converterFunctions.storeInt(CONVERT_FROM_KEY, dimension)
+            }
+        }
     }
 
     fun setValue(position: Int, value: CharSequence) {
