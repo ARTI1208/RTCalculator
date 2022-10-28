@@ -193,7 +193,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.fragment:fragment-ktx:1.5.3")
+    implementation("androidx.fragment:fragment-ktx:1.5.4")
     implementation("androidx.hilt:hilt-work:$androidxHiltVersion")
     kapt("androidx.hilt:hilt-compiler:$androidxHiltVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
