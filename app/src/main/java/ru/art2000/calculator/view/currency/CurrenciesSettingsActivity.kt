@@ -14,9 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -36,7 +34,9 @@ import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
-import ru.art2000.extensions.fragments.UniqueReplaceableFragment
+import ru.art2000.extensions.fragments.*
+import ru.art2000.extensions.views.MyFragmentStateAdapter
+import ru.art2000.extensions.views.createOnTabSelectedListener
 import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.CurrencyPreferenceHelper
@@ -44,9 +44,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CurrenciesSettingsActivity : AppActivity() {
-
-    private val add by lazy { CurrenciesAddFragment() }
-    private val edit by lazy { CurrenciesEditFragment() }
 
     private var deselect: MenuItem? = null
     private var select: MenuItem? = null
@@ -123,6 +120,11 @@ class CurrenciesSettingsActivity : AppActivity() {
             })
         }
 
+        val pages = listOf(
+            NamedReplaceableFragmentCreator(R.string.currencies_add, ::CurrenciesAddFragment),
+            NamedReplaceableFragmentCreator(R.string.currencies_edit, ::CurrenciesEditFragment),
+        )
+        val pager2Adapter = CurrencyEditorPager2Adapter(pages)
         binding.pager2.apply {
 
             offscreenPageLimit = 2
@@ -139,26 +141,18 @@ class CurrenciesSettingsActivity : AppActivity() {
                 }
             })
 
-            val pager2Adapter = CurrencyEditorPager2Adapter()
             adapter = pager2Adapter
 
             TabLayoutMediator(binding.tabs, this) { tab, position ->
-                tab.text = pager2Adapter.getPageTitle(position)
+                tab.text = pages[position].getTitle(this@CurrenciesSettingsActivity)
             }.attach()
         }
 
+        binding.tabs.addOnTabSelectedListener(pager2Adapter.createOnTabSelectedListener())
         binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
+
+
             override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    1 -> {
-                        edit.onReplaced(add)
-                        add.onReplace(edit)
-                    }
-                    else -> {
-                        add.onReplaced(edit)
-                        edit.onReplace(add)
-                    }
-                }
                 model.selectedTab = tab.position
                 binding.floatingActionButton.hide()
                 modifyVisualElements(tab.position)
@@ -174,9 +168,7 @@ class CurrenciesSettingsActivity : AppActivity() {
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                (if (tab.position == 1) edit else add).onReselected()
-            }
+            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
     }
 
@@ -421,17 +413,12 @@ class CurrenciesSettingsActivity : AppActivity() {
         }
     }
 
-    private inner class CurrencyEditorPager2Adapter :
-        FragmentStateAdapter(this@CurrenciesSettingsActivity) {
+    private inner class CurrencyEditorPager2Adapter(
+        private val creators: List<INamedReplaceableCreator<CommonReplaceableFragment>>,
+    ) : MyFragmentStateAdapter<CommonReplaceableFragment>(this@CurrenciesSettingsActivity) {
 
-        private val fragments: Array<UniqueReplaceableFragment> = arrayOf(add, edit)
+        override fun getItemCount(): Int = creators.size
 
-        override fun getItemCount(): Int = fragments.size
-
-        fun getPageTitle(position: Int): CharSequence {
-            return fragments[position].getTitle(this@CurrenciesSettingsActivity)
-        }
-
-        override fun createFragment(position: Int): Fragment = fragments[position]
+        override fun createFragment(position: Int) = creators[position].createReplaceable()
     }
 }

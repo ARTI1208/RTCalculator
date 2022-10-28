@@ -32,11 +32,11 @@ import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
-import ru.art2000.extensions.fragments.UniqueReplaceableFragment
+import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.extensions.views.*
 import ru.art2000.helpers.dip2px
 
-class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
+class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
 
     private var itemTouchHelper: ItemTouchHelper? = null
     private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
@@ -54,7 +54,9 @@ class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
             }
             val editCurrenciesAdapter = EditCurrenciesAdapter()
             adapter = editCurrenciesAdapter
-            layoutManager = OrientationManger(requireContext())
+            layoutManager = OrientationManger(requireContext()) {
+                editCurrenciesAdapter.itemCount == 0
+            }
             addOrientationItemDecoration()
             itemTouchHelper = ItemTouchHelper(CurrenciesEditRecyclerTouchCallback(
                 requireContext(),
@@ -93,10 +95,6 @@ class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
     @get:StringRes
     private val emptyTextRes: Int
         get() = R.string.empty_text_no_currencies_added
-
-    override fun getTitle(): Int {
-        return R.string.currencies_edit
-    }
 
     companion object {
         private const val REORDER_MODE = 0
@@ -266,7 +264,7 @@ class CurrenciesEditFragment : UniqueReplaceableFragment(), AppFragmentMixin {
                     false
                 }
 
-                binding.handle.consumeInsetsForMargin { windowInsetsCompat, left, top, right, bottom ->
+                binding.handle.consumeInsetsForMargin { windowInsetsCompat, left, _, right, _ ->
                     val gestureInsets = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemGestures())
                     updateLayoutParams<MarginLayoutParams> {
                         if (ltr) {

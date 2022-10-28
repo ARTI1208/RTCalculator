@@ -3,13 +3,19 @@ package ru.art2000.extensions.fragments
 import androidx.annotation.CallSuper
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 
-abstract class CommonReplaceableFragment : Fragment(), IReplaceableFragment {
+abstract class PreferenceReplaceableFragment : ExtendedPreferenceFragment(), IReplaceableFragment {
 
     private val helper by lazy { ReplaceableFragmentHelper(this) }
 
-    override fun onShown(previousReplaceable: IReplaceableFragment?) {}
+    /**
+     * Called when current fragment becomes primary in the collection and shown
+     *
+     * @param previousReplaceable object that was previously shown or whatever
+     */
+    override fun onShown(previousReplaceable: IReplaceableFragment?) {
+
+    }
 
     /**
      * Called when current fragment becomes primary in the collection. Fragment may not be fully
@@ -29,9 +35,13 @@ abstract class CommonReplaceableFragment : Fragment(), IReplaceableFragment {
      *
      * @param nextReplaceable object that has replaced current
      */
-    override fun onReplaced(nextReplaceable: IReplaceableFragment?) {}
+    override fun onReplaced(nextReplaceable: IReplaceableFragment?) {
 
-    override fun onReselected() {}
+    }
+
+    override fun onReselected() {
+
+    }
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

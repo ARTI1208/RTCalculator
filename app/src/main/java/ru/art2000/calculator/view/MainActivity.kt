@@ -13,7 +13,7 @@ import ru.art2000.calculator.view.calculator.CalculatorFragment
 import ru.art2000.calculator.view.currency.CurrencyConverterFragment
 import ru.art2000.calculator.view.settings.SettingsFragment
 import ru.art2000.calculator.view.unit.UnitConverterFragment
-import ru.art2000.extensions.fragments.INavigationFragment
+import ru.art2000.extensions.fragments.NavigationFragmentCreator
 import ru.art2000.extensions.views.*
 
 @AndroidEntryPoint
@@ -39,15 +39,33 @@ class MainActivity : AppActivity() {
             true
         }
 
-        val replaceableFragments: Array<INavigationFragment> = arrayOf(
-            CurrencyConverterFragment(), CalculatorFragment(),
-            UnitConverterFragment(), SettingsFragment(),
-        )
-
         navigation.setupWithViewPager2(
             this,
             binding.pager2,
-            *replaceableFragments,
+            NavigationFragmentCreator(
+                R.drawable.ic_currency,
+                R.id.navigation_currency,
+                R.string.title_currency,
+                ::CurrencyConverterFragment,
+            ),
+            NavigationFragmentCreator(
+                R.drawable.ic_calc,
+                R.id.navigation_calc,
+                R.string.title_calc,
+                ::CalculatorFragment,
+            ),
+            NavigationFragmentCreator(
+                R.drawable.ic_unit,
+                R.id.navigation_unit,
+                R.string.title_unit,
+                ::UnitConverterFragment,
+            ),
+            NavigationFragmentCreator(
+                R.drawable.ic_settings,
+                R.id.navigation_settings,
+                R.string.title_settings,
+                ::SettingsFragment,
+            ),
         )
 
         val tabId = when (intent.action) {

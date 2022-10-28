@@ -312,18 +312,6 @@ class CalculatorFragment : MainScreenFragment() {
         setupHistoryHeader(adapter)
     }
 
-    override fun getIcon(): Int {
-        return R.drawable.ic_calc
-    }
-
-    override fun getReplaceableId(): Int {
-        return R.id.navigation_calc
-    }
-
-    override fun getTitle(): Int {
-        return R.string.title_calc
-    }
-
     override fun onReselected() {
         ensureHistoryPanelClosed()
     }

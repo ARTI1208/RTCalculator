@@ -3,9 +3,9 @@ package ru.art2000.calculator.view
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import ru.art2000.extensions.fragments.NavigationFragment
+import ru.art2000.extensions.fragments.CommonReplaceableFragment
 
-abstract class MainScreenFragment : NavigationFragment(), AppFragmentMixin {
+abstract class MainScreenFragment : CommonReplaceableFragment(), AppFragmentMixin {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

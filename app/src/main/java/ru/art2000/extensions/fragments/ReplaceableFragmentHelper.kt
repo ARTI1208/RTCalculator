@@ -1,18 +1,16 @@
 package ru.art2000.extensions.fragments
 
-import androidx.annotation.CallSuper
-import android.os.Bundle
-import android.view.View
-import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
 
-abstract class PreferenceNavigationFragment : ExtendedPreferenceFragment(), INavigationFragment {
+class ReplaceableFragmentHelper<F>(
+    private val fragment: F,
+) where F: Fragment, F: IReplaceableFragment{
 
     private var previousReplaceable: IReplaceableFragment? = null
     private var callOnShownOnViewCreated = false
 
     private fun canBeShown(): Boolean {
-        return view != null
+        return fragment.view != null
     }
 
     /**
@@ -20,8 +18,8 @@ abstract class PreferenceNavigationFragment : ExtendedPreferenceFragment(), INav
      *
      * @param previousReplaceable object that was previously shown or whatever
      */
-    override fun onShown(previousReplaceable: IReplaceableFragment?) {
-
+    private fun onShown(previousReplaceable: IReplaceableFragment?) {
+        fragment.onShown(previousReplaceable)
     }
 
     /**
@@ -32,8 +30,7 @@ abstract class PreferenceNavigationFragment : ExtendedPreferenceFragment(), INav
      *
      * @param previousReplaceable object that was previously shown or whatever
      */
-    @CallSuper
-    override fun onReplace(previousReplaceable: IReplaceableFragment?) {
+    fun onReplace(previousReplaceable: IReplaceableFragment?) {
         if (canBeShown()) {
             onShown(previousReplaceable)
         } else {
@@ -42,22 +39,7 @@ abstract class PreferenceNavigationFragment : ExtendedPreferenceFragment(), INav
         }
     }
 
-    /**
-     * Called when current fragment becomes secondary in the collection
-     *
-     * @param nextReplaceable object that has replaced current
-     */
-    override fun onReplaced(nextReplaceable: IReplaceableFragment?) {
-
-    }
-
-    override fun onReselected() {
-
-    }
-
-    @CallSuper
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    fun onViewCreated() {
         if (callOnShownOnViewCreated) {
             onShown(previousReplaceable)
             previousReplaceable = null
@@ -65,13 +47,4 @@ abstract class PreferenceNavigationFragment : ExtendedPreferenceFragment(), INav
         }
     }
 
-    @DrawableRes
-    override fun getIcon(): Int {
-        return -1
-    }
-
-    @IdRes
-    override fun getReplaceableId(): Int {
-        return -1
-    }
 }

@@ -213,16 +213,4 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         return null
     }
-
-    override fun getTitle(): Int {
-        return R.string.title_settings
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.ic_settings
-    }
-
-    override fun getReplaceableId(): Int {
-        return R.id.navigation_settings
-    }
 }

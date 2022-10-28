@@ -23,12 +23,12 @@ import ru.art2000.calculator.view_model.currency.CurrenciesSettingsModel
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
-import ru.art2000.extensions.fragments.UniqueReplaceableFragment
+import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.addOrientationItemDecoration
 import ru.art2000.extensions.views.createTextEmptyView
 
-class CurrenciesAddFragment : UniqueReplaceableFragment(), AppFragmentMixin {
+class CurrenciesAddFragment : CommonReplaceableFragment(), AppFragmentMixin {
 
     private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
     private val model: CurrenciesAddModel by activityViewModels<CurrenciesSettingsModel>()
@@ -39,8 +39,11 @@ class CurrenciesAddFragment : UniqueReplaceableFragment(), AppFragmentMixin {
         savedInstanceState: Bundle?
     ): View {
 
+        val addCurrenciesAdapter = AddCurrenciesAdapter()
         binding.modifyCurrenciesList.apply {
-            layoutManager = OrientationManger(requireContext())
+            layoutManager = OrientationManger(requireContext()) {
+                addCurrenciesAdapter.itemCount == 0
+            }
             addOrientationItemDecoration()
             emptyViewGenerator = { ctx, _, _ ->
                 createTextEmptyView(ctx, emptyTextRes)
@@ -50,7 +53,7 @@ class CurrenciesAddFragment : UniqueReplaceableFragment(), AppFragmentMixin {
                 emptyView?.setText(emptyTextRes)
             }
 
-            adapter = AddCurrenciesAdapter()
+            adapter = addCurrenciesAdapter
         }
 
         return binding.root
@@ -66,10 +69,6 @@ class CurrenciesAddFragment : UniqueReplaceableFragment(), AppFragmentMixin {
 
     override fun onReselected() {
         binding.modifyCurrenciesList.smoothScrollToPosition(0)
-    }
-
-    override fun getTitle(): Int {
-        return R.string.currencies_add
     }
 
     @get:StringRes

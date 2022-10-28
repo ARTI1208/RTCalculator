@@ -73,6 +73,10 @@ class HalfPoweredUnitPageFragment : BaseUnitPageFragment<UnitFragHalfBinding>() 
         binding.hpuvEt.postDelayed(binding.hpuvEt::requestFocus, 100L)
     }
 
+    override fun onReselected() {
+        binding.unitRv.smoothScrollToPosition(0)
+    }
+
     private fun UnitListAdapter.setValueForPosition(position: Int) {
         setValue(position, binding.hpuvEt.text)
     }

@@ -10,10 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationBarView
-import ru.art2000.extensions.fragments.INavigationFragment
+import ru.art2000.extensions.fragments.INavigationCreator
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import kotlin.reflect.KProperty
 
@@ -23,22 +22,26 @@ fun NavigationBarView.setSelectedItemId(@IdRes itemId: Int, smoothScroll: Boolea
     smoothScrollNext = true
 }
 
-fun NavigationBarView.setupWithViewPager2(
+fun <F> NavigationBarView.setupWithViewPager2(
     parentActivity: FragmentActivity,
     pager2: ViewPager2,
-    vararg replaceableFragments: INavigationFragment,
-) {
+    vararg items: INavigationCreator<F>,
+) where F : Fragment, F : IReplaceableFragment {
     attachedPager2 = pager2
-    setReplaceableFragments(*replaceableFragments)
-    pager2.offscreenPageLimit = replaceableFragments.size
+    inflateMenuFromItems(*items)
+    pager2.offscreenPageLimit = items.size
     pager2.isUserInputEnabled = false
-    pager2.adapter = object : FragmentStateAdapter(parentActivity) {
-        override fun createFragment(position: Int): Fragment {
-            return replaceableFragments[position] as Fragment
+    pager2.adapter = object : MyFragmentStateAdapter<F>(parentActivity) {
+        override fun createFragment(position: Int): F {
+            return items[position].createReplaceable()
         }
 
         override fun getItemCount(): Int {
-            return replaceableFragments.size
+            return items.size
+        }
+    }.apply {
+        addOnCreateOrRestoreListener { position, fragment ->
+            replaceables[position] = fragment
         }
     }
     parentActivity.lifecycle.addObserver(object : DefaultLifecycleObserver {
@@ -109,12 +112,12 @@ private fun NavigationBarView.clearMemory() {
     selectedListenerSetMap.remove(this)
 }
 
-private fun NavigationBarView.setReplaceableFragments(
-    vararg replaceableFragments: INavigationFragment
+private fun NavigationBarView.inflateMenuFromItems(
+    vararg navigationItems: INavigationCreator<*>,
 ) {
     menu.clear()
-    for (order in replaceableFragments.indices) {
-        val replaceableFragment = replaceableFragments[order]
+    for (order in navigationItems.indices) {
+        val replaceableFragment = navigationItems[order]
         var id = replaceableFragment.getReplaceableId()
         id = if (id == -1) Menu.NONE else id
         val item = menu.add(
@@ -134,14 +137,13 @@ private fun NavigationBarView.setReplaceableFragments(
                 item.icon = iconDrawable
             }
         }
-        replaceables.put(order, replaceableFragment)
     }
 }
 
 private fun NavigationBarView.onNavigationItemSelected(item: MenuItem) {
+    attachedPager2?.setCurrentItem(item.order, smoothScrollNext ?: true)
     val replaceable = getReplaceable(item.order) ?: return
     sendReplaceCallback(replaceable)
-    attachedPager2?.setCurrentItem(item.order, smoothScrollNext ?: false)
 }
 
 private fun NavigationBarView.onNavigationItemReselected(item: MenuItem) {

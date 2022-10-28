@@ -174,18 +174,6 @@ class CurrencyConverterFragment : MainScreenFragment() {
         }
     }
 
-    override fun getReplaceableId(): Int {
-        return R.id.navigation_currency
-    }
-
-    override fun getIcon(): Int {
-        return R.drawable.ic_currency
-    }
-
-    override fun getTitle(): Int {
-        return R.string.title_currency
-    }
-
     private fun applyLoadingState(loadingState: LoadingState) {
         setRefreshStatus(loadingState === LoadingState.LOADING_STARTED)
         val messageId = when (loadingState) {

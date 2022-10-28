@@ -1,6 +1,6 @@
 package ru.art2000.extensions.fragments
 
-interface IReplaceableFragment {
+interface IReplaceableFragment : IReplaceableItem<IReplaceableFragment> {
 
     /**
      * Called when current fragment becomes primary in the collection and shown
@@ -17,22 +17,20 @@ interface IReplaceableFragment {
      * @param previousReplaceable object that was previously shown or whatever
      *
      * @see CommonReplaceableFragment
-     * @see UniqueReplaceableFragment
-     * @see NavigationFragment
-     * @see PreferenceNavigationFragment
+     * @see PreferenceReplaceableFragment
      */
-    fun onReplace(previousReplaceable: IReplaceableFragment?)
+    override fun onReplace(previousReplaceable: IReplaceableFragment?)
 
     /**
      * Called when current fragment becomes secondary in collection
      *
      * @param nextReplaceable fragment that has replaced current
      */
-    fun onReplaced(nextReplaceable: IReplaceableFragment?)
+    override fun onReplaced(nextReplaceable: IReplaceableFragment?)
 
     /**
-     * Called when current fragment is reselected as primary
+     * Called when current item is reselected as primary
      *
      */
-    fun onReselected()
+    override fun onReselected()
 }

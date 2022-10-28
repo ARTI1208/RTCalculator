@@ -3,9 +3,9 @@ package ru.art2000.calculator.view
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import ru.art2000.extensions.fragments.PreferenceNavigationFragment
+import ru.art2000.extensions.fragments.PreferenceReplaceableFragment
 
-internal abstract class MainScreenPreferenceFragment : PreferenceNavigationFragment(), AppFragmentMixin {
+internal abstract class MainScreenPreferenceFragment : PreferenceReplaceableFragment(), AppFragmentMixin {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -29,6 +29,10 @@ class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
         }
     }
 
+    override fun onReselected() {
+        binding.unitRv.smoothScrollToPosition(0)
+    }
+
     override val bottomViews: List<View>
         get() = if (requireContext().isLandscape) listOf(binding.unitRv) else emptyList()
 }
