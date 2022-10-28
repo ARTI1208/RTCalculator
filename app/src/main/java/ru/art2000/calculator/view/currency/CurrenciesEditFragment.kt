@@ -50,7 +50,10 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
             emptyViewGenerator = { ctx, _, _ ->
                 createTextEmptyView(ctx, emptyTextRes)
             }
-            val editCurrenciesAdapter = EditCurrenciesAdapter()
+            val editCurrenciesAdapter = EditCurrenciesAdapter(
+                savedInstanceState?.getInt(ADAPTER_MODE_KEY, REORDER_MODE)
+                    ?: REORDER_MODE
+            )
             adapter = editCurrenciesAdapter
             layoutManager = OrientationManger(requireContext()) {
                 editCurrenciesAdapter.itemCount == 0
@@ -90,19 +93,27 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
         binding.modifyCurrenciesList.smoothScrollToPosition(0)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ADAPTER_MODE_KEY, adapter.currentMode)
+    }
+
+    private val adapter: EditCurrenciesAdapter
+        get() = binding.modifyCurrenciesList.actualAdapter as EditCurrenciesAdapter
+
     @get:StringRes
     private val emptyTextRes: Int
         get() = R.string.empty_text_no_currencies_added
 
     companion object {
+        private const val ADAPTER_MODE_KEY = "adapterMode"
         private const val REORDER_MODE = 0
         private const val SELECTION_MODE = 1
     }
 
-    private inner class EditCurrenciesAdapter :
-        RecyclerView.Adapter<EditCurrenciesAdapter.Holder>() {
-
-        private var curMode = REORDER_MODE
+    private inner class EditCurrenciesAdapter(
+        var currentMode: Int
+    ) : RecyclerView.Adapter<EditCurrenciesAdapter.Holder>() {
 
         init {
             model.selectedVisibleItems.observe(
@@ -141,7 +152,7 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
                 })
         }
 
-        override fun getItemViewType(position: Int) = curMode
+        override fun getItemViewType(position: Int) = currentMode
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
             val inflater = LayoutInflater.from(requireContext())
@@ -193,8 +204,8 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
         }
 
         private fun setReorderMode() {
-            if (curMode == REORDER_MODE) return
-            curMode = REORDER_MODE
+            if (currentMode == REORDER_MODE) return
+            currentMode = REORDER_MODE
             model.isEditSelectionMode = false
             itemTouchHelper!!.attachToRecyclerView(binding.modifyCurrenciesList)
             model.selectedVisibleItems.clear()
@@ -202,7 +213,7 @@ class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
 
         @SuppressLint("NotifyDataSetChanged")
         private fun setSelectionMode(holder: RecyclerView.ViewHolder) {
-            curMode = SELECTION_MODE
+            currentMode = SELECTION_MODE
             model.isEditSelectionMode = true
             itemTouchHelper!!.attachToRecyclerView(null)
             model.dismissFirstTimeTooltip()
