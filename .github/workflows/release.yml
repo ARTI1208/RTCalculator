@@ -44,7 +44,7 @@ jobs:
       - name: Extract changelog
         id: extract_changelog
         run: |
-          changelog=$(sed -n "/^$GITHUB_REF_NAME$/,/^v/p" app/src/main/res/raw/changelog.txt | head -n -2)
+          changelog=$(sed -n "/^$GITHUB_REF_NAME/,/^v/p" app/src/main/res/raw/changelog.txt | head -n -2)
           echo 'CHANGELOG<<EOF' >> $GITHUB_ENV
           echo "$changelog" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
