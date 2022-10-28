@@ -15,9 +15,9 @@ val composeMaterial3Version = "1.0.0"
 val composeCompilerVersion = "1.3.2"
 
 val major = 1
-val minor = 4
-val patch = 1
-val code = 13
+val minor = 5
+val patch = 0
+val code = 14
 
 android {
     signingConfigs {
@@ -155,7 +155,7 @@ val newVersion = tasks.create("newVersion") {
             }.forEach {
                 if (it.name != "changelog.txt") return@forEach
                 it.useLines { lines ->
-                    val versionInChangelog = lines.first()
+                    val versionInChangelog = lines.first().takeWhile { c -> c != ' ' }
                     check(versionInChangelog == version) {
                         val parentName = it.parentFile.name
                         val fileName = it.name

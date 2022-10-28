@@ -1,3 +1,31 @@
+v1.5.0 (2022-10-28)
+ - Allow landscape orientation of main screen
+ - Improve layouts in landscape orientation on other screens
+ - Display content edge-to-edge on all screens on Android 5+ (API 21+)
+ - Add ability to add comments to calculator history items
+ - Save last calculator expression and memory and show them after app restart
+ - Remove double back click requirement to exit on main screen
+ - Opt-in Android 13+ (API 33+) predictive back gesture
+ - Don't animate initial tab selection on app open
+ - Make main screen UI less jumpy on app opening
+ - Make calculator respect locale-specific decimal separator
+ - Maintain unit converter data across all view types
+ - Maintain shown unit converter category and selected item between view type changes
+ - Improve handling of gesture zone
+ - Increase height of input and result rows in simple unit converter layout for long devices
+ - Add release dates to changelog
+ - Show localized build time in settings
+ - Add missing translation for dynamic coloring preference
+ - Save and restore edit list mode on activity recreate
+ - Fix crashes on Android <6 (API <23)
+ - Fix RTL bugs
+ - Fix some leaks
+ - Fix wrong unit converter page was shown when clicking tab from the end
+ - Fix unit converter pages cannot be scrolled by swiping on values in powerful and half-powerful modes
+ - Fix new currency rates were not shown immediately after update
+ - Fix currency converter title didn't update after system language changed until restart
+ - Fix items swapping in currencies edit screen
+
 v1.4.1 (2022-10-12)
  - Fix unit name copying in unit converter
  - Improved stability of currencies searching in currencies' settings
