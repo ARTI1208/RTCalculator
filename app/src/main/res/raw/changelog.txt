@@ -1,3 +1,9 @@
+v1.5.1 (2022-10-29)
+ - Fix dark status bar icons in black theme
+ - Fix inconsistency in height of angle type view and memory view
+ - Fix missing unit names in simple unit converter in some situations
+ - Fix text parts were out of rounded screen in currencies settings
+
 v1.5.0 (2022-10-28)
  - Allow landscape orientation of main screen
  - Improve layouts in landscape orientation on other screens
