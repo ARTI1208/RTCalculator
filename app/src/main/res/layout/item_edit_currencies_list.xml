@@ -7,7 +7,8 @@
     android:background="?selectableItemBackground"
     android:minHeight="50dp"
     android:orientation="horizontal"
-    android:padding="6dp">
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -46,6 +47,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         app:srcCompat="@drawable/ic_drag_handle"
-        app:tint="?colorSecondary" />
+        app:tint="?colorSecondary"
+        tools:ignore="ContentDescription" />
 
 </RelativeLayout>
