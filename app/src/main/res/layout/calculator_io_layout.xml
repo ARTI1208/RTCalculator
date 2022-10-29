@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
-            android:textSize="18sp"
+            android:textSize="@dimen/angle_text_size"
             android:visibility="gone"
             tools:text="M10"
             tools:visibility="visible" />
@@ -45,7 +45,7 @@
         android:id="@+id/io_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="@string/orientation"
         android:paddingTop="@dimen/calc_field_vertical_padding"
         android:paddingBottom="@dimen/calc_field_vertical_padding">
 
@@ -73,6 +73,7 @@
             android:id="@+id/result_hsv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="@string/visible_or_gone"
             android:layout_weight="1.0"
             android:paddingHorizontal="6dp"
             android:scrollbars="none">

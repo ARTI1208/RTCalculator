@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- horizontal -->
+    <string name="orientation" translatable="false">0</string>
+    <!-- gone -->
+    <string name="visible_or_gone" translatable="false">2</string>
+</resources>

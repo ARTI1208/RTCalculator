@@ -151,4 +151,10 @@
     <string name="app_dynamic_colors">Dynamic theme coloring</string>
     <string name="app_dynamic_colors_on">Enabled</string>
     <string name="app_dynamic_colors_off">Disabled</string>
+
+    <!-- vertical -->
+    <string name="orientation" translatable="false">1</string>
+    <!-- visible -->
+    <string name="visible_or_gone" translatable="false">0</string>
+
 </resources>
