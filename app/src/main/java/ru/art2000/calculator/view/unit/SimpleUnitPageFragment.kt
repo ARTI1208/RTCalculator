@@ -119,6 +119,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
             model.converterFunctions.getInt(CONVERT_TO_KEY, 1)
         )
 
+        binding.spinnerFrom.isSaveEnabled = false
         binding.spinnerFrom.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

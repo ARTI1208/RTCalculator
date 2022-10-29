@@ -36,9 +36,9 @@
         <TextView
             android:id="@+id/original_dimension_hint"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="end|bottom"
-            android:gravity="end"
+            android:gravity="end|bottom"
             android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
             tools:text="m/s" />
@@ -74,9 +74,9 @@
         <TextView
             android:id="@+id/converted_dimension_hint"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="end|bottom"
-            android:gravity="end"
+            android:gravity="end|bottom"
             android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
             android:paddingBottom="@dimen/unit_view_hint_bottom_margin"
             android:textColor="?colorSecondary"
