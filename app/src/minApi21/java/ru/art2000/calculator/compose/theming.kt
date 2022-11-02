@@ -30,7 +30,7 @@ fun AutoThemed(
         false -> when (isSystemInDarkTheme()) {
             true -> {
                 val blackTheme = prefsHelper.appTheme != R.style.RT_AppTheme_Dark &&
-                        prefsHelper.isAppAutoDarkThemeBlack
+                        prefsHelper.isBlackThemePreferred
 
                 if (blackTheme) blackCalculatorColors() else darkCalculatorColors()
             }
