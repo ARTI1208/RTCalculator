@@ -22,7 +22,7 @@ import ru.art2000.extensions.collections.ArrayLiveList
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.CurrencyPreferenceHelper
-import ru.art2000.helpers.getLocalizedString
+import ru.art2000.extensions.getLocalizedString
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList

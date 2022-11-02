@@ -2,7 +2,7 @@ package ru.art2000.calculator.model.calculator.history
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.art2000.calculator.model.common.DiffComparable
+import ru.art2000.extensions.collections.DiffComparable
 import java.util.*
 
 @Entity(tableName = "history")

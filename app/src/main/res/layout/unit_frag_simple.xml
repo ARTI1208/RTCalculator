@@ -18,7 +18,7 @@
             android:background="?attr/colorSurfaceVariant"
             android:scrollbars="none">
 
-            <ru.art2000.extensions.views.CalculatorEditText
+            <ru.art2000.extensions.views.CustomInputEditText
                 android:id="@+id/value_original"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

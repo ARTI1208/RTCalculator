@@ -3,7 +3,7 @@ package ru.art2000.calculator.utils
 import ru.art2000.calculator.model.calculator.*
 import ru.art2000.calculator.model.calculator.numbers.DoubleField
 import ru.art2000.calculator.model.calculator.parts.*
-import ru.art2000.extensions.language.safeToDouble
+import ru.art2000.extensions.strings.safeToDouble
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -69,7 +69,7 @@ object TreeCalculations {
         }
     }
 
-    fun parseExpression(expression: String, angleType: AngleType): CalculationTree<Double>? {
+    private fun parseExpression(expression: String, angleType: AngleType): CalculationTree<Double>? {
 
         val modifiedExpression = if (expression.isInBrackets)
             expression.substring(1, expression.lastIndex)
@@ -102,8 +102,6 @@ object TreeCalculations {
             null -> {
 
                 println("Constant: $modifiedExpression")
-
-                val postfixOperationPair = getEndingOperation<PostfixOperation<Double>>(modifiedExpression)
 
                 val prefixOperationPair = getStartingOperation<PrefixOperation<Double>>(modifiedExpression)
 

@@ -1,22 +1,12 @@
 package ru.art2000.helpers
 
 import ru.art2000.extensions.preferences.ReadOnlyPreferenceDelegate
+import ru.art2000.extensions.preferences.ThemeSettingsHolder
 
-interface GeneralPreferenceHelper {
+interface GeneralPreferenceHelper : ThemeSettingsHolder {
 
     var defaultNavItemId: Int
 
-    val areDynamicColorsEnabled: Boolean
-
     val appThemeProperty: ReadOnlyPreferenceDelegate<Int>
-
-    //    @StyleRes
-    val appTheme: Int
-
-    val isAppAutoDarkThemeBlack: Boolean
-
-    val darkThemeActivationTime: Int
-
-    val darkThemeDeactivationTime: Int
 
 }

@@ -24,7 +24,7 @@ import ru.art2000.helpers.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
 import ru.art2000.helpers.PreferenceKeys.KEY_DYNAMIC_COLORS
 import ru.art2000.helpers.PreferenceKeys.KEY_UNIT_VIEW
 import ru.art2000.helpers.PreferenceValues
-import ru.art2000.helpers.getColorAttribute
+import ru.art2000.extensions.getColorAttribute
 import java.text.DateFormat
 import java.util.*
 

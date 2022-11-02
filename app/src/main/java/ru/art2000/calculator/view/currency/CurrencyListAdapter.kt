@@ -19,7 +19,7 @@ import ru.art2000.calculator.model.currency.getNameIdentifier
 import ru.art2000.calculator.view_model.currency.CurrencyListAdapterModel
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.helpers.getColorAttribute
+import ru.art2000.extensions.getColorAttribute
 import java.text.DecimalFormat
 import com.google.android.material.R as MaterialR
 

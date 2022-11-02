@@ -2,7 +2,7 @@ package ru.art2000.calculator.model.calculator.numbers
 
 import org.apache.commons.math3.special.Gamma
 import ru.art2000.calculator.model.calculator.parts.*
-import ru.art2000.extensions.language.dotSafeToDouble
+import ru.art2000.extensions.strings.dotSafeToDouble
 import kotlin.math.*
 
 object DoubleField : NumberField<Double> {

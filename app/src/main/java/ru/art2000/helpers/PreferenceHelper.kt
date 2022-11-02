@@ -8,6 +8,7 @@ import ru.art2000.calculator.CalculatorApplication
 import ru.art2000.calculator.R
 import ru.art2000.calculator.background.currency.CurrencyDownloadWorker
 import ru.art2000.extensions.preferences.*
+import ru.art2000.extensions.timeStringToSeconds
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,7 +75,7 @@ class PreferenceHelper @Inject constructor(
 
     override val appTheme by appThemeProperty
 
-    override val isAppAutoDarkThemeBlack by preferences.booleanPreference(
+    override val isBlackThemePreferred by preferences.booleanPreference(
         PreferenceKeys.KEY_AUTO_DARK_THEME, PreferenceDefaults.DEFAULT_DARK_THEME_IS_BLACK
     )
 
@@ -202,35 +203,6 @@ class PreferenceHelper @Inject constructor(
             unitViewTypeProperty.listen(onChanged)
         } else {
             unitViewTypeProperty.stopListening()
-        }
-    }
-
-
-    // Other ===========================================================
-
-    companion object {
-
-        @JvmStatic
-        private fun timeStringToSeconds(time: String): Int {
-            val (first, second) = parseStringTime(time)
-            return (first * 60 + second) * 60
-        }
-
-        @JvmStatic
-        fun parseStringTime(time: String): Pair<Int, Int> {
-            val parts = time.split(':')
-            val e = IllegalArgumentException("String '$time' is not time string")
-            if (parts.size != 2) throw e
-
-            val hour = (parts.first().toIntOrNull() ?: throw e)
-                .coerceAtLeast(0)
-                .coerceAtMost(23)
-
-            val minute = (parts.last().toIntOrNull() ?: throw e)
-                .coerceAtLeast(0)
-                .coerceAtMost(59)
-
-            return hour to minute
         }
     }
 }

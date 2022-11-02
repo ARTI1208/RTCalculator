@@ -60,7 +60,7 @@ class CalculatorFragment : MainScreenFragment() {
         // Set text before listener so model.selection is not wrongly updated
         inputTv.setText(model.expression)
         inputTv.onSelectionChangedListener =
-            CalculatorEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
+            CustomInputEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
                 model.inputSelection = Pair(selStart, selEnd)
             }
 
@@ -146,7 +146,7 @@ class CalculatorFragment : MainScreenFragment() {
         get() = binding.calculatorPanel.historyPart.historyHandle
     private val historyPanelHeader: RelativeLayout
         get() = binding.calculatorPanel.historyPart.header
-    private val inputTv: CalculatorEditText
+    private val inputTv: CustomInputEditText
         get() = binding.calculatorIo.tvInput
     private val resultTV: TextView
         get() = binding.calculatorIo.tvResult

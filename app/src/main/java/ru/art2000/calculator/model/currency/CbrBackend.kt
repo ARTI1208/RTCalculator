@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package ru.art2000.calculator.model.currency
 
 import okhttp3.OkHttpClient
@@ -6,8 +8,8 @@ import org.simpleframework.xml.core.Persister
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.art2000.calculator.view_model.currency.CbrAPI
-import ru.art2000.extensions.platform.TLSSocketFactory
-import ru.art2000.extensions.platform.platformTrustManager
+import ru.art2000.extensions.net.TLSSocketFactory
+import ru.art2000.extensions.net.platformTrustManager
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

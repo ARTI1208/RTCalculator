@@ -22,7 +22,7 @@ import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.fragments.IReplaceableFragment
 import ru.art2000.extensions.views.*
-import ru.art2000.helpers.getColorAttribute
+import ru.art2000.extensions.getColorAttribute
 
 @AndroidEntryPoint
 class CurrencyConverterFragment : MainScreenFragment() {

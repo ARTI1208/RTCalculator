@@ -19,7 +19,7 @@ import ru.art2000.calculator.view.unit.BaseUnitPageFragment.Companion.CONVERT_FR
 import ru.art2000.extensions.arch.launchAndCollect
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.helpers.getColorAttribute
+import ru.art2000.extensions.getColorAttribute
 import com.google.android.material.R as MaterialR
 
 typealias CopyFunction = (CharSequence, CharSequence, CharSequence, CopyMode) -> Boolean

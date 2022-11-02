@@ -1,6 +1,6 @@
 package ru.art2000.calculator.model.unit
 
-import ru.art2000.calculator.model.common.DiffComparable
+import ru.art2000.extensions.collections.DiffComparable
 
 interface UnitConverterItem<T> : UnitItem, DiffComparable<UnitConverterItem<T>> {
 

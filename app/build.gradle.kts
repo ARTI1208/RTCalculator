@@ -183,36 +183,35 @@ val kotlinVersion = libs.versions.kotlin.get()
 dependencies {
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
+    implementation(project(":extensions"))
 
     val androidxHiltVersion = "1.0.0"
     val daggerHiltVersion = "2.44"
-    val lifecycleVersion = "2.5.1"
     val multidexVersion = "2.0.1"
     val roomVersion = "2.4.3"
 
-    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation(libs.appcompat)
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.fragment:fragment-ktx:1.5.4")
+    implementation(libs.androidx.core)
+    implementation(libs.preference)
     implementation("androidx.hilt:hilt-work:$androidxHiltVersion")
     kapt("androidx.hilt:hilt-compiler:$androidxHiltVersion")
-    implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation(libs.lifecycle.viewmodel)
     implementation("androidx.multidex:multidex:$multidexVersion")
-    implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation(libs.preference)
+    implementation(libs.recycler)
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.work:work-runtime-ktx:2.7.1")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
+    coreLibraryDesugaring(libs.desugaring)
 
     implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
     implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
 
-    implementation("com.google.android.material:material:1.7.0")
+    implementation(libs.material)
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
 
@@ -222,7 +221,7 @@ dependencies {
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
 
 

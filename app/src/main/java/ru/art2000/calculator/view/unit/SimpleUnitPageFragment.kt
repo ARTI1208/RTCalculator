@@ -98,7 +98,7 @@ class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
         })
 
         binding.valueOriginal.onSelectionChangedListener =
-            CalculatorEditText.OnSelectionChangedListener { selStart, selEnd ->
+            CustomInputEditText.OnSelectionChangedListener { selStart, selEnd ->
                 model.inputSelection = Pair(selStart, selEnd)
             }
 

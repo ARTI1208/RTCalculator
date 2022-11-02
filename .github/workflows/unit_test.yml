@@ -30,4 +30,4 @@ jobs:
           export signing_keyAlias=${{ secrets.ANDROID_SIGNATURE_KEY }}
           export signing_keyPassword=${{ secrets.ANDROID_SIGNATURE_KEY_PASS }}
           ./gradlew clean
-          ./gradlew test${{ matrix.variant }}DebugUnitTest -PexcludeTime
+          ./gradlew test${{ matrix.variant }}DebugUnitTest :extensions:check -PexcludeTime

@@ -37,7 +37,6 @@ import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.fragments.*
 import ru.art2000.extensions.views.MyFragmentStateAdapter
 import ru.art2000.extensions.views.createOnTabSelectedListener
-import ru.art2000.extensions.views.createThemedSnackbar
 import ru.art2000.extensions.writeAndUpdateUi
 import ru.art2000.helpers.CurrencyPreferenceHelper
 import javax.inject.Inject

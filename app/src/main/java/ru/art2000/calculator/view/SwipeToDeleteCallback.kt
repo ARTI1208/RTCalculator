@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.art2000.calculator.R
-import ru.art2000.helpers.getColorAttribute
+import ru.art2000.extensions.getColorAttribute
 
 abstract class SwipeToDeleteCallback(
     private val context: Context,

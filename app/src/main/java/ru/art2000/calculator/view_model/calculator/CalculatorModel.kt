@@ -20,7 +20,7 @@ import ru.art2000.calculator.view_model.ExpressionInputViewModel.Companion.zero
 import ru.art2000.calculator.view_model.calculator.CalculationLexer.Companion.isFloatingPointSymbol
 import ru.art2000.extensions.arch.context
 import ru.art2000.extensions.arch.launchAndCollect
-import ru.art2000.extensions.language.dotSafeToDouble
+import ru.art2000.extensions.strings.dotSafeToDouble
 import ru.art2000.helpers.CalculatorPreferenceHelper
 import java.text.DecimalFormatSymbols
 import java.time.LocalDate
