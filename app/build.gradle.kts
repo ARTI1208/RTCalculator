@@ -1,14 +1,16 @@
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.hasProperty
+import ru.art2000.modules.setupAndroidModule
+import ru.art2000.modules.kapt
 import java.util.*
 
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
+
+setupAndroidModule()
 
 val composeVersion = "1.3.0"
 val composeMaterial3Version = "1.0.0"
@@ -38,28 +40,17 @@ android {
             keyPassword = stringProperty("signing.keyPassword")
         }
     }
-    compileSdkVersion = "android-33"
-    buildToolsVersion = "33.0.0"
-
-    namespace = "ru.art2000.calculator"
 
     defaultConfig {
         applicationId = "ru.art2000.calculator"
-        minSdk = 16
-        targetSdk = 33
         versionCode = code
 
         versionName = "$major.$minor.$patch"
 
-        multiDexEnabled = true
         buildConfigField("long", "BUILD_TIME", "${Date().time}")
         buildConfigField("boolean", "USE_COMPOSE", "true")
 
         setProperty("archivesBaseName", "RTCalculator-$versionName")
-    }
-
-    buildFeatures {
-        viewBinding = true
     }
 
     buildTypes {
@@ -90,24 +81,9 @@ android {
     compileOptions {
         targetCompatibility = javaVersion
         sourceCompatibility = javaVersion
-        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = javaVersion.toString()
-    }
-
-    flavorDimensions += listOf("sdk")
-    productFlavors {
-
-        create("minApi16") {
-            minSdk = 16
-            dimension = "sdk"
-        }
-
-        create("minApi21") {
-            minSdk = 21
-            dimension = "sdk"
-        }
     }
 
     val flavorsWithoutCompose = listOf("api16")
@@ -128,14 +104,6 @@ android {
 
         composeOptions {
             kotlinCompilerExtensionVersion = composeCompilerVersion
-        }
-    }
-}
-
-tasks.whenTaskAdded {
-    if (name.startsWith("test") && name.endsWith("UnitTest") && project.hasProperty("excludeTime")) {
-        (this as Test).exclude {
-            it.name.contains("TimeTest")
         }
     }
 }
@@ -178,83 +146,22 @@ val newVersion = tasks.create("newVersion") {
     }
 }
 
-val kotlinVersion = libs.versions.kotlin.get()
-
 dependencies {
-    android.defaultConfig.vectorDrawables.useSupportLibrary = true
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
     implementation(project(":extensions"))
+    implementation(project(":currency"))
+    implementation(project(":calculator"))
+    implementation(project(":unit"))
+    implementation(project(":common"))
 
-    val androidxHiltVersion = "1.0.0"
-    val daggerHiltVersion = "2.44"
-    val multidexVersion = "2.0.1"
-    val roomVersion = "2.4.3"
-
-    implementation(libs.appcompat)
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation(libs.androidx.core)
-    implementation(libs.preference)
-    implementation("androidx.hilt:hilt-work:$androidxHiltVersion")
-    kapt("androidx.hilt:hilt-compiler:$androidxHiltVersion")
+    implementation(libs.constraintlayout)
+    implementation(libs.bundles.hilt.impl)
+    kapt(libs.bundles.hilt.kapt)
     implementation(libs.lifecycle.viewmodel)
-    implementation("androidx.multidex:multidex:$multidexVersion")
-    implementation(libs.preference)
-    implementation(libs.recycler)
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.work:work-runtime-ktx:2.7.1")
 
-    coreLibraryDesugaring(libs.desugaring)
-
-    implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
-    implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
-
-    implementation(libs.material)
-    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
-
-    implementation("org.apache.commons:commons-math3:3.6.1")
-
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
+    implementation(libs.viewbinding.delegate)
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
-
-    testImplementation(libs.junit)
-
-
-
-    val okhttpVersionMinApi16 = "3.12.13"
-    val retrofitVersionMinApi16 = "2.6.4"
-
-    //noinspection GradleDependency
-    "minApi16Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi16")
-    //noinspection GradleDependency
-    "minApi16Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi16")
-    //noinspection GradleDependency
-    "minApi16Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi16")
-    //noinspection GradleDependency
-    "minApi16Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi16") {
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-        exclude(group = "xpp3", module = "xpp3")
-    }
-
-
-
-    val okhttpVersionMinApi21 = "4.10.0"
-    val retrofitVersionMinApi21 = "2.9.0"
-
-    "minApi21Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi21")
-    "minApi21Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi21")
-
-    "minApi21Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi21")
-    "minApi21Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi21") {
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-        exclude(group = "xpp3", module = "xpp3")
-    }
 
     "minApi21Implementation"("androidx.activity:activity-compose:1.6.1")
 

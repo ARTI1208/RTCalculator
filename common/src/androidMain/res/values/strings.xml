@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
+    <string name="copied">Copied:</string>
+    <string name="you_can">You can…</string>
+
+    <!-- vertical -->
+    <string name="orientation" translatable="false">1</string>
+    <!-- visible -->
+    <string name="visible_or_gone" translatable="false">0</string>
+
+</resources>

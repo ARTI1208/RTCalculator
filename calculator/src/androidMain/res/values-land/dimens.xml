@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="calc_text_size">28sp</dimen>
+<!--    <dimen name="calc_field_min_height">0dp</dimen>-->
+    <dimen name="angle_text_size">14sp</dimen>
+    <dimen name="calc_field_vertical_padding">8dp</dimen>
+
+</resources>

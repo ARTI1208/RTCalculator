@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="currency_AUD">Australian dollar</string>
+    <string name="currency_AZN">Azerbaijani manat</string>
+    <string name="currency_AMD">Armenian dram</string>
+    <string name="currency_BYN">Belarusian ruble</string>
+    <string name="currency_BGN">Bulgarian lev</string>
+    <string name="currency_BRL">Brazilian real</string>
+    <string name="currency_HUF">Hungarian forint</string>
+    <string name="currency_KRW">South Korean won</string>
+    <string name="currency_HKD">Hong Kong dollar</string>
+    <string name="currency_DKK">Danish krone</string>
+    <string name="currency_USD">US dollar</string>
+    <string name="currency_EUR">Euro</string>
+    <string name="currency_INR">Indian rupee</string>
+    <string name="currency_KZT">Kazakhstani tenge</string>
+    <string name="currency_CAD">Canadian dollar</string>
+    <string name="currency_KGS">Kyrgyzstani som</string>
+    <string name="currency_CNY">Chinese yuan</string>
+    <string name="currency_MDL">Moldovan leu</string>
+    <string name="currency_TMT">Turkmenistan manat</string>
+    <string name="currency_NOK">Norwegian krone</string>
+    <string name="currency_PLN">Polish złoty</string>
+    <string name="currency_RON">Romanian leu</string>
+    <string name="currency_XDR">Special Drawing Rights</string>
+    <string name="currency_SGD">Singapore dollar</string>
+    <string name="currency_TJS">Tajikistani somoni</string>
+    <string name="currency_TRY">Turkish lira</string>
+    <string name="currency_UZS">Uzbekistani som</string>
+    <string name="currency_UAH">Ukrainian hryvnia</string>
+    <string name="currency_GBP">Pound sterling</string>
+    <string name="currency_CZK">Czech koruna</string>
+    <string name="currency_SEK">Swedish krona</string>
+    <string name="currency_CHF">Swiss franc</string>
+    <string name="currency_ZAR">South African rand</string>
+    <string name="currency_JPY">Japanese yen</string>
+    <string name="currency_RUB">Russian ruble</string>
+
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="update_network_type">
+        <item>@string/currency_update_never</item>
+        <item>@string/currency_update_wifi</item>
+        <item>@string/currency_update_any</item>
+    </array>
+    <array name="update_network_type_values">
+        <item>no_update</item>
+        <item>wifi</item>
+        <item>any</item>
+    </array>
+    <array name="currency_update_interval">
+        <item>@string/currency_update_interval_4</item>
+        <item>@string/currency_update_interval_6</item>
+        <item>@string/currency_update_interval_8</item>
+        <item>@string/currency_update_interval_12</item>
+        <item>@string/currency_update_interval_24</item>
+    </array>
+    <string-array name="currency_update_interval_values">
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+
+</resources>

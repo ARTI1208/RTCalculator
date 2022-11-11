@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="unit_converter_categories">
+        <item>@string/unit_category_velocity</item>
+        <item>@string/unit_category_distance</item>
+        <item>@string/unit_category_area</item>
+        <item>@string/unit_category_volume</item>
+        <item>@string/unit_category_mass</item>
+        <item>@string/unit_category_pressure</item>
+        <item>@string/unit_category_temperature</item>
+    </array>
+
+    <array name="unit_view">
+        <item>@string/unit_view_simple</item>
+        <item>@string/unit_view_half_powerful</item>
+        <item>@string/unit_view_powerful</item>
+    </array>
+    <array name="unit_view_values">
+        <item>simple</item>
+        <item>half</item>
+        <item>powerful</item>
+    </array>
+
+</resources>

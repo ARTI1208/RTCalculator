@@ -2,119 +2,11 @@
 
     <!-- Common -->
     <string name="app_name">Calculator</string>
-    <string name="title_calc">Calculator</string>
-    <string name="title_unit">Unit Converter</string>
-    <string name="title_currency">Currency</string>
     <string name="title_settings">Settings</string>
-    <string name="twice_tap_exit">Click BACK again to exit</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-
-    <!-- Calculator -->
-    <string name="error">Error</string>
-    <string name="infinity" translatable="false">∞</string>
-    <string name="copied">Copied:</string>
-    <string name="deleted">Deleted:</string>
-    <string name="history">History</string>
-    <string name="history_cleared">History cleared!</string>
-    <string name="no_history">No history yet</string>
-    <string name="you_can">You can…</string>
-    <string name="context_menu_copy">Copy</string>
-    <string name="context_menu_copy_all">Copy all</string>
-    <string name="context_menu_copy_expr">Copy expression</string>
-    <string name="context_menu_copy_res">Copy result</string>
-    <string name="delete_record">Delete record</string>
-    <string name="comment_item">Comment</string>
-    <string name="comment_item_title">Set item comment</string>
-    <string name="history_clear">Clear</string>
-    <string name="history_clear_confirm">Are you sure you want wipe calculation history?</string>
-    <string name="paste_replace">Replace</string>
-    <string name="paste_after">Paste after</string>
-    <string name="calculator_input_hint" translatable="false">2+2</string>
-    <string name="debug_lexeme_list_title">Expression lexemes:</string>
-    <string name="debug_lexer_time">Lexer time: %1$d ms</string>
-    <string name="debug_parser_time">Parser time: %1$d ms</string>
-    <string name="debug_compute_time">Compute time: %1$d ms</string>
-
-    <!-- Currencies -->
-    <string name="currency_date">For date: </string>
-    <string name="currencies_add">Add</string>
-    <string name="currencies_edit">Edit</string>
-    <string name="currencies_list_modify">Set up currencies</string>
-    <string name="currency_AUD">Australian dollar</string>
-    <string name="currency_AZN">Azerbaijani manat</string>
-    <string name="currency_AMD">Armenian dram</string>
-    <string name="currency_BYN">Belarusian ruble</string>
-    <string name="currency_BGN">Bulgarian lev</string>
-    <string name="currency_BRL">Brazilian real</string>
-    <string name="currency_HUF">Hungarian forint</string>
-    <string name="currency_KRW">South Korean won</string>
-    <string name="currency_HKD">Hong Kong dollar</string>
-    <string name="currency_DKK">Danish krone</string>
-    <string name="currency_USD">US dollar</string>
-    <string name="currency_EUR">Euro</string>
-    <string name="currency_INR">Indian rupee</string>
-    <string name="currency_KZT">Kazakhstani tenge</string>
-    <string name="currency_CAD">Canadian dollar</string>
-    <string name="currency_KGS">Kyrgyzstani som</string>
-    <string name="currency_CNY">Chinese yuan</string>
-    <string name="currency_MDL">Moldovan leu</string>
-    <string name="currency_TMT">Turkmenistan manat</string>
-    <string name="currency_NOK">Norwegian krone</string>
-    <string name="currency_PLN">Polish złoty</string>
-    <string name="currency_RON">Romanian leu</string>
-    <string name="currency_XDR">Special Drawing Rights</string>
-    <string name="currency_SGD">Singapore dollar</string>
-    <string name="currency_TJS">Tajikistani somoni</string>
-    <string name="currency_TRY">Turkish lira</string>
-    <string name="currency_UZS">Uzbekistani som</string>
-    <string name="currency_UAH">Ukrainian hryvnia</string>
-    <string name="currency_GBP">Pound sterling</string>
-    <string name="currency_CZK">Czech koruna</string>
-    <string name="currency_SEK">Swedish krona</string>
-    <string name="currency_CHF">Swiss franc</string>
-    <string name="currency_ZAR">South African rand</string>
-    <string name="currency_JPY">Japanese yen</string>
-    <string name="currency_RUB">Russian ruble</string>
-    <string name="save_currency_value">Save last conversion</string>
-    <string name="update_currencies_on_tab_open">Update on tab opening</string>
-    <string name="update_currencies_on_tab_open_summary">On first time opening during session</string>
-    <string name="empty_text_no_currencies_added">No currency items added</string>
-    <string name="empty_text_no_currencies_found">No matching currencies found</string>
-    <string name="empty_text_all_currencies_added">All available items already added</string>
-    <string name="currencies_no_internet">Update failed: connection unavailable</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_edit_date">Select date</string>
-    <string name="action_select_all">Select all</string>
-    <string name="action_deselect_all">Deselect all</string>
-    <string name="tooltip_remove_currency">Long click on item toggles deletion mode</string>
-    <string name="action_tooltip_got_it">Got it</string>
-    <string name="hint_currency_search">Search for currencies…</string>
-    <string name="currencies_update_failed">Load failed: update app or contact dev if it is not fixed in last version</string>
-    <string name="currencies_update_exception">Load exception: update app or contact dev if it is not fixed in last version</string>
-    <string name="currencies_update_toast">Updating…</string>
-    <string name="action_undo">Undo</string>
-    <string name="message_item_shown">Item \"%s\" made shown</string>
-    <string name="message_item_hidden">Item \"%s\" made hidden</string>
-    <string name="message_manually_update">Update currencies?</string>
-    <string name="action_update">Update</string>
-
-    <!-- Unit Converter -->
-    <string name="unit_view">Unit view</string>
-    <string name="unit_view_simple">Simple</string>
-    <string name="unit_view_powerful">Powerful</string>
-    <string name="unit_view_half_powerful">Half-Powerful</string>
-    <string name="unit_view_simple_extra_action_title">Select button action</string>
-    <string name="unit_view_simple_swap">Swap dimensions</string>
-    <string name="unit_view_simple_list_all">List all</string>
-    <string name="context_menu_copy_value">Copy value</string>
-    <string name="context_menu_copy_with_short_name">Copy with short name</string>
-    <string name="context_menu_copy_with_full_name">Copy with full name</string>
 
     <!-- Settings -->
     <string name="basic">Basic</string>
     <string name="tab_default">Default tab</string>
-    <string name="zero_div">Divide by zero</string>
     <string name="app_theme">Theme</string>
     <string name="app_auto_dark_theme">Auto dark theme</string>
     <string name="theme_light">Light</string>
@@ -137,24 +29,8 @@
     <string name="link_url_gitlab" translatable="false">https://gitlab.com/ARTI1208</string>
     <string name="link_url_kde" translatable="false">https://invent.kde.org/artpinch</string>
     <string name="changelog_load_failed">Error loading changelog</string>
-    <string name="preloaded_currencies_date" translatable="false">1609459200000</string>
-    <string name="currency_update_title">Update currencies in background</string>
-    <string name="currency_update_never">Don\'t update</string>
-    <string name="currency_update_wifi">When Wi-Fi available</string>
-    <string name="currency_update_any">When mobile network available</string>
-    <string name="currency_update_interval_title">Currency update interval</string>
-    <string name="currency_update_interval_4">Every 4 hours</string>
-    <string name="currency_update_interval_6">Every 6 hours</string>
-    <string name="currency_update_interval_8">Every 8 hours</string>
-    <string name="currency_update_interval_12">Every 12 hours</string>
-    <string name="currency_update_interval_24">Every 24 hours</string>
     <string name="app_dynamic_colors">Dynamic theme coloring</string>
     <string name="app_dynamic_colors_on">Enabled</string>
     <string name="app_dynamic_colors_off">Disabled</string>
-
-    <!-- vertical -->
-    <string name="orientation" translatable="false">1</string>
-    <!-- visible -->
-    <string name="visible_or_gone" translatable="false">0</string>
 
 </resources>

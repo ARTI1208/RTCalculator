@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="currency_AUD">Австралийский доллар</string>
+    <string name="currency_AZN">Азербайджанский манат</string>
+    <string name="currency_AMD">Армянский драм</string>
+    <string name="currency_BYN">Белорусский рубль</string>
+    <string name="currency_BGN">Болгарский лев</string>
+    <string name="currency_BRL">Бразильский реал</string>
+    <string name="currency_HUF">Венгерский форинт</string>
+    <string name="currency_KRW">Южнокорейская вона</string>
+    <string name="currency_HKD">Гонконгский доллар</string>
+    <string name="currency_DKK">Датская крона</string>
+    <string name="currency_USD">Доллар США</string>
+    <string name="currency_EUR">Евро</string>
+    <string name="currency_INR">Индийская рупия</string>
+    <string name="currency_KZT">Казахстанский тенге</string>
+    <string name="currency_CAD">Канадский доллар</string>
+    <string name="currency_KGS">Киргизский сом</string>
+    <string name="currency_CNY">Китайский юань</string>
+    <string name="currency_MDL">Молдавский лей</string>
+    <string name="currency_TMT">Туркменский манат</string>
+    <string name="currency_NOK">Норвежская крона</string>
+    <string name="currency_PLN">Польский злотый</string>
+    <string name="currency_RON">Румынский лей</string>
+    <string name="currency_XDR">Специальные права заимствования</string>
+    <string name="currency_SGD">Сингапурский доллар</string>
+    <string name="currency_TJS">Таджикский сомони</string>
+    <string name="currency_TRY">Турецкая лира</string>
+    <string name="currency_UZS">Узбекский сум</string>
+    <string name="currency_UAH">Украинская гривна</string>
+    <string name="currency_GBP">Фунт стерлингов</string>
+    <string name="currency_CZK">Чешская крона</string>
+    <string name="currency_SEK">Шведская крона</string>
+    <string name="currency_CHF">Швейцарский франк</string>
+    <string name="currency_ZAR">Южноафриканский ранд</string>
+    <string name="currency_JPY">Японская йена</string>
+    <string name="currency_RUB">Рубль РФ</string>
+
+</resources>

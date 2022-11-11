@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="keyboard_button_text_size">30sp</dimen>
+
+    <dimen name="bottom_view_corner_radius">8dp</dimen>
+    <dimen name="bottom_view_horizontal_margin">8dp</dimen>
+    <dimen name="bottom_view_vertical_margin">2.3dp</dimen>
+    <dimen name="bottom_view_stroke_width">1dp</dimen>
+    <dimen name="bottom_view_elevation">2dp</dimen>
+    <dimen name="bottom_view_min_height">40dp</dimen>
+
+    <dimen name="actionbar_elevation">0dp</dimen>
+
+</resources>

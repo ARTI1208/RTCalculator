@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:layout="@layout/category"
+        android:title="@string/title_unit">
+        <ru.art2000.extensions.preferences.MyDropDownPreference
+            android:entries="@array/unit_view"
+            android:entryValues="@array/unit_view_values"
+            android:key="unit_view"
+            android:title="@string/unit_view"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

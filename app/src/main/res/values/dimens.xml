@@ -1,33 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="calc_field_min_height">0dp</dimen>
-    <dimen name="calc_field_vertical_padding">4dp</dimen>
     <dimen name="bottom_sheet_corner_radius">16dp</dimen>
 
-    <dimen name="angle_text_size">18sp</dimen>
-    <dimen name="calc_text_size">40sp</dimen>
-    <dimen name="calc_vertical_padding">6.0dip</dimen>
-    <dimen name="calculator_info_divider_width">1dp</dimen>
-
-    <dimen name="sliding_panel_collapsed_height">30dp</dimen>
     <dimen name="design_bottom_navigation_text_size" tools:override="true">12sp</dimen>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
     <dimen name="floating_bottom_margin_horizontal">8.0dip</dimen>
-    <dimen name="actionbar_elevation">0dp</dimen>
-    <dimen name="currency_list_item_value_normal">14.0sp</dimen>
-    <dimen name="currency_list_item_code_normal">18.0sp</dimen>
-    <dimen name="currency_list_item_code_highlight">22.0sp</dimen>
-    <dimen name="bottom_view_corner_radius">8dp</dimen>
-    <dimen name="bottom_view_horizontal_margin">8dp</dimen>
-    <dimen name="bottom_view_vertical_margin">2.3dp</dimen>
-    <dimen name="bottom_view_stroke_width">1dp</dimen>
-    <dimen name="bottom_view_elevation">2dp</dimen>
-
-    <dimen name="bottom_view_min_height">40dp</dimen>
-    <dimen name="unit_view_simple_row_height">80dp</dimen>
-    <dimen name="unit_view_edge_horizontal_margin">6dp</dimen>
-    <dimen name="unit_view_hint_bottom_margin">4dp</dimen>
 
     <dimen name="author_avatar_background_stroke_width">1dp</dimen>
     <dimen name="author_avatar_background_corner_radius">10dp</dimen>
@@ -42,6 +19,4 @@
 
     <dimen name="changelog_padding">6dp</dimen>
     <dimen name="changelog_background_corner_radius">8dp</dimen>
-
-    <dimen name="keyboard_button_text_size">30sp</dimen>
 </resources>

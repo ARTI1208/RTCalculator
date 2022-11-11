@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Unit Converter -->
+    <string name="title_unit">Unit Converter</string>
+    <string name="unit_view">Unit view</string>
+    <string name="unit_view_simple">Simple</string>
+    <string name="unit_view_powerful">Powerful</string>
+    <string name="unit_view_half_powerful">Half-Powerful</string>
+    <string name="unit_view_simple_extra_action_title">Select button action</string>
+    <string name="context_menu_copy_value">Copy value</string>
+    <string name="context_menu_copy_with_short_name">Copy with short name</string>
+    <string name="context_menu_copy_with_full_name">Copy with full name</string>
+
+</resources>

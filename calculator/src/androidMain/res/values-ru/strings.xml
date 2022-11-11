@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Calculator -->
+    <string name="error">Ошибка</string>
+    <string name="deleted">Удалено:</string>
+    <string name="history">История</string>
+    <string name="history_cleared">История очищена!</string>
+    <string name="no_history">История пуста</string>
+    <string name="context_menu_copy">Скопировать</string>
+    <string name="context_menu_copy_all">Скопировать всё</string>
+    <string name="context_menu_copy_expr">Скопировать выражение</string>
+    <string name="context_menu_copy_res">Скопировать результат</string>
+    <string name="delete_record">Удалить запись</string>
+    <string name="comment_item">Комментировать</string>
+    <string name="comment_item_title">Установить комментарий</string>
+    <string name="history_clear">Очистить</string>
+    <string name="history_clear_confirm">Вы уверены, что хотите удалить историю?</string>
+    <string name="paste_replace">Вставить с заменой</string>
+    <string name="paste_after">Вставить в конец</string>
+    <string name="debug_lexeme_list_title">Лексемы выражения:</string>
+    <string name="debug_lexer_time">Время работы лексера: %1$d мс</string>
+    <string name="debug_parser_time">Время работы парсера: %1$d мс</string>
+    <string name="debug_compute_time">Время подсчёта: %1$d мс</string>
+    <string name="title_calc">Калькулятор</string>
+    <string name="zero_div">Деление на ноль</string>
+
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Currencies -->
+    <string name="title_currency">Валюты</string>
+    <string name="currency_date">На дату: </string>
+    <string name="currencies_add">Добавление</string>
+    <string name="currencies_edit">Изменение</string>
+    <string name="currencies_list_modify">Настройка валют</string>
+    <string name="save_currency_value">Запоминать введённое значение</string>
+    <string name="update_currencies_on_tab_open">Обновлять при открытии вкладки</string>
+    <string name="update_currencies_on_tab_open_summary">При первом открытии за сессию</string>
+    <string name="empty_text_no_currencies_added">Нет добавленных элементов</string>
+    <string name="empty_text_no_currencies_found">Соотвествующие валюты не найдены</string>
+    <string name="empty_text_all_currencies_added">Добавлены все доступные элементы</string>
+    <string name="currencies_no_internet">Ошибка обновления: нет соединения</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_edit_date">Дата</string>
+    <string name="action_select_all">Выбрать все</string>
+    <string name="action_deselect_all">Отменить выбор</string>
+    <string name="tooltip_remove_currency">Удержание элемента переводит список в режим удаления</string>
+    <string name="action_tooltip_got_it">Понятно</string>
+    <string name="hint_currency_search">Поиск валют…</string>
+    <string name="currencies_update_failed">Ошибка загрузки: обновите приложение или свяжитесь с разрабочиком, если это не справлено в последней версии</string>
+    <string name="currencies_update_exception">Исключение при загрузке: обновите приложение или свяжитесь с разрабочиком, если это не справлено в последней версии</string>
+    <string name="currencies_update_toast">Обновление…</string>
+    <string name="action_undo">Отмена</string>
+    <string name="message_item_shown">Добавлен элемент \"%s\"</string>
+    <string name="message_item_hidden">Скрыт элемент \"%s\"</string>
+    <string name="message_manually_update">Обновить курс валют?</string>
+    <string name="action_update">Обновить</string>
+    <string name="currency_update_title">Обновлять курс автоматически</string>
+    <string name="currency_update_never">Не обновлять</string>
+    <string name="currency_update_wifi">При доступе к Wi-Fi</string>
+    <string name="currency_update_any">При доступе к мобильным интернету</string>
+    <string name="currency_update_interval_title">Интервал обновления курса валют</string>
+    <string name="currency_update_interval_4">Каждые 4 часа</string>
+    <string name="currency_update_interval_6">Каждые 6 часов</string>
+    <string name="currency_update_interval_8">Каждые 8 часов</string>
+    <string name="currency_update_interval_12">Каждые 12 часов</string>
+    <string name="currency_update_interval_24">Каждые 24 часа</string>
+
+</resources>

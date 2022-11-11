@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RT.Widget.ListView.VerticalIndicators" parent="@style/Widget.AppCompat.ListView">
+        <item name="android:scrollIndicators">bottom|top</item>
+    </style>
+
+    <style name="RT.Widget.ListView.TopIndicator" parent="@style/Widget.AppCompat.ListView">
+        <item name="android:scrollIndicators">top</item>
+    </style>
+
+</resources>

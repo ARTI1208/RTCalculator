@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:layout="@layout/category"
+        android:title="@string/title_calc">
+        <ru.art2000.extensions.preferences.Material3SwitchPreference
+            android:defaultValue="false"
+            android:key="zero_div"
+            android:summaryOff="@string/error"
+            android:summaryOn="@string/infinity"
+            android:title="@string/zero_div"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

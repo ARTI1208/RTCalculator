@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="cancel">Отмена</string>
+    <string name="ok">OK</string>
+
+    <string name="copied">Скопировано:</string>
+    <string name="you_can">Вы можете…</string>
+
+</resources>

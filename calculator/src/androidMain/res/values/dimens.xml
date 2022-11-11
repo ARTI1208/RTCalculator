@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="sliding_panel_collapsed_height">30dp</dimen>
+    <dimen name="calc_text_size">40sp</dimen>
+    <dimen name="calc_field_min_height">0dp</dimen>
+    <dimen name="angle_text_size">18sp</dimen>
+    <dimen name="calc_field_vertical_padding">4dp</dimen>
+    <dimen name="calculator_info_divider_width">1dp</dimen>
+
+</resources>

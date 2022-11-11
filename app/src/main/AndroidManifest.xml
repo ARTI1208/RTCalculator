@@ -8,13 +8,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:allowBackup="false"
-        android:name=".CalculatorApplication"
+        android:name=".main.CalculatorApplication"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/RT.AppTheme.Light"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity
-            android:name=".view.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/RT.AppTheme.Launch"
             android:windowSoftInputMode="adjustPan"
@@ -30,8 +30,8 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity android:name=".view.settings.InfoActivity" android:label="@string/info" />
-        <activity android:name=".view.currency.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
-        <activity android:name=".view.unit.AllUnitsActivity" />
+        <activity android:name=".settings.view.InfoActivity" android:label="@string/info" />
+        <activity android:name=".currency.view.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
+        <activity android:name=".unit.view.AllUnitsActivity" />
     </application>
 </manifest>

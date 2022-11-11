@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="keyboard_0" translatable="false">0</string>
+    <string name="keyboard_1" translatable="false">1</string>
+    <string name="keyboard_2" translatable="false">2</string>
+    <string name="keyboard_3" translatable="false">3</string>
+    <string name="keyboard_4" translatable="false">4</string>
+    <string name="keyboard_5" translatable="false">5</string>
+    <string name="keyboard_6" translatable="false">6</string>
+    <string name="keyboard_7" translatable="false">7</string>
+    <string name="keyboard_8" translatable="false">8</string>
+    <string name="keyboard_9" translatable="false">9</string>
+
+    <string name="keyboard_00" translatable="false">00</string>
+
+    <string name="keyboard_decimal_separator" translatable="false">.</string>
+
+    <string name="keyboard_clear" translatable="false">C</string>
+    <string name="keyboard_delete" translatable="false">DEL</string>
+
+    <string name="keyboard_change_sign" translatable="false">+/-</string>
+
+</resources>

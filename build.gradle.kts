@@ -1,17 +1,16 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    alias(libs.plugins.dagger) apply false
 }
 
 buildscript {
-    val kotlinVersion = libs.versions.kotlin.get()
-
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath(libs.android.gradle)
+        classpath(libs.kotlin.gradle)
     }
 }
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Unit Converter -->
+    <string name="title_unit">Конвертер</string>
+    <string name="unit_view">Вид конвертера</string>
+    <string name="unit_view_simple">Простой</string>
+    <string name="unit_view_powerful">Мощный</string>
+    <string name="unit_view_half_powerful">Полумощный</string>
+    <string name="unit_view_simple_extra_action_title">Выберите назначение кнопки</string>
+    <string name="context_menu_copy_value">Скопировать значение</string>
+    <string name="context_menu_copy_with_short_name">Скопировать с сокращением</string>
+    <string name="context_menu_copy_with_full_name">Скопировать с названием</string>
+
+</resources>
