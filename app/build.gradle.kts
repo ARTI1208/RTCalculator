@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.PostProcessing
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.hasProperty
@@ -55,8 +56,17 @@ android {
 
     buildTypes {
 
+        fun withCommonProguard(files: Array<out Any>) = arrayOf("proguard-rules-common.pro", *files)
+
         fun VariantDimension.withLocalProguard(vararg files: Any) {
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules-common.pro", *files)
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                *withCommonProguard(files),
+            )
+        }
+
+        fun PostProcessing.withLocalProguard(vararg files: Any) {
+            proguardFiles(*withCommonProguard(files))
         }
 
         debug {
@@ -66,9 +76,15 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
         release {
-            isShrinkResources = true
-            isMinifyEnabled = true
-            withLocalProguard("proguard-rules-release.pro")
+
+            postprocessing {
+                isRemoveUnusedCode = true
+                isRemoveUnusedResources = true
+                isObfuscate = true
+                isOptimizeCode = true
+                withLocalProguard("proguard-rules-release.pro")
+            }
+
             signingConfig = signingConfigs.getByName("release")
         }
     }

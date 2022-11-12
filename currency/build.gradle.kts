@@ -78,3 +78,11 @@ kotlin {
         }
     }
 }
+
+android {
+    buildTypes {
+        release {
+            consumerProguardFile("proguard-rules.pro")
+        }
+    }
+}
