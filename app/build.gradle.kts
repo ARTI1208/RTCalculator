@@ -13,8 +13,8 @@ plugins {
 
 setupAndroidModule()
 
-val composeVersion = "1.3.0"
-val composeMaterial3Version = "1.0.0"
+val composeVersion = "1.3.1"
+val composeMaterial3Version = "1.0.1"
 val composeCompilerVersion = "1.3.2"
 
 val major = 1
