@@ -164,11 +164,7 @@ val newVersion = tasks.create("newVersion") {
 
 dependencies {
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
-    implementation(project(":extensions"))
-    implementation(project(":currency"))
-    implementation(project(":calculator"))
-    implementation(project(":unit"))
-    implementation(project(":common"))
+    implementation(project(":shared"))
 
     implementation(libs.constraintlayout)
     implementation(libs.bundles.hilt.impl)

@@ -1,0 +1,6 @@
+/**
+!src
+!src/**
+!*.pro
+!*.kts
+!.gitignore
