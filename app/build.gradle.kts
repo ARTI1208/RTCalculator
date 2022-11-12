@@ -19,8 +19,8 @@ val composeCompilerVersion = "1.3.2"
 
 val major = 1
 val minor = 5
-val patch = 1
-val code = 15
+val patch = 2
+val code = 16
 
 android {
     signingConfigs {

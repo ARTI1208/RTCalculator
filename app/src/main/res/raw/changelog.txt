@@ -1,3 +1,7 @@
+v1.5.2 (2022-11-12)
+ - Fix crash on Android <4.3 (API <18) when loading currency data
+ - Fix auto dark theme on Android <5 (API <21) in Follow System and Follow Battery modes
+
 v1.5.1 (2022-10-29)
  - Fix dark status bar icons in black theme
  - Fix inconsistency in height of angle type view and memory view
