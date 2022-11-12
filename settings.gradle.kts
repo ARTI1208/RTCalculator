@@ -8,7 +8,7 @@ dependencyResolutionManagement {
             val room = version("room", "2.4.3")
             val kotest = version("kotest", "5.5.4")
 
-            library("desugaring", "com.android.tools:desugar_jdk_libs:1.2.2")
+            library("desugaring", "com.android.tools:desugar_jdk_libs:2.0.0")
             library("appcompat", "androidx.appcompat:appcompat:1.5.1")
             library("androidx.core", "androidx.core:core-ktx:1.9.0")
             library("preference", "androidx.preference:preference-ktx:1.2.0")
