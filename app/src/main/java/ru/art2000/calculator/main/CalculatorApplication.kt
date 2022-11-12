@@ -32,7 +32,11 @@ class CalculatorApplication : MultiDexApplication() {
     private fun checkNightMode(themeId: Int) {
         val newMode = when (themeId) {
             R.style.RT_AppTheme_DayNight -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
-            R.style.RT_AppTheme_System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            R.style.RT_AppTheme_System -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
             R.style.RT_AppTheme_Battery -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
             R.style.RT_AppTheme_Dark, R.style.RT_AppTheme_Black -> AppCompatDelegate.MODE_NIGHT_YES
             else -> AppCompatDelegate.MODE_NIGHT_NO
