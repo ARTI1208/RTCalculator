@@ -79,7 +79,7 @@ internal class CalculatorModel @Inject constructor(
 
     fun handleClosingBracket() = commonModel.handleClosingBracket()
 
-    override fun clearInput() = commonModel.clearResult()
+    override fun clearInput() = commonModel.clearInput()
 
     override fun deleteLastCharacter() = commonModel.deleteLastCharacter()
 
