@@ -240,7 +240,6 @@ internal class CalculatorCommonModel(
             result = null
         }
 
-        val last = expressionLastChar ?: return
         val textBefore = expression.substring(0, inputSelection.first)
         val textAfter = expression.substring(inputSelection.second)
 
@@ -257,6 +256,8 @@ internal class CalculatorCommonModel(
             if (toAdd == "-") insertInExpression(toAdd)
             return
         }
+
+        val last = expressionLastChar ?: return
 
         if (calculations.isBinaryOperationSymbol(last)) {
             if (toAdd == "-") {
