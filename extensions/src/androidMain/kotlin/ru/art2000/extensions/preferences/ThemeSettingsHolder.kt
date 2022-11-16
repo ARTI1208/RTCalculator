@@ -1,16 +1,25 @@
 package ru.art2000.extensions.preferences
 
-interface ThemeSettingsHolder {
+actual enum class AppTheme {
+    SYSTEM,
+    BATTERY,
+    DAY_NIGHT,
+    LIGHT,
+    DARK,
+    BLACK,
+}
+
+actual interface ThemeSettingsHolder {
 
     val areDynamicColorsEnabled: Boolean
 
-    //    @StyleRes
-    val appTheme: Int
+    actual val appTheme: AppTheme
 
-    val isBlackThemePreferred: Boolean
+    actual val isBlackThemePreferred: Boolean
 
-    val darkThemeActivationTime: Int
+    actual val darkThemeActivationTime: Int
 
-    val darkThemeDeactivationTime: Int
+    actual val darkThemeDeactivationTime: Int
 
 }
+

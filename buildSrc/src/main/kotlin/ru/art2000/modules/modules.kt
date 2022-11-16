@@ -141,6 +141,11 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
                 iosX64Main.dependsOn(this)
                 iosArm64Main.dependsOn(this)
                 iosSimulatorArm64Main.dependsOn(this)
+
+                dependencies {
+                    val koin = "3.2.0"
+                    implementation("io.insert-koin:koin-core:$koin")
+                }
             }
             val iosX64Test by getting
             val iosArm64Test by getting
@@ -163,6 +168,7 @@ fun Project.setupFeatureModule() {
 
             val commonMain by getting {
                 dependencies {
+                    implementation(project(":common"))
                     implementation(project(":extensions"))
                 }
             }

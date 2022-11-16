@@ -14,19 +14,45 @@ import ru.art2000.calculator.calculator.model.HistoryValueItem
 import ru.art2000.calculator.calculator.preferences.CalculatorPreferenceHelper
 import ru.art2000.calculator.calculator.repo.HistoryRepository
 import ru.art2000.extensions.kt.launchAndCollect
+import ru.art2000.extensions.preferences.listen
 import ru.art2000.extensions.strings.dotSafeToDouble
 import ru.art2000.calculator.calculator.computation.localizeExpression as computationLocalizeExpression
 
 internal class CalculatorCommonModel(
     prefsHelper: CalculatorPreferenceHelper,
     private val historyRepository: HistoryRepository,
-    private val viewModelScope: CoroutineScope,
+    viewModelScopeGetter: () -> CoroutineScope,
     private val copyText: (String) -> Unit,
     private val getSystemDecimalSeparator: () -> Char,
     private val getDivideByZeroResult: () -> String,
     private val getErrorString: () -> String,
     formatter: CalculationNumberFormatter<Double>,
-): HistoryViewModel, ExpressionInputViewModel {
+): ICalculatorModel {
+
+    private val viewModelScope by lazy(viewModelScopeGetter)
+
+    constructor(
+        prefsHelper: CalculatorPreferenceHelper,
+        historyRepository: HistoryRepository,
+        viewModelScope: CoroutineScope,
+        copyText: (String) -> Unit,
+        getSystemDecimalSeparator: () -> Char,
+        getDivideByZeroResult: () -> String,
+        getErrorString: () -> String,
+        formatter: CalculationNumberFormatter<Double>,
+    ): this(prefsHelper, historyRepository, { viewModelScope }, copyText, getSystemDecimalSeparator, getDivideByZeroResult, getErrorString, formatter)
+
+    constructor(
+        prefsHelper: CalculatorPreferenceHelper,
+        historyRepository: HistoryRepository,
+        viewModelScopeOwner: CoroutineScopeOwner,
+        copyText: (String) -> Unit,
+        getSystemDecimalSeparator: () -> Char,
+        getDivideByZeroResult: () -> String,
+        getErrorString: () -> String,
+        formatter: CalculationNumberFormatter<Double>,
+    ): this(prefsHelper, historyRepository, { viewModelScopeOwner.coroutineScope }, copyText, getSystemDecimalSeparator, getDivideByZeroResult, getErrorString, formatter)
+
 
     override var decimalSeparator: Char = getSystemDecimalSeparator()
         private set(value) {
@@ -95,6 +121,10 @@ internal class CalculatorCommonModel(
             launchAndCollect(liveExpression) { prefsHelper.lastExpression = it  }
             launchAndCollect(liveResult) { prefsHelper.lastExpressionWasCalculated = it != null }
         }
+
+        prefsHelper.zeroDivResultProperty.listen {
+            if (!result.isNullOrEmpty()) onResult()
+        }
     }
 
     override fun copyHistoryItemToClipboard(
@@ -130,7 +160,7 @@ internal class CalculatorCommonModel(
         }
     }
 
-    fun handlePrefixUnaryOperationSign(sign: CharSequence) {
+    override fun handlePrefixUnaryOperationSign(sign: CharSequence) {
         val currentExpression = expression
         if (currentExpression.isEmpty() || currentExpression == ExpressionInputViewModel.zero) {
             setExpression(sign)
@@ -149,7 +179,7 @@ internal class CalculatorCommonModel(
         insertInExpression(extraAppend + sign)
     }
 
-    fun handlePostfixUnaryOperationSign(sign: CharSequence) {
+    override fun handlePostfixUnaryOperationSign(sign: CharSequence) {
 
         val last = expressionLastChar ?: return
 
@@ -161,7 +191,7 @@ internal class CalculatorCommonModel(
         insertInExpression(extraAppend + sign)
     }
 
-    fun handleOpeningBracket() {
+    override fun handleOpeningBracket() {
         if (result != null) {
             result = null
             setExpression("(")
@@ -186,7 +216,7 @@ internal class CalculatorCommonModel(
             insertInExpression("$append(")
     }
 
-    fun handleClosingBracket() {
+    override fun handleClosingBracket() {
         val currentExpression: String = expression
         val ar = currentExpression.toCharArray()
         var o = 0
@@ -227,7 +257,7 @@ internal class CalculatorCommonModel(
         super.deleteLastCharacter()
     }
 
-    fun appendBinaryOperationSign(sign: CharSequence) {
+    override fun appendBinaryOperationSign(sign: CharSequence) {
 
         var toAdd: String = sign.toString()
 
@@ -296,7 +326,7 @@ internal class CalculatorCommonModel(
         result = calculated
     }
 
-    fun onResult() = onResult(true)
+    override fun onResult() = onResult(true)
 
     fun calculateAndFormatForDisplay(expression: String, angleType: AngleType): Pair<String, Boolean> {
         val result = calculations.calculateForDisplay(expression, angleType)
@@ -311,7 +341,7 @@ internal class CalculatorCommonModel(
         return display to err
     }
 
-    fun handleMemoryOperation(operation: CharSequence) {
+    override fun handleMemoryOperation(operation: CharSequence) {
         var memory = mLiveMemory.value
         when (val char = operation.last()) {
             '+' -> {
@@ -336,7 +366,7 @@ internal class CalculatorCommonModel(
         mLiveMemory.value = memory
     }
 
-    fun handleConstant(constant: CharSequence) {
+    override fun handleConstant(constant: CharSequence) {
         val last = expressionLastChar
         val append = when {
             last == null -> constant
@@ -367,7 +397,7 @@ internal class CalculatorCommonModel(
         super.handleFloatingPointSymbol()
     }
 
-    fun clearResult() {
+    override fun clearResult() {
         result = null
     }
 
@@ -378,7 +408,7 @@ internal class CalculatorCommonModel(
             null -> AngleType.DEGREES
         }
 
-    fun changeAngleType(): String {
+    override fun changeAngleType(): String {
 
         mLiveAngleType.value = mLiveAngleType.value.reversed
 

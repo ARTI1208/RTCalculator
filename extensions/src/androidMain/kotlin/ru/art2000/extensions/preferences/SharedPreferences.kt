@@ -1,189 +1,80 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
-
 package ru.art2000.extensions.preferences
 
+import android.content.Context
 import android.content.SharedPreferences
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ProcessLifecycleOwner
-import kotlin.properties.ReadOnlyProperty
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
-
-open class ReadOnlyPreferenceDelegate<V>(
-    private val preferences: SharedPreferences,
-    private val key: String,
-    private val defaultValue: V,
-    private val getter: SharedPreferences.() -> V,
-) : ReadOnlyProperty<Any, V> {
-
-    private val onUpdates = mutableMapOf<LifecycleOwner, MutableSet<(V) -> Unit>>()
-
-    private val observer = object : DefaultLifecycleObserver {
-
-        private fun createListener(owner: LifecycleOwner) = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key != this@ReadOnlyPreferenceDelegate.key) return@OnSharedPreferenceChangeListener
-
-            onUpdates[owner]?.forEach {
-                it(sharedPreferences.getter())
-            }
-        }
-
-        private val listeners = mutableMapOf<LifecycleOwner, SharedPreferences.OnSharedPreferenceChangeListener>()
-
-        override fun onCreate(owner: LifecycleOwner) {
-            val listener = createListener(owner)
-            listeners[owner] = listener
-            preferences.registerOnSharedPreferenceChangeListener(listener)
-        }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            onUpdates.remove(owner)
-
-            val listener = listeners.remove(owner) ?: return
-            preferences.unregisterOnSharedPreferenceChangeListener(listener)
-        }
-    }
-
-    override fun getValue(thisRef: Any, property: KProperty<*>): V {
-        return preferences.getter()
-    }
-
-    fun <T> getAs(mapper: (V) -> T): ReadOnlyPreferenceDelegate<T> = ReadOnlyPreferenceDelegate(
-        preferences, key, mapper(defaultValue)
-    ) { mapper(getter()) }
-
-    open fun listen(lifecycleOwner: LifecycleOwner, onUpdate: (V) -> Unit): ReadOnlyPreferenceDelegate<V> {
-
-        onUpdates.getOrPut(lifecycleOwner) { mutableSetOf() } += onUpdate
-
-        lifecycleOwner.lifecycle.removeObserver(observer)
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        return this
-    }
-
-    open fun listen(onUpdate: (V) -> Unit): ReadOnlyPreferenceDelegate<V> {
-        return listen(ProcessLifecycleOwner.get(), onUpdate)
-    }
-
-    fun stopListening(lifecycleOwner: LifecycleOwner) {
-        onUpdates.remove(lifecycleOwner)
-        lifecycleOwner.lifecycle.removeObserver(observer)
-    }
-
-    fun stopListening() {
-        stopListening(ProcessLifecycleOwner.get())
-    }
-
-}
-
-data class PreferenceDelegate<V>(
-    private val preferences: SharedPreferences,
-    private val key: String,
-    private val defaultValue: V,
-    private val getter: SharedPreferences.() -> V,
-    private val setter: SharedPreferences.Editor.(V) -> Unit,
-) : ReadOnlyPreferenceDelegate<V>(preferences, key, defaultValue, getter), ReadWriteProperty<Any, V> {
-
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: V) {
-        preferences.edit().apply { setter(value) }.apply()
-    }
-
-    fun mapGetter(mapper: (V) -> V): PreferenceDelegate<V> = PreferenceDelegate(
-        preferences, key, defaultValue, { mapper(getter()) }, setter
-    )
-
-    fun <STORE> mapStore(mapping: StoreMapping<V, STORE>): PreferenceDelegate<V> {
-        return PreferenceDelegate(preferences, key, defaultValue, { mapping.getter(this, key, defaultValue) }, { mapping.setter(this, key, it) })
-    }
-
-    fun <OPERATE> mapOperate(mapping: OperateMapping<OPERATE, V>): PreferenceDelegate<OPERATE> {
-        return PreferenceDelegate(preferences, key, mapping.toOperate(defaultValue),
-            { mapping.toOperate(getter()) }, { setter(mapping.toStore(it)) })
-    }
-
-    override fun listen(
-        lifecycleOwner: LifecycleOwner,
-        onUpdate: (V) -> Unit
-    ) = super.listen(lifecycleOwner, onUpdate) as PreferenceDelegate<V>
-
-    override fun listen(onUpdate: (V) -> Unit) = super.listen(onUpdate) as PreferenceDelegate<V>
-
-    fun guard(guard: () -> Boolean): PreferenceDelegate<V> {
-        return copy(setter = {
-            if (guard()) {
-                setter(it)
-            }
-        })
-    }
-}
-
-interface OperateMapping<OPERATE, STORE> {
-
-    fun toOperate(value: STORE): OPERATE
-
-    fun toStore(value: OPERATE): STORE
-
-}
-
-interface StoreMapping<OPERATE, STORE> {
-
-    fun getter(preferences: SharedPreferences, key: String, defaultValue: OPERATE): OPERATE
-
-    fun setter(editor: SharedPreferences.Editor, key: String, value: OPERATE)
-
-}
-
-sealed class StringMapping<OPERATE> : StoreMapping<OPERATE, String> {
-
-    protected abstract fun String.toOperate(): OPERATE
-
-    override fun getter(preferences: SharedPreferences, key: String, defaultValue: OPERATE): OPERATE {
-        val stringValue = preferences.getString(key, null) ?: return defaultValue
-        return stringValue.toOperate()
-    }
-
-    override fun setter(editor: SharedPreferences.Editor, key: String, value: OPERATE) {
-        editor.putString(key, value.toString())
-    }
-}
-
-object IntStringMapping : StringMapping<Int>() {
-
-    override fun String.toOperate() = toInt()
-
-}
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 
 fun SharedPreferences.stringPreference(key: String, defaultValue: String) =
-    PreferenceDelegate(this, key, defaultValue, { getString(key, defaultValue)!! }, { putString(key, it) })
+    toAppPreferences().stringPreference(key, defaultValue)
 
 fun SharedPreferences.nullableStringPreference(key: String, defaultValue: String? = null) =
-    PreferenceDelegate(this, key, defaultValue, { getString(key, defaultValue) }, { putString(key, it) })
+    toAppPreferences().nullableStringPreference(key, defaultValue)
 
 fun SharedPreferences.intPreference(key: String, defaultValue: Int) =
-    PreferenceDelegate(this, key, defaultValue, { getInt(key, defaultValue) }, { putInt(key, it) })
+    toAppPreferences().intPreference(key, defaultValue)
 
 fun SharedPreferences.longPreference(key: String, defaultValue: Long) =
-    PreferenceDelegate(this, key, defaultValue, { getLong(key, defaultValue) }, { putLong(key, it) })
+    toAppPreferences().longPreference(key, defaultValue)
 
-fun SharedPreferences.booleanPreference(key: String, defaultValue: Boolean, onUpdate: SharedPreferences.Editor.(Boolean) -> Unit = {}) =
-    PreferenceDelegate(this, key, defaultValue, { getBoolean(key, defaultValue) }, {
-        onUpdate(it)
-        putBoolean(key, it)
-    })
+fun SharedPreferences.booleanPreference(key: String, defaultValue: Boolean) =
+    toAppPreferences().booleanPreference(key, defaultValue)
 
-fun SharedPreferences.doublePreference(key: String, defaultValue: Double) = run {
-    val defaultLong = doubleToLong(defaultValue)
-    PreferenceDelegate(
-        this,
-        key,
-        defaultValue,
-        { longToDouble(getLong(key, defaultLong)) },
-        { putLong(key, doubleToLong(it)) },
-    )
+fun SharedPreferences.doublePreference(key: String, defaultValue: Double) =
+    toAppPreferences().doublePreference(key, defaultValue)
+
+fun SharedPreferences.toAppPreferences(): AppPreferences = AndroidAppPreferences(this)
+
+fun Context.getDefaultAppPreferences() =
+    PreferenceManager.getDefaultSharedPreferences(this).toAppPreferences()
+
+class AndroidAppPreferences internal constructor(val sharedPreferences: SharedPreferences) : AppPreferences {
+
+    override fun getString(key: String, defaultValue: String) = sharedPreferences.getString(key, defaultValue)!!
+
+    override fun getNullableString(key: String, defaultValue: String?) = sharedPreferences.getString(key, defaultValue)
+
+    override fun getInt(key: String, defaultValue: Int) = sharedPreferences.getInt(key, defaultValue)
+
+    override fun getLong(key: String, defaultValue: Long) = sharedPreferences.getLong(key, defaultValue)
+
+    override fun getDouble(key: String, defaultValue: Double): Double {
+        val defaultLong = doubleToLong(defaultValue)
+        return longToDouble(sharedPreferences.getLong(key, defaultLong))
+    }
+
+    override fun getBoolean(key: String, defaultValue: Boolean) = sharedPreferences.getBoolean(key, defaultValue)
+
+    override fun putNullableString(key: String, value: String?) = sharedPreferences.edit {
+        putString(key, value)
+    }
+
+    override fun putInt(key: String, value: Int) = sharedPreferences.edit {
+        putInt(key, value)
+    }
+
+    override fun putLong(key: String, value: Long) = sharedPreferences.edit {
+        putLong(key, value)
+    }
+
+    override fun putDouble(key: String, value: Double) = sharedPreferences.edit {
+        putLong(key, doubleToLong(value))
+    }
+
+    override fun putBoolean(key: String, value: Boolean) = sharedPreferences.edit {
+        putBoolean(key, value)
+    }
+
+//    override fun registerListener(listener: AppPreferences.PreferenceListener) {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun unregisterListener(listener: AppPreferences.PreferenceListener) {
+//        TODO("Not yet implemented")
+//    }
+
+    private fun doubleToLong(value: Double) = java.lang.Double.doubleToRawLongBits(value)
+
+    private fun longToDouble(value: Long) = java.lang.Double.longBitsToDouble(value)
+
 }
-
-private fun doubleToLong(value: Double) = java.lang.Double.doubleToRawLongBits(value)
-
-private fun longToDouble(value: Long) = java.lang.Double.longBitsToDouble(value)

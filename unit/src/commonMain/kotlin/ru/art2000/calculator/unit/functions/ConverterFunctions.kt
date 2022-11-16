@@ -21,4 +21,8 @@ internal interface ConverterFunctions {
     fun storeInt(key: String, value: Int)
 
     fun getInt(key: String, defaultValue: Int): Int
+
+    companion object {
+        const val CONVERT_FROM_KEY = "from"
+    }
 }

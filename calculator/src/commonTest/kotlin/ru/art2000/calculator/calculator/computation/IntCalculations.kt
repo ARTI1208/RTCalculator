@@ -4,6 +4,7 @@ import ru.art2000.calculator.calculator.model.AngleType
 import ru.art2000.calculator.calculator.computation.numbers.DoubleMath
 import ru.art2000.calculator.calculator.computation.numbers.IntField
 import ru.art2000.calculator.calculator.computation.numbers.NumberField
+import kotlin.math.PI
 
 class IntCalculations(
     override val formatter: CalculationNumberFormatter<Int>,
@@ -21,7 +22,7 @@ class IntCalculations(
 
         override fun angleToRadiansConverter(originalNumber: Int, angleType: AngleType): Int {
             return when (angleType) {
-                AngleType.DEGREES -> DoubleMath.toRadians(originalNumber.toDouble()).toInt()
+                AngleType.DEGREES -> (originalNumber * PI / 180).toInt()
                 AngleType.RADIANS -> originalNumber
             }
         }

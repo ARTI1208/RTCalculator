@@ -14,13 +14,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import ru.art2000.calculator.calculator.R
 import ru.art2000.calculator.calculator.computation.Calculations
 import ru.art2000.calculator.calculator.computation.LexerParserCalculations
-import ru.art2000.calculator.calculator.vm.CalculatorModel
+import ru.art2000.calculator.calculator.vm.ICalculatorModel
 import ru.art2000.calculator.calculator.computation.addRemoveBrackets
 import ru.art2000.calculator.calculator.databinding.CalculatorExpertiseViewBinding
 import ru.art2000.calculator.calculator.databinding.CalculatorLexerParseExpertiseViewBinding
 import ru.art2000.calculator.calculator.databinding.CalculatorPage1Binding
 import ru.art2000.calculator.calculator.databinding.CalculatorPage2Binding
 import ru.art2000.calculator.calculator.model.AngleType
+import ru.art2000.calculator.calculator.vm.CalculatorModel
 import java.util.*
 import kotlin.system.measureTimeMillis
 

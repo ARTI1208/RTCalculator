@@ -13,14 +13,15 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import ru.art2000.calculator.calculator.db.CalculatorHistoryDB
 import ru.art2000.calculator.calculator.db.CalculatorHistoryDao
-import ru.art2000.calculator.calculator.preferences.AndroidCalculatorPreferenceHelperImpl
 import ru.art2000.calculator.calculator.preferences.CalculatorPreferenceHelper
 import ru.art2000.calculator.calculator.preferences.CalculatorSettingsSetup
+import ru.art2000.calculator.calculator.preferences.CommonCalculatorPreferenceHelper
 import ru.art2000.calculator.calculator.repo.HistoryRepository
 import ru.art2000.calculator.calculator.repo.RoomHistoryRepository
 import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.di.PageKey
 import ru.art2000.calculator.common.model.MainPage
+import ru.art2000.extensions.preferences.getDefaultAppPreferences
 import javax.inject.Singleton
 
 @Module
@@ -28,16 +29,19 @@ import javax.inject.Singleton
 internal abstract class CalculatorModule {
 
     @Binds
-    abstract fun bindPreferenceHelper(
-        prefsHelper: AndroidCalculatorPreferenceHelperImpl
-    ): CalculatorPreferenceHelper
-
-    @Binds
     abstract fun bindHistoryRepository(
         repository: RoomHistoryRepository
     ): HistoryRepository
 
     companion object {
+
+        @Singleton
+        @Provides
+        fun providePreferenceHelper(
+            @ApplicationContext context: Context
+        ): CalculatorPreferenceHelper = CommonCalculatorPreferenceHelper(
+            context.getDefaultAppPreferences()
+        )
 
         @Provides
         @IntoMap

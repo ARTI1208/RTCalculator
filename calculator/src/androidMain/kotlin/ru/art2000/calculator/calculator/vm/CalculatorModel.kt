@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.art2000.calculator.calculator.R
 import ru.art2000.calculator.calculator.computation.CalculatorFormatter
 import ru.art2000.calculator.calculator.model.AngleType
+import ru.art2000.calculator.calculator.model.DivideByZero
 import ru.art2000.calculator.calculator.model.HistoryValueItem
 import ru.art2000.calculator.calculator.preferences.CalculatorPreferenceHelper
 import ru.art2000.calculator.calculator.repo.HistoryRepository
@@ -24,12 +25,17 @@ internal class CalculatorModel @Inject constructor(
     @ApplicationContext application: Context,
     prefsHelper: CalculatorPreferenceHelper,
     historyRepository: HistoryRepository,
-) : AndroidViewModel(application as Application), HistoryViewModel, ExpressionInputViewModel {
+) : AndroidViewModel(application as Application), ICalculatorModel {
 
     private val commonModel = CalculatorCommonModel(
         prefsHelper, historyRepository, viewModelScope,
         ::copyText, { DecimalFormatSymbols.getInstance().decimalSeparator },
-        { context.getString(prefsHelper.zeroDivResult) },
+        {
+            when (prefsHelper.zeroDivResult) {
+                DivideByZero.ERROR -> R.string.error
+                DivideByZero.INFINITY -> R.string.infinity
+            }.let { context.getString(it) }
+        },
         { context.getString(R.string.error) },
         CalculatorFormatter,
     )
@@ -69,37 +75,37 @@ internal class CalculatorModel @Inject constructor(
 
     override fun clearHistoryDatabase() = commonModel.clearHistoryDatabase()
 
-    fun handlePrefixUnaryOperationSign(sign: CharSequence) =
+    override fun handlePrefixUnaryOperationSign(sign: CharSequence) =
         commonModel.handlePrefixUnaryOperationSign(sign)
 
-    fun handlePostfixUnaryOperationSign(sign: CharSequence) =
+    override fun handlePostfixUnaryOperationSign(sign: CharSequence) =
         commonModel.handlePostfixUnaryOperationSign(sign)
 
-    fun handleOpeningBracket() = commonModel.handleOpeningBracket()
+    override fun handleOpeningBracket() = commonModel.handleOpeningBracket()
 
-    fun handleClosingBracket() = commonModel.handleClosingBracket()
+    override fun handleClosingBracket() = commonModel.handleClosingBracket()
 
     override fun clearInput() = commonModel.clearInput()
 
     override fun deleteLastCharacter() = commonModel.deleteLastCharacter()
 
-    fun appendBinaryOperationSign(sign: CharSequence) = commonModel.appendBinaryOperationSign(sign)
+    override fun appendBinaryOperationSign(sign: CharSequence) = commonModel.appendBinaryOperationSign(sign)
 
-    fun onResult() = commonModel.onResult()
+    override fun onResult() = commonModel.onResult()
 
     fun calculateAndFormatForDisplay(expression: String, angleType: AngleType) =
         commonModel.calculateAndFormatForDisplay(expression, angleType)
 
-    fun handleMemoryOperation(operation: CharSequence) =
+    override fun handleMemoryOperation(operation: CharSequence) =
         commonModel.handleMemoryOperation(operation)
 
-    fun handleConstant(constant: CharSequence) = commonModel.handleConstant(constant)
+    override fun handleConstant(constant: CharSequence) = commonModel.handleConstant(constant)
 
     override fun handleNumber(number: CharSequence) = commonModel.handleNumber(number)
 
     override fun handleFloatingPointSymbol() = commonModel.handleFloatingPointSymbol()
 
-    fun clearResult() = commonModel.clearResult()
+    override fun clearResult() = commonModel.clearResult()
 
-    fun changeAngleType() = commonModel.changeAngleType()
+    override fun changeAngleType() = commonModel.changeAngleType()
 }

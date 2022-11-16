@@ -2,11 +2,19 @@
 
 package ru.art2000.calculator.calculator.computation.numbers
 
-import ru.art2000.calculator.calculator.computation.CalculationNumberFormatter
+import platform.Foundation.NSNumber
+import platform.Foundation.NSNumberFormatter
 
-object CalculatorFormatter : CalculationNumberFormatter<Double> {
+internal object CalculatorFormatter : BaseCalculatorFormatter() {
+
+    private val formatter by lazy {
+        NSNumberFormatter().apply {
+            numberStyle = 1u // decimal
+            maximumFractionDigits = this@CalculatorFormatter.maximumFractionDigits.toULong()
+        }
+    }
 
     override fun format(number: CalculationNumber<Double>): String {
-        return number.value.toString()
+        return formatter.stringFromNumber(NSNumber(number.value))!!
     }
 }

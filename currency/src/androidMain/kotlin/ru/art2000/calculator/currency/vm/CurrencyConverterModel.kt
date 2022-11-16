@@ -14,8 +14,10 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import ru.art2000.calculator.currency.background.CurrencyDownloadCallback
 import ru.art2000.calculator.currency.model.LoadingState
-import ru.art2000.calculator.currency.preferences.AndroidCurrencyPreferenceHelper
+import ru.art2000.calculator.currency.preferences.CurrencyPreferenceHelper
 import ru.art2000.calculator.currency.repo.CurrencyRepository
+import ru.art2000.extensions.preferences.Subscription
+import ru.art2000.extensions.preferences.observe
 import ru.art2000.extensions.timeInMillis
 import java.io.IOException
 import java.time.Instant
@@ -27,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class CurrencyConverterModel @Inject constructor(
     @ApplicationContext application: Context,
-    private val prefsHelper: AndroidCurrencyPreferenceHelper,
+    private val prefsHelper: CurrencyPreferenceHelper,
     private val repository: CurrencyRepository,
 ): AndroidViewModel(application as Application), CurrencyListAdapterModel {
 
@@ -119,12 +121,17 @@ internal class CurrencyConverterModel @Inject constructor(
 
     fun isUpdateOnFirstTabOpenEnabled() = prefsHelper.updateOnFirstTabOpen
 
+    private var dateSubscription: Subscription? = null
+
     fun listenDateUpdate() {
-        prefsHelper.updateDateMillisProperty.listen { mUpdateDate.value = updateDateString(it) }
+        dateSubscription = prefsHelper.updateDateMillisProperty.observe {
+            mUpdateDate.value = updateDateString(it)
+        }
     }
 
     fun stopListeningDateUpdate() {
-        prefsHelper.updateDateMillisProperty.stopListening()
+        dateSubscription?.invoke()
+        dateSubscription = null
     }
 
     private fun updateDateString(timeMillis: Long): String {

@@ -30,6 +30,7 @@ import ru.art2000.calculator.calculator.vm.CalculatorModel
 import ru.art2000.calculator.common.view.MainScreenFragment
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.kt.launchAndCollect
+import ru.art2000.extensions.views.CustomInputEditText.OnSelectionChangedListener
 import ru.art2000.extensions.views.addOrientationItemDecoration
 import ru.art2000.extensions.views.autoScrollOnInput
 import ru.art2000.extensions.views.isLandscape
@@ -65,7 +66,7 @@ class CalculatorFragment : MainScreenFragment() {
         // Set text before listener so model.selection is not wrongly updated
         inputTv.setText(model.expression)
         inputTv.onSelectionChangedListener =
-            ru.art2000.extensions.views.CustomInputEditText.OnSelectionChangedListener { selStart: Int, selEnd: Int ->
+            OnSelectionChangedListener { selStart: Int, selEnd: Int ->
                 model.inputSelection = Pair(selStart, selEnd)
             }
 

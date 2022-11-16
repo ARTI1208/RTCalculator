@@ -4,15 +4,17 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
-import ru.art2000.calculator.R
 import ru.art2000.calculator.common.AppStartupListener
+import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
+import ru.art2000.extensions.preferences.AppTheme
+import ru.art2000.extensions.preferences.listen
 import javax.inject.Inject
 
 @HiltAndroidApp
 class CalculatorApplication : MultiDexApplication() {
 
     @Inject
-    lateinit var prefsHelper: PreferenceHelper
+    lateinit var prefsHelper: GeneralPreferenceHelper
 
     @Inject
     lateinit var startupListeners: Set<@JvmSuppressWildcards AppStartupListener>
@@ -29,23 +31,18 @@ class CalculatorApplication : MultiDexApplication() {
         }
     }
 
-    private fun checkNightMode(themeId: Int) {
-        val newMode = when (themeId) {
-            R.style.RT_AppTheme_DayNight -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
-            R.style.RT_AppTheme_System -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+    private fun checkNightMode(theme: AppTheme) {
+        val newMode = when (theme) {
+            AppTheme.DAY_NIGHT -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
+            AppTheme.SYSTEM -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
-            R.style.RT_AppTheme_Battery -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-            R.style.RT_AppTheme_Dark, R.style.RT_AppTheme_Black -> AppCompatDelegate.MODE_NIGHT_YES
+            AppTheme.BATTERY -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+            AppTheme.DARK, AppTheme.BLACK -> AppCompatDelegate.MODE_NIGHT_YES
             else -> AppCompatDelegate.MODE_NIGHT_NO
         }
         AppCompatDelegate.setDefaultNightMode(newMode)
-    }
-
-    companion object {
-        @JvmField
-        val DYNAMIC_COLORS_AVAILABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     }
 }

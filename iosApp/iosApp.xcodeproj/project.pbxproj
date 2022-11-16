@@ -3,13 +3,26 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		3A67A6C9292266DF003A1F04 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A67A6CB292266DF003A1F04 /* Localizable.strings */; };
+		49A000285D638104B8FDCF10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49A007E5CBE1668CFC313D50 /* InfoPlist.strings */; };
+		49A0054DF00FD92C5CFDA529 /* DropdownPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */; };
+		49A005D0039D7C5FD9A6A656 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A006EFFA077FC33308B1E8 /* SettingsView.swift */; };
+		49A006E4ECB2073832902CAB /* UnitConverterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0073EBA684EA091CAFEA0 /* UnitConverterView.swift */; };
+		49A00A9C5CEFC938BBE228E3 /* SwitchPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A000844AF0ABDF85DC603B /* SwitchPreference.swift */; };
+		49A00AB2FFDE3C8DC719E7FC /* CalculatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00BDF985E29E06B7A998E /* CalculatorButton.swift */; };
+		49A00BCA3796A0DC94D11D85 /* ButtonsPage2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0029104E367C1183C8E6A /* ButtonsPage2.swift */; };
+		49A00C585937506F5E5DD33E /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00AC5C72D7CA1D19C0CBB /* Preference.swift */; };
+		49A00D4A5F2610BA2CBCFECA /* CurrencyConverterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A003A841BBE2D0C5982B4C /* CurrencyConverterView.swift */; };
+		49A00D834E8523E6A1C906D0 /* ButtonMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00CD6B845058D3FB8BB83 /* ButtonMatrix.swift */; };
+		49A00FA17C00ACEE7EC036A4 /* CalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00402E0D52DEE6A357261 /* CalculatorView.swift */; };
+		49A00FD61505DD760162906B /* ButtonsPage1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00108596984EF9786E2BB /* ButtonsPage1.swift */; };
 		6BBC422C3526A5D0DA81A43C /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 423AEC1B1F998CF4F0EC9E20 /* Pods_iosApp.framework */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 /* End PBXBuildFile section */
@@ -18,7 +31,22 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		3A67A6CA292266DF003A1F04 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3A67A6CC292266EA003A1F04 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		423AEC1B1F998CF4F0EC9E20 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49A000844AF0ABDF85DC603B /* SwitchPreference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwitchPreference.swift; path = settings/SwitchPreference.swift; sourceTree = "<group>"; };
+		49A00108596984EF9786E2BB /* ButtonsPage1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ButtonsPage1.swift; path = calculator/ButtonsPage1.swift; sourceTree = "<group>"; };
+		49A0029104E367C1183C8E6A /* ButtonsPage2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ButtonsPage2.swift; path = calculator/ButtonsPage2.swift; sourceTree = "<group>"; };
+		49A003A841BBE2D0C5982B4C /* CurrencyConverterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencyConverterView.swift; path = currency/CurrencyConverterView.swift; sourceTree = "<group>"; };
+		49A00402E0D52DEE6A357261 /* CalculatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalculatorView.swift; path = calculator/CalculatorView.swift; sourceTree = "<group>"; };
+		49A006EFFA077FC33308B1E8 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = settings/SettingsView.swift; sourceTree = "<group>"; };
+		49A0073EBA684EA091CAFEA0 /* UnitConverterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnitConverterView.swift; path = unit/UnitConverterView.swift; sourceTree = "<group>"; };
+		49A0094894BCB9D32C7510DB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		49A00A4DDDBACDB9ADDCB892 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		49A00AC5C72D7CA1D19C0CBB /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preference.swift; path = settings/Preference.swift; sourceTree = "<group>"; };
+		49A00BDF985E29E06B7A998E /* CalculatorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalculatorButton.swift; path = calculator/CalculatorButton.swift; sourceTree = "<group>"; };
+		49A00CD6B845058D3FB8BB83 /* ButtonMatrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ButtonMatrix.swift; path = calculator/ButtonMatrix.swift; sourceTree = "<group>"; };
+		49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropdownPreference.swift; path = settings/DropdownPreference.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -72,6 +100,19 @@
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				49A00108596984EF9786E2BB /* ButtonsPage1.swift */,
+				49A0029104E367C1183C8E6A /* ButtonsPage2.swift */,
+				49A00BDF985E29E06B7A998E /* CalculatorButton.swift */,
+				3A67A6CB292266DF003A1F04 /* Localizable.strings */,
+				49A00CD6B845058D3FB8BB83 /* ButtonMatrix.swift */,
+				49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */,
+				49A00402E0D52DEE6A357261 /* CalculatorView.swift */,
+				49A006EFFA077FC33308B1E8 /* SettingsView.swift */,
+				49A003A841BBE2D0C5982B4C /* CurrencyConverterView.swift */,
+				49A0073EBA684EA091CAFEA0 /* UnitConverterView.swift */,
+				49A007E5CBE1668CFC313D50 /* InfoPlist.strings */,
+				49A000844AF0ABDF85DC603B /* SwitchPreference.swift */,
+				49A00AC5C72D7CA1D19C0CBB /* Preference.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -82,7 +123,6 @@
 				9D1AD3AC7F17742929AE9F8F /* Pods-iosApp.debug.xcconfig */,
 				B570AD571C0B0812D79D82F6 /* Pods-iosApp.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -105,13 +145,15 @@
 				7555FF77242A565900829871 /* Sources */,
 				7555FF79242A565900829871 /* Resources */,
 				A61ED3F009A195A1EFD40CE6 /* Frameworks */,
-				0A2C018FF75956E7D49F4435 /* [CP] Embed Pods Frameworks */,
+				7E5458285C44E61A7E84F7CD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = iosApp;
+			packageProductDependencies = (
+			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
 			productType = "com.apple.product-type.application";
@@ -124,7 +166,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1130;
-				ORGANIZATIONNAME = orgName;
+				ORGANIZATIONNAME = ru.art2000;
 				TargetAttributes = {
 					7555FF7A242A565900829871 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -138,8 +180,11 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 7555FF72242A565900829871;
+			packageReferences = (
+			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -156,13 +201,15 @@
 			files = (
 				058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */,
 				058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */,
+				3A67A6C9292266DF003A1F04 /* Localizable.strings in Resources */,
+				49A000285D638104B8FDCF10 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0A2C018FF75956E7D49F4435 /* [CP] Embed Pods Frameworks */ = {
+		7E5458285C44E61A7E84F7CD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -210,10 +257,42 @@
 			files = (
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
+				49A00FD61505DD760162906B /* ButtonsPage1.swift in Sources */,
+				49A00BCA3796A0DC94D11D85 /* ButtonsPage2.swift in Sources */,
+				49A00AB2FFDE3C8DC719E7FC /* CalculatorButton.swift in Sources */,
+				49A00D834E8523E6A1C906D0 /* ButtonMatrix.swift in Sources */,
+				49A0054DF00FD92C5CFDA529 /* DropdownPreference.swift in Sources */,
+				49A00FA17C00ACEE7EC036A4 /* CalculatorView.swift in Sources */,
+				49A005D0039D7C5FD9A6A656 /* SettingsView.swift in Sources */,
+				49A00D4A5F2610BA2CBCFECA /* CurrencyConverterView.swift in Sources */,
+				49A006E4ECB2073832902CAB /* UnitConverterView.swift in Sources */,
+				49A00A9C5CEFC938BBE228E3 /* SwitchPreference.swift in Sources */,
+				49A00C585937506F5E5DD33E /* Preference.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3A67A6CB292266DF003A1F04 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A67A6CA292266DF003A1F04 /* en */,
+				3A67A6CC292266EA003A1F04 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		49A007E5CBE1668CFC313D50 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				49A0094894BCB9D32C7510DB /* en */,
+				49A00A4DDDBACDB9ADDCB892 /* ru */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		7555FFA3242A565B00829871 /* Debug */ = {
@@ -267,12 +346,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Calculator;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -322,11 +404,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Calculator;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -345,7 +430,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = orgIdentifier.iosApp;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.art2000.calculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -365,7 +450,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = orgIdentifier.iosApp;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.art2000.calculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

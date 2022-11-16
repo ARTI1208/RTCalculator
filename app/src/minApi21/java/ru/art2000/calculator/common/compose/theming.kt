@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import ru.art2000.calculator.R
 import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
+import ru.art2000.extensions.preferences.AppTheme
 
 @Composable
 fun AutoThemed(
@@ -29,7 +30,7 @@ fun AutoThemed(
         }
         false -> when (isSystemInDarkTheme()) {
             true -> {
-                val blackTheme = prefsHelper.appTheme != R.style.RT_AppTheme_Dark &&
+                val blackTheme = prefsHelper.appTheme != AppTheme.DARK &&
                         prefsHelper.isBlackThemePreferred
 
                 if (blackTheme) blackCalculatorColors() else darkCalculatorColors()

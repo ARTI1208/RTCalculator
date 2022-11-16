@@ -20,29 +20,19 @@ import ru.art2000.calculator.common.model.MainPage
 import ru.art2000.calculator.currency.background.CurrencyDownloadWorker
 import ru.art2000.calculator.currency.db.CurrencyDao
 import ru.art2000.calculator.currency.db.CurrencyRoomDB
-import ru.art2000.calculator.currency.preferences.AndroidCurrencyPreferenceHelper
-import ru.art2000.calculator.currency.preferences.AndroidCurrencyPreferenceHelperImpl
+import ru.art2000.calculator.currency.preferences.CommonCurrencyPreferenceHelper
 import ru.art2000.calculator.currency.preferences.CurrencyPreferenceHelper
 import ru.art2000.calculator.currency.preferences.CurrencySettingsSetup
 import ru.art2000.calculator.currency.remote.CurrencyRemoteBackend
 import ru.art2000.calculator.currency.remote.cbr.CbrBackend
 import ru.art2000.calculator.currency.repo.CurrencyRepository
 import ru.art2000.calculator.currency.repo.DefaultCurrencyRepo
+import ru.art2000.extensions.preferences.getDefaultAppPreferences
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class CurrencyModule {
-
-    @Binds
-    abstract fun bindAndroidPreferenceHelper(
-        prefsHelper: AndroidCurrencyPreferenceHelperImpl
-    ): AndroidCurrencyPreferenceHelper
-
-    @Binds
-    abstract fun bindPreferenceHelper(
-        prefsHelper: AndroidCurrencyPreferenceHelperImpl
-    ): CurrencyPreferenceHelper
 
     @Binds
     abstract fun bindCurrencyRemoteBackend(
@@ -55,6 +45,18 @@ internal abstract class CurrencyModule {
     ): CurrencyRepository
 
     companion object {
+
+        @Singleton
+        @Provides
+        fun providePreferenceHelper(
+            @ApplicationContext context: Context
+        ): CurrencyPreferenceHelper = CommonCurrencyPreferenceHelper(
+            context.getDefaultAppPreferences()
+        ) { type, interval ->
+            CurrencyDownloadWorker.setupCurrencyDownload(
+                context, type, interval, ExistingPeriodicWorkPolicy.REPLACE,
+            )
+        }
 
         @Provides
         @IntoMap

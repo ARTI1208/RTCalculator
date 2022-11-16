@@ -12,6 +12,7 @@ import ru.art2000.calculator.calculator.view.CalculatorFragment
 import ru.art2000.calculator.currency.view.CurrencyConverterFragment
 import ru.art2000.calculator.databinding.ActivityMainBinding
 import ru.art2000.calculator.common.view.AppActivity
+import ru.art2000.calculator.settings.preferences.PreferenceValues
 import ru.art2000.calculator.settings.view.SettingsFragment
 import ru.art2000.calculator.unit.view.UnitConverterFragment
 import ru.art2000.extensions.fragments.NavigationFragmentCreator
@@ -35,7 +36,12 @@ class MainActivity : AppActivity() {
         val navigation = binding.navigation as NavigationBarView
 
         navigation.setMyOnItemSelectedListener { item ->
-            generalPrefsHelper.defaultNavItemId = item.itemId
+            generalPrefsHelper.defaultTabToOpen = when (item.itemId) {
+                R.id.navigation_unit -> PreferenceValues.VALUE_TAB_DEFAULT_UNIT
+                R.id.navigation_currency -> PreferenceValues.VALUE_TAB_DEFAULT_CURRENCY
+                R.id.navigation_settings -> PreferenceValues.VALUE_TAB_DEFAULT_SETTINGS
+                else -> PreferenceValues.VALUE_TAB_DEFAULT_CALC
+            }
             intent.action = when (item.itemId) {
                 R.id.navigation_unit -> ACTION_CONVERTER
                 R.id.navigation_currency -> ACTION_CURRENCIES
@@ -76,7 +82,12 @@ class MainActivity : AppActivity() {
         )
 
         val tabId = when (intent.action) {
-            Intent.ACTION_MAIN -> generalPrefsHelper.defaultNavItemId
+            Intent.ACTION_MAIN -> when (generalPrefsHelper.defaultTabToOpen) {
+                PreferenceValues.VALUE_TAB_DEFAULT_UNIT -> R.id.navigation_unit
+                PreferenceValues.VALUE_TAB_DEFAULT_CURRENCY -> R.id.navigation_currency
+                PreferenceValues.VALUE_TAB_DEFAULT_SETTINGS -> R.id.navigation_settings
+                else -> R.id.navigation_calc
+            }
             ACTION_CALCULATOR -> R.id.navigation_calc
             ACTION_CONVERTER -> R.id.navigation_unit
             ACTION_CURRENCIES -> R.id.navigation_currency

@@ -5,11 +5,14 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import ru.art2000.calculator.common.R
+import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.activities.IEdgeToEdgeActivity
+import ru.art2000.extensions.preferences.AppTheme
 import ru.art2000.extensions.preferences.ThemeSettingsHolder
 import ru.art2000.extensions.views.isDarkThemeApplied
-import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
+import ru.art2000.extensions.preferences.listen
 
 abstract class AppActivity : AutoThemeActivity(), IEdgeToEdgeActivity {
 
@@ -49,6 +52,8 @@ abstract class AppActivity : AutoThemeActivity(), IEdgeToEdgeActivity {
     override fun getBatteryTheme(black: Boolean) = holder.autoThemeData.getBatteryTheme(black)
 
     override fun getDayNightTheme(black: Boolean) = holder.autoThemeData.getDayNightTheme(black)
+
+    override fun getThemeResId(theme: AppTheme) = holder.autoThemeData.getThemeRes(theme)
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)

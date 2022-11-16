@@ -1,8 +1,8 @@
 package ru.art2000.calculator.calculator.computation
 
-import ru.art2000.calculator.calculator.computation.numbers.DoubleMath
 import ru.art2000.calculator.calculator.model.AngleType
 import ru.art2000.calculator.calculator.computation.numbers.NumberField
+import kotlin.math.PI
 
 internal class DoubleParserConfiguration(
     override val field: NumberField<Double>,
@@ -10,7 +10,7 @@ internal class DoubleParserConfiguration(
 
     override fun angleToRadiansConverter(originalNumber: Double, angleType: AngleType): Double {
         return when (angleType) {
-            AngleType.DEGREES -> DoubleMath.toRadians(originalNumber)
+            AngleType.DEGREES -> originalNumber * PI / 180
             AngleType.RADIANS -> originalNumber
         }
     }

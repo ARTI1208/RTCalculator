@@ -128,6 +128,4 @@ internal expect object DoubleMath {
 
     fun factorial(x: Double): Double
 
-    fun toRadians(x: Double): Double
-
 }

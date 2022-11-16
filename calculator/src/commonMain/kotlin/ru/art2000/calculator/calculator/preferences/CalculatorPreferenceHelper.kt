@@ -1,9 +1,13 @@
 package ru.art2000.calculator.calculator.preferences
 
-internal interface CalculatorPreferenceHelper {
+import ru.art2000.calculator.calculator.model.DivideByZero
+import ru.art2000.extensions.preferences.PreferenceDelegate
 
-    //    @StringRes
-    val zeroDivResult: Int
+interface CalculatorPreferenceHelper {
+
+    val zeroDivResultProperty: PreferenceDelegate<DivideByZero>
+
+    val zeroDivResult: DivideByZero
 
     var lastExpression: String?
 

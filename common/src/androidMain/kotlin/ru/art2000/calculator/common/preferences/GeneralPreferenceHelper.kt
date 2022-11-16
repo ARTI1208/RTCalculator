@@ -1,20 +1,21 @@
 package ru.art2000.calculator.common.preferences
 
-import ru.art2000.extensions.preferences.ReadOnlyPreferenceDelegate
+import ru.art2000.extensions.preferences.AppTheme
+import ru.art2000.extensions.preferences.PreferenceDelegate
 import ru.art2000.extensions.preferences.ThemeSettingsHolder
 
-interface GeneralPreferenceHelper : ThemeSettingsHolder {
+actual interface GeneralPreferenceHelper : ThemeSettingsHolder {
 
-    var defaultNavItemId: Int
+    actual var defaultTabToOpen: String
 
-    val appThemeProperty: ReadOnlyPreferenceDelegate<Int>
+    actual val appThemeProperty: PreferenceDelegate<AppTheme>
 
-    val dynamicColorsProperty: ReadOnlyPreferenceDelegate<Boolean>
+    val dynamicColorsProperty: PreferenceDelegate<Boolean>
 
-    val autoDarkThemeProperty: ReadOnlyPreferenceDelegate<Boolean>
+    actual val autoDarkThemeProperty: PreferenceDelegate<Boolean>
 
-    val darkThemeActivationProperty: ReadOnlyPreferenceDelegate<Int>
+    actual val darkThemeActivationProperty: PreferenceDelegate<Int>
 
-    val darkThemeDeactivationProperty: ReadOnlyPreferenceDelegate<Int>
+    actual val darkThemeDeactivationProperty: PreferenceDelegate<Int>
 
 }

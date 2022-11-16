@@ -18,6 +18,7 @@ kotlin {
         project(":calculator"),
         project(":unit"),
         project(":currency"),
+        project(":settings"),
     )
 
     cocoapods {

@@ -17,12 +17,13 @@ import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.model.MainPage
 import ru.art2000.calculator.common.view.MainScreenPreferenceFragment
 import ru.art2000.calculator.main.CalculatorApplication
-import ru.art2000.calculator.settings.PreferenceKeys.KEY_APP_THEME
-import ru.art2000.calculator.settings.PreferenceKeys.KEY_AUTO_DARK_THEME
-import ru.art2000.calculator.settings.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
-import ru.art2000.calculator.settings.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
-import ru.art2000.calculator.settings.PreferenceKeys.KEY_DYNAMIC_COLORS
-import ru.art2000.calculator.settings.PreferenceValues
+import ru.art2000.calculator.settings.preferences.DYNAMIC_COLORS_AVAILABLE
+import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_APP_THEME
+import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_AUTO_DARK_THEME
+import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
+import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
+import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DYNAMIC_COLORS
+import ru.art2000.calculator.settings.preferences.PreferenceValues
 import ru.art2000.extensions.getColorAttribute
 import ru.art2000.extensions.views.isLandscape
 import java.text.DateFormat
@@ -82,7 +83,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         val themingGroup = dynamicColors?.parent
 
-        fun areDynamicColorsEnabled() = CalculatorApplication.DYNAMIC_COLORS_AVAILABLE
+        fun areDynamicColorsEnabled() = DYNAMIC_COLORS_AVAILABLE
                 && (dynamicColors?.isChecked ?: false)
 
         fun showThemingPreferences(dynamicColorsEnabled: Boolean) {
@@ -100,7 +101,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
         showThemingPreferences(areDynamicColorsEnabled())
 
         dynamicColors?.also {
-            if (!CalculatorApplication.DYNAMIC_COLORS_AVAILABLE) {
+            if (!DYNAMIC_COLORS_AVAILABLE) {
                 it.parent?.removePreference(it)
             }
         }
