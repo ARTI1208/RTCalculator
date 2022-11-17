@@ -32,7 +32,7 @@ fun Modifier.verticalScrollBar(
         animationSpec = tween(durationMillis = duration)
     )
 
-    val actualColor = color ?: MaterialTheme.calculatorColors.strokeColor
+    val actualColor = color ?: MaterialTheme.colorScheme.outline
     val ltr = LocalLayoutDirection.current == LayoutDirection.Ltr
 
     drawWithContent {

@@ -13,10 +13,6 @@ plugins {
 
 setupAndroidModule()
 
-val composeVersion = "1.3.1"
-val composeMaterial3Version = "1.0.1"
-val composeCompilerVersion = "1.3.2"
-
 val major = 1
 val minor = 5
 val patch = 2
@@ -101,27 +97,6 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion.toString()
     }
-
-    val flavorsWithoutCompose = listOf("api16")
-
-    // A bit of a hack. assembleApi21* tasks are generated and not accessible with getByName,
-    // and trying to setup with tasks.whenTaskAdded and doFirst somewhy doesn't work
-    // TODO Rework this somehow to support building all flavours at the same time
-    if (
-            gradle.startParameter.taskNames.isEmpty() ||
-            gradle.startParameter.taskNames.all { task ->
-                !flavorsWithoutCompose.any { task.contains(it, ignoreCase = true) }
-            }
-    ) {
-
-        buildFeatures {
-            compose = true
-        }
-
-        composeOptions {
-            kotlinCompilerExtensionVersion = composeCompilerVersion
-        }
-    }
 }
 
 val newVersion = tasks.create("newVersion") {
@@ -175,21 +150,6 @@ dependencies {
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
 
-    "minApi21Implementation"("androidx.activity:activity-compose:1.6.1")
-
-    "minApi21Implementation"("androidx.compose.ui:ui:$composeVersion")
-    // Tooling support (Previews, etc.)
-    "minApi21Implementation"("androidx.compose.ui:ui-tooling:$composeVersion")
-    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    "minApi21Implementation"("androidx.compose.foundation:foundation:$composeVersion")
-    // Material Design
-    "minApi21Implementation"("androidx.compose.material:material:$composeVersion")
-    "minApi21Implementation"("androidx.compose.material3:material3:$composeMaterial3Version")
-    // Material design icons
-    "minApi21Implementation"("androidx.compose.material:material-icons-core:$composeVersion")
-    "minApi21Implementation"("androidx.compose.material:material-icons-extended:$composeVersion")
-    // Integration with observables
-    "minApi21Implementation"("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    "minApi21Implementation"("androidx.compose.compiler:compiler:$composeCompilerVersion")
+    "minApi21Implementation"(libs.bundles.compose)
 
 }

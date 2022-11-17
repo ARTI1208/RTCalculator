@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import ru.art2000.calculator.BuildConfig
 import ru.art2000.calculator.R
 import ru.art2000.calculator.common.compose.*
@@ -57,7 +58,7 @@ class InfoActivity : InfoActivityBase() {
             clearSystemBars()
         }
         setContent {
-            AutoThemed(generalPrefsHelper) {
+            Mdc3Theme {
                 InfoScreenRoot(model)
             }
         }
@@ -66,23 +67,7 @@ class InfoActivity : InfoActivityBase() {
     @Preview
     @Composable
     private fun LightThemePreview() {
-        LightTheme {
-            InfoScreenRoot(PreviewInfoViewModel)
-        }
-    }
-
-    @Preview
-    @Composable
-    private fun DarkThemePreview() {
-        DarkTheme {
-            InfoScreenRoot(PreviewInfoViewModel)
-        }
-    }
-
-    @Preview
-    @Composable
-    private fun BlackThemePreview() {
-        BlackTheme {
+        Mdc3Theme {
             InfoScreenRoot(PreviewInfoViewModel)
         }
     }
@@ -90,7 +75,7 @@ class InfoActivity : InfoActivityBase() {
     @Preview
     @Composable
     private fun LightThemePreviewShort() {
-        LightTheme {
+        Mdc3Theme {
             InfoScreenRoot(PreviewInfoViewModelShort)
         }
     }
@@ -98,7 +83,7 @@ class InfoActivity : InfoActivityBase() {
     @Preview(device = Devices.TABLET)
     @Composable
     private fun LightThemePreviewLandscape() {
-        LightTheme {
+        Mdc3Theme {
             InfoScreenRoot(PreviewInfoViewModel)
         }
     }
@@ -106,7 +91,7 @@ class InfoActivity : InfoActivityBase() {
     @Preview(device = Devices.TABLET)
     @Composable
     private fun LightThemePreviewShortLandscape() {
-        LightTheme {
+        Mdc3Theme {
             InfoScreenRoot(PreviewInfoViewModelShort)
         }
     }
@@ -284,7 +269,7 @@ class InfoActivity : InfoActivityBase() {
                     .padding(top = avatarPadding) // margin
                     .border(
                         1.dp,
-                        MaterialTheme.calculatorColors.strokeColor,
+                        MaterialTheme.colorScheme.outline,
                         RoundedCornerShape(10.dp)
                     )
                     .padding(avatarPadding) // padding

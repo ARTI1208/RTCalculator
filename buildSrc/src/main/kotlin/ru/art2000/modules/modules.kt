@@ -2,12 +2,15 @@
 
 package ru.art2000.modules
 
+import com.android.build.api.dsl.ComposeOptions
+import com.android.build.api.dsl.ProductFlavor
+import com.android.build.api.variant.AndroidComponentsExtension
+import com.android.build.gradle.internal.TaskManager
+import com.android.build.gradle.internal.component.ComponentCreationConfig
 import com.android.build.gradle.internal.dsl.DefaultConfig
 import com.android.build.gradle.internal.dsl.InternalCommonExtension
-import org.gradle.api.Action
-import org.gradle.api.NamedDomainObjectCollection
-import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.Project
+import com.android.build.gradle.internal.utils.addComposeArgsToKotlinCompile
+import org.gradle.api.*
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.dsl.DependencyHandler
@@ -17,6 +20,12 @@ import org.gradle.kotlin.dsl.getting
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+
+private fun Project.version(alias: String) =
+    extensions.getByType<VersionCatalogsExtension>()
+        .named("libs")
+        .findVersion(alias)
+        .get()
 
 private fun Project.library(alias: String) =
     extensions.getByType<VersionCatalogsExtension>()
@@ -29,6 +38,58 @@ private fun Project.bundle(alias: String) =
         .named("libs")
         .findBundle(alias)
         .get()
+
+private fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.() -> Unit = {}) {
+
+    val composeOptions = object : ComposeOptions {
+        override var kotlinCompilerExtensionVersion: String? = null
+
+        @Deprecated("")
+        override var kotlinCompilerVersion: String?
+            get() = null
+            set(_) { logger.warn("ComposeOptions.kotlinCompilerVersion is deprecated. Compose now uses the kotlin compiler defined in your buildscript.") }
+
+        override var useLiveLiterals: Boolean= true
+
+    }
+
+    composeOptions.options()
+
+    // adapted from [com.android.build.gradle.internal.TaskManager]
+
+    val kotlinCompilerExtensionVersionInDsl =
+        composeOptions.kotlinCompilerExtensionVersion
+
+    val useLiveLiterals = composeOptions.useLiveLiterals
+
+    // Create a project configuration that holds the androidx compose kotlin
+    // compiler extension
+    val kotlinExtension = project.configurations.create("kotlin-extension")
+    project.dependencies
+        .add(
+            kotlinExtension.name, "androidx.compose.compiler:compiler:"
+                    + (kotlinCompilerExtensionVersionInDsl
+                ?: TaskManager.COMPOSE_KOTLIN_COMPILER_EXTENSION_VERSION))
+    kotlinExtension.isTransitive = false
+    kotlinExtension.description = "Configuration for Compose related kotlin compiler extension"
+
+    extensions.configure<AndroidComponentsExtension<*, *, *>>("androidComponents") {
+        onVariants {
+            if (it.flavorName != flavor.name) return@onVariants
+
+            val creationConfig = it as ComponentCreationConfig
+
+            val taskName = creationConfig.computeTaskName("compile", "Kotlin")
+
+            project.tasks.whenTaskAdded {
+                if (this.name != taskName) return@whenTaskAdded
+
+                addComposeArgsToKotlinCompile(
+                    this, creationConfig, project.files(kotlinExtension), useLiveLiterals)
+            }
+        }
+    }
+}
 
 private fun Project.setupAndroid(moduleNamespace: String) {
 
@@ -68,6 +129,9 @@ private fun Project.setupAndroid(moduleNamespace: String) {
             create("minApi21") {
                 minSdk = 21
                 dimension = "sdk"
+                addCompose(this) {
+                    kotlinCompilerExtensionVersion = version("composeCompiler").toString()
+                }
             }
         }
     }
@@ -127,6 +191,11 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
             val androidMain by getting {
                 setupAndroid("$androidPrefix.${this@setupKmmModule.name}")
                 setupModule(dependencies)
+            }
+            val androidMinApi21 by getting {
+                dependencies {
+                    implementation(bundle("compose"))
+                }
             }
             val androidTest by getting {
                 dependencies {

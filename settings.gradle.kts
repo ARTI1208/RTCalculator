@@ -7,6 +7,11 @@ dependencyResolutionManagement {
             val daggerHilt = version("daggerHilt", "2.44")
             val room = version("room", "2.4.3")
             val kotest = version("kotest", "5.5.4")
+            val activity = version("activity", "1.6.1")
+            val compose = version("compose", "1.3.1")
+            val composeCompiler = version("composeCompiler", "1.3.2")
+            val composeMaterial3 = version("composeMaterial3", "1.0.1")
+            val composeThemeAdapter3 = version("composeThemeAdapter3", "1.1.0")
 
             library("desugaring", "com.android.tools:desugar_jdk_libs:1.2.2")
             library("appcompat", "androidx.appcompat:appcompat:1.5.1")
@@ -68,6 +73,34 @@ dependencyResolutionManagement {
             bundle("kotest-jvm", listOf("kotest-runner-junit5"))
 
             plugin("dagger", "com.google.dagger.hilt.android").versionRef(daggerHilt)
+
+            val composeAliases = mutableListOf<String>()
+
+            listOf(
+                "androidx.compose.ui:ui",
+                "androidx.compose.ui:ui-tooling",
+                "androidx.compose.foundation:foundation",
+                "androidx.compose.material:material",
+            ).forEach {
+                val (group, artifact) = it.split(':')
+                val alias = "compose-$artifact"
+                composeAliases += alias
+                library(alias, group, artifact).versionRef(compose)
+            }
+
+            library("compose-activity".also { composeAliases += it }, "androidx.activity", "activity-compose")
+                .versionRef(activity)
+
+            library("compose-compiler".also { composeAliases += it }, "androidx.compose.compiler", "compiler")
+                .versionRef(composeCompiler)
+
+            library("compose-material3".also { composeAliases += it }, "androidx.compose.material3", "material3")
+                .versionRef(composeMaterial3)
+
+            library("compose-theme-adapter3".also { composeAliases += it }, "com.google.android.material", "compose-theme-adapter-3")
+                .versionRef(composeThemeAdapter3)
+
+            bundle("compose", composeAliases)
         }
     }
 }
