@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.material.composethemeadapter3.Mdc3Theme
-import ru.art2000.calculator.BuildConfig
-import ru.art2000.calculator.R
+import ru.art2000.calculator.common.BuildConfig
 import ru.art2000.calculator.common.compose.*
+import ru.art2000.calculator.settings.R
 import ru.art2000.calculator.settings.model.AuthorLink
 import ru.art2000.calculator.settings.vm.IInfoViewModel
 import ru.art2000.extensions.activities.clearSystemBars

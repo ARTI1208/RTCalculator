@@ -12,7 +12,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.SnackbarContentLayout
 import ru.art2000.calculator.common.R
-import ru.art2000.extensions.getColorAttribute
+import ru.art2000.extensions.getColorFromAttribute
 import com.google.android.material.R as MaterialR
 
 fun View.createThemedSnackbar(message: CharSequence, duration: Int): Snackbar {
@@ -44,17 +44,17 @@ fun View.createThemedSnackbar(message: CharSequence, duration: Int): Snackbar {
     val backgroundDrawable = MaterialShapeDrawable()
     backgroundDrawable.setStroke(
         resources.getDimension(R.dimen.bottom_view_stroke_width),
-        context.getColorAttribute(MaterialR.attr.strokeColor)
+        context.getColorFromAttribute(MaterialR.attr.strokeColor)
     )
     backgroundDrawable.setCornerSize(cornerRadius)
     backgroundDrawable.fillColor = ColorStateList.valueOf(
-        context.getColorAttribute(R.attr.floatingViewBackground)
+        context.getColorFromAttribute(R.attr.floatingViewBackground)
     )
     snackbarLayout.background = backgroundDrawable
 
     //MessageView
     snackbar.setTextColor(
-        context.getColorAttribute(MaterialR.attr.colorOnBackground)
+        context.getColorFromAttribute(MaterialR.attr.colorOnBackground)
     )
 
     //Animation

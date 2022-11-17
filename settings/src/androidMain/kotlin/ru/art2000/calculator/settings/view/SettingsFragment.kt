@@ -1,6 +1,8 @@
 package ru.art2000.calculator.settings.view
 
 import android.content.Intent
+import android.content.pm.PackageManager.PackageInfoFlags
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -11,20 +13,21 @@ import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ru.art2000.calculator.BuildConfig
-import ru.art2000.calculator.R
 import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.model.MainPage
+import ru.art2000.calculator.common.preferences.MainTabData
 import ru.art2000.calculator.common.view.MainScreenPreferenceFragment
-import ru.art2000.calculator.main.CalculatorApplication
+import ru.art2000.calculator.settings.BuildConfig
+import ru.art2000.calculator.settings.R
 import ru.art2000.calculator.settings.preferences.DYNAMIC_COLORS_AVAILABLE
+import ru.art2000.calculator.settings.preferences.PreferenceKeys
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_APP_THEME
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_AUTO_DARK_THEME
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DYNAMIC_COLORS
 import ru.art2000.calculator.settings.preferences.PreferenceValues
-import ru.art2000.extensions.getColorAttribute
+import ru.art2000.extensions.getColorFromAttribute
 import ru.art2000.extensions.views.isLandscape
 import java.text.DateFormat
 import java.util.*
@@ -32,7 +35,7 @@ import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
-internal class SettingsFragment : MainScreenPreferenceFragment() {
+class SettingsFragment : MainScreenPreferenceFragment() {
 
     private var dev = 0
 
@@ -49,6 +52,9 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
     @Inject
     lateinit var settingsSetups: Map<MainPage, @JvmSuppressWildcards SettingsSetup>
+
+    @Inject
+    lateinit var tabDatas: Map<MainPage, @JvmSuppressWildcards MainTabData>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.general_settings)
@@ -150,14 +156,35 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
             }
         }
 
+        val tabPreference = findPreference<ListPreference>(PreferenceKeys.KEY_TAB_DEFAULT)
+        tabPreference?.also {
+            val datas = tabDatas.toSortedMap(Comparator.comparingInt { it.ordinal }).values
+            it.entries = datas.map { it.getTitle(requireContext()) }.toTypedArray() + it.entries
+            it.entryValues = datas.map { it.getKey(requireContext()) }.toTypedArray() + it.entryValues
+        }
+
         /* appVersion preference */
         val appVersion = findPreference<Preference>(KEY_APP_VERSION)
         val buildDate = DateFormat
             .getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM)
             .format(Date(BuildConfig.BUILD_TIME))
         val suffix = if (BuildConfig.DEBUG) "-debug" else ""
+        val versionName = requireContext().packageManager.let {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.getPackageInfo(
+                    requireContext().packageName, PackageInfoFlags.of(0)
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                it.getPackageInfo(
+                    requireContext().packageName, 0
+                )
+            }
+
+        }.versionName
         appVersion?.summary =
-            "${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}$suffix ($buildDate)"
+            "$versionName-${BuildConfig.FLAVOR}$suffix ($buildDate)"
         appVersion?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dev++
             if (dev == CLICKS_TO_OPEN_HIDDEN_INFO) {
@@ -170,7 +197,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(requireContext().getColorAttribute(MaterialR.attr.colorSurface))
+        view.setBackgroundColor(requireContext().getColorFromAttribute(MaterialR.attr.colorSurface))
     }
 
     override val topViews: List<View>

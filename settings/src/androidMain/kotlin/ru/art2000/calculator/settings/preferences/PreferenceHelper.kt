@@ -1,12 +1,15 @@
 package ru.art2000.calculator.settings.preferences
 
+import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
 import ru.art2000.extensions.preferences.AppPreferences
 import ru.art2000.extensions.preferences.PreferenceDelegate
 import ru.art2000.extensions.preferences.booleanPreference
 import javax.inject.Singleton
 
 @Singleton
-internal class PreferenceHelper(preferences: AppPreferences) : CommonPreferenceHelper(preferences) {
+internal class PreferenceHelper(
+    preferences: AppPreferences,
+) : CommonPreferenceHelper(preferences), GeneralPreferenceHelper {
 
     override val dynamicColorsProperty: PreferenceDelegate<Boolean> =
         preferences.booleanPreference(

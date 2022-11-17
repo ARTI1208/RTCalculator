@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RT.View.Changelog" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">?colorOnSurface</item>
+        <item name="android:background">?changelogBackground</item>
+        <item name="android:padding">@dimen/changelog_padding</item>
+    </style>
+
+</resources>

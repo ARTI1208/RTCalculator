@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="author_avatar_background_stroke_width">1dp</dimen>
+    <dimen name="author_avatar_background_corner_radius">10dp</dimen>
+    <dimen name="author_avatar_padding">10dp</dimen>
+    <dimen name="author_avatar_image_size">60dp</dimen>
+    <dimen name="author_nick_text_size">20sp</dimen>
+
+    <dimen name="author_info_link_image_size">40dp</dimen>
+    <dimen name="author_info_link_image_padding">5dp</dimen>
+    <dimen name="author_info_link_block_margin">15dp</dimen>
+    <dimen name="author_info_link_gap">40dp</dimen>
+
+    <dimen name="changelog_padding">6dp</dimen>
+    <dimen name="changelog_background_corner_radius">8dp</dimen>
+
+</resources>

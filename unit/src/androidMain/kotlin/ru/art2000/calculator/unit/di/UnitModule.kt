@@ -13,6 +13,9 @@ import dagger.multibindings.IntoMap
 import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.di.PageKey
 import ru.art2000.calculator.common.model.MainPage
+import ru.art2000.calculator.common.preferences.MainTabData
+import ru.art2000.calculator.common.preferences.MainTabDataImpl
+import ru.art2000.calculator.unit.R
 import ru.art2000.calculator.unit.functions.ConverterFunctionsProvider
 import ru.art2000.calculator.unit.functions.AndroidDoubleFunctionsProvider
 import ru.art2000.calculator.unit.preferences.CommonUnitPreferenceHelper
@@ -44,6 +47,11 @@ internal abstract class UnitModule {
         @IntoMap
         @PageKey(MainPage.UNIT)
         fun provideUnitSettingsSetup(): SettingsSetup = UnitSettingsSetup()
+
+        @Provides
+        @IntoMap
+        @PageKey(MainPage.UNIT)
+        fun provideTabData(): MainTabData = MainTabDataImpl(R.string.title_unit, "unit_tab")
 
     }
 }

@@ -2,7 +2,7 @@ package ru.art2000.calculator.settings.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import ru.art2000.calculator.R
+import ru.art2000.calculator.settings.R
 import ru.art2000.calculator.settings.model.AuthorLink
 import ru.art2000.extensions.arch.context
 import java.io.BufferedReader
@@ -26,10 +26,10 @@ class InfoViewModel(application: Application) : AndroidViewModel(application), I
 
                 BufferedReader(InputStreamReader(stream)).use { reader ->
                     var mLine: String?
-                    var i = 0
+                    var firstLine = true
                     while (reader.readLine().also { mLine = it } != null) {
-                        if (i == 0) sb.append(mLine) else sb.append("\n").append(mLine)
-                        i++
+                        if (firstLine) sb.append(mLine) else sb.append("\n").append(mLine)
+                        firstLine = false
                     }
                 }
 

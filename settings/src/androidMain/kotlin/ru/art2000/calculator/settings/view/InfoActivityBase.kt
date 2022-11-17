@@ -5,11 +5,11 @@ import android.net.Uri
 import android.view.ViewGroup
 import android.widget.Space
 import androidx.activity.viewModels
-import ru.art2000.calculator.R
-import ru.art2000.calculator.databinding.ActivityAppInfoBinding
-import ru.art2000.calculator.databinding.AuthorLinkItemBinding
 import ru.art2000.calculator.settings.model.AuthorLink
 import ru.art2000.calculator.common.view.AppActivity
+import ru.art2000.calculator.settings.R
+import ru.art2000.calculator.settings.databinding.ActivityAppInfoBinding
+import ru.art2000.calculator.settings.databinding.AuthorLinkItemBinding
 import ru.art2000.calculator.settings.vm.InfoViewModel
 import ru.art2000.extensions.activities.applyEdgeToEdgePaddingIfAvailable
 import ru.art2000.extensions.views.isLandscape

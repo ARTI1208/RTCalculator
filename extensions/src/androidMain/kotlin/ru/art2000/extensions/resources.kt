@@ -32,7 +32,7 @@ fun Context.getLocalizedString(
 )= getLocalizedResource(desiredLocale) { getString(resId) }
 
 @ColorInt
-fun Context.getColorAttribute(@AttrRes attribute: Int): Int {
+fun Context.getColorFromAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(attribute, typedValue, true)
     return when (typedValue.type) {
@@ -43,12 +43,22 @@ fun Context.getColorAttribute(@AttrRes attribute: Int): Int {
 }
 
 @Dimension
-fun Context.getDimenAttribute(@AttrRes attribute: Int): Int {
+fun Context.getDimenFromAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(attribute, typedValue, true)
     return when (typedValue.type) {
         TypedValue.TYPE_ATTRIBUTE -> resources.getDimensionPixelOffset(typedValue.resourceId)
         TypedValue.TYPE_DIMENSION -> TypedValue.complexToDimensionPixelOffset(typedValue.data, resources.displayMetrics)
         else -> throw Exception("Unsupported dimen attribute type: ${typedValue.type}")
+    }
+}
+
+@DrawableRes
+fun Context.getDrawableResFromAttribute(@AttrRes attribute: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(attribute, typedValue, true)
+    return when (val id = typedValue.resourceId) {
+        0 -> throw Exception("Unsupported dimen attribute type: ${typedValue.type}")
+        else -> id
     }
 }

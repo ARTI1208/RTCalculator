@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.art2000.calculator.currency.di
 
 import android.content.Context
@@ -17,6 +19,9 @@ import ru.art2000.calculator.common.AppStartupListener
 import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.di.PageKey
 import ru.art2000.calculator.common.model.MainPage
+import ru.art2000.calculator.common.preferences.MainTabData
+import ru.art2000.calculator.common.preferences.MainTabDataImpl
+import ru.art2000.calculator.currency.R
 import ru.art2000.calculator.currency.background.CurrencyDownloadWorker
 import ru.art2000.calculator.currency.db.CurrencyDao
 import ru.art2000.calculator.currency.db.CurrencyRoomDB
@@ -62,6 +67,12 @@ internal abstract class CurrencyModule {
         @IntoMap
         @PageKey(MainPage.CURRENCY)
         fun provideCurrencySettingsSetup(): SettingsSetup = CurrencySettingsSetup()
+
+        @Provides
+        @IntoMap
+        @PageKey(MainPage.CURRENCY)
+        fun provideTabData(): MainTabData =
+            MainTabDataImpl(R.string.title_currency, "currency_tab")
 
         @Singleton
         @Provides

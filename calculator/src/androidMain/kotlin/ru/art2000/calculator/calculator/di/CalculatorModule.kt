@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.art2000.calculator.calculator.di
 
 import android.content.Context
@@ -11,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
+import ru.art2000.calculator.calculator.R
 import ru.art2000.calculator.calculator.db.CalculatorHistoryDB
 import ru.art2000.calculator.calculator.db.CalculatorHistoryDao
 import ru.art2000.calculator.calculator.preferences.CalculatorPreferenceHelper
@@ -21,6 +24,8 @@ import ru.art2000.calculator.calculator.repo.RoomHistoryRepository
 import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.di.PageKey
 import ru.art2000.calculator.common.model.MainPage
+import ru.art2000.calculator.common.preferences.MainTabData
+import ru.art2000.calculator.common.preferences.MainTabDataImpl
 import ru.art2000.extensions.preferences.getDefaultAppPreferences
 import javax.inject.Singleton
 
@@ -47,6 +52,11 @@ internal abstract class CalculatorModule {
         @IntoMap
         @PageKey(MainPage.CALCULATOR)
         fun provideCalculatorSettingsSetup(): SettingsSetup = CalculatorSettingsSetup()
+
+        @Provides
+        @IntoMap
+        @PageKey(MainPage.CALCULATOR)
+        fun provideTabData(): MainTabData = MainTabDataImpl(R.string.title_calc, "calc_tab")
 
         @Singleton
         @Provides

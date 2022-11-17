@@ -21,7 +21,7 @@ import ru.art2000.calculator.currency.model.LoadingState
 import ru.art2000.calculator.currency.vm.CurrencyConverterModel
 import ru.art2000.extensions.LocalDate
 import ru.art2000.extensions.arch.launchRepeatOnStarted
-import ru.art2000.extensions.getColorAttribute
+import ru.art2000.extensions.getColorFromAttribute
 import ru.art2000.extensions.kt.launchAndCollect
 import ru.art2000.extensions.timeInMillis
 import ru.art2000.extensions.views.*
@@ -60,9 +60,9 @@ class CurrencyConverterFragment : MainScreenFragment() {
 
         binding.refresher.apply {
             val colorAccent =
-                requireContext().getColorAttribute(com.google.android.material.R.attr.colorSecondary)
+                requireContext().getColorFromAttribute(com.google.android.material.R.attr.colorSecondary)
             val circleBackground =
-                requireContext().getColorAttribute(CommonR.attr.floatingViewBackground)
+                requireContext().getColorFromAttribute(CommonR.attr.floatingViewBackground)
             setProgressBackgroundColorSchemeColor(circleBackground)
             setColorSchemeColors(colorAccent)
             setProgressViewEndTarget(true, progressViewEndOffset)

@@ -1,4 +1,5 @@
 import ru.art2000.modules.setupFeatureModule
+import java.util.*
 
 plugins {
     kotlin("multiplatform")
@@ -7,9 +8,8 @@ plugins {
 
 setupFeatureModule()
 
-kotlin {
-    
-    sourceSets {
-
+android {
+    defaultConfig {
+        buildConfigField("long", "BUILD_TIME", "${Date().time}")
     }
 }

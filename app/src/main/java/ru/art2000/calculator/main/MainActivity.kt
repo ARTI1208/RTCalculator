@@ -22,6 +22,7 @@ import ru.art2000.extensions.views.setSelectedItemId
 import ru.art2000.extensions.views.setupWithViewPager2
 import ru.art2000.calculator.calculator.R as CalculatorR
 import ru.art2000.calculator.currency.R as CurrencyR
+import ru.art2000.calculator.settings.R as SettingsR
 import ru.art2000.calculator.unit.R as UnitR
 
 @AndroidEntryPoint
@@ -76,7 +77,7 @@ class MainActivity : AppActivity() {
             NavigationFragmentCreator(
                 R.drawable.ic_settings,
                 R.id.navigation_settings,
-                R.string.title_settings,
+                SettingsR.string.title_settings,
                 ::SettingsFragment,
             ),
         )

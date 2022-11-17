@@ -19,7 +19,7 @@ import ru.art2000.calculator.currency.model.getNameIdentifier
 import ru.art2000.calculator.currency.vm.CurrencyListAdapterModel
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.extensions.getColorAttribute
+import ru.art2000.extensions.getColorFromAttribute
 import java.text.DecimalFormat
 import com.google.android.material.R as MaterialR
 
@@ -28,13 +28,13 @@ internal class CurrencyListAdapter internal constructor(
     private val adapterModel: CurrencyListAdapterModel
 ) : RecyclerView.Adapter<CurrencyListAdapter.Holder>() {
     @ColorInt
-    private val colorAccent = mContext.getColorAttribute(MaterialR.attr.colorSecondary)
+    private val colorAccent = mContext.getColorFromAttribute(MaterialR.attr.colorSecondary)
 
     @ColorInt
-    private val colorDefaultBright = mContext.getColorAttribute(MaterialR.attr.colorOnBackground)
+    private val colorDefaultBright = mContext.getColorFromAttribute(MaterialR.attr.colorOnBackground)
 
     @ColorInt
-    private val colorDefaultDimmed = mContext.getColorAttribute(MaterialR.attr.colorOnSurface)
+    private val colorDefaultDimmed = mContext.getColorFromAttribute(MaterialR.attr.colorOnSurface)
     private val codeTextSizeNormal =
         mContext.resources.getDimension(R.dimen.currency_list_item_code_normal)
     private val codeTextSizeHighlighted =

@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="default_tab">
-        <item>@string/title_currency</item>
-        <item>@string/title_calc</item>
-        <item>@string/title_unit</item>
         <item>@string/tab_last_opened</item>
     </array>
     <array name="default_tab_values">
-        <item>currency_tab</item>
-        <item>calc_tab</item>
-        <item>unit_tab</item>
         <item>last_tab</item>
     </array>
     <array name="app_theme">
@@ -25,14 +19,6 @@
         <item>battery</item>
         <item>day_night</item>
         <item>light</item>
-        <item>dark</item>
-        <item>black</item>
-    </array>
-    <array name="app_dark_theme">
-        <item>@string/theme_dark</item>
-        <item>@string/theme_black</item>
-    </array>
-    <array name="app_dark_theme_values">
         <item>dark</item>
         <item>black</item>
     </array>

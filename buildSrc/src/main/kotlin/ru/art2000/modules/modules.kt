@@ -79,10 +79,14 @@ private fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.()
 
             val creationConfig = it as ComponentCreationConfig
 
-            val taskName = creationConfig.computeTaskName("compile", "Kotlin")
+            val taskNamePrefix = creationConfig.computeTaskName("compile")
+            val possibleTaskNames = listOf(
+                "${taskNamePrefix}Kotlin",
+                "${taskNamePrefix}KotlinAndroid",
+            )
 
             project.tasks.whenTaskAdded {
-                if (this.name != taskName) return@whenTaskAdded
+                if (name !in possibleTaskNames) return@whenTaskAdded
 
                 addComposeArgsToKotlinCompile(
                     this, creationConfig, project.files(kotlinExtension), useLiveLiterals)

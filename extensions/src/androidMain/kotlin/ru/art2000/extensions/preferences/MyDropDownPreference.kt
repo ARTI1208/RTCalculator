@@ -8,7 +8,7 @@ import android.widget.Spinner
 import androidx.core.view.updateLayoutParams
 import androidx.preference.DropDownPreference
 import androidx.preference.PreferenceViewHolder
-import ru.art2000.extensions.getDimenAttribute
+import ru.art2000.extensions.getDimenFromAttribute
 
 class MyDropDownPreference @JvmOverloads constructor(
         context: Context,
@@ -30,10 +30,10 @@ class MyDropDownPreference @JvmOverloads constructor(
 
         mSpinner.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                val paddingStart = context.getDimenAttribute(android.R.attr.listPreferredItemPaddingStart)
+                val paddingStart = context.getDimenFromAttribute(android.R.attr.listPreferredItemPaddingStart)
                 marginStart = paddingStart
             } else {
-                val paddingLeft = context.getDimenAttribute(android.R.attr.listPreferredItemPaddingLeft)
+                val paddingLeft = context.getDimenFromAttribute(android.R.attr.listPreferredItemPaddingLeft)
                 leftMargin = paddingLeft
             }
         }

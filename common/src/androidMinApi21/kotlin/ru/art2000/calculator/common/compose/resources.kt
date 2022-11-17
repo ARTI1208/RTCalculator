@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 @ReadOnlyComposable
 fun resources(): Resources {
-    LocalConfiguration.current
+    LocalConfiguration.current // Do NOT remove. Copied from compose internals
     return LocalContext.current.resources
 }
 

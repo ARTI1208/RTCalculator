@@ -20,7 +20,7 @@ import ru.art2000.calculator.unit.model.DisplayableUnitItem
 import ru.art2000.calculator.unit.view.BaseUnitPageFragment.Companion.CONVERT_FROM_KEY
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.views.SimpleTextWatcher
-import ru.art2000.extensions.getColorAttribute
+import ru.art2000.extensions.getColorFromAttribute
 import ru.art2000.extensions.kt.launchAndCollect
 import com.google.android.material.R as MaterialR
 import ru.art2000.calculator.common.R as CommonR
@@ -53,13 +53,13 @@ internal class UnitListAdapter private constructor(
         }
 
     @ColorInt
-    private val colorAccent = mContext.getColorAttribute(MaterialR.attr.colorSecondary)
+    private val colorAccent = mContext.getColorFromAttribute(MaterialR.attr.colorSecondary)
 
     @ColorInt
-    private val colorDefaultBright = mContext.getColorAttribute(MaterialR.attr.colorOnBackground)
+    private val colorDefaultBright = mContext.getColorFromAttribute(MaterialR.attr.colorOnBackground)
 
     @ColorInt
-    private var colorDefaultDimmed = mContext.getColorAttribute(MaterialR.attr.colorOnSurface)
+    private var colorDefaultDimmed = mContext.getColorFromAttribute(MaterialR.attr.colorOnSurface)
 
     private var recycler: RecyclerView? = null
 

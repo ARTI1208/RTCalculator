@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_settings">Настройки</string>
+    <string name="basic">Общее</string>
+    <string name="tab_default">Вкладка по умолчанию</string>
+    <string name="app_theme">Тема</string>
+    <string name="app_auto_dark_theme">Автоматическая тёмная тема</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_black">Чёрная</string>
+    <string name="theme_daynight">День/Ночь по времени</string>
+    <string name="theme_daynight_system">Как в системе</string>
+    <string name="theme_daynight_battery">По сбережению батареи</string>
+    <string name="info">Информация</string>
+    <string name="changelog">История изменений</string>
+    <string name="dev">Разработчик</string>
+    <string name="about">Справка</string>
+    <string name="app_version">Версия приложения</string>
+    <string name="tab_last_opened">Последняя открытая</string>
+    <string name="daynight_support_message">Если система не имеет поддержки переключения светлой/тёмной темы, то эта опция также не будет работать</string>
+
+    <string name="changelog_load_failed">Ошибка загрузки списка изменений</string>
+    <string name="theme_daynight_start">Активация тёмной темы в</string>
+    <string name="theme_daynight_end">Деактивация тёмной темы в</string>
+
+    <string name="app_dynamic_colors">Динамические цвета</string>
+    <string name="app_dynamic_colors_on">Применены</string>
+    <string name="app_dynamic_colors_off">Не применены</string>
+
+</resources>

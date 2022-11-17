@@ -44,9 +44,6 @@ android {
 
         versionName = "$major.$minor.$patch"
 
-        buildConfigField("long", "BUILD_TIME", "${Date().time}")
-        buildConfigField("boolean", "USE_COMPOSE", "true")
-
         setProperty("archivesBaseName", "RTCalculator-$versionName")
     }
 

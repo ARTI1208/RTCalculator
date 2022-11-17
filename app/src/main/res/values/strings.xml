@@ -2,35 +2,5 @@
 
     <!-- Common -->
     <string name="app_name">Calculator</string>
-    <string name="title_settings">Settings</string>
-
-    <!-- Settings -->
-    <string name="basic">Basic</string>
-    <string name="tab_default">Default tab</string>
-    <string name="app_theme">Theme</string>
-    <string name="app_auto_dark_theme">Auto dark theme</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
-    <string name="theme_black">Black</string>
-    <string name="theme_daynight">Time-based Day/Night</string>
-    <string name="theme_daynight_system">Follow System</string>
-    <string name="theme_daynight_battery">Follow Battery Saver</string>
-    <string name="theme_daynight_start">Enable dark theme at</string>
-    <string name="theme_daynight_end">Disable dark theme at</string>
-    <string name="info">Info</string>
-    <string name="changelog">Changelog</string>
-    <string name="dev">Dev</string>
-    <string name="about">About</string>
-    <string name="app_version">App version</string>
-    <string name="tab_last_opened">Last opened</string>
-    <string name="daynight_support_message">If the system doesn\'t support Day/Night switch, this option won\'t work either</string>
-    <string name="author_nick" translatable="false">ARTI1208</string>
-    <string name="link_url_github" translatable="false">https://github.com/ARTI1208</string>
-    <string name="link_url_gitlab" translatable="false">https://gitlab.com/ARTI1208</string>
-    <string name="link_url_kde" translatable="false">https://invent.kde.org/artpinch</string>
-    <string name="changelog_load_failed">Error loading changelog</string>
-    <string name="app_dynamic_colors">Dynamic theme coloring</string>
-    <string name="app_dynamic_colors_on">Enabled</string>
-    <string name="app_dynamic_colors_off">Disabled</string>
 
 </resources>
