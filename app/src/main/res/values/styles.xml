@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.RT.v18.AppTheme.Light" parent="Theme.Material3.Light">
+    <style name="Base.RT.v16.AppTheme.Light" parent="Theme.Material3.Light">
 
         <item name="colorPrimary">@color/LightTheme_primary</item>
         <item name="colorOnPrimary">@color/LightTheme_onPrimary</item>
@@ -45,9 +45,9 @@
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light" />
+    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v16.AppTheme.Light" />
 
-    <style name="Base.RT.v18.AppTheme.Dark" parent="Theme.Material3.Dark">
+    <style name="Base.RT.v16.AppTheme.Dark" parent="Theme.Material3.Dark">
 
         <item name="colorPrimary">@color/DarkTheme_primary</item>
         <item name="colorOnPrimary">@color/DarkTheme_onPrimary</item>
@@ -92,9 +92,9 @@
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark" />
+    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v16.AppTheme.Dark" />
 
-    <style name="Base.RT.v18.AppTheme.Black" parent="Base.RT.v18.AppTheme.Dark">
+    <style name="Base.RT.v16.AppTheme.Black" parent="Base.RT.v16.AppTheme.Dark">
 
         <item name="android:colorBackground">@color/BlackTheme_background</item>
         <item name="colorSurface">@color/BlackTheme_surface</item>
@@ -106,7 +106,7 @@
         <item name="authorAvatarBackground">@drawable/author_avatar_background_black</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v18.AppTheme.Black" />
+    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v16.AppTheme.Black" />
 
 
 

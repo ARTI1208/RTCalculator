@@ -9,6 +9,22 @@
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
+    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v27.AppTheme.Dark" />
+
+    <style name="Base.RT.v27.AppTheme.Dark" parent="Base.RT.v23.AppTheme.Dark">
+        <item name="android:navigationBarColor">?colorSurface</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
+    </style>
+
+    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v27.AppTheme.Black" />
+
+    <style name="Base.RT.v27.AppTheme.Black" parent="Base.RT.v23.AppTheme.Black">
+        <item name="android:navigationBarColor">?colorSurface</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
+    </style>
+
     <style name="RT.Design.BottomSheetDialog" parent="Base.RT.v21.Design.BottomSheetDialog">
         <item name="android:navigationBarColor">?colorSurface</item>
     </style>

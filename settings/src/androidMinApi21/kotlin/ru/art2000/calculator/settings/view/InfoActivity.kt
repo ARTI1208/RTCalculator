@@ -54,13 +54,13 @@ internal class InfoActivity : InfoActivityBase() {
     //Compose version
 
     private fun setupCompose() {
-        if (isFullscreen) {
-            clearSystemBars()
-        }
         setContent {
             Mdc3Theme {
                 InfoScreenRoot(model)
             }
+        }
+        if (isFullscreen) {
+            clearSystemBars()
         }
     }
 

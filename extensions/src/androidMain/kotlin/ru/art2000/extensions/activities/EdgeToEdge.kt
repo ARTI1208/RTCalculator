@@ -244,7 +244,12 @@ fun FragmentActivity.clearSystemBars(
         window.statusBarColor = Color.TRANSPARENT
     }
     if (clearNavigationBar) {
-        window.navigationBarColor = Color.TRANSPARENT
+        window.apply {
+            navigationBarColor = Color.TRANSPARENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                isNavigationBarContrastEnforced = false
+            }
+        }
     }
 }
 

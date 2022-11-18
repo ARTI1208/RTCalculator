@@ -3,7 +3,7 @@
 
     <style name="Base.RT.AppTheme.Light" parent="Base.RT.v21.AppTheme.Light" />
 
-    <style name="Base.RT.v21.AppTheme.Light" parent="Base.RT.v18.AppTheme.Light">
+    <style name="Base.RT.v21.AppTheme.Light" parent="Base.RT.v16.AppTheme.Light">
         <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
@@ -13,7 +13,7 @@
 
     <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark" />
 
-    <style name="Base.RT.v21.AppTheme.Dark" parent="Base.RT.v18.AppTheme.Dark">
+    <style name="Base.RT.v21.AppTheme.Dark" parent="Base.RT.v16.AppTheme.Dark">
         <item name="android:navigationBarColor">?colorSurface</item>
         <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
@@ -23,7 +23,7 @@
 
     <style name="Base.RT.AppTheme.Black" parent="Base.RT.v21.AppTheme.Black" />
 
-    <style name="Base.RT.v21.AppTheme.Black" parent="Base.RT.v18.AppTheme.Black">
+    <style name="Base.RT.v21.AppTheme.Black" parent="Base.RT.v16.AppTheme.Black">
         <item name="android:navigationBarColor">?colorSurface</item>
         <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
