@@ -100,7 +100,7 @@ val newVersion = tasks.create("newVersion") {
 
     val version = "v${android.defaultConfig.versionName}"
 
-    val resRoot = file("src/main/res")
+    val resRoot = file("../settings/src/androidMain/res")
 
     doLast {
 
