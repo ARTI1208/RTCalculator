@@ -5,5 +5,6 @@ enum class MainPage {
     CURRENCY,
     CALCULATOR,
     UNIT,
+    SETTINGS,
 
 }

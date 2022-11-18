@@ -22,18 +22,18 @@ fun NavigationBarView.setSelectedItemId(@IdRes itemId: Int, smoothScroll: Boolea
     smoothScrollNext = true
 }
 
-fun <F> NavigationBarView.setupWithViewPager2(
+fun NavigationBarView.setupWithViewPager2(
     parentActivity: FragmentActivity,
     pager2: ViewPager2,
-    vararg items: INavigationCreator<F>,
-) where F : Fragment, F : IReplaceableFragment {
+    items: List<INavigationCreator<*>>,
+) {
     attachedPager2 = pager2
-    inflateMenuFromItems(*items)
+    inflateMenuFromItems(*items.toTypedArray())
     pager2.offscreenPageLimit = items.size
     pager2.isUserInputEnabled = false
-    pager2.adapter = object : MyFragmentStateAdapter<F>(parentActivity) {
-        override fun createFragment(position: Int): F {
-            return items[position].createReplaceable()
+    pager2.adapter = object : MyFragmentStateAdapter<Fragment>(parentActivity) {
+        override fun createFragment(position: Int): Fragment {
+            return items[position].createReplaceable() as Fragment
         }
 
         override fun getItemCount(): Int {
@@ -41,7 +41,7 @@ fun <F> NavigationBarView.setupWithViewPager2(
         }
     }.apply {
         addOnCreateOrRestoreListener { position, fragment ->
-            replaceables[position] = fragment
+            replaceables[position] = fragment as IReplaceableFragment
         }
     }
     parentActivity.lifecycle.addObserver(object : DefaultLifecycleObserver {

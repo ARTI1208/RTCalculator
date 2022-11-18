@@ -14,7 +14,7 @@ import ru.art2000.calculator.settings.vm.InfoViewModel
 import ru.art2000.extensions.activities.applyEdgeToEdgePaddingIfAvailable
 import ru.art2000.extensions.views.isLandscape
 
-sealed class InfoActivityBase : AppActivity() {
+internal sealed class InfoActivityBase : AppActivity() {
 
     protected val model by viewModels<InfoViewModel>()
 

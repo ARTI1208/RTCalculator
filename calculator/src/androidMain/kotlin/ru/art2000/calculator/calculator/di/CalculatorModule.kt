@@ -21,6 +21,7 @@ import ru.art2000.calculator.calculator.preferences.CalculatorSettingsSetup
 import ru.art2000.calculator.calculator.preferences.CommonCalculatorPreferenceHelper
 import ru.art2000.calculator.calculator.repo.HistoryRepository
 import ru.art2000.calculator.calculator.repo.RoomHistoryRepository
+import ru.art2000.calculator.calculator.view.CalculatorFragment
 import ru.art2000.calculator.common.preferences.SettingsSetup
 import ru.art2000.calculator.common.di.PageKey
 import ru.art2000.calculator.common.model.MainPage
@@ -56,7 +57,13 @@ internal abstract class CalculatorModule {
         @Provides
         @IntoMap
         @PageKey(MainPage.CALCULATOR)
-        fun provideTabData(): MainTabData = MainTabDataImpl(R.string.title_calc, "calc_tab")
+        fun provideTabData(): MainTabData<*> = MainTabDataImpl(
+            R.string.title_calc,
+            "calc_tab",
+            R.id.calc_tab,
+            R.drawable.ic_calc,
+            ::CalculatorFragment,
+        )
 
         @Singleton
         @Provides

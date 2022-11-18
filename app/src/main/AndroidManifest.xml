@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
@@ -30,8 +30,5 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity android:name=".settings.view.InfoActivity" android:label="@string/info" />
-        <activity android:name=".currency.view.CurrenciesSettingsActivity" android:label="@string/currencies_list_modify" />
-        <activity android:name=".unit.view.AllUnitsActivity" />
     </application>
 </manifest>

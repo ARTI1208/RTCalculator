@@ -28,7 +28,7 @@ import ru.art2000.extensions.views.*
 import ru.art2000.calculator.common.R as CommonR
 
 @AndroidEntryPoint
-class CurrencyConverterFragment : MainScreenFragment() {
+internal class CurrencyConverterFragment : MainScreenFragment() {
 
     private val model by viewModels<CurrencyConverterModel>()
     private val binding by viewBinding<CurrencyLayoutBinding>(CreateMethod.INFLATE)

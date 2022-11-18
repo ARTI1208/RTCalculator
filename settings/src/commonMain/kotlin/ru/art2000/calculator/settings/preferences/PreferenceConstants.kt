@@ -27,10 +27,4 @@ object PreferenceValues {
     const val VALUE_TAB_DEFAULT_CURRENCY = "currency_tab"
     const val VALUE_TAB_DEFAULT_UNIT = "unit_tab"
     const val VALUE_TAB_DEFAULT_SETTINGS = "settings_tab"
-    const val VALUE_THEME_LIGHT = "light"
-    const val VALUE_THEME_DARK = "dark"
-    const val VALUE_THEME_BLACK = "black"
-    const val VALUE_THEME_DAY_NIGHT = "day_night"
-    const val VALUE_THEME_SYSTEM = "system"
-    const val VALUE_THEME_BATTERY = "battery"
 }

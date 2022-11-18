@@ -231,6 +231,17 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
             }
         }
     }
+
+    android {
+        sourceSets {
+            val main by getting
+            main.apply {
+                manifest {
+                    srcFile("src/androidMain/AndroidManifest.xml")
+                }
+            }
+        }
+    }
 }
 
 fun Project.setupFeatureModule() {

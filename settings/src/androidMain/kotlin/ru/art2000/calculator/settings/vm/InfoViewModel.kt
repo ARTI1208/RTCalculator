@@ -9,7 +9,7 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class InfoViewModel(application: Application) : AndroidViewModel(application), IInfoViewModel {
+internal class InfoViewModel(application: Application) : AndroidViewModel(application), IInfoViewModel {
 
     override val authorLinks = listOf(
         AuthorLink(R.drawable.github, R.string.link_url_github),

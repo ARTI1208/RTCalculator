@@ -39,7 +39,7 @@ import ru.art2000.calculator.settings.vm.IInfoViewModel
 import ru.art2000.extensions.activities.clearSystemBars
 import ru.art2000.extensions.views.isDarkThemeApplied
 
-class InfoActivity : InfoActivityBase() {
+internal class InfoActivity : InfoActivityBase() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -4,7 +4,9 @@ import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
 import ru.art2000.extensions.preferences.*
 import ru.art2000.extensions.timeStringToSeconds
 
-abstract class CommonPreferenceHelper(preferences: AppPreferences) : GeneralPreferenceHelper {
+internal abstract class CommonPreferenceHelper(
+    preferences: AppPreferences,
+) : GeneralPreferenceHelper {
 
     final override val appThemeProperty = preferences.enumPreference(
         PreferenceKeys.KEY_APP_THEME, PreferenceDefaults.DEFAULT_THEME,

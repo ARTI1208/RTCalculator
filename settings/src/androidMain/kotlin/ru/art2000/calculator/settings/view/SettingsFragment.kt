@@ -26,8 +26,8 @@ import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_AUTO_DARK_T
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DYNAMIC_COLORS
-import ru.art2000.calculator.settings.preferences.PreferenceValues
 import ru.art2000.extensions.getColorFromAttribute
+import ru.art2000.extensions.preferences.AppTheme
 import ru.art2000.extensions.views.isLandscape
 import java.text.DateFormat
 import java.util.*
@@ -35,7 +35,7 @@ import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
-class SettingsFragment : MainScreenPreferenceFragment() {
+internal class SettingsFragment : MainScreenPreferenceFragment() {
 
     private var dev = 0
 
@@ -45,16 +45,19 @@ class SettingsFragment : MainScreenPreferenceFragment() {
         private const val KEY_APP_VERSION = "app_version"
 
         private val AUTO_THEMES_ANDROIDX = listOf(
-            PreferenceValues.VALUE_THEME_SYSTEM, PreferenceValues.VALUE_THEME_BATTERY,
-        )
-        private val AUTO_THEMES = AUTO_THEMES_ANDROIDX + PreferenceValues.VALUE_THEME_DAY_NIGHT
+            AppTheme.SYSTEM, AppTheme.BATTERY,
+        ).map { it.name.lowercase() }
+
+        private val DAY_NIGHT_THEME_KEY = AppTheme.DAY_NIGHT.name.lowercase()
+
+        private val AUTO_THEMES = AUTO_THEMES_ANDROIDX + DAY_NIGHT_THEME_KEY
     }
 
     @Inject
     lateinit var settingsSetups: Map<MainPage, @JvmSuppressWildcards SettingsSetup>
 
     @Inject
-    lateinit var tabDatas: Map<MainPage, @JvmSuppressWildcards MainTabData>
+    lateinit var tabDatas: Map<MainPage, @JvmSuppressWildcards MainTabData<*>>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.general_settings)
@@ -143,14 +146,14 @@ class SettingsFragment : MainScreenPreferenceFragment() {
         }
 
         appDarkThemeActivationTime?.also {
-            if (appTheme?.value != PreferenceValues.VALUE_THEME_DAY_NIGHT) {
+            if (appTheme?.value != DAY_NIGHT_THEME_KEY) {
                 it.parent?.removePreference(it)
                 return@also
             }
         }
 
         appDarkThemeDeactivationTime?.also {
-            if (appTheme?.value != PreferenceValues.VALUE_THEME_DAY_NIGHT) {
+            if (appTheme?.value != DAY_NIGHT_THEME_KEY) {
                 it.parent?.removePreference(it)
                 return@also
             }
@@ -158,9 +161,15 @@ class SettingsFragment : MainScreenPreferenceFragment() {
 
         val tabPreference = findPreference<ListPreference>(PreferenceKeys.KEY_TAB_DEFAULT)
         tabPreference?.also {
-            val datas = tabDatas.toSortedMap(Comparator.comparingInt { it.ordinal }).values
-            it.entries = datas.map { it.getTitle(requireContext()) }.toTypedArray() + it.entries
-            it.entryValues = datas.map { it.getKey(requireContext()) }.toTypedArray() + it.entryValues
+            val data = tabDatas
+                .filterKeys { page -> BuildConfig.DEBUG || page != MainPage.SETTINGS }
+                .toSortedMap(Comparator.comparingInt { page -> page.ordinal })
+                .values
+
+            it.entries = data.map<MainTabData<*>, CharSequence> {
+                    item -> requireContext().getString(item.titleRes)
+            }.toTypedArray() + it.entries
+            it.entryValues = data.map { item -> item.key }.toTypedArray() + it.entryValues
         }
 
         /* appVersion preference */

@@ -21,6 +21,7 @@ import ru.art2000.calculator.unit.functions.AndroidDoubleFunctionsProvider
 import ru.art2000.calculator.unit.preferences.CommonUnitPreferenceHelper
 import ru.art2000.calculator.unit.preferences.UnitPreferenceHelper
 import ru.art2000.calculator.unit.preferences.UnitSettingsSetup
+import ru.art2000.calculator.unit.view.UnitConverterFragment
 import ru.art2000.extensions.preferences.getDefaultAppPreferences
 import javax.inject.Singleton
 
@@ -51,7 +52,13 @@ internal abstract class UnitModule {
         @Provides
         @IntoMap
         @PageKey(MainPage.UNIT)
-        fun provideTabData(): MainTabData = MainTabDataImpl(R.string.title_unit, "unit_tab")
+        fun provideTabData(): MainTabData<*> = MainTabDataImpl(
+            R.string.title_unit,
+            "unit_tab",
+            R.id.unit_tab,
+            R.drawable.ic_unit,
+            ::UnitConverterFragment,
+        )
 
     }
 }

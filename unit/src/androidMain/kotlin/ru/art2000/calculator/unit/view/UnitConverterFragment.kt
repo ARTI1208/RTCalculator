@@ -19,7 +19,7 @@ import ru.art2000.calculator.unit.model.ViewType
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnitConverterFragment : MainScreenFragment() {
+internal class UnitConverterFragment : MainScreenFragment() {
 
     @Inject
     internal lateinit var prefsHelper: UnitPreferenceHelper

@@ -32,6 +32,7 @@ import ru.art2000.calculator.currency.remote.CurrencyRemoteBackend
 import ru.art2000.calculator.currency.remote.cbr.CbrBackend
 import ru.art2000.calculator.currency.repo.CurrencyRepository
 import ru.art2000.calculator.currency.repo.DefaultCurrencyRepo
+import ru.art2000.calculator.currency.view.CurrencyConverterFragment
 import ru.art2000.extensions.preferences.getDefaultAppPreferences
 import javax.inject.Singleton
 
@@ -71,8 +72,13 @@ internal abstract class CurrencyModule {
         @Provides
         @IntoMap
         @PageKey(MainPage.CURRENCY)
-        fun provideTabData(): MainTabData =
-            MainTabDataImpl(R.string.title_currency, "currency_tab")
+        fun provideTabData(): MainTabData<*> = MainTabDataImpl(
+            R.string.title_currency,
+            "currency_tab",
+            R.id.currency_tab,
+            R.drawable.ic_currency,
+            ::CurrencyConverterFragment,
+        )
 
         @Singleton
         @Provides

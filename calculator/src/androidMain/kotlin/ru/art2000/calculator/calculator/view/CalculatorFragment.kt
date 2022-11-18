@@ -39,7 +39,7 @@ import java.util.*
 import ru.art2000.calculator.common.R as CommonR
 
 @AndroidEntryPoint
-class CalculatorFragment : MainScreenFragment() {
+internal class CalculatorFragment : MainScreenFragment() {
 
     private val model by viewModels<CalculatorModel>()
     private val binding by viewBinding<CalculatorLayoutBinding>(CreateMethod.INFLATE)
