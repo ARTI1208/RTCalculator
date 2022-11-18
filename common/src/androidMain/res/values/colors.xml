@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="LightTheme_inputBackground">#dedede</color>
+    <color name="LightTheme_strokeColor">#a7a7a7</color>
+
+    <color name="DarkTheme_inputBackground">#000000</color>
+    <color name="DarkTheme_strokeColor">#8a8a8a</color>
+
+    <color name="BlackTheme_inputBackground">#000000</color>
+    <color name="BlackTheme_strokeColor">#a7a7a7</color>
+
+</resources>

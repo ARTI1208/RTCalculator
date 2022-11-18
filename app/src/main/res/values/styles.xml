@@ -168,13 +168,6 @@
     <style name="RT.Widget.Toolbar" parent="Widget.Material3.Toolbar.Surface">
     </style>
 
-    <style name="RT.View.LinkImageButton" parent="Widget.AppCompat.ImageButton">
-        <item name="android:background">?selectableItemBackgroundBorderless</item>
-        <item name="android:layout_height">@dimen/author_info_link_image_size</item>
-        <item name="android:layout_width">@dimen/author_info_link_image_size</item>
-        <item name="android:scaleType">centerInside</item>
-    </style>
-
     <style name="Base.RT.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
 
         <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
