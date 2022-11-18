@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import ru.art2000.calculator.calculator.db.model.HistoryDatabaseItem
 import ru.art2000.calculator.common.db.RoomConverters
 
-@Database(entities = [HistoryDatabaseItem::class], version = 3)
+@Database(entities = [HistoryDatabaseItem::class], version = 3, exportSchema = false)
 @TypeConverters(RoomConverters::class)
 internal abstract class CalculatorHistoryDB : RoomDatabase() {
 

@@ -235,18 +235,16 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
     android {
         sourceSets {
             val main by getting
-            main.apply {
-                manifest {
-                    srcFile("src/androidMain/AndroidManifest.xml")
-                }
+            main.manifest {
+                srcFile("src/androidMain/AndroidManifest.xml")
             }
         }
     }
 }
 
 fun Project.setupFeatureModule() {
-    setupKmmModule()
     apply(plugin = "com.google.dagger.hilt.android")
+    setupKmmModule()
     kotlin {
         sourceSets {
 
