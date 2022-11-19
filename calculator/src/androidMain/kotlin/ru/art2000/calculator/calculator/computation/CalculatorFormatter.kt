@@ -9,6 +9,7 @@ internal object CalculatorFormatter : BaseCalculatorFormatter() {
     private val actualFormatter by lazy {
         DecimalFormat().apply {
             maximumFractionDigits = this@CalculatorFormatter.maximumFractionDigits
+            isGroupingUsed = false
         }
     }
 

@@ -11,6 +11,7 @@ internal object CalculatorFormatter : BaseCalculatorFormatter() {
         NSNumberFormatter().apply {
             numberStyle = 1u // decimal
             maximumFractionDigits = this@CalculatorFormatter.maximumFractionDigits.toULong()
+            groupingSeparator = ""
         }
     }
 
