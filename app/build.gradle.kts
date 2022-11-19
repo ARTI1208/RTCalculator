@@ -15,8 +15,8 @@ setupAndroidModule()
 
 val major = 1
 val minor = 5
-val patch = 3
-val code = 17
+val patch = 4
+val code = 18
 
 android {
     signingConfigs {
