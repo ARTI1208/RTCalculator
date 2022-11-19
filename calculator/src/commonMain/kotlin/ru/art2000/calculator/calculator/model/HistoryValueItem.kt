@@ -1,6 +1,6 @@
 package ru.art2000.calculator.calculator.model
 
-internal data class HistoryValueItem(
+data class HistoryValueItem(
     val id: Int,
     val expression: String,
     val result: String,

@@ -11,6 +11,7 @@ import ru.art2000.calculator.calculator.computation.numbers.CalculatorFormatter
 import ru.art2000.calculator.calculator.di.CalculatorHelper
 import ru.art2000.calculator.calculator.model.AngleType
 import ru.art2000.calculator.calculator.model.DivideByZero
+import ru.art2000.calculator.calculator.model.HistoryListItem
 import ru.art2000.calculator.calculator.repo.IosHistoryRepository
 
 class IosCalculatorModel private constructor(
@@ -56,6 +57,10 @@ class IosCalculatorModel private constructor(
 
     fun watchMemory(onMemoryChanged: (String) -> Unit) {
         delegate.liveMemory.onEach(onMemoryChanged).launchIn(watchScope)
+    }
+
+    fun watchHistory(onHistoryChanged: (List<HistoryListItem>) -> Unit) {
+        delegate.historyListItems.onEach(onHistoryChanged).launchIn(watchScope)
     }
 
     companion object {

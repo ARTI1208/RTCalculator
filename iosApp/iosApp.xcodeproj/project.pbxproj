@@ -10,10 +10,13 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		3A6412A02928C4D7001C180E /* HistoryModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3A64129E2928C4D7001C180E /* HistoryModel.xcdatamodeld */; };
 		3A67A6C9292266DF003A1F04 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A67A6CB292266DF003A1F04 /* Localizable.strings */; };
 		49A000285D638104B8FDCF10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49A007E5CBE1668CFC313D50 /* InfoPlist.strings */; };
+		49A000C3051453201B2417A4 /* SlideDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A004D935E7E9B4843B514A /* SlideDown.swift */; };
 		49A0054DF00FD92C5CFDA529 /* DropdownPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */; };
 		49A005D0039D7C5FD9A6A656 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A006EFFA077FC33308B1E8 /* SettingsView.swift */; };
+		49A0062456706381CA85E328 /* HistoryPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00844B373688A15C4B06D /* HistoryPanel.swift */; };
 		49A006E4ECB2073832902CAB /* UnitConverterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A0073EBA684EA091CAFEA0 /* UnitConverterView.swift */; };
 		49A00A9C5CEFC938BBE228E3 /* SwitchPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A000844AF0ABDF85DC603B /* SwitchPreference.swift */; };
 		49A00AB2FFDE3C8DC719E7FC /* CalculatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A00BDF985E29E06B7A998E /* CalculatorButton.swift */; };
@@ -31,6 +34,7 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		3A64129F2928C4D7001C180E /* HistoryModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HistoryModel.xcdatamodel; sourceTree = "<group>"; };
 		3A67A6CA292266DF003A1F04 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A67A6CC292266EA003A1F04 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		423AEC1B1F998CF4F0EC9E20 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,14 +43,16 @@
 		49A0029104E367C1183C8E6A /* ButtonsPage2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ButtonsPage2.swift; path = calculator/ButtonsPage2.swift; sourceTree = "<group>"; };
 		49A003A841BBE2D0C5982B4C /* CurrencyConverterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencyConverterView.swift; path = currency/CurrencyConverterView.swift; sourceTree = "<group>"; };
 		49A00402E0D52DEE6A357261 /* CalculatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalculatorView.swift; path = calculator/CalculatorView.swift; sourceTree = "<group>"; };
+		49A004D935E7E9B4843B514A /* SlideDown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlideDown.swift; path = calculator/SlideDown.swift; sourceTree = "<group>"; };
 		49A006EFFA077FC33308B1E8 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = settings/SettingsView.swift; sourceTree = "<group>"; };
 		49A0073EBA684EA091CAFEA0 /* UnitConverterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnitConverterView.swift; path = unit/UnitConverterView.swift; sourceTree = "<group>"; };
+		49A00844B373688A15C4B06D /* HistoryPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HistoryPanel.swift; path = calculator/HistoryPanel.swift; sourceTree = "<group>"; };
 		49A0094894BCB9D32C7510DB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		49A00A4DDDBACDB9ADDCB892 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		49A00AC5C72D7CA1D19C0CBB /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preference.swift; path = settings/Preference.swift; sourceTree = "<group>"; };
 		49A00BDF985E29E06B7A998E /* CalculatorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalculatorButton.swift; path = calculator/CalculatorButton.swift; sourceTree = "<group>"; };
 		49A00CD6B845058D3FB8BB83 /* ButtonMatrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ButtonMatrix.swift; path = calculator/ButtonMatrix.swift; sourceTree = "<group>"; };
-		49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropdownPreference.swift; path = settings/DropdownPreference.swift; sourceTree = "<group>"; };
+		49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropdownPreference.swift; path = settings/DropdownPreference.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,6 +112,7 @@
 				3A67A6CB292266DF003A1F04 /* Localizable.strings */,
 				49A00CD6B845058D3FB8BB83 /* ButtonMatrix.swift */,
 				49A00EFB315C3A89E1E0F9EE /* DropdownPreference.swift */,
+				3A64129E2928C4D7001C180E /* HistoryModel.xcdatamodeld */,
 				49A00402E0D52DEE6A357261 /* CalculatorView.swift */,
 				49A006EFFA077FC33308B1E8 /* SettingsView.swift */,
 				49A003A841BBE2D0C5982B4C /* CurrencyConverterView.swift */,
@@ -113,6 +120,8 @@
 				49A007E5CBE1668CFC313D50 /* InfoPlist.strings */,
 				49A000844AF0ABDF85DC603B /* SwitchPreference.swift */,
 				49A00AC5C72D7CA1D19C0CBB /* Preference.swift */,
+				49A004D935E7E9B4843B514A /* SlideDown.swift */,
+				49A00844B373688A15C4B06D /* HistoryPanel.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -267,7 +276,10 @@
 				49A00D4A5F2610BA2CBCFECA /* CurrencyConverterView.swift in Sources */,
 				49A006E4ECB2073832902CAB /* UnitConverterView.swift in Sources */,
 				49A00A9C5CEFC938BBE228E3 /* SwitchPreference.swift in Sources */,
+				3A6412A02928C4D7001C180E /* HistoryModel.xcdatamodeld in Sources */,
 				49A00C585937506F5E5DD33E /* Preference.swift in Sources */,
+				49A000C3051453201B2417A4 /* SlideDown.swift in Sources */,
+				49A0062456706381CA85E328 /* HistoryPanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +491,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3A64129E2928C4D7001C180E /* HistoryModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3A64129F2928C4D7001C180E /* HistoryModel.xcdatamodel */,
+			);
+			currentVersion = 3A64129F2928C4D7001C180E /* HistoryModel.xcdatamodel */;
+			path = HistoryModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 7555FF73242A565900829871 /* Project object */;
 }

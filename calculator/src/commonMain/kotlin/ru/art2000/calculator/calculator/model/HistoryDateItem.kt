@@ -2,7 +2,7 @@ package ru.art2000.calculator.calculator.model
 
 import kotlinx.datetime.LocalDate
 
-internal class HistoryDateItem(
+class HistoryDateItem(
     val date: LocalDate,
 ) : HistoryListItem {
 

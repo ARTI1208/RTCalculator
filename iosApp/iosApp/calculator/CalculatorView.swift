@@ -64,15 +64,22 @@ struct CalculatorView : View {
                     .font(.title)
                     .frame(maxWidth: .infinity, alignment: .trailing)
 
-            TabView {
-                ButtonsPage1(model)
-                ButtonsPage2(model)
+            ZStack(alignment: Alignment.top) {
+
+                TabView {
+                    ButtonsPage1(model)
+                    ButtonsPage2(model)
+                }
+                        .tabViewStyle(PageTabViewStyle())
+                .padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0))
+//                        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+
+                SlideDown(content: { HistoryPanel(model) }, handle: {
+                    Text("History")
+                            .frame(maxWidth: .infinity)
+                })
             }
-                    .tabViewStyle(PageTabViewStyle())
-//                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-
         }
-
     }
 
 }
