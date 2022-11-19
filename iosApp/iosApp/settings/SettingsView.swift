@@ -58,7 +58,7 @@ struct SettingsView : View {
                         options: themes
                 )
 
-                if themes.contains(where: { element in element.key == PreferenceValues.shared.VALUE_THEME_BLACK}) {
+                if themes.contains(where: { element in element.key == "black" }) {
 
                     SwitchPreference(
                             title: "Auto dark theme",
