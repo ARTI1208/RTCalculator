@@ -14,7 +14,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import ru.art2000.calculator.calculator.R
 import ru.art2000.calculator.calculator.computation.Calculations
 import ru.art2000.calculator.calculator.computation.LexerParserCalculations
-import ru.art2000.calculator.calculator.vm.ICalculatorModel
 import ru.art2000.calculator.calculator.computation.addRemoveBrackets
 import ru.art2000.calculator.calculator.databinding.CalculatorExpertiseViewBinding
 import ru.art2000.calculator.calculator.databinding.CalculatorLexerParseExpertiseViewBinding

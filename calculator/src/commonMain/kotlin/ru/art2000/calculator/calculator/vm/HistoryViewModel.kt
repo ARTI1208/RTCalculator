@@ -16,6 +16,8 @@ internal interface HistoryViewModel {
 
     fun clearHistoryDatabase()
 
+    fun ensureDisplayResult(historyValueItem: HistoryValueItem): String
+
     companion object {
         private const val COPY_CATEGORY_BEGINNING = 100
         const val DELETE = 200

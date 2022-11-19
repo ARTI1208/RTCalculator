@@ -100,17 +100,8 @@ internal class CalculatorCommonModel(
         decimalSeparator: Char = this.decimalSeparator,
     ) = computationLocalizeExpression(expression, decimalSeparator)
 
-    private fun HistoryValueItem.localized(): HistoryValueItem {
-        val localizedExpr = localizeExpression(expression)
-        val localizedResult = result.let { calculations.calculateForDisplay(it) }
-        return copy(expression = localizedExpr, result = localizedResult)
-    }
-
-    override val historyListItems = historyRepository.getAll().map { items ->
-        items.map {
-            (it as? HistoryValueItem)?.localized() ?: it
-        }
-    }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
+    override val historyListItems = historyRepository.getAll()
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
 
     init {
         if (prefsHelper.lastExpressionWasCalculated) {
@@ -132,8 +123,8 @@ internal class CalculatorCommonModel(
         type: HistoryViewModel.CopyMode
     ) = when (type) {
         HistoryViewModel.CopyMode.EXPRESSION -> item.expression
-        HistoryViewModel.CopyMode.RESULT -> item.result
-        HistoryViewModel.CopyMode.ALL -> item.fullExpression
+        HistoryViewModel.CopyMode.RESULT -> compute(item)
+        HistoryViewModel.CopyMode.ALL -> "${item.expression}=${compute(item)}"
     }.also { copyText(it) }
 
     override fun updateHistoryItem(item: HistoryValueItem) {
@@ -154,9 +145,9 @@ internal class CalculatorCommonModel(
         }
     }
 
-    private fun saveCalculationResult(expression: String, result: String) {
+    private fun saveCalculationResult(expression: String, angleType: AngleType) {
         viewModelScope.launch(Dispatchers.Default) {
-            historyRepository.add(HistoryContentItem(expression, result, null))
+            historyRepository.add(HistoryContentItem(expression, angleType, null))
         }
     }
 
@@ -307,38 +298,48 @@ internal class CalculatorCommonModel(
     }
 
     private fun onResult(saveIfNoError: Boolean) {
-        val countStr = expression
-        if (countStr.isEmpty()) return
+        var computedExpression = expression
+        if (computedExpression.isEmpty()) return
 
-        val last = countStr.last()
-        if (last.isFloatingPointSymbol || calculations.isBinaryOperationSymbol(last) || result != null) return
-        var expr = addRemoveBrackets(countStr)
-        if (expr.isEmpty()) {
-            expr = getErrorString()
-        }
-        setExpression(expr)
+        val last = computedExpression.last()
+        if (last.isFloatingPointSymbol || calculations.isBinaryOperationSymbol(last)) return
 
-        val (calculated, err) = calculateAndFormatForDisplay(expr, liveAngleType.value)
+        computedExpression = addRemoveBrackets(computedExpression).ifEmpty(getErrorString)
+        setExpression(computedExpression)
+
+        val angleType = liveAngleType.value
+        val (display, err) = calculateAndFormatForDisplay(computedExpression, angleType)
 
         if (!err && saveIfNoError) {
-            saveCalculationResult(expr, calculated)
+            saveCalculationResult(computedExpression, angleType)
         }
-        result = calculated
+        result = display
     }
 
     override fun onResult() = onResult(true)
+
+    private fun compute(historyValueItem: HistoryValueItem): String {
+        return calculateAndFormatForDisplay(historyValueItem.expression, historyValueItem.angle)
+            .first
+    }
+
+    override fun ensureDisplayResult(historyValueItem: HistoryValueItem): String {
+        return if (historyValueItem.result.isEmpty()) compute(historyValueItem)
+        else ensureErrorDisplayResult(historyValueItem.result)
+    }
+
+    private fun ensureErrorDisplayResult(result: String) = when (result) {
+        Calculations.calculationDivideByZero -> getDivideByZeroResult()
+        Calculations.calculationError -> getErrorString()
+        else -> result
+    }
 
     fun calculateAndFormatForDisplay(expression: String, angleType: AngleType): Pair<String, Boolean> {
         val result = calculations.calculateForDisplay(expression, angleType)
 
         val err = result == Calculations.calculationError
-        val display = when (result) {
-            Calculations.calculationDivideByZero -> getDivideByZeroResult()
-            Calculations.calculationError -> getErrorString()
-            else -> result
-        }
 
-        return display to err
+        return ensureErrorDisplayResult(result) to err
     }
 
     override fun handleMemoryOperation(operation: CharSequence) {

@@ -84,6 +84,7 @@ internal abstract class CalculatorModule {
                 .addMigrations(
                     CalculationHistoryMigration1to2(),
                     CalculationHistoryMigration2to3(),
+                    CalculationHistoryMigration3to4(),
                 ).fallbackToDestructiveMigrationOnDowngrade()
                 .build()
 
@@ -98,6 +99,13 @@ internal abstract class CalculatorModule {
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE history ADD COLUMN comment TEXT")
+            }
+        }
+
+        private class CalculationHistoryMigration3to4 : Migration(3, 4) {
+
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE history ADD COLUMN angle TEXT NOT NULL DEFAULT 'DEGREES'")
             }
         }
     }

@@ -75,6 +75,9 @@ internal class CalculatorModel @Inject constructor(
 
     override fun clearHistoryDatabase() = commonModel.clearHistoryDatabase()
 
+    override fun ensureDisplayResult(historyValueItem: HistoryValueItem) =
+        commonModel.ensureDisplayResult(historyValueItem)
+
     override fun handlePrefixUnaryOperationSign(sign: CharSequence) =
         commonModel.handlePrefixUnaryOperationSign(sign)
 

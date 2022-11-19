@@ -3,11 +3,10 @@ package ru.art2000.calculator.calculator.model
 data class HistoryValueItem(
     val id: Int,
     val expression: String,
-    val result: String,
+    val angle: AngleType,
     var comment: String?,
+    val result: String = "",
 ) : HistoryListItem {
-
-    val fullExpression: String get() = "$expression=$result"
 
     override fun isSameItem(anotherItem: HistoryListItem): Boolean {
         if (anotherItem !is HistoryValueItem) return false
@@ -17,7 +16,7 @@ data class HistoryValueItem(
     override fun isContentSame(anotherItem: HistoryListItem): Boolean {
         if (anotherItem !is HistoryValueItem) return false
         return expression == anotherItem.expression
-                && result == anotherItem.result
+                && angle == anotherItem.angle
                 && comment == anotherItem.comment
     }
 }

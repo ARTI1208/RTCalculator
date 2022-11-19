@@ -97,7 +97,7 @@ internal class HistoryListAdapter internal constructor(
 
             historyListItem.apply {
                 binding.expression.text = expression
-                binding.result.text = result
+                binding.result.text = model.ensureDisplayResult(this)
                 binding.comment.text = comment
                 binding.comment.visibility = if (comment.isNullOrEmpty()) View.GONE else View.VISIBLE
             }
@@ -135,7 +135,8 @@ internal class HistoryListAdapter internal constructor(
             } else if (id == HistoryViewModel.DELETE) {
                 val selectedItem = currentItem
                 model.removeHistoryItem(selectedItem)
-                context.getString(R.string.deleted) + " " + selectedItem.fullExpression
+                val fullExpression = "${selectedItem.expression}=${binding.result.text}"
+                context.getString(R.string.deleted) + " " + fullExpression
             } else if (id == HistoryViewModel.COMMENT) {
                 showCommentDialog()
                 null
