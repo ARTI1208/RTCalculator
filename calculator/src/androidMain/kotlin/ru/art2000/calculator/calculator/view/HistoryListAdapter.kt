@@ -29,7 +29,7 @@ import ru.art2000.calculator.common.R as CommonR
 
 internal class HistoryListAdapter internal constructor(
     private val context: Context,
-    lifecycleOwner: LifecycleOwner,
+    private val lifecycleOwner: LifecycleOwner,
     private val model: HistoryViewModel,
     items: Flow<List<HistoryListItem>>
 ) : RecyclerView.Adapter<HistoryViewHolder>() {
@@ -90,14 +90,20 @@ internal class HistoryListAdapter internal constructor(
     inner class ValueViewHolder internal constructor(private val binding: ItemHistoryListBinding) : HistoryViewHolder(binding.root), OnCreateContextMenuListener {
 
         private val currentItem: HistoryValueItem
-            get() = historyList[bindingAdapterPosition] as HistoryValueItem
+            get() = nullableCurrentItem!!
+
+        private val nullableCurrentItem: HistoryValueItem?
+            get() = historyList.getOrNull(bindingAdapterPosition) as HistoryValueItem?
+
+        private val HistoryValueItem.computedResult
+            get() = model.ensureDisplayResult(this)
 
         override fun bind(historyListItem: HistoryListItem) {
             require(historyListItem is HistoryValueItem)
 
             historyListItem.apply {
                 binding.expression.text = expression
-                binding.result.text = model.ensureDisplayResult(this)
+                binding.result.text = computedResult
                 binding.comment.text = comment
                 binding.comment.visibility = if (comment.isNullOrEmpty()) View.GONE else View.VISIBLE
             }
@@ -167,6 +173,12 @@ internal class HistoryListAdapter internal constructor(
 
         init {
             itemView.setOnCreateContextMenuListener(this)
+            lifecycleOwner.launchRepeatOnStarted {
+                launchAndCollect(model.historyConfigChanged) {
+                    val item = nullableCurrentItem ?: return@launchAndCollect
+                    binding.result.text = item.computedResult
+                }
+            }
         }
     }
 

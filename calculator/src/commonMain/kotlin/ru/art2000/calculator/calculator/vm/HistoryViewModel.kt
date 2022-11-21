@@ -8,6 +8,8 @@ internal interface HistoryViewModel {
 
     val historyListItems: Flow<List<HistoryListItem>>
 
+    val historyConfigChanged: Flow<Unit>
+
     fun copyHistoryItemToClipboard(item: HistoryValueItem, type: CopyMode): String
 
     fun updateHistoryItem(item: HistoryValueItem)

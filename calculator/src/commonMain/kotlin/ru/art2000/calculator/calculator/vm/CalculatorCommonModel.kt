@@ -2,6 +2,8 @@ package ru.art2000.calculator.calculator.vm
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.art2000.calculator.calculator.computation.*
@@ -15,6 +17,7 @@ import ru.art2000.calculator.calculator.preferences.CalculatorPreferenceHelper
 import ru.art2000.calculator.calculator.repo.HistoryRepository
 import ru.art2000.extensions.kt.launchAndCollect
 import ru.art2000.extensions.preferences.listen
+import ru.art2000.extensions.preferences.observe
 import ru.art2000.extensions.strings.dotSafeToDouble
 import ru.art2000.calculator.calculator.computation.localizeExpression as computationLocalizeExpression
 
@@ -103,6 +106,17 @@ internal class CalculatorCommonModel(
     override val historyListItems = historyRepository.getAll()
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
 
+    private val mHistoryConfigChanged: SharedFlow<Unit> = callbackFlow {
+        val subscription = prefsHelper.zeroDivResultProperty.observe {
+            trySendBlocking(Unit)
+        }
+
+        awaitClose { subscription() }
+    }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+
+    override val historyConfigChanged: Flow<Unit>
+        get() = mHistoryConfigChanged
+
     init {
         if (prefsHelper.lastExpressionWasCalculated) {
             onResult(false)
@@ -114,7 +128,7 @@ internal class CalculatorCommonModel(
         }
 
         prefsHelper.zeroDivResultProperty.listen {
-            if (!result.isNullOrEmpty()) onResult()
+            if (!result.isNullOrEmpty()) onResult(false)
         }
     }
 

@@ -64,6 +64,8 @@ internal class CalculatorModel @Inject constructor(
 
     override val historyListItems = commonModel.historyListItems
 
+    override val historyConfigChanged = commonModel.historyConfigChanged
+
     override fun copyHistoryItemToClipboard(
         item: HistoryValueItem,
         type: HistoryViewModel.CopyMode
