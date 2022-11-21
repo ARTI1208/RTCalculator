@@ -1,6 +1,5 @@
 package ru.art2000.calculator.calculator.db
 
-import kotlinx.cinterop.objcPtr
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -83,6 +82,7 @@ internal class CalculatorHistoryDao {
                 it.setValue(item.expression, "expression")
                 it.setValue(item.result, "result")
                 it.setValue(item.comment, "comment")
+                it.setValue(item.angle.name, "angle")
             }
             save(null)
         }

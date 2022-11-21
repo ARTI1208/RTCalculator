@@ -79,7 +79,7 @@ struct HistoryPanel: View {
                                 }
                                 Text(valueItem.item.expression)
                                         .frame(maxWidth: .infinity, alignment: .trailing)
-                                Text(valueItem.item.result)
+                                Text(model.ensureDisplayResult(historyValueItem: valueItem.item))
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                             }
                         }
