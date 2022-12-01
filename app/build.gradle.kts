@@ -145,7 +145,7 @@ dependencies {
 
     implementation(libs.viewbinding.delegate)
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.10")
 
     "minApi21Implementation"(libs.bundles.compose)
 
