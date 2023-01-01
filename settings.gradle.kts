@@ -17,7 +17,7 @@ dependencyResolutionManagement {
             library("appcompat", "androidx.appcompat:appcompat:1.5.1")
             library("androidx.core", "androidx.core:core-ktx:1.9.0")
             library("preference", "androidx.preference:preference-ktx:1.2.0")
-            library("fragment", "androidx.fragment:fragment-ktx:1.5.4")
+            library("fragment", "androidx.fragment:fragment-ktx:1.5.5")
             library("recycler", "androidx.recyclerview:recyclerview:1.2.1")
             library("material", "com.google.android.material:material:1.7.0")
 
