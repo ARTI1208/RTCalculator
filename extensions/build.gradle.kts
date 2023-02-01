@@ -16,7 +16,7 @@ kotlin {
             dependencies {
                 implementation(libs.datetime)
                 implementation(libs.coroutines.core)
-                implementation("com.russhwolf:multiplatform-settings:1.0.0-RC")
+                implementation("com.russhwolf:multiplatform-settings:1.0.0")
             }
         }
 
