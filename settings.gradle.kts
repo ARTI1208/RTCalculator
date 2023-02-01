@@ -19,7 +19,7 @@ dependencyResolutionManagement {
             library("preference", "androidx.preference:preference-ktx:1.2.0")
             library("fragment", "androidx.fragment:fragment-ktx:1.5.4")
             library("recycler", "androidx.recyclerview:recyclerview:1.2.1")
-            library("material", "com.google.android.material:material:1.7.0")
+            library("material", "com.google.android.material:material:1.8.0")
 
             listOf("lifecycle-process", "lifecycle-viewmodel-ktx").forEach {
                 library(it.removeSuffix("-ktx"), "androidx.lifecycle", it)
