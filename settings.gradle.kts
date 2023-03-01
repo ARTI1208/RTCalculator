@@ -26,7 +26,7 @@ dependencyResolutionManagement {
                     .versionRef(lifecycle)
             }
 
-            library("viewbinding-delegate", "com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
+            library("viewbinding-delegate", "com.github.kirich1409:viewbindingpropertydelegate:1.5.8")
 
             listOf("hilt-work", "hilt-compiler").forEach {
                 library(it, "androidx.hilt", it).versionRef(androidxHilt)
