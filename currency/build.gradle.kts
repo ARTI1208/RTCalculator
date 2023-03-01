@@ -26,7 +26,7 @@ kotlin {
                 implementation(libs.bundles.room.impl)
                 kapt(libs.bundles.room.kapt)
 
-                implementation("androidx.work:work-runtime-ktx:2.7.1")
+                implementation("androidx.work:work-runtime-ktx:2.8.0")
 
                 implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
