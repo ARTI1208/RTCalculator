@@ -2,31 +2,50 @@ dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     versionCatalogs {
         create("libs") {
-            val lifecycle = version("lifecycle", "2.5.1")
+            val lifecycle = version("lifecycle", "2.6.0")
             val androidxHilt = version("androidxHilt", "1.0.0")
-            val daggerHilt = version("daggerHilt", "2.44")
-            val room = version("room", "2.4.3")
+            val daggerHilt = version("daggerHilt", "2.45")
+            val room = version("room", "2.5.0")
             val kotest = version("kotest", "5.5.4")
             val activity = version("activity", "1.6.1")
             val compose = version("compose", "1.3.1")
-            val composeCompiler = version("composeCompiler", "1.3.2")
+            val composeCompiler = version("composeCompiler", "1.4.3")
             val composeMaterial3 = version("composeMaterial3", "1.0.1")
-            val composeThemeAdapter3 = version("composeThemeAdapter3", "1.1.0")
+            val accompanist = version("accompanist", "0.28.0")
+            val koin = version("koin", "3.3.3")
+            val work = version("work", "2.8.0")
+            val swiperefreshlayout = version("swiperefreshlayout", "1.1.0")
+            val okhttpMinApi16 = version("okhttpMinApi16", "3.12.13")
+            val okhttpMinApi21 = version("okhttpMinApi21", "4.10.0")
+            val okhttpVersions = listOf(
+                okhttpMinApi16,
+                okhttpMinApi21,
+            )
+            val retrofitMinApi16 = version("retrofitMinApi16", "2.6.4")
+            val retrofitMinApi21 = version("retrofitMinApi21", "2.9.0")
+            val retrofitVersions = listOf(
+                retrofitMinApi16,
+                retrofitMinApi21,
+            )
+            val leakcanary = version("leakcanary", "2.10")
+            val commonsMath = version("commonsMath", "3.6.1")
+            val slidingUpPanel = version("slidingUpPanel", "4.5.0")
+            val multiplatformSettings = version("multiplatformSettings", "1.0.0")
 
             library("desugaring", "com.android.tools:desugar_jdk_libs:1.2.2")
-            library("appcompat", "androidx.appcompat:appcompat:1.5.1")
+            library("appcompat", "androidx.appcompat:appcompat:1.6.1")
             library("androidx.core", "androidx.core:core-ktx:1.9.0")
             library("preference", "androidx.preference:preference-ktx:1.2.0")
-            library("fragment", "androidx.fragment:fragment-ktx:1.5.4")
-            library("recycler", "androidx.recyclerview:recyclerview:1.2.1")
-            library("material", "com.google.android.material:material:1.7.0")
+            library("fragment", "androidx.fragment:fragment-ktx:1.5.5")
+            library("recycler", "androidx.recyclerview:recyclerview:1.3.0")
+            library("material", "com.google.android.material:material:1.8.0")
 
             listOf("lifecycle-process", "lifecycle-viewmodel-ktx").forEach {
                 library(it.removeSuffix("-ktx"), "androidx.lifecycle", it)
                     .versionRef(lifecycle)
             }
 
-            library("viewbinding-delegate", "com.github.kirich1409:viewbindingpropertydelegate:1.5.6")
+            library("viewbindingdelegate", "com.github.kirich1409:viewbindingpropertydelegate-full:1.5.8")
 
             listOf("hilt-work", "hilt-compiler").forEach {
                 library(it, "androidx.hilt", it).versionRef(androidxHilt)
@@ -97,10 +116,72 @@ dependencyResolutionManagement {
             library("compose-material3".also { composeAliases += it }, "androidx.compose.material3", "material3")
                 .versionRef(composeMaterial3)
 
-            library("compose-theme-adapter3".also { composeAliases += it }, "com.google.android.material", "compose-theme-adapter-3")
-                .versionRef(composeThemeAdapter3)
+            library("compose-theme-adapter3".also { composeAliases += it }, "com.google.accompanist", "accompanist-themeadapter-material3")
+                .versionRef(accompanist)
 
             bundle("compose", composeAliases)
+
+            library("koin-core", "io.insert-koin", "koin-core").versionRef(koin)
+            library("work", "androidx.work", "work-runtime-ktx").versionRef(work)
+            library("swiperefreshlayout", "androidx.swiperefreshlayout", "swiperefreshlayout")
+                .versionRef(swiperefreshlayout)
+
+            val networkAliases = mutableMapOf<String, MutableList<String>>()
+
+            fun <T> Iterable<T>.collectionSizeOrDefault(default: Int): Int = if (this is Collection<*>) this.size else default
+
+            fun <T, R, V> Iterable<T>.zipAll(other: Iterable<R>, transform: (a: T, b: R) -> V): List<V> {
+                val first = iterator()
+                val list = ArrayList<V>(collectionSizeOrDefault(10) + other.collectionSizeOrDefault(10))
+                while (first.hasNext()) {
+                    val firstElem = first.next()
+                    val second = other.iterator()
+                    while (second.hasNext()) {
+                        list.add(transform(firstElem, second.next()))
+                    }
+                }
+                return list
+            }
+
+            infix fun <T, R> Iterable<T>.zipAll(other: Iterable<R>): List<Pair<T, R>> {
+                return zipAll(other) { t1, t2 -> t1 to t2 }
+            }
+
+            listOf(
+                "okhttp",
+                "okhttp-urlconnection",
+            ).zipAll(okhttpVersions).forEach { (artifact, version) ->
+                val type = version.substringAfter("okhttp")
+                val alias = "okhttp-${artifact.replace("-", "")}$type"
+                networkAliases.computeIfAbsent(type) { mutableListOf() } += alias
+                library(alias, "com.squareup.okhttp3", artifact).versionRef(version)
+            }
+
+            listOf(
+                "retrofit",
+                "converter-simplexml",
+            ).zipAll(retrofitVersions).forEach { (artifact, version) ->
+                val type = version.substringAfter("retrofit")
+                val alias = "retrofit-${artifact.replace("-", "")}$type"
+                networkAliases.computeIfAbsent(type) { mutableListOf() } += alias
+                library(alias, "com.squareup.retrofit2", artifact).versionRef(version)
+            }
+
+            networkAliases.forEach { (type, aliases) ->
+                bundle("network-$type", aliases)
+            }
+
+            library("leakcanary", "com.squareup.leakcanary", "leakcanary-android")
+                .versionRef(leakcanary)
+
+            library("apache-commons-math3", "org.apache.commons", "commons-math3")
+                .versionRef(commonsMath)
+
+            library("slidingUpPanel", "com.github.hannesa2", "AndroidSlidingUpPanel")
+                .versionRef(slidingUpPanel)
+
+            library("multiplatformSettings", "com.russhwolf", "multiplatform-settings")
+                .versionRef(multiplatformSettings)
         }
     }
 }

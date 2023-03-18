@@ -20,6 +20,7 @@ import org.gradle.kotlin.dsl.getting
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 private fun Project.version(alias: String) =
     extensions.getByType<VersionCatalogsExtension>()
@@ -89,7 +90,11 @@ private fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.()
                 if (name !in possibleTaskNames) return@whenTaskAdded
 
                 addComposeArgsToKotlinCompile(
-                    this, creationConfig, project.files(kotlinExtension), useLiveLiterals)
+                    this as KotlinCompile,
+                    creationConfig,
+                    project.files(kotlinExtension),
+                    useLiveLiterals,
+                )
             }
         }
     }
@@ -216,8 +221,7 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
                 iosSimulatorArm64Main.dependsOn(this)
 
                 dependencies {
-                    val koin = "3.2.0"
-                    implementation("io.insert-koin:koin-core:$koin")
+                    implementation(library("koin-core"))
                 }
             }
             val iosX64Test by getting
@@ -265,7 +269,7 @@ fun Project.setupFeatureModule() {
                     kapt(bundle("hilt-kapt"))
 
                     implementation(library("lifecycle-viewmodel"))
-                    implementation(library("viewbinding-delegate"))
+                    implementation(library("viewbindingdelegate"))
                 }
             }
         }

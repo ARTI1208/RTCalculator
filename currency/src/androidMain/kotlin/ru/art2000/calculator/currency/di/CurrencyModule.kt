@@ -60,7 +60,7 @@ internal abstract class CurrencyModule {
             context.getDefaultAppPreferences()
         ) { type, interval ->
             CurrencyDownloadWorker.setupCurrencyDownload(
-                context, type, interval, ExistingPeriodicWorkPolicy.REPLACE,
+                context, type, interval, ExistingPeriodicWorkPolicy.UPDATE,
             )
         }
 

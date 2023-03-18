@@ -22,8 +22,8 @@ kotlin {
         val androidMain by getting {
             dependencies {
 
-                implementation("org.apache.commons:commons-math3:3.6.1")
-                implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.5.0")
+                implementation(libs.apache.commons.math3)
+                implementation(libs.slidingUpPanel)
 
                 implementation(libs.datetime)
 

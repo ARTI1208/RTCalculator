@@ -11,7 +11,7 @@ fun library(alias: String) =
 dependencies {
     implementation(library("android-gradle"))
     implementation(library("kotlin-gradle"))
-    implementation("com.squareup:javapoet:1.13.0")
+    implementation(library("javapoet"))
 }
 
 repositories {

@@ -17,7 +17,7 @@ val AndroidViewModel.context: Context get() = getApplication()
 inline fun <reified VM : ViewModel> Fragment.assistedViewModel(
     crossinline viewModelProducer: (SavedStateHandle) -> VM,
 ) = viewModels<VM> {
-    object : AbstractSavedStateViewModelFactory(this, arguments) {
+    object : AbstractSavedStateViewModelFactory(this@assistedViewModel, arguments) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle) =
             viewModelProducer(handle) as VM
@@ -27,7 +27,7 @@ inline fun <reified VM : ViewModel> Fragment.assistedViewModel(
 inline fun <reified T : ViewModel> ComponentActivity.assistedViewModel(
     crossinline viewModelProducer: (SavedStateHandle) -> T,
 ) = viewModels<T> {
-    object : AbstractSavedStateViewModelFactory(this, intent.extras) {
+    object : AbstractSavedStateViewModelFactory(this@assistedViewModel, intent.extras) {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle) =
             viewModelProducer(handle) as T

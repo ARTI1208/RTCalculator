@@ -10,6 +10,12 @@ plugins {
 
 setupFeatureModule()
 
+configurations.all {
+    exclude(group = "stax", module = "stax-api")
+    exclude(group = "stax", module = "stax")
+    exclude(group = "xpp3", module = "xpp3")
+}
+
 kotlin {
 
     sourceSets {
@@ -26,9 +32,9 @@ kotlin {
                 implementation(libs.bundles.room.impl)
                 kapt(libs.bundles.room.kapt)
 
-                implementation("androidx.work:work-runtime-ktx:2.7.1")
+                implementation(libs.work)
 
-                implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+                implementation(libs.swiperefreshlayout)
 
                 // TODO rework when kotlin multiple receivers will be available
                 operator fun String.invoke(dependencyNotation: Any) {
@@ -45,35 +51,8 @@ kotlin {
                 }
 
 
-                val okhttpVersionMinApi16 = "3.12.13"
-                val retrofitVersionMinApi16 = "2.6.4"
-
-                //noinspection GradleDependency
-                "minApi16Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi16")
-                //noinspection GradleDependency
-                "minApi16Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi16")
-                //noinspection GradleDependency
-                "minApi16Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi16")
-                //noinspection GradleDependency
-                "minApi16Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi16") {
-                    exclude(group = "stax", module = "stax-api")
-                    exclude(group = "stax", module = "stax")
-                    exclude(group = "xpp3", module = "xpp3")
-                }
-
-
-                val okhttpVersionMinApi21 = "4.10.0"
-                val retrofitVersionMinApi21 = "2.9.0"
-
-                "minApi21Implementation"("com.squareup.okhttp3:okhttp:$okhttpVersionMinApi21")
-                "minApi21Implementation"("com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersionMinApi21")
-
-                "minApi21Implementation"("com.squareup.retrofit2:retrofit:$retrofitVersionMinApi21")
-                "minApi21Implementation"("com.squareup.retrofit2:converter-simplexml:$retrofitVersionMinApi21") {
-                    exclude(group = "stax", module = "stax-api")
-                    exclude(group = "stax", module = "stax")
-                    exclude(group = "xpp3", module = "xpp3")
-                }
+                "minApi16Implementation"(libs.bundles.network.minApi16)
+                "minApi21Implementation"(libs.bundles.network.minApi21)
             }
         }
     }

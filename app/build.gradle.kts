@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.api.dsl.PostProcessing
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
@@ -143,9 +145,9 @@ dependencies {
     kapt(libs.bundles.hilt.kapt)
     implementation(libs.lifecycle.viewmodel)
 
-    implementation(libs.viewbinding.delegate)
+    implementation(libs.viewbindingdelegate)
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+    debugImplementation(libs.leakcanary)
 
     "minApi21Implementation"(libs.bundles.compose)
 
