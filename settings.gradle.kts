@@ -32,7 +32,7 @@ dependencyResolutionManagement {
             val slidingUpPanel = version("slidingUpPanel", "4.5.0")
             val multiplatformSettings = version("multiplatformSettings", "1.0.0")
 
-            library("desugaring", "com.android.tools:desugar_jdk_libs:1.2.2")
+            library("desugaring", "com.android.tools:desugar_jdk_libs:2.0.2")
             library("appcompat", "androidx.appcompat:appcompat:1.6.1")
             library("androidx.core", "androidx.core:core-ktx:1.9.0")
             library("preference", "androidx.preference:preference-ktx:1.2.0")
