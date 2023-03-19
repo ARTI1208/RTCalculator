@@ -143,6 +143,9 @@ private fun Project.setupAndroid(moduleNamespace: String) {
                 }
             }
         }
+        dependencies {
+            "minApi21Implementation"(bundle("compose"))
+        }
     }
 }
 
@@ -201,12 +204,7 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
                 setupAndroid("$androidPrefix.${this@setupKmmModule.name}")
                 setupModule(dependencies)
             }
-            val androidMinApi21 by getting {
-                dependencies {
-                    implementation(bundle("compose"))
-                }
-            }
-            val androidTest by getting {
+            val androidUnitTest by getting {
                 dependencies {
                     implementation(bundle("kotest-jvm"))
                 }
