@@ -15,9 +15,11 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.tasks.testing.Test
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.*
 import org.gradle.kotlin.dsl.getting
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -100,6 +102,8 @@ private fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.()
     }
 }
 
+private val javaVersion = JavaVersion.VERSION_11
+
 private fun Project.setupAndroid(moduleNamespace: String) {
 
     android {
@@ -116,6 +120,7 @@ private fun Project.setupAndroid(moduleNamespace: String) {
 
         buildFeatures {
             viewBinding = true
+            buildConfig = true
         }
 
         compileOptions {
@@ -146,6 +151,10 @@ private fun Project.setupAndroid(moduleNamespace: String) {
         dependencies {
             "minApi21Implementation"(bundle("compose"))
         }
+        compileOptions {
+            targetCompatibility = javaVersion
+            sourceCompatibility = javaVersion
+        }
     }
 }
 
@@ -166,6 +175,10 @@ private fun Project.setupModule(scope: DependencyHandler) {
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
     }
+
+    kotlin<KotlinProjectExtension> {
+        jvmToolchain(javaVersion.majorVersion.toInt())
+    }
 }
 
 fun Project.setupAndroidModule(
@@ -179,7 +192,7 @@ fun Project.setupAndroidModule(
 
 fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
 
-    kotlin {
+    kotlin<KotlinMultiplatformExtension> {
         android()
 
         listOf(
@@ -247,7 +260,7 @@ fun Project.setupKmmModule(androidPrefix: String = "ru.art2000.calculator") {
 fun Project.setupFeatureModule() {
     apply(plugin = "com.google.dagger.hilt.android")
     setupKmmModule()
-    kotlin {
+    kotlin<KotlinMultiplatformExtension> {
         sourceSets {
 
             val commonMain by getting {
@@ -282,7 +295,7 @@ fun DependencyHandler.kapt(dependencyNotation: Any) =
 
 //=========== Internal ============
 
-internal fun Project.kotlin(configure: Action<KotlinMultiplatformExtension>) =
+internal fun <T : KotlinProjectExtension> Project.kotlin(configure: Action<T>) =
     extensions.configure("kotlin", configure)
 
 internal fun KotlinMultiplatformExtension.sourceSets(configure: Action<NamedDomainObjectContainer<KotlinSourceSet>>) =

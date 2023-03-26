@@ -86,16 +86,6 @@ android {
     lint {
         checkReleaseBuilds = false
     }
-
-    val javaVersion = JavaVersion.VERSION_1_8
-
-    compileOptions {
-        targetCompatibility = javaVersion
-        sourceCompatibility = javaVersion
-    }
-    kotlinOptions {
-        jvmTarget = javaVersion.toString()
-    }
 }
 
 val newVersion = tasks.create("newVersion") {

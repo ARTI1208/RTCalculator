@@ -10,6 +10,34 @@ plugins {
 
 setupKmmModule()
 
+// TODO remove when native.cocoapods properly supports gradle 8
+val myAttribute = Attribute.of("configurationDisambiguation", String::class.java)
+
+val archTypes = listOf("Arm64", "SimulatorArm64", "X64", "Fat")
+val buildTypes = listOf("debug", "release")
+val podTypes = listOf("", "pod")
+
+val names = podTypes.flatMap { pod ->
+    buildTypes.flatMap { build ->
+        val podBuild = when {
+            pod.isEmpty() -> build
+            else -> "$pod${build.replaceFirstChar { it.uppercaseChar() }}"
+        }
+        archTypes.map { arch ->
+            "${podBuild}FrameworkIos$arch"
+        }
+    }
+}
+
+configurations.configureEach {
+    if (name in names) {
+        attributes {
+            attribute(myAttribute, name)
+        }
+    }
+}
+// END
+
 kotlin {
 
     val projects = listOf(

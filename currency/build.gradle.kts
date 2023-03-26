@@ -50,8 +50,15 @@ kotlin {
                     }
                 }
 
+                val okhttpGroup = libs.okhttp.okhttpMinApi16.get().group
+                "minApi16Implementation"(libs.okhttp.okhttpMinApi16)
+                "minApi16Implementation"(libs.retrofit.retrofitMinApi16.get()) {
+                    exclude(group = okhttpGroup)
+                }
+                "minApi16Implementation"(libs.retrofit.convertersimplexmlMinApi16.get()) {
+                    exclude(group = okhttpGroup)
+                }
 
-                "minApi16Implementation"(libs.bundles.network.minApi16)
                 "minApi21Implementation"(libs.bundles.network.minApi21)
             }
         }

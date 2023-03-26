@@ -1,5 +1,4 @@
 dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
     versionCatalogs {
         create("libs") {
             val lifecycle = version("lifecycle", "2.6.0")
@@ -21,7 +20,7 @@ dependencyResolutionManagement {
                 okhttpMinApi16,
                 okhttpMinApi21,
             )
-            val retrofitMinApi16 = version("retrofitMinApi16", "2.6.4")
+            val retrofitMinApi16 = version("retrofitMinApi16", "2.7.1")
             val retrofitMinApi21 = version("retrofitMinApi21", "2.9.0")
             val retrofitVersions = listOf(
                 retrofitMinApi16,
@@ -32,7 +31,7 @@ dependencyResolutionManagement {
             val slidingUpPanel = version("slidingUpPanel", "4.5.0")
             val multiplatformSettings = version("multiplatformSettings", "1.0.0")
 
-            library("desugaring", "com.android.tools:desugar_jdk_libs:1.2.2")
+            library("desugaring", "com.android.tools:desugar_jdk_libs:2.0.2")
             library("appcompat", "androidx.appcompat:appcompat:1.6.1")
             library("androidx.core", "androidx.core:core-ktx:1.9.0")
             library("preference", "androidx.preference:preference-ktx:1.2.0")
@@ -149,7 +148,6 @@ dependencyResolutionManagement {
 
             listOf(
                 "okhttp",
-                "okhttp-urlconnection",
             ).zipAll(okhttpVersions).forEach { (artifact, version) ->
                 val type = version.substringAfter("okhttp")
                 val alias = "okhttp-${artifact.replace("-", "")}$type"
