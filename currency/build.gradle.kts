@@ -49,17 +49,21 @@ kotlin {
                         (this as ExternalModuleDependency).dependencyConfiguration()
                     }
                 }
+                fun implementation(
+                    dependencyProvider: Provider<MinimalExternalModuleDependency>,
+                    dependencyConfiguration: ExternalModuleDependency.() -> Unit
+                ) = "implementation"(dependencyProvider.get(), dependencyConfiguration)
 
                 val okhttpGroup = libs.okhttp.okhttpMinApi16.get().group
-                "minApi16Implementation"(libs.okhttp.okhttpMinApi16)
-                "minApi16Implementation"(libs.retrofit.retrofitMinApi16.get()) {
+                implementation(libs.retrofit.retrofit) {
                     exclude(group = okhttpGroup)
                 }
-                "minApi16Implementation"(libs.retrofit.convertersimplexmlMinApi16.get()) {
+                implementation(libs.retrofit.convertersimplexml) {
                     exclude(group = okhttpGroup)
                 }
 
-                "minApi21Implementation"(libs.bundles.network.minApi21)
+                "minApi16Implementation"(libs.okhttp.okhttpMinApi16)
+                "minApi21Implementation"(libs.okhttp.okhttpMinApi21)
             }
         }
     }

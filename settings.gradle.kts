@@ -20,12 +20,7 @@ dependencyResolutionManagement {
                 okhttpMinApi16,
                 okhttpMinApi21,
             )
-            val retrofitMinApi16 = version("retrofitMinApi16", "2.7.1")
-            val retrofitMinApi21 = version("retrofitMinApi21", "2.9.0")
-            val retrofitVersions = listOf(
-                retrofitMinApi16,
-                retrofitMinApi21,
-            )
+            val retrofit = version("retrofit", "2.9.0")
             val leakcanary = version("leakcanary", "2.10")
             val commonsMath = version("commonsMath", "3.6.1")
             val slidingUpPanel = version("slidingUpPanel", "4.5.0")
@@ -125,8 +120,6 @@ dependencyResolutionManagement {
             library("swiperefreshlayout", "androidx.swiperefreshlayout", "swiperefreshlayout")
                 .versionRef(swiperefreshlayout)
 
-            val networkAliases = mutableMapOf<String, MutableList<String>>()
-
             fun <T> Iterable<T>.collectionSizeOrDefault(default: Int): Int = if (this is Collection<*>) this.size else default
 
             fun <T, R, V> Iterable<T>.zipAll(other: Iterable<R>, transform: (a: T, b: R) -> V): List<V> {
@@ -151,22 +144,15 @@ dependencyResolutionManagement {
             ).zipAll(okhttpVersions).forEach { (artifact, version) ->
                 val type = version.substringAfter("okhttp")
                 val alias = "okhttp-${artifact.replace("-", "")}$type"
-                networkAliases.computeIfAbsent(type) { mutableListOf() } += alias
                 library(alias, "com.squareup.okhttp3", artifact).versionRef(version)
             }
 
             listOf(
                 "retrofit",
                 "converter-simplexml",
-            ).zipAll(retrofitVersions).forEach { (artifact, version) ->
-                val type = version.substringAfter("retrofit")
-                val alias = "retrofit-${artifact.replace("-", "")}$type"
-                networkAliases.computeIfAbsent(type) { mutableListOf() } += alias
-                library(alias, "com.squareup.retrofit2", artifact).versionRef(version)
-            }
-
-            networkAliases.forEach { (type, aliases) ->
-                bundle("network-$type", aliases)
+            ).forEach { artifact ->
+                val alias = "retrofit-${artifact.replace("-", "")}"
+                library(alias, "com.squareup.retrofit2", artifact).versionRef(retrofit)
             }
 
             library("leakcanary", "com.squareup.leakcanary", "leakcanary-android")
