@@ -20,11 +20,5 @@ jobs:
       - run: chmod +x gradlew
       - name: Unit test
         run: |
-          echo "${{ secrets.ANDROID_SIGNATURE }}" > signature.jks.asc
-          gpg -d --batch --passphrase ${{ secrets.ANDROID_SIGNATURE_PASS }} signature.jks.asc > signature.jks
-          export signing_storeFile=$(pwd)/signature.jks
-          export signing_storePassword=${{ secrets.ANDROID_SIGNATURE_STORE_PASS }}
-          export signing_keyAlias=${{ secrets.ANDROID_SIGNATURE_KEY }}
-          export signing_keyPassword=${{ secrets.ANDROID_SIGNATURE_KEY_PASS }}
           ./gradlew clean
           ./gradlew test

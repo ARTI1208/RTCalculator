@@ -28,12 +28,13 @@ android {
 
             val fromProperties = props.hasProperty("signing.storeFile")
 
-            fun stringProperty(key: String): String {
+            fun stringProperty(key: String): String? {
                 return if (fromProperties) props.getProperty(key)
                 else System.getenv(key.replace('.', '_'))
             }
 
-            storeFile = File(stringProperty("signing.storeFile"))
+            val storeFilePath = stringProperty("signing.storeFile") ?: return@create
+            storeFile = File(storeFilePath)
             storePassword = stringProperty("signing.storePassword")
             keyAlias = stringProperty("signing.keyAlias")
             keyPassword = stringProperty("signing.keyPassword")
