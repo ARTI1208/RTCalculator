@@ -28,7 +28,7 @@ dependencyResolutionManagement {
 
             library("desugaring", "com.android.tools:desugar_jdk_libs:2.0.2")
             library("appcompat", "androidx.appcompat:appcompat:1.6.1")
-            library("androidx.core", "androidx.core:core-ktx:1.9.0")
+            library("androidx.core", "androidx.core:core-ktx:1.10.0")
             library("preference", "androidx.preference:preference-ktx:1.2.0")
             library("fragment", "androidx.fragment:fragment-ktx:1.5.5")
             library("recycler", "androidx.recyclerview:recyclerview:1.3.0")
