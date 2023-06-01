@@ -60,7 +60,7 @@ dependencyResolutionManagement {
             bundle("room-kapt", listOf("room-compiler"))
 
             library("datetime", "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-            library("coroutines-core", "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+            library("coroutines-core", "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 
             library("multidex", "androidx.multidex:multidex:2.0.1")
 
