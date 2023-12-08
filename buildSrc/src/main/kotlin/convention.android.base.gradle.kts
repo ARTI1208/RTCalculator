@@ -151,8 +151,8 @@ fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.() -> Unit
                 "${taskNamePrefix}KotlinAndroid",
             )
 
-            project.tasks.whenTaskAdded {
-                if (name !in possibleTaskNames) return@whenTaskAdded
+            project.tasks.configureEach {
+                if (name !in possibleTaskNames) return@configureEach
 
                 addComposeArgsToKotlinCompile(
                     this as KotlinCompile,
