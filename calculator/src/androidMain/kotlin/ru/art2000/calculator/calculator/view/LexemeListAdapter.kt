@@ -2,6 +2,7 @@ package ru.art2000.calculator.calculator.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,8 @@ internal class LexemeListAdapter<CN>(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LexemeViewHolder, position: Int) {
         val lexeme = lexemes[position]
+
+        holder.lexemeTextView.gravity = Gravity.START
 
         holder.lexemeTextView.text = if (lexeme is ExpressionValue<CN>)
             numberFormatter(lexeme.value)

@@ -5,7 +5,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import ru.art2000.calculator.common.R
 import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.activities.IEdgeToEdgeActivity

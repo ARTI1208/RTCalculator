@@ -1,8 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.dagger) apply false
-}
-
 buildscript {
     repositories {
         google()
@@ -11,6 +6,7 @@ buildscript {
     dependencies {
         classpath(libs.android.gradle)
         classpath(libs.kotlin.gradle)
+        classpath(libs.dagger.gradle)
     }
 }
 
@@ -20,13 +16,4 @@ allprojects {
         mavenCentral()
         maven("https://jitpack.io")
     }
-    tasks.withType<JavaCompile> {
-        options.compilerArgs.plusAssign(listOf(
-            "-Xlint:unchecked", "-Xlint:deprecation"
-        ))
-    }
-}
-
-tasks.create("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
 }

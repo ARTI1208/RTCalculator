@@ -1,14 +1,6 @@
-@file:Suppress("UNUSED_VARIABLE")
-
-import ru.art2000.modules.setupFeatureModule
-import ru.art2000.modules.kapt
-
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
+    id("convention.feature")
 }
-
-setupFeatureModule()
 
 configurations.all {
     exclude(group = "stax", module = "stax-api")
@@ -28,9 +20,6 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-
-                implementation(libs.bundles.room.impl)
-                kapt(libs.bundles.room.kapt)
 
                 implementation(libs.work)
 

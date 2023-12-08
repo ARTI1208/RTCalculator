@@ -1,52 +1,17 @@
-@file:Suppress("UNUSED_VARIABLE")
-
-import ru.art2000.modules.setupKmmModule
-
 plugins {
-    kotlin("multiplatform")
+    id("convention.kmp")
     kotlin("native.cocoapods")
-    id("com.android.library")
 }
-
-setupKmmModule()
-
-// TODO remove when native.cocoapods properly supports gradle 8
-val myAttribute = Attribute.of("configurationDisambiguation", String::class.java)
-
-val archTypes = listOf("Arm64", "SimulatorArm64", "X64", "Fat")
-val buildTypes = listOf("debug", "release")
-val podTypes = listOf("", "pod")
-
-val names = podTypes.flatMap { pod ->
-    buildTypes.flatMap { build ->
-        val podBuild = when {
-            pod.isEmpty() -> build
-            else -> "$pod${build.replaceFirstChar { it.uppercaseChar() }}"
-        }
-        archTypes.map { arch ->
-            "${podBuild}FrameworkIos$arch"
-        }
-    }
-}
-
-configurations.configureEach {
-    if (name in names) {
-        attributes {
-            attribute(myAttribute, name)
-        }
-    }
-}
-// END
 
 kotlin {
 
     val projects = listOf(
-        project(":extensions"),
-        project(":common"),
-        project(":calculator"),
-        project(":unit"),
-        project(":currency"),
-        project(":settings"),
+        projects.ext,
+        projects.common,
+        projects.calculator,
+        projects.unit,
+        projects.currency,
+        projects.settings,
     )
 
     cocoapods {

@@ -115,13 +115,13 @@ internal abstract class CurrencyModule {
                 .build()
 
         private class V2Migration : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("drop table info")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("drop table info")
             }
         }
 
         private class V3Migration : Migration(2, 3) {
-            override fun migrate(database: SupportSQLiteDatabase) {
+            override fun migrate(db: SupportSQLiteDatabase) {
                 // language=sql
                 listOf(
                     """
@@ -135,7 +135,7 @@ internal abstract class CurrencyModule {
                     "DROP TABLE currency;",
                     "ALTER TABLE currency3 RENAME TO currency;",
                 ).forEach {
-                    database.execSQL(it)
+                    db.execSQL(it)
                 }
             }
         }

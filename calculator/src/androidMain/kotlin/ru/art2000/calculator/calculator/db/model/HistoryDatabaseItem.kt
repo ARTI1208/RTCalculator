@@ -9,12 +9,12 @@ import ru.art2000.extensions.collections.DiffComparable
 import java.util.*
 
 @Entity(tableName = "history")
-internal data class HistoryDatabaseItem @JvmOverloads constructor(
+internal data class HistoryDatabaseItem(
     val expression: String,
     val angle: AngleType,
     val date: Calendar,
     var comment: String?,
-    val result: String = "", // for backwards compatibility
+    val result: String,
 ) : DiffComparable<HistoryDatabaseItem> {
 
     @PrimaryKey(autoGenerate = true)
@@ -33,7 +33,7 @@ internal data class HistoryDatabaseItem @JvmOverloads constructor(
     companion object {
 
         fun of(item: HistoryContentItem) = with(item) {
-            HistoryDatabaseItem(expression, angleType, Calendar.getInstance(), comment)
+            HistoryDatabaseItem(expression, angleType, Calendar.getInstance(), comment, "")
         }
     }
 }

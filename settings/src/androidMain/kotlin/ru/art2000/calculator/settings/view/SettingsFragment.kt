@@ -185,7 +185,6 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
                     requireContext().packageName, PackageInfoFlags.of(0)
                 )
             } else {
-                @Suppress("DEPRECATION")
                 it.getPackageInfo(
                     requireContext().packageName, 0
                 )

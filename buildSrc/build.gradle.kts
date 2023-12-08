@@ -1,17 +1,18 @@
 plugins {
     `kotlin-dsl`
+    java
 }
 
-fun library(alias: String) =
-    extensions.getByType<VersionCatalogsExtension>()
-        .named("libs")
-        .findLibrary(alias)
-        .get()
-
 dependencies {
-    implementation(library("android-gradle"))
-    implementation(library("kotlin-gradle"))
-    implementation(library("javapoet"))
+    implementation(libs.android.gradle)
+    implementation(libs.kotlin.gradle)
+    implementation(libs.ksp.gradle)
+    implementation(libs.dagger.gradle)
+//    compileClasspath(libs.dagger.gradle)
+//    kotlinCompilerClasspath(libs.dagger.gradle)
+    implementation(libs.javapoet)
+    // https://github.com/gradle/gradle/issues/15383
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
 repositories {

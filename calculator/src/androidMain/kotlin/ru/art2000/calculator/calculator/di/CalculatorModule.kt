@@ -90,22 +90,22 @@ internal abstract class CalculatorModule {
 
         private class CalculationHistoryMigration1to2 : Migration(1, 2) {
 
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE history ADD COLUMN date INTEGER NOT NULL DEFAULT 0")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE history ADD COLUMN date INTEGER NOT NULL DEFAULT 0")
             }
         }
 
         private class CalculationHistoryMigration2to3 : Migration(2, 3) {
 
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE history ADD COLUMN comment TEXT")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE history ADD COLUMN comment TEXT")
             }
         }
 
         private class CalculationHistoryMigration3to4 : Migration(3, 4) {
 
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE history ADD COLUMN angle TEXT NOT NULL DEFAULT 'DEGREES'")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE history ADD COLUMN angle TEXT NOT NULL DEFAULT 'DEGREES'")
             }
         }
     }

@@ -1,13 +1,10 @@
-@file:Suppress("UNUSED_VARIABLE")
-
-import ru.art2000.modules.setupKmmModule
-
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
+    id("convention.kmp")
 }
 
-setupKmmModule("ru.art2000")
+android {
+    namespace = "ru.art2000.extensions"
+}
 
 kotlin {
 

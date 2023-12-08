@@ -4,16 +4,11 @@ import com.android.build.api.dsl.PostProcessing
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.hasProperty
-import ru.art2000.modules.setupAndroidModule
-import ru.art2000.modules.kapt
 import java.util.*
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    id("convention.android")
 }
-
-setupAndroidModule()
 
 val major = 1
 val minor = 5
@@ -21,6 +16,8 @@ val patch = 4
 val code = 18
 
 android {
+    namespace = "ru.art2000.calculator"
+
     signingConfigs {
         create("release") {
 
@@ -89,7 +86,7 @@ android {
     }
 }
 
-val newVersion = tasks.create("newVersion") {
+tasks.create("newVersion") {
 
     val version = "v${android.defaultConfig.versionName}"
 
@@ -129,11 +126,9 @@ val newVersion = tasks.create("newVersion") {
 
 dependencies {
     implementation(fileTree("include" to listOf("*.jar"), "dir" to "libs"))
-    implementation(project(":shared"))
+    implementation(projects.shared)
 
     implementation(libs.constraintlayout)
-    implementation(libs.bundles.hilt.impl)
-    kapt(libs.bundles.hilt.kapt)
     implementation(libs.lifecycle.viewmodel)
 
     implementation(libs.viewbindingdelegate)
@@ -141,5 +136,4 @@ dependencies {
     debugImplementation(libs.leakcanary)
 
     "minApi21Implementation"(libs.bundles.compose)
-
 }

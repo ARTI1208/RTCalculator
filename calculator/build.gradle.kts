@@ -1,14 +1,6 @@
-@file:Suppress("UNUSED_VARIABLE")
-
-import ru.art2000.modules.setupFeatureModule
-import ru.art2000.modules.kapt
-
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
+    id("convention.feature")
 }
-
-setupFeatureModule()
 
 kotlin {
 
@@ -26,9 +18,6 @@ kotlin {
                 implementation(libs.slidingUpPanel)
 
                 implementation(libs.datetime)
-
-                implementation(libs.bundles.room.impl)
-                kapt(libs.bundles.room.kapt)
             }
         }
     }
