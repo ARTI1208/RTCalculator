@@ -1,3 +1,7 @@
+v1.5.5 (2023-12-08)
+ - Fix displaying of erroneous history results
+ - Fix multiple occurrences of history items after changing "Divide by zero" setting
+
 v1.5.4 (2022-11-19)
  - Fix calculation problems due to erroneously enabled grouping
 

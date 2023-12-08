@@ -4,7 +4,6 @@ import com.android.build.api.dsl.PostProcessing
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.konan.properties.hasProperty
-import java.util.*
 
 plugins {
     id("convention.android")
@@ -12,8 +11,8 @@ plugins {
 
 val major = 1
 val minor = 5
-val patch = 4
-val code = 18
+val patch = 5
+val code = 19
 
 android {
     namespace = "ru.art2000.calculator"
