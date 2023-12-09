@@ -83,8 +83,11 @@ dependencies {
         else -> extension.sourceSets.getByName("androidMain").implementationConfigurationName
     }
 
-    fun unifiedImplementation(dependencyNotation: Any) {
-        add(implementationConfigurationName, dependencyNotation)
+    fun unifiedImplementation(
+        dependencyNotation: Provider<MinimalExternalModuleDependency>,
+        dependencyConfiguration: ExternalModuleDependency.() -> Unit = {},
+    ) {
+        addProvider(implementationConfigurationName, dependencyNotation, dependencyConfiguration)
     }
 
     unifiedImplementation(libs.androidx.core)
@@ -97,6 +100,15 @@ dependencies {
 
     "coreLibraryDesugaring"(libs.desugaring)
     "minApi21Implementation"(libs.bundles.compose)
+}
+
+configurations {
+    val runtimeConfigurationNames = names.filter { it.contains("runtime", ignoreCase = true) }
+    runtimeConfigurationNames.forEach {
+        named(it) {
+            exclude(group = "androidx.profileinstaller", module = "profileinstaller")
+        }
+    }
 }
 
 tasks.withType<Test>().configureEach {
