@@ -1,3 +1,6 @@
+v1.5.6 (2023-12-09)
+ - Fix crash in minApi16 build
+
 v1.5.5 (2023-12-08)
  - Fix displaying of erroneous history results
  - Fix multiple occurrences of history items after changing "Divide by zero" setting
