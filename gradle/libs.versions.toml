@@ -13,7 +13,7 @@ okhttpMinApi16 = "3.12.13"
 okhttpMinApi21 = "4.11.0"
 retrofit = "2.9.0"
 
-activity = "1.8.1"
+activity = "1.8.2"
 appcompat = "1.6.1"
 constraintlayout = "2.1.4"
 androidx-core = "1.12.0"
