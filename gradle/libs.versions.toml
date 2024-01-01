@@ -42,7 +42,7 @@ leakcanary = "2.12"
 commonsMath = "3.6.1"
 slidingUpPanel = "4.5.0"
 
-datetime = "0.4.0"
+datetime = "0.5.0"
 coroutines-core = "1.7.3"
 multiplatformSettings = "1.0.0"
 
