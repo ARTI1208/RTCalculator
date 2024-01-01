@@ -44,7 +44,7 @@ slidingUpPanel = "4.5.0"
 
 datetime = "0.4.0"
 coroutines-core = "1.7.3"
-multiplatformSettings = "1.0.0"
+multiplatformSettings = "1.1.1"
 
 [libraries]
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
