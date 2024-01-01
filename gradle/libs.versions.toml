@@ -40,7 +40,7 @@ daggerHilt = "2.49"
 
 leakcanary = "2.12"
 commonsMath = "3.6.1"
-slidingUpPanel = "4.5.0"
+slidingUpPanel = "4.6.1"
 
 datetime = "0.4.0"
 coroutines-core = "1.7.3"
