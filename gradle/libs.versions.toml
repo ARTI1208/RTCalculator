@@ -36,7 +36,7 @@ accompanist = "0.32.0"
 
 androidxHilt = "1.1.0"
 # 2.47+ doesn't see plugin
-daggerHilt = "2.49"
+daggerHilt = "2.50"
 
 leakcanary = "2.12"
 commonsMath = "3.6.1"
