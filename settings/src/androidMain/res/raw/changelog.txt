@@ -1,3 +1,7 @@
+v1.5.7 (2024-07-13)
+ - Last update that supports Android 4.1-4.4 (API 16-20)
+ - Updated dependencies
+
 v1.5.6 (2023-12-09)
  - Fix crash in minApi16 build
 

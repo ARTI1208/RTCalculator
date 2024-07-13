@@ -11,8 +11,8 @@ plugins {
 
 val major = 1
 val minor = 5
-val patch = 6
-val code = 20
+val patch = 7
+val code = 21
 
 android {
     namespace = "ru.art2000.calculator"
