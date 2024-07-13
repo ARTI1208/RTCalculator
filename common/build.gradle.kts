@@ -25,9 +25,3 @@ kotlin {
         }
     }
 }
-
-android {
-    defaultConfig {
-        buildConfigField("boolean", "USE_COMPOSE", "true")
-    }
-}

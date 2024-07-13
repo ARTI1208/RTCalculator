@@ -133,6 +133,4 @@ dependencies {
     implementation(libs.viewbindingdelegate)
 
     debugImplementation(libs.leakcanary)
-
-    minApi21Implementation(libs.bundles.compose)
 }

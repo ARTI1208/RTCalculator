@@ -26,13 +26,11 @@ import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_AUTO_DARK_T
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_ACTIVATION
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DARK_THEME_DEACTIVATION
 import ru.art2000.calculator.settings.preferences.PreferenceKeys.KEY_DYNAMIC_COLORS
-import ru.art2000.extensions.getColorFromAttribute
 import ru.art2000.extensions.preferences.AppTheme
 import ru.art2000.extensions.views.isLandscape
 import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject
-import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 internal class SettingsFragment : MainScreenPreferenceFragment() {
@@ -192,7 +190,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         }.versionName
         appVersion?.summary =
-            "$versionName-${BuildConfig.FLAVOR}$suffix ($buildDate)"
+            "$versionName-$suffix ($buildDate)"
         appVersion?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dev++
             if (dev == CLICKS_TO_OPEN_HIDDEN_INFO) {

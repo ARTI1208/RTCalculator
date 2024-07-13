@@ -43,7 +43,7 @@ kotlin {
                     dependencyConfiguration: ExternalModuleDependency.() -> Unit
                 ) = "implementation"(dependencyProvider.get(), dependencyConfiguration)
 
-                val okhttpGroup = libs.okhttp.okhttpMinApi16.get().group
+                val okhttpGroup = libs.okhttp.get().group
                 implementation(libs.retrofit.retrofit) {
                     exclude(group = okhttpGroup)
                 }
@@ -51,8 +51,7 @@ kotlin {
                     exclude(group = okhttpGroup)
                 }
 
-                "minApi16Implementation"(libs.okhttp.okhttpMinApi16)
-                "minApi21Implementation"(libs.okhttp.okhttpMinApi21)
+                implementation(libs.okhttp)
             }
         }
     }
