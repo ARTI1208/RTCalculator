@@ -38,7 +38,7 @@ fun Context.getColorFromAttribute(@AttrRes attribute: Int): Int {
     return when (typedValue.type) {
         TypedValue.TYPE_ATTRIBUTE -> ContextCompat.getColor(this, typedValue.resourceId)
         in TypedValue.TYPE_FIRST_COLOR_INT..TypedValue.TYPE_LAST_COLOR_INT -> typedValue.data
-        else -> throw Exception("Unsupported color attribute type: ${typedValue.type}")
+        else -> throw Exception("Unsupported color attribute type '${typedValue.type}' for ${resources.getResourceName(typedValue.resourceId)}")
     }
 }
 

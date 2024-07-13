@@ -20,7 +20,7 @@ android {
     signingConfigs {
         create("release") {
 
-            val props = gradleLocalProperties(project.rootProject.projectDir)
+            val props = gradleLocalProperties(project.rootProject.projectDir, providers)
 
             val fromProperties = props.hasProperty("signing.storeFile")
 
@@ -134,5 +134,5 @@ dependencies {
 
     debugImplementation(libs.leakcanary)
 
-    "minApi21Implementation"(libs.bundles.compose)
+    minApi21Implementation(libs.bundles.compose)
 }

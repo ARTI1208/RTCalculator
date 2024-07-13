@@ -157,7 +157,7 @@ fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.() -> Unit
 
             val creationConfig = it as ComponentCreationConfig
 
-            val taskNamePrefix = creationConfig.computeTaskName("compile")
+            val taskNamePrefix = creationConfig.computeTaskNameInternal("compile")
             val possibleTaskNames = listOf(
                 "${taskNamePrefix}Kotlin",
                 "${taskNamePrefix}KotlinAndroid",
@@ -177,7 +177,7 @@ fun Project.addCompose(flavor: ProductFlavor, options: ComposeOptions.() -> Unit
     }
 }
 
-fun android(configure: Action<InternalCommonExtension<*, *, DefaultConfig, *, *>>) =
+fun android(configure: Action<InternalCommonExtension<*, *, DefaultConfig, *, *, *>>) =
     extensions.configure("android", configure)
 
 val Project.kotlin: KotlinProjectExtension

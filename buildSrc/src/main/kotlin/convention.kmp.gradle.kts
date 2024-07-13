@@ -1,9 +1,3 @@
-import com.android.build.api.dsl.ComposeOptions
-import com.android.build.api.dsl.ProductFlavor
-import com.android.build.api.variant.AndroidComponentsExtension
-import com.android.build.gradle.internal.TaskManager
-import com.android.build.gradle.internal.component.ComponentCreationConfig
-import com.android.build.gradle.internal.utils.addComposeArgsToKotlinCompile
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -58,12 +52,10 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs += listOf(
+    compilerOptions {
+        freeCompilerArgs.addAll(listOf(
             "-Xexpect-actual-classes",
-//            "-P",
-//            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-RC2"
-        )
+        ))
     }
 }
 

@@ -203,11 +203,6 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(requireContext().getColorFromAttribute(MaterialR.attr.colorSurface))
-    }
-
     override val topViews: List<View>
         get() = listOf(findRecyclerView(view as ViewGroup)!!)
 
