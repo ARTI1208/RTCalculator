@@ -1,3 +1,7 @@
+v1.5.8 (2024-07-13)
+ - Bump minimum supported Android version to Android 5 (API 21)
+ - Updated dependencies
+
 v1.5.7 (2024-07-13)
  - Last update that supports Android 4.1-4.4 (API 16-20)
  - Updated dependencies
