@@ -6,6 +6,14 @@
     *;
 }
 
+-keep,allowobfuscation @interface org.simpleframework.xml.Root
+-keep @org.simpleframework.xml.Root class * {*;}
+-keepclasseswithmembers class * {
+    @org.simpleframework.xml.Root <methods>;
+    @org.simpleframework.xml.Root <fields>;
+    @org.simpleframework.xml.Root <init>(...);
+}
+
 -dontwarn javax.xml.stream.Location
 -dontwarn javax.xml.stream.XMLEventReader
 -dontwarn javax.xml.stream.XMLInputFactory
