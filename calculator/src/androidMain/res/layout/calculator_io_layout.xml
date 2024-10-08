@@ -49,7 +49,7 @@
         android:paddingTop="@dimen/calc_field_vertical_padding"
         android:paddingBottom="@dimen/calc_field_vertical_padding">
 
-        <ru.art2000.extensions.views.HorizontalScrollViewCompat
+        <HorizontalScrollView
             android:id="@+id/input_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,9 +67,9 @@
                 android:paddingHorizontal="0dp"
                 android:hint="@string/calculator_input_hint"
                 android:textSize="@dimen/calc_text_size" />
-        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
+        </HorizontalScrollView>
 
-        <ru.art2000.extensions.views.HorizontalScrollViewCompat
+        <HorizontalScrollView
             android:id="@+id/result_hsv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,6 +88,6 @@
                 android:textColor="?colorSecondary"
                 android:textSize="@dimen/calc_text_size"
                 android:visibility="invisible" />
-        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
+        </HorizontalScrollView>
     </LinearLayout>
 </FrameLayout>
