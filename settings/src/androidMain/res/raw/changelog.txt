@@ -1,3 +1,6 @@
+v1.5.9 (2024-10-08)
+ - Fix displayed app version in settings tab
+
 v1.5.8 (2024-07-13)
  - Bump minimum supported Android version to Android 5 (API 21)
  - Updated dependencies
