@@ -64,7 +64,6 @@ Android calculator app
 * MVVM
 * Room
 * Retrofit
-* Part of UI uses Jetpack Compose in minApi21 version
 * JUnit
 * CI (unit testing and publishing releases)
 * DI (started)
@@ -77,8 +76,6 @@ Android calculator app
 * Upcoming Android features support (if any useful)
 
 ## Building
-
-Current limitation: you cannot build both minApi16 and minApi21 versions at the same time due to AGP limitations on Compose settings.
 
 To build release artifact create `local.properties` file in project root and add following properties:
 * signing.storeFile - path to signature file
