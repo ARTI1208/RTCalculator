@@ -190,7 +190,7 @@ internal class SettingsFragment : MainScreenPreferenceFragment() {
 
         }.versionName
         appVersion?.summary =
-            "$versionName-$suffix ($buildDate)"
+            "$versionName$suffix ($buildDate)"
         appVersion?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dev++
             if (dev == CLICKS_TO_OPEN_HIDDEN_INFO) {
