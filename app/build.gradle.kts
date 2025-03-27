@@ -85,7 +85,7 @@ android {
     }
 }
 
-tasks.create("newVersion") {
+tasks.register("newVersion") {
 
     val version = "v${android.defaultConfig.versionName}"
 
