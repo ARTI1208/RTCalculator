@@ -120,7 +120,7 @@ internal class CalculatorFragment : MainScreenFragment() {
         super.onViewStateRestored(savedInstanceState)
 
         // Fix handle becoming visible in collapsed state after theme change
-        if (slidingPanel.panelState != PanelState.COLLAPSED) {
+        if (slidingPanel.state != PanelState.COLLAPSED) {
             historyPanelHandle.visibility = View.GONE
         }
     }
@@ -135,10 +135,10 @@ internal class CalculatorFragment : MainScreenFragment() {
      * @return true if panel was already closed, false otherwise
      */
     private fun ensureHistoryPanelClosed(): Boolean {
-        if (slidingPanel.panelState == PanelState.EXPANDED ||
-            slidingPanel.panelState == PanelState.ANCHORED
+        if (slidingPanel.state == PanelState.EXPANDED ||
+            slidingPanel.state == PanelState.ANCHORED
         ) {
-            slidingPanel.panelState = PanelState.COLLAPSED
+            slidingPanel.state = PanelState.COLLAPSED
             return false
         }
         return true
@@ -173,10 +173,10 @@ internal class CalculatorFragment : MainScreenFragment() {
 
     private fun setupHistoryPanel(adapter: HistoryListAdapter) {
         historyPanelHandle.setOnClickListener {
-            slidingPanel.panelState = PanelState.EXPANDED
+            slidingPanel.state = PanelState.EXPANDED
         }
         historyPanelHeader.setOnClickListener {
-            slidingPanel.panelState = PanelState.COLLAPSED
+            slidingPanel.state = PanelState.COLLAPSED
         }
         slidingPanel.addPanelSlideListener(object : PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
@@ -195,7 +195,7 @@ internal class CalculatorFragment : MainScreenFragment() {
                     historyRecyclerView.scrollToPosition(adapter.itemCount - 1)
                 }
                 if (newState == PanelState.ANCHORED) {
-                    slidingPanel.panelState = PanelState.COLLAPSED
+                    slidingPanel.state = PanelState.COLLAPSED
                 }
                 if (newState == PanelState.COLLAPSED) {
                     slidingPanel.setDragView(historyPanelHandle)

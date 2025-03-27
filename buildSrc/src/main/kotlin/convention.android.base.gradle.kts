@@ -14,11 +14,11 @@ val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
 android {
 
     namespace = "ru.art2000.calculator.${project.name}"
-    compileSdk = 34
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 34
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
