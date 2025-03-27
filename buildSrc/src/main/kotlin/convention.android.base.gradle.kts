@@ -20,7 +20,6 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
-        multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -74,7 +73,6 @@ dependencies {
     unifiedImplementation(libs.preference)
     unifiedImplementation(libs.recycler)
     unifiedImplementation(libs.material)
-    unifiedImplementation(libs.multidex)
 
     "coreLibraryDesugaring"(libs.desugaring)
 }

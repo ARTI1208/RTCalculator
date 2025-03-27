@@ -1,8 +1,8 @@
 package ru.art2000.calculator.main
 
+import android.app.Application
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
 import ru.art2000.calculator.common.AppStartupListener
 import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
@@ -11,7 +11,7 @@ import ru.art2000.extensions.preferences.listen
 import javax.inject.Inject
 
 @HiltAndroidApp
-class CalculatorApplication : MultiDexApplication() {
+class CalculatorApplication : Application() {
 
     @Inject
     lateinit var prefsHelper: GeneralPreferenceHelper
