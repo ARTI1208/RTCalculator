@@ -1,11 +1,9 @@
 package ru.art2000.extensions.views
 
-import android.os.Build
 import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.IdRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -128,14 +126,7 @@ private fun NavigationBarView.inflateMenuFromItems(
         )
         val iconRes = replaceableFragment.getIcon()
         if (iconRes != -1) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                item.setIcon(iconRes)
-            } else {
-                val iconDrawable = ResourcesCompat.getDrawable(
-                    context.resources, iconRes, context.theme
-                )
-                item.icon = iconDrawable
-            }
+            item.setIcon(iconRes)
         }
     }
 }

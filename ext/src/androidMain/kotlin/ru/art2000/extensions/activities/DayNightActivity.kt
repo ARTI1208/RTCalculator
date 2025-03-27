@@ -1,6 +1,5 @@
 package ru.art2000.extensions.activities
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import ru.art2000.extensions.preferences.ThemeSettingsHolder
@@ -78,16 +77,8 @@ abstract class DayNightActivity : AppCompatActivity() {
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
-            getSystemTheme() -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
-            getBatteryTheme() -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-            }
+            getSystemTheme() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            getBatteryTheme() -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
             else -> return
         }
 

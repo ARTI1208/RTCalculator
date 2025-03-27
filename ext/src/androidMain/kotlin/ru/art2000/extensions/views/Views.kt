@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.text.Editable
 import android.view.Gravity
 import android.view.View
@@ -16,7 +15,6 @@ import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.util.Consumer
 import androidx.core.view.ViewCompat
@@ -76,18 +74,13 @@ fun HorizontalScrollView.autoScrollOnInput(lifecycle: Lifecycle) {
                 var xCoordinate = layout.getPrimaryHorizontal(first).toInt()
                 val xCoordinate2 = layout.getSecondaryHorizontal(first).toInt()
 
-                val totalPadding: Int
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    xCoordinate = if (childEditText.layoutDirection == View.LAYOUT_DIRECTION_LTR)
-                        xCoordinate
-                    else
-                        xCoordinate2
-                    totalPadding =
-                        paddingStart + paddingEnd + childEditText.paddingStart + childEditText.paddingEnd
-                } else {
-                    totalPadding =
-                        paddingLeft + paddingRight + childEditText.paddingLeft + childEditText.paddingRight
-                }
+                xCoordinate = if (childEditText.layoutDirection == View.LAYOUT_DIRECTION_LTR)
+                    xCoordinate
+                else
+                    xCoordinate2
+
+                val childHorizontalPadding = childEditText.paddingStart + childEditText.paddingEnd
+                val totalPadding = paddingStart + paddingEnd + childHorizontalPadding
 
                 var scrollToX =
                     if (xCoordinate > width) xCoordinate - width + totalPadding else xCoordinate
@@ -120,49 +113,7 @@ fun HorizontalScrollView.autoScrollOnInput(lifecycle: Lifecycle) {
 }
 
 fun View.addImeVisibilityListener(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        addImeVisibilityListenerApi21(listener)
-    } else {
-        addImeVisibilityListenerApi16(listener)
-    }
-}
-
-/*
- * Heuristic implementation for old APIs. Based on https://stackoverflow.com/a/26964010
- * TODO not works for fullscreen keyboard
- * TODO may use many CPU resources because OnGlobalLayoutListener called regularly
- */
-private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {
-    var keyboardVisible = false
-
-    val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        val r = Rect()
-        getWindowVisibleDisplayFrame(r)
-        val screenHeight = rootView.height
-
-        // r.bottom is the position above soft keypad or device button.
-        // if keypad is shown, the r.bottom is smaller than that before.
-
-        // r.bottom is the position above soft keypad or device button.
-        // if keypad is shown, the r.bottom is smaller than that before.
-        val keypadHeight = screenHeight - r.bottom
-
-        if (keypadHeight > screenHeight * 0.2) {
-            // keyboard is opened
-            if (!keyboardVisible) {
-                keyboardVisible = true
-                listener.accept(true)
-            }
-        } else {
-            // keyboard is closed
-            if (keyboardVisible) {
-                keyboardVisible = false
-                listener.accept(false)
-            }
-        }
-    }
-
-    return attachImeListener(viewTreeObserver, layoutListener, listener)
+    return addImeVisibilityListenerApi21(listener)
 }
 
 /*
@@ -170,7 +121,6 @@ private fun View.addImeVisibilityListenerApi16(listener: Consumer<Boolean>): Lis
  * TODO not works for fullscreen keyboard on API 21-29
  * TODO may use many CPU resources because OnGlobalLayoutListener called regularly
  */
-@RequiresApi(21)
 private fun View.addImeVisibilityListenerApi21(listener: Consumer<Boolean>): ListenerSubscription<Boolean> {
     var keyboardVisible = false
 
@@ -217,7 +167,6 @@ val Context.isDarkThemeApplied: Boolean
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
-@RequiresApi(Build.VERSION_CODES.KITKAT)
 fun <T : View> T.whenAttachedToWindow(callback: (T) -> Unit) {
     if (isAttachedToWindow) {
         callback(this)

@@ -1,6 +1,5 @@
 package ru.art2000.calculator.common.view
 
-import android.os.Build
 import android.view.View
 import android.view.Window
 import androidx.fragment.app.Fragment
@@ -15,11 +14,9 @@ interface AppFragmentMixin : IEdgeToEdgeFragment {
 
 }
 
-@Suppress("unused")
+@Suppress("UnusedReceiverParameter")
 internal fun AppFragmentMixin.onAttachedToWindow(window: Window) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        check(window.isDrawingUnderSystemBarsAllowed) {
-            "MainScreenPages should be added only to activities allowing drawing under status bar"
-        }
+    check(window.isDrawingUnderSystemBarsAllowed) {
+        "MainScreenPages should be added only to activities allowing drawing under status bar"
     }
 }

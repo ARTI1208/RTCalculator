@@ -12,8 +12,6 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.art2000.calculator.currency.remote.CurrencyRemoteBackend
 import ru.art2000.calculator.currency.model.CurrencyData
 import ru.art2000.calculator.currency.model.CurrencyRate
-import ru.art2000.extensions.net.TLSSocketFactory
-import ru.art2000.extensions.net.platformTrustManager
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -28,7 +26,6 @@ internal class CbrBackend @Inject constructor(): CurrencyRemoteBackend {
             .connectTimeout(2, TimeUnit.MINUTES)
             .writeTimeout(2, TimeUnit.MINUTES)
             .readTimeout(2, TimeUnit.MINUTES)
-            .sslSocketFactory(TLSSocketFactory(), platformTrustManager())
             .build()
 
 

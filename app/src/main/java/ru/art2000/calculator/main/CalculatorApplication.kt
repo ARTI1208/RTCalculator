@@ -1,7 +1,6 @@
 package ru.art2000.calculator.main
 
 import android.app.Application
-import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.HiltAndroidApp
 import ru.art2000.calculator.common.AppStartupListener
@@ -34,11 +33,7 @@ class CalculatorApplication : Application() {
     private fun checkNightMode(theme: AppTheme) {
         val newMode = when (theme) {
             AppTheme.DAY_NIGHT -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
-            AppTheme.SYSTEM -> if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
+            AppTheme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             AppTheme.BATTERY -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
             AppTheme.DARK, AppTheme.BLACK -> AppCompatDelegate.MODE_NIGHT_YES
             else -> AppCompatDelegate.MODE_NIGHT_NO

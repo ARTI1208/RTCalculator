@@ -2,7 +2,6 @@ package ru.art2000.calculator.currency.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -326,20 +325,11 @@ internal class CurrenciesSettingsActivity : AppActivity() {
         get() {
             val cardView = findViewById<MaterialCardView>(R.id.card_wrapper)
             val cardLayoutParams = cardView.layoutParams as MarginLayoutParams
-            var leftMargin = cardLayoutParams.leftMargin + cardView.paddingLeft
-            var rightMargin = cardLayoutParams.rightMargin + cardView.paddingRight
-            var bottomMargin = cardLayoutParams.bottomMargin + cardView.paddingBottom
-            var height = cardView.getChildAt(0).measuredHeight
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                height += (cardView.paddingBottom
-                        + cardView.strokeWidth
-                        - cardView.cardElevation.toInt())
-                leftMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
-                rightMargin -= (cardView.cardElevation + cardView.strokeWidth).toInt()
-                bottomMargin -= (cardView.cardElevation + cardView.paddingBottom - cardLayoutParams.topMargin - cardView.strokeWidth).toInt()
-            } else {
-                view.elevation = 0f
-            }
+            val leftMargin = cardLayoutParams.leftMargin + cardView.paddingLeft
+            val rightMargin = cardLayoutParams.rightMargin + cardView.paddingRight
+            val bottomMargin = cardLayoutParams.bottomMargin + cardView.paddingBottom
+            val height = cardView.getChildAt(0).measuredHeight
+            view.elevation = 0f
             view.minimumHeight = height
 
             view.updateLayoutParams<MarginLayoutParams> {
