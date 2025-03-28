@@ -4,5 +4,5 @@ import com.sothree.slidinguppanel.PanelState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 var SlidingUpPanelLayout.state: PanelState
-    get() = panelState
+    get() = getPanelState()
     set(value) = setPanelState(value)

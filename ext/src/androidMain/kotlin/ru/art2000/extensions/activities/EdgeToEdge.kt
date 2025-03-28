@@ -5,11 +5,13 @@ import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.Insets
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import ru.art2000.extensions.views.*
 import ru.art2000.extensions.views.isDarkThemeApplied
 import ru.art2000.extensions.views.isDrawingUnderSystemBarsAllowed
 import ru.art2000.extensions.views.whenAttachedToWindow
@@ -99,7 +101,7 @@ private fun EdgeToEdgeScreen.applyEdgeToEdgeIfAvailable(activity: FragmentActivi
 
 
 val isLtr: Boolean
-    get() = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR
+    get() = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR
 
 @Suppress("unused")
 fun Fragment.applyEdgeToEdgePaddingIfAvailable(
@@ -193,8 +195,11 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
     top: View.() -> Int = { 0 },
     right: View.() -> Int = { 0 },
     bottom: View.() -> Int = { 0 },
-    consumer: View.(left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+    consumer: View.(left: Int, top: Int, right: Int, bottom: Int,) -> Unit,
 ) {
+    // dark statusbar and navigationbar
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
+
     val clearStatusBarReally = clearStatusBar &&
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || isDarkThemeApplied)
 
@@ -228,6 +233,7 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun FragmentActivity.clearSystemBars(
     clearStatusBar: Boolean = true,
     clearNavigationBar: Boolean = true,
@@ -248,6 +254,7 @@ fun FragmentActivity.clearSystemBars(
 }
 
 @Suppress("NAME_SHADOWING")
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 private fun <T : View> T.consumeSystemInsets(
     left: T.() -> Int,
     top: T.() -> Int,
@@ -268,6 +275,7 @@ fun <T : View> T.consumeInsets(
     bottom: T.() -> Int,
     consumer: T.(WindowInsetsCompat, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
 ) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
 
     val topLazy by lazy { top() }
     val bottomLazy by lazy { bottom() }

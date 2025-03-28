@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/unit_view_simple_row_height">
 
-        <HorizontalScrollView
+        <ru.art2000.extensions.views.HorizontalScrollViewCompat
             android:id="@+id/or_hsv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
@@ -28,7 +28,7 @@
                 android:paddingHorizontal="@dimen/unit_view_edge_horizontal_margin"
                 android:textSize="@dimen/calc_text_size"
                 tools:text="0" />
-        </HorizontalScrollView>
+        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
         <!--
             layout_width="wrap_content" produces wrong width sometimes for some unknown reason
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/unit_view_simple_row_height">
 
-        <HorizontalScrollView
+        <ru.art2000.extensions.views.HorizontalScrollViewCompat
             android:id="@+id/converted_hsv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/unit_view_simple_row_height"
@@ -66,7 +66,7 @@
                 android:textColor="?colorSecondary"
                 android:textSize="@dimen/calc_text_size"
                 tools:text="0" />
-        </HorizontalScrollView>
+        </ru.art2000.extensions.views.HorizontalScrollViewCompat>
 
         <!--
             layout_width="wrap_content" produces wrong width sometimes for some unknown reason
