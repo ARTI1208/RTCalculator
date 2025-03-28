@@ -1,3 +1,7 @@
+v1.5.11 (2025-03-28)
+ - Restore support for Android 4.1-4.4 (API 16-20). 1.x branch will support these versions, but may not receive some further updates from 2.x branch
+ - Updated dependencies
+
 v1.5.10 (2024-10-08)
  - Fix loading currencies data
 
