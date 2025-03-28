@@ -77,15 +77,6 @@ dependencies {
     "coreLibraryDesugaring"(libs.desugaring)
 }
 
-configurations {
-    val runtimeConfigurationNames = names.filter { it.contains("runtime", ignoreCase = true) }
-    runtimeConfigurationNames.forEach {
-        named(it) {
-            exclude(group = "androidx.profileinstaller", module = "profileinstaller")
-        }
-    }
-}
-
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
