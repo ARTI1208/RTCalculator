@@ -20,7 +20,9 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
-        vectorDrawables.useSupportLibrary = true
+        // https://stackoverflow.com/a/61932099
+        // TLDR: remove this next line completely when min sdk version is API24 or higher
+        // vectorDrawables.useSupportLibrary = true
     }
 
     buildFeatures {
