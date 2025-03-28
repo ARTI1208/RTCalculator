@@ -1,7 +1,28 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.RT.v16.AppTheme.Light" parent="Theme.Material3.Light">
+    <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:navigationBarColor">#00000000</item>
+    </style>
 
+    <!-- overridden in values-night -->
+    <style name="RT.AppTheme.DayNightDark" parent="RT.AppTheme.Light" />
+    <style name="RT.AppTheme.BatteryDark" parent="RT.AppTheme.Light" />
+    <style name="RT.AppTheme.SystemDark" parent="RT.AppTheme.Light" />
+
+    <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Light" />
+    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Light" />
+    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Light" />
+
+    <!-- base styles -->
+    <style name="RT.AppTheme.Light" parent="RT.v21.AppTheme.Light" />
+    <style name="RT.AppTheme.Dark" parent="RT.v21.AppTheme.Dark" />
+    <style name="RT.AppTheme.Black" parent="RT.v21.AppTheme.Black" />
+
+    <style name="RT.v21.AppTheme.Light" parent="Theme.Material3.Light">
+
+        <!-- material theme colors -->
         <item name="colorPrimary">@color/LightTheme_primary</item>
         <item name="colorOnPrimary">@color/LightTheme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/LightTheme_primaryContainer</item>
@@ -29,6 +50,7 @@
         <item name="colorSurfaceInverse">@color/LightTheme_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/LightTheme_inversePrimary</item>
 
+        <!--components -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
@@ -36,19 +58,24 @@
         <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
         <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
         <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
-        <item name="floatingViewBackground">?colorSurfaceVariant</item>
-        <item name="strokeColor">@color/LightTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
-        <item name="changelogBackground">@drawable/changelog_background_light</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
+
+        <!-- system -->
+        <item name="android:navigationBarColor">@color/LightTheme_lollipopStatusBackground</item>
+        <item name="android:statusBarColor">@color/LightTheme_lollipopStatusBackgroundTransparent</item>
+
+        <!-- app -->
+        <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
+        <item name="changelogBackground">@drawable/changelog_background</item>
+        <item name="floatingViewBackground">?colorSurfaceVariant</item>
+        <item name="strokeColor">@color/LightTheme_strokeColor</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v16.AppTheme.Light" />
+    <style name="RT.v21.AppTheme.Dark" parent="Theme.Material3.Dark">
 
-    <style name="Base.RT.v16.AppTheme.Dark" parent="Theme.Material3.Dark">
-
+        <!-- material theme colors -->
         <item name="colorPrimary">@color/DarkTheme_primary</item>
         <item name="colorOnPrimary">@color/DarkTheme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/DarkTheme_primaryContainer</item>
@@ -76,6 +103,7 @@
         <item name="colorSurfaceInverse">@color/DarkTheme_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/DarkTheme_inversePrimary</item>
 
+        <!--components -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
@@ -83,54 +111,44 @@
         <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
         <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
         <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
-        <item name="floatingViewBackground">?colorSurfaceVariant</item>
-        <item name="strokeColor">@color/DarkTheme_strokeColor</item>
         <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
         <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
-        <item name="changelogBackground">@drawable/changelog_background_dark</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog.Dark</item>
+
+        <!-- system -->
+        <item name="android:navigationBarColor">?colorSurface</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+
+        <!-- app -->
+        <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
+        <item name="changelogBackground">@drawable/changelog_background</item>
+        <item name="floatingViewBackground">?colorSurfaceVariant</item>
+        <item name="strokeColor">@color/DarkTheme_strokeColor</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v16.AppTheme.Dark" />
+    <style name="RT.v21.AppTheme.Black" parent="RT.v21.AppTheme.Dark">
 
-    <style name="Base.RT.v16.AppTheme.Black" parent="Base.RT.v16.AppTheme.Dark">
-
+        <!-- material theme colors -->
         <item name="android:colorBackground">@color/BlackTheme_background</item>
         <item name="colorSurface">@color/BlackTheme_surface</item>
         <item name="colorSurfaceVariant">@color/BlackTheme_surfaceVariant</item>
 
+        <!-- components -->
+        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog.Black</item>
+
+        <!-- system -->
+        <item name="android:navigationBarColor">?colorSurface</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+
+        <!-- app -->
+        <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
+        <item name="changelogBackground">@drawable/changelog_background</item>
         <item name="floatingViewBackground">?colorSurfaceVariant</item>
         <item name="strokeColor">@color/BlackTheme_strokeColor</item>
-        <item name="changelogBackground">@drawable/changelog_background_black</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background_black</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v16.AppTheme.Black" />
-
-
-
-    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Dark" />
-
-    <style name="RT.AppTheme.Dark" parent="Base.RT.AppTheme.Dark" />
-
-    <style name="RT.AppTheme.Black" parent="Base.RT.AppTheme.Black" />
-
-    <style name="RT.AppTheme.DayNight" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light" />
-
-    <style name="RT.AppTheme.Light" parent="Base.RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.System" parent="RT.AppTheme.Dark" />
-
-    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Black" />
-
-    <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Black" />
-
-    <style name="RT.PreferenceTheme" parent="PreferenceThemeOverlay.v14" />
+    <style name="RT.PreferenceTheme" parent="RT.V21.PreferenceTheme" />
+    <style name="RT.V21.PreferenceTheme" parent="PreferenceThemeOverlay.v14" />
 
     <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.Material3.Button.TextButton.Dialog">
         <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
@@ -144,7 +162,9 @@
         <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
-    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="RT.V21.Widget.ScrollView.TopIndicator" />
+
+    <style name="RT.V21.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
 
     <style name="RT.Widget.Snackbar" parent="Widget.Material3.Snackbar">
         <item name="actionTextColorAlpha">1.0</item>
@@ -168,16 +188,24 @@
     <style name="RT.Widget.Toolbar" parent="Widget.Material3.Toolbar.Surface">
     </style>
 
-    <style name="Base.RT.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-
-        <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
-    </style>
-
-    <style name="RT.Design.BottomSheetDialog" parent="Base.RT.Design.BottomSheetDialog" />
-
     <style name="Widget.RT.BottomSheet" parent="Widget.Material3.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.RT.BottomSheet</item>
         <item name="android:elevation" tools:ignore="NewApi,PrivateResource">@dimen/m3_sys_elevation_level0</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog" parent="RT.v21.Design.BottomSheetDialog" />
+
+    <style name="RT.Design.BottomSheetDialog.Dark" parent="RT.v21.Design.BottomSheetDialog">
+        <item name="android:navigationBarColor">?colorSurface</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog.Black" parent="RT.Design.BottomSheetDialog.Dark">
+    </style>
+
+    <style name="RT.v21.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.RT.BottomSheet" parent="">

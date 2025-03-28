@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="RT.PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
+    <style name="RT.PreferenceTheme" parent="RT.V26.PreferenceTheme" />
+
+    <style name="RT.V26.PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
         <item name="iconSpaceReserved">false</item>
     </style>
 

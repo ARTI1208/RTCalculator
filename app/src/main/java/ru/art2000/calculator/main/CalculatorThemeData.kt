@@ -8,17 +8,17 @@ import javax.inject.Inject
 class CalculatorThemeData @Inject constructor() : AutoThemeData {
 
     override fun getSystemTheme(black: Boolean) = when (black) {
-        false -> R.style.RT_AppTheme_System
+        false -> R.style.RT_AppTheme_SystemDark
         true -> R.style.RT_AppTheme_SystemBlack
     }
 
     override fun getBatteryTheme(black: Boolean) = when (black) {
-        false -> R.style.RT_AppTheme_Battery
+        false -> R.style.RT_AppTheme_BatteryDark
         true -> R.style.RT_AppTheme_BatteryBlack
     }
 
     override fun getDayNightTheme(black: Boolean) = when (black) {
-        false -> R.style.RT_AppTheme_DayNight
+        false -> R.style.RT_AppTheme_DayNightDark
         true -> R.style.RT_AppTheme_DayNightBlack
     }
 
@@ -26,8 +26,8 @@ class CalculatorThemeData @Inject constructor() : AutoThemeData {
         AppTheme.LIGHT -> R.style.RT_AppTheme_Light
         AppTheme.DARK -> R.style.RT_AppTheme_Dark
         AppTheme.BLACK -> R.style.RT_AppTheme_Black
-        AppTheme.DAY_NIGHT -> R.style.RT_AppTheme_DayNight
-        AppTheme.SYSTEM -> R.style.RT_AppTheme_System
-        AppTheme.BATTERY -> R.style.RT_AppTheme_Battery
+        AppTheme.DAY_NIGHT -> R.style.RT_AppTheme_DayNightDark
+        AppTheme.SYSTEM -> R.style.RT_AppTheme_SystemDark
+        AppTheme.BATTERY -> R.style.RT_AppTheme_BatteryDark
     }
 }
