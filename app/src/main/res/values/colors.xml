@@ -51,9 +51,9 @@
     <color name="DarkTheme_errorContainer">#93000A</color>
     <color name="DarkTheme_onError">#690005</color>
     <color name="DarkTheme_onErrorContainer">#FFDAD6</color>
-    <color name="DarkTheme_background">#001F24</color>
+    <color name="DarkTheme_background">#211f26</color>
     <color name="DarkTheme_onBackground">#fafafa</color>
-    <color name="DarkTheme_surface">#001F24</color>
+    <color name="DarkTheme_surface">#211f26</color>
     <color name="DarkTheme_onSurface">#fafafa</color>
     <color name="DarkTheme_surfaceVariant">#46464F</color>
     <color name="DarkTheme_onSurfaceVariant">#C7C5D0</color>
