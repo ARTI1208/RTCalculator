@@ -29,6 +29,9 @@ android {
     }
 
     compileOptions {
+        // desugaring is required until min sdk version is API24 or higher
+        // as we need some java 8 features
+        // https://stackoverflow.com/questions/54129834/which-android-versions-run-which-java-versions
         isCoreLibraryDesugaringEnabled = true
     }
     testOptions {
