@@ -9,7 +9,7 @@ plugins {
 }
 
 val libs = the<LibrariesForLibs>()
-val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
+val javaVersion: JavaVersion = JavaVersion.toVersion(libs.versions.java.get())
 
 android {
 

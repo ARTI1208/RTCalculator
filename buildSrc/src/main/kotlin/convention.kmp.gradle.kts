@@ -11,8 +11,6 @@ plugins {
 
 val libs = the<LibrariesForLibs>()
 
-val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
-
 kotlin {
     androidTarget()
 
@@ -27,8 +25,6 @@ kotlin {
     }
 
     applyDefaultHierarchyTemplate()
-
-    jvmToolchain(javaVersion.majorVersion.toInt())
 
     sourceSets {
         val commonMain by getting
@@ -57,10 +53,6 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xexpect-actual-classes",
         ))
     }
-}
-
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
 }
 
 android {
