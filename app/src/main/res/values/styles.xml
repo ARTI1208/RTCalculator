@@ -1,137 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.RT.v16.AppTheme.Light" parent="Theme.Material3.Light">
-
-        <item name="colorPrimary">@color/LightTheme_primary</item>
-        <item name="colorOnPrimary">@color/LightTheme_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/LightTheme_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/LightTheme_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/LightTheme_secondary</item>
-        <item name="colorOnSecondary">@color/LightTheme_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/LightTheme_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/LightTheme_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/LightTheme_tertiary</item>
-        <item name="colorOnTertiary">@color/LightTheme_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/LightTheme_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/LightTheme_onTertiaryContainer</item>
-        <item name="colorError">@color/LightTheme_error</item>
-        <item name="colorErrorContainer">@color/LightTheme_errorContainer</item>
-        <item name="colorOnError">@color/LightTheme_onError</item>
-        <item name="colorOnErrorContainer">@color/LightTheme_onErrorContainer</item>
-        <item name="android:colorBackground">@color/LightTheme_background</item>
-        <item name="colorOnBackground">@color/LightTheme_onBackground</item>
-        <item name="colorSurface">@color/LightTheme_surface</item>
-        <item name="colorOnSurface">@color/LightTheme_onSurface</item>
-        <item name="colorSurfaceVariant">@color/LightTheme_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/LightTheme_onSurfaceVariant</item>
-        <item name="colorOutline">@color/LightTheme_outline</item>
-        <item name="colorOnSurfaceInverse">@color/LightTheme_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/LightTheme_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/LightTheme_inversePrimary</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
-        <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
-        <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
-        <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
-        <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
-        <item name="floatingViewBackground">?colorSurfaceVariant</item>
-        <item name="strokeColor">@color/LightTheme_strokeColor</item>
-        <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
-        <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
-        <item name="changelogBackground">@drawable/changelog_background_light</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background_light</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
-    </style>
-
-    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v16.AppTheme.Light" />
-
-    <style name="Base.RT.v16.AppTheme.Dark" parent="Theme.Material3.Dark">
-
-        <item name="colorPrimary">@color/DarkTheme_primary</item>
-        <item name="colorOnPrimary">@color/DarkTheme_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/DarkTheme_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/DarkTheme_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/DarkTheme_secondary</item>
-        <item name="colorOnSecondary">@color/DarkTheme_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/DarkTheme_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/DarkTheme_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/DarkTheme_tertiary</item>
-        <item name="colorOnTertiary">@color/DarkTheme_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/DarkTheme_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/DarkTheme_onTertiaryContainer</item>
-        <item name="colorError">@color/DarkTheme_error</item>
-        <item name="colorErrorContainer">@color/DarkTheme_errorContainer</item>
-        <item name="colorOnError">@color/DarkTheme_onError</item>
-        <item name="colorOnErrorContainer">@color/DarkTheme_onErrorContainer</item>
-        <item name="android:colorBackground">@color/DarkTheme_background</item>
-        <item name="colorOnBackground">@color/DarkTheme_onBackground</item>
-        <item name="colorSurface">@color/DarkTheme_surface</item>
-        <item name="colorOnSurface">@color/DarkTheme_onSurface</item>
-        <item name="colorSurfaceVariant">@color/DarkTheme_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/DarkTheme_onSurfaceVariant</item>
-        <item name="colorOutline">@color/DarkTheme_outline</item>
-        <item name="colorOnSurfaceInverse">@color/DarkTheme_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/DarkTheme_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/DarkTheme_inversePrimary</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="preferenceTheme">@style/RT.PreferenceTheme</item>
-        <item name="toolbarStyle">@style/RT.Widget.Toolbar</item>
-        <item name="homeAsUpIndicator">@drawable/ic_ab_back</item>
-        <item name="snackbarStyle">@style/RT.Widget.Snackbar</item>
-        <item name="snackbarButtonStyle">@style/RT.Widget.Snackbar.TextButton</item>
-        <item name="floatingViewBackground">?colorSurfaceVariant</item>
-        <item name="strokeColor">@color/DarkTheme_strokeColor</item>
-        <item name="android:listViewStyle">@style/RT.Widget.ListView.TopIndicator</item>
-        <item name="android:scrollViewStyle">@style/RT.Widget.ScrollView.TopIndicator</item>
-        <item name="changelogBackground">@drawable/changelog_background_dark</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background_dark</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
-    </style>
-
-    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v16.AppTheme.Dark" />
-
-    <style name="Base.RT.v16.AppTheme.Black" parent="Base.RT.v16.AppTheme.Dark">
-
-        <item name="android:colorBackground">@color/BlackTheme_background</item>
-        <item name="colorSurface">@color/BlackTheme_surface</item>
-        <item name="colorSurfaceVariant">@color/BlackTheme_surfaceVariant</item>
-
-        <item name="floatingViewBackground">?colorSurfaceVariant</item>
-        <item name="strokeColor">@color/BlackTheme_strokeColor</item>
-        <item name="changelogBackground">@drawable/changelog_background_black</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background_black</item>
-    </style>
-
-    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v16.AppTheme.Black" />
-
-
-
-    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Dark" />
-
-    <style name="RT.AppTheme.Dark" parent="Base.RT.AppTheme.Dark" />
-
-    <style name="RT.AppTheme.Black" parent="Base.RT.AppTheme.Black" />
-
-    <style name="RT.AppTheme.DayNight" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light" />
-
-    <style name="RT.AppTheme.Light" parent="Base.RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.System" parent="RT.AppTheme.Dark" />
-
-    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Black" />
-
-    <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Black" />
-
-    <style name="RT.PreferenceTheme" parent="PreferenceThemeOverlay.v14" />
-
     <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.Material3.Button.TextButton.Dialog">
         <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
         <item name="android:textColor">?colorSecondary</item>
@@ -144,7 +12,9 @@
         <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
-    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="RT.V21.Widget.ScrollView.TopIndicator" />
+
+    <style name="RT.V21.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
 
     <style name="RT.Widget.Snackbar" parent="Widget.Material3.Snackbar">
         <item name="actionTextColorAlpha">1.0</item>
@@ -168,16 +38,24 @@
     <style name="RT.Widget.Toolbar" parent="Widget.Material3.Toolbar.Surface">
     </style>
 
-    <style name="Base.RT.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-
-        <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
-    </style>
-
-    <style name="RT.Design.BottomSheetDialog" parent="Base.RT.Design.BottomSheetDialog" />
-
     <style name="Widget.RT.BottomSheet" parent="Widget.Material3.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.RT.BottomSheet</item>
         <item name="android:elevation" tools:ignore="NewApi,PrivateResource">@dimen/m3_sys_elevation_level0</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog" parent="RT.v21.Design.BottomSheetDialog" />
+
+    <style name="RT.Design.BottomSheetDialog.Dark" parent="RT.v21.Design.BottomSheetDialog">
+        <item name="android:navigationBarColor">?colorSurface</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog.Black" parent="RT.Design.BottomSheetDialog.Dark">
+    </style>
+
+    <style name="RT.v21.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.RT.BottomSheet" parent="">
@@ -186,6 +64,15 @@
         <item name="cornerSizeTopRight">@dimen/bottom_sheet_corner_radius</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Widget.RT.BottomNavigationView" parent="Widget.Material3.BottomNavigationView" />
+
+    <style name="Widget.RT.BottomNavigationView.Dark" parent="Widget.Material3.BottomNavigationView" />
+
+    <style name="Widget.RT.BottomNavigationView.Black" parent="Widget.Material3.BottomNavigationView">
+        <!-- ensure bottom navigation background won't be changed because of elevation -->
+        <item name="elevation">0dp</item>
     </style>
 
 </resources>

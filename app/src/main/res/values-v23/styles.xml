@@ -1,28 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v23.AppTheme.Dark" />
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="RT.V23.Widget.ScrollView.TopIndicator" />
 
-    <style name="Base.RT.v23.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark">
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v23.AppTheme.Light" />
-
-    <style name="Base.RT.v23.AppTheme.Light" parent="Base.RT.v21.AppTheme.Light">
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
-    </style>
-
-    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v23.AppTheme.Black" />
-
-    <style name="Base.RT.v23.AppTheme.Black" parent="Base.RT.v21.AppTheme.Black">
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="RT.AppTheme.DayNightBlack" parent="RT.AppTheme.Light" />
-
-    <style name="RT.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView">
+    <style name="RT.V23.Widget.ScrollView.TopIndicator" parent="RT.V21.Widget.ScrollView.TopIndicator">
         <item name="android:scrollIndicators">top</item>
     </style>
 
