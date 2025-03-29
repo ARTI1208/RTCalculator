@@ -3,9 +3,12 @@ package ru.art2000.extensions.fragments
 import androidx.annotation.CallSuper
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
-abstract class CommonReplaceableFragment : Fragment(), IReplaceableFragment {
+abstract class CommonReplaceableFragment(
+    @LayoutRes contentLayoutId: Int = 0,
+) : Fragment(contentLayoutId), IReplaceableFragment {
 
     private val helper by lazy { ReplaceableFragmentHelper(this) }
 

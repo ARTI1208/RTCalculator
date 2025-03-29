@@ -2,17 +2,14 @@ package ru.art2000.calculator.currency.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.viewModels
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.datepicker.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.common.view.MainScreenFragment
 import ru.art2000.calculator.common.view.createThemedSnackbar
 import ru.art2000.calculator.currency.R
@@ -28,19 +25,22 @@ import ru.art2000.extensions.views.*
 import ru.art2000.calculator.common.R as CommonR
 
 @AndroidEntryPoint
-internal class CurrencyConverterFragment : MainScreenFragment() {
+internal class CurrencyConverterFragment : MainScreenFragment(R.layout.currency_layout) {
 
     private val model by viewModels<CurrencyConverterModel>()
-    private val binding by viewBinding<CurrencyLayoutBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(CurrencyLayoutBinding::bind)
     private var currenciesAdapter: CurrencyListAdapter? = null
     private var keyboardListenerSubscription: ListenerSubscription<Boolean>? = null
     private var updateSnackbar: Snackbar? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override val topViews: List<View>
+        get() = listOf(binding.root)
+
+    override val bottomViews: List<View>
+        get() = if (requireContext().isLandscape) listOf(binding.currencyList) else emptyList()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.inflateMenu(R.menu.currencies_converter_menu)
         currenciesAdapter = CurrencyListAdapter(requireContext(), model)
@@ -112,17 +112,6 @@ internal class CurrencyConverterFragment : MainScreenFragment() {
 
         model.listenDateUpdate()
 
-        return binding.root
-    }
-
-    override val topViews: List<View>
-        get() = listOf(binding.root)
-
-    override val bottomViews: List<View>
-        get() = if (requireContext().isLandscape) listOf(binding.currencyList) else emptyList()
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         launchRepeatOnStarted {
             launchAndCollect(model.loadingState) { applyLoadingState(it) }
             launchAndCollect(model.updateDate) { setCurrenciesUpdateDate(it) }

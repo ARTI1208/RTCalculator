@@ -120,19 +120,6 @@ internal class CalculatorButtonsPagerAdapter(
 
             val binding = CalculatorExpertiseViewBinding.inflate(LayoutInflater.from(mContext))
 
-
-            BottomSheetDialog(mContext).apply {
-                setContentView(binding.root)
-                setOnShowListener { dialog ->
-                    val d = dialog as BottomSheetDialog
-                    val bottomSheet =
-                        d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)!!
-                    BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
-                }
-                behavior.disableShapeAnimations()
-                show()
-            }
-
             binding.expertiseIo.tvInput.isFocusable = false
             binding.expertiseIo.tvResult.visibility = View.VISIBLE
             binding.expertiseIo.resultHsv.visibility = View.VISIBLE
@@ -148,6 +135,18 @@ internal class CalculatorButtonsPagerAdapter(
             val (result, _) = model.calculateAndFormatForDisplay(expr, model.liveAngleType.value)
 
             binding.expertiseIo.tvResult.text = result
+
+            BottomSheetDialog(mContext).apply {
+                setContentView(binding.root)
+                setOnShowListener { dialog ->
+                    val d = dialog as BottomSheetDialog
+                    val bottomSheet =
+                        d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)!!
+                    BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
+                }
+                behavior.disableShapeAnimations()
+                show()
+            }
 
             return@setOnLongClickListener true
         }

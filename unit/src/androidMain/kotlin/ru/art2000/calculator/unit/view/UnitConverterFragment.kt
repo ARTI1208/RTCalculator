@@ -2,12 +2,9 @@ package ru.art2000.calculator.unit.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.unit.model.UnitCategory
 import ru.art2000.calculator.common.view.MainScreenFragment
 import ru.art2000.calculator.unit.R
@@ -16,29 +13,25 @@ import ru.art2000.calculator.unit.view.BaseUnitPageFragment.Companion.newInstanc
 import ru.art2000.extensions.views.createOnTabSelectedListener
 import ru.art2000.calculator.unit.preferences.UnitPreferenceHelper
 import ru.art2000.calculator.unit.model.ViewType
+import ru.art2000.extensions.views.MyFragmentStateAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class UnitConverterFragment : MainScreenFragment() {
+internal class UnitConverterFragment : MainScreenFragment(R.layout.unit_layout) {
 
     @Inject
     internal lateinit var prefsHelper: UnitPreferenceHelper
 
     private var pager2Mediator: ru.art2000.extensions.views.MyTabLayoutMediator? = null
-    private val binding by viewBinding<UnitLayoutBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(UnitLayoutBinding::bind)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         updateAdapter()
         prefsHelper.setOnViewTypeChangedListener {
             updateAdapter(it, true)
         }
-
-        return binding.root
     }
 
     override val topViews: List<View>
@@ -79,7 +72,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
 
     private inner class UnitPagerAdapter(
         type: ViewType,
-    ) : ru.art2000.extensions.views.MyFragmentStateAdapter<BaseUnitPageFragment<*>>(this@UnitConverterFragment) {
+    ) : MyFragmentStateAdapter<BaseUnitPageFragment>(this@UnitConverterFragment) {
 
         var viewType = type
             @SuppressLint("NotifyDataSetChanged")
@@ -91,7 +84,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
         private val shift: Long
             get() = (Int.MAX_VALUE + 1L) shl viewType.ordinal
 
-        override fun createFragment(position: Int): BaseUnitPageFragment<*> {
+        override fun createFragment(position: Int): BaseUnitPageFragment {
             return newInstance(UnitCategory.ofOrdinal(position), viewType)
         }
 

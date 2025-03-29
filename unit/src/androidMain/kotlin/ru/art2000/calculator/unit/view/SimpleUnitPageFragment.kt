@@ -1,11 +1,10 @@
 package ru.art2000.calculator.unit.view
 
 import android.content.Intent
+import android.os.Bundle
 import android.text.Editable
 import android.view.ContextMenu
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Spinner
@@ -13,6 +12,7 @@ import androidx.core.widget.ImageViewCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.common.databinding.SimpleKeyboardBinding
 import ru.art2000.calculator.unit.R
 import ru.art2000.calculator.unit.databinding.UnitFragSimpleBinding
@@ -26,15 +26,9 @@ import ru.art2000.extensions.views.isLandscape
 import ru.art2000.extensions.views.textValue
 
 @AndroidEntryPoint
-internal class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBinding>() {
+internal class SimpleUnitPageFragment : BaseUnitPageFragment(R.layout.unit_frag_simple) {
 
-    companion object {
-
-        const val MENU_ITEM_COPY = 0
-
-        private const val CONVERT_TO_KEY = "to"
-
-    }
+    private val binding by viewBinding(UnitFragSimpleBinding::bind)
 
     private var spinnerFromPosition = 0
         set(value) {
@@ -47,11 +41,8 @@ internal class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBindi
             field = value
         }
 
-    override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragSimpleBinding {
-        return UnitFragSimpleBinding.inflate(inflater, container, false)
-    }
-
-    override fun setup() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val keyboardBinding = binding.keyboard
 
@@ -247,4 +238,8 @@ internal class SimpleUnitPageFragment : BaseUnitPageFragment<UnitFragSimpleBindi
         binding.valueConverted.textValue = converterFunctions.displayValue(toPosition)
     }
 
+    companion object {
+        const val MENU_ITEM_COPY = 0
+        private const val CONVERT_TO_KEY = "to"
+    }
 }
