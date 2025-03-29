@@ -12,11 +12,11 @@ sealed class Calculations<T> {
     fun format(number: T): String = formatter.format(field.toCalculationNumber(number))
 
     fun calculateForDisplay(expression: String, angleType: AngleType): String  {
-        val result = calculate(expression, angleType) ?: return calculationError
+        val result = calculate(expression, angleType) ?: return CALCULATION_ERROR
 
         val calculationNumberResult = field.toCalculationNumber(result)
 
-        if (calculationNumberResult.isInfinite) return calculationDivideByZero
+        if (calculationNumberResult.isInfinite) return CALCULATION_DIVIDE_BY_ZERO
 
         return formatter.format(calculationNumberResult)
     }
@@ -28,8 +28,8 @@ sealed class Calculations<T> {
     fun calculate(expression: String): T? = calculate(expression, AngleType.RADIANS)
 
     companion object {
-        const val calculationError = "error"
+        const val CALCULATION_ERROR = "error"
 
-        const val calculationDivideByZero = "zero"
+        const val CALCULATION_DIVIDE_BY_ZERO = "zero"
     }
 }

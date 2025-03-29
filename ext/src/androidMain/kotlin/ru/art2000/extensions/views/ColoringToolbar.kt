@@ -8,6 +8,8 @@ import android.util.AttributeSet
 import androidx.core.content.res.use
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.R as R
+import androidx.core.view.size
+import androidx.core.view.get
 
 class ColoringToolbar @JvmOverloads constructor(
     context: Context,
@@ -18,8 +20,8 @@ class ColoringToolbar @JvmOverloads constructor(
     override fun inflateMenu(resId: Int) {
         super.inflateMenu(resId)
 
-        repeat(menu.size()) {
-            menu.getItem(it).icon?.tint()
+        repeat(menu.size) {
+            menu[it].icon?.tint()
         }
     }
 

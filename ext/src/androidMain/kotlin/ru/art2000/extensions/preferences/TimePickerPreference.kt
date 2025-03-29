@@ -1,5 +1,6 @@
 package ru.art2000.extensions.preferences
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.os.Bundle
@@ -35,6 +36,7 @@ sealed class TimePickerPreference @JvmOverloads constructor(
         }
 
     private val timeString: String
+        @SuppressLint("DefaultLocale")
         get() = String.format("%02d", hour) + ":" + String.format("%02d", minute)
 
     companion object {

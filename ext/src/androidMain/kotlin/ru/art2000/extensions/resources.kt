@@ -43,6 +43,7 @@ fun Context.getDimenFromAttribute(@AttrRes attribute: Int): Int {
     }
 }
 
+@Suppress("unused")
 @DrawableRes
 fun Context.getDrawableResFromAttribute(@AttrRes attribute: Int): Int {
     val typedValue = TypedValue()

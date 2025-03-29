@@ -301,7 +301,7 @@ internal object TestCases {
 
         val expectedLexemes = emptyList<ExpressionPart<Double>>()
 
-        val answer = Calculations.calculationError
+        val answer = Calculations.CALCULATION_ERROR
 
         return TestCase(expressions, expectedLexemes, answer)
     }

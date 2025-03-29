@@ -118,9 +118,7 @@ internal class HistoryListAdapter internal constructor(
                     itemId,
                     Menu.NONE,
                     titleRes,
-            ).setOnMenuItemClickListener {
-                onContextItemSelected(it)
-            }
+            ).setOnMenuItemClickListener(::onContextItemSelected)
 
             fun Menu.addHistoryMenuItem(copyMode: HistoryViewModel.CopyMode, titleRes: Int) =
                 addHistoryMenuItem(copyMode.id, titleRes)
@@ -132,6 +130,7 @@ internal class HistoryListAdapter internal constructor(
             menu.addHistoryMenuItem(HistoryViewModel.DELETE, R.string.delete_record)
         }
 
+        @Suppress("SameReturnValue")
         private fun onContextItemSelected(menuItem: MenuItem): Boolean {
             val id = menuItem.itemId
             val copyMode = HistoryViewModel.CopyMode.fromId(id)
