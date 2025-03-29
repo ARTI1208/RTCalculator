@@ -1,21 +1,43 @@
 package ru.art2000.extensions.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.res.getColorOrThrow
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import ru.art2000.extensions.views.isDrawingUnderSystemBarsAllowed
 
 class EdgeToEdgeActivityCallbacks : ActivityCallbacksAdapter {
 
+    @SuppressLint("UseKtx")
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         if (activity is ComponentActivity) {
-            activity.enableEdgeToEdge()
+
+            // https://stackoverflow.com/questions/79319740/edge-to-edge-doesnt-work-when-activity-recreated-or-appcompatdelegate-setdefaul
+            if (savedInstanceState != null && Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                WindowCompat.setDecorFitsSystemWindows(activity.window, false)
+            }
+
+            val navigationBarColor = activity.getNavBarColor()
+
+            activity.enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.auto(
+                    lightScrim = Color.TRANSPARENT,
+                    darkScrim = Color.TRANSPARENT,
+                ),
+                navigationBarStyle = SystemBarStyle.auto(
+                    lightScrim = navigationBarColor,
+                    darkScrim = navigationBarColor,
+                ),
+            )
         }
 
         if (activity is FragmentActivity) {
@@ -25,11 +47,18 @@ class EdgeToEdgeActivityCallbacks : ActivityCallbacksAdapter {
         }
     }
 
-    override fun onActivityPostCreated(activity: Activity, savedInstanceState: Bundle?) {
-        if (activity is EdgeToEdgeScreen) {
-            activity.applyEdgeToEdgeIfAvailable()
+    private fun Activity.getNavBarColor() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            Color.TRANSPARENT
+        } else {
+            @Suppress("DEPRECATION")
+            val typedArray = obtainStyledAttributes(
+                intArrayOf(android.R.attr.navigationBarColor),
+            )
+            val navigationBarColor = typedArray.getColorOrThrow(0)
+            typedArray.recycle()
+            navigationBarColor
         }
-    }
 
     private object EdgeToEdgeFragmentCallbacks : FragmentManager.FragmentLifecycleCallbacks() {
 

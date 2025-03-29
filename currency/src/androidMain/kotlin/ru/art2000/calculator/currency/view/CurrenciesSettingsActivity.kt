@@ -177,9 +177,6 @@ internal class CurrenciesSettingsActivity : AppActivity() {
         })
     }
 
-    override val clearStatusBar: Boolean
-        get() = false
-
     override val insetAsPadding: Boolean
         get() = false
 

@@ -6,20 +6,15 @@
     <style name="RT.AppTheme.Black" parent="RT.v27.AppTheme.Black" />
 
     <style name="RT.v27.AppTheme.Light" parent="RT.v23.AppTheme.Light">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarColor">@color/LightTheme_navigationBarTransparentColor</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
     <style name="RT.v27.AppTheme.Dark" parent="RT.v23.AppTheme.Dark">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:windowLightNavigationBar">false</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 
     <style name="RT.v27.AppTheme.Black" parent="RT.v23.AppTheme.Black">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:windowLightNavigationBar">false</item>
         <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
     </style>
 

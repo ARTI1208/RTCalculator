@@ -85,8 +85,8 @@
         <item name="bottomNavigationStyle">@style/Widget.RT.BottomNavigationView</item>
 
         <!-- system -->
-        <item name="android:navigationBarColor">@color/LightTheme_lollipopStatusBackground</item>
-        <item name="android:statusBarColor">@color/LightTheme_lollipopStatusBackgroundTransparent</item>
+        <item name="android:navigationBarColor">@color/LightTheme_navigationBarTranslucentColor</item>
+        <item name="android:statusBarColor">@color/LightTheme_statusBarTranslucentColor</item>
 
         <!-- app -->
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
@@ -159,8 +159,8 @@
         <item name="bottomNavigationStyle">@style/Widget.RT.BottomNavigationView.Dark</item>
 
         <!-- system -->
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
 
         <!-- app -->
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
@@ -233,8 +233,8 @@
         <item name="bottomNavigationStyle">@style/Widget.RT.BottomNavigationView.Black</item>
 
         <!-- system -->
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
 
         <!-- app -->
         <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
