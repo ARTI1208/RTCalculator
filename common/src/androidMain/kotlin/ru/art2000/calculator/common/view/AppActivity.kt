@@ -1,5 +1,6 @@
 package ru.art2000.calculator.common.view
 
+import android.os.Bundle
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -7,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
 import ru.art2000.extensions.activities.AutoThemeActivity
 import ru.art2000.extensions.activities.IEdgeToEdgeActivity
+import ru.art2000.extensions.activities.applyEdgeToEdgeIfAvailable
 import ru.art2000.extensions.preferences.AppTheme
 import ru.art2000.extensions.preferences.ThemeSettingsHolder
 import ru.art2000.extensions.views.isDarkThemeApplied
@@ -52,4 +54,12 @@ abstract class AppActivity : AutoThemeActivity(), IEdgeToEdgeActivity {
     override fun getDayNightTheme(black: Boolean) = holder.autoThemeData.getDayNightTheme(black)
 
     override fun getThemeResId(theme: AppTheme) = holder.autoThemeData.getThemeRes(theme)
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        // can not move to EdgeToEdgeActivityCallbacks
+        // as onActivityPostCreated is supported on API29 and higher
+        applyEdgeToEdgeIfAvailable()
+    }
 }

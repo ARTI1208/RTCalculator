@@ -143,8 +143,10 @@
     <color name="LightTheme_surfaceContainer_highContrast">#EFEDF4</color>
     <color name="LightTheme_surfaceContainerHigh_highContrast">#E9E7EF</color>
     <color name="LightTheme_surfaceContainerHighest_highContrast">#E4E1E9</color>
-    <color name="LightTheme_lollipopStatusBackgroundTransparent">#3b000000</color>
-    <color name="LightTheme_lollipopStatusBackground">#c0c0c0</color>
+    <color name="LightTheme_statusBarTranslucentColor">#3b000000</color>
+    <color name="LightTheme_statusBarTransparentColor">@color/transparent</color>
+    <color name="LightTheme_navigationBarTranslucentColor">#3b000000</color>
+    <color name="LightTheme_navigationBarTransparentColor">@color/transparent</color>
 
     <!--DarkTheme colors-->
     <color name="DarkTheme_primary">#BAC3FF</color>
@@ -434,4 +436,5 @@
 
     <!--Other colors-->
     <color name="white">#ffffffff</color>
+    <color name="transparent">#00000000</color>
 </resources>

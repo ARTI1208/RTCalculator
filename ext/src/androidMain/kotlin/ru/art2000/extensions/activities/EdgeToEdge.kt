@@ -1,7 +1,5 @@
 package ru.art2000.extensions.activities
 
-import android.app.Activity
-import android.graphics.Color
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +7,10 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.Insets
 import androidx.core.view.*
-import androidx.fragment.app.Fragment
 import ru.art2000.extensions.layout.isLtr
-import ru.art2000.extensions.views.isDarkThemeApplied
-import ru.art2000.extensions.views.isDrawingUnderSystemBarsAllowed
 import ru.art2000.extensions.views.whenAttachedToWindow
 
 interface EdgeToEdgeScreen {
-
-    val clearStatusBar: Boolean
-
-    val clearNavigationBar: Boolean
 
     val insetAsPadding: Boolean
         get() = true
@@ -38,37 +29,15 @@ interface EdgeToEdgeScreen {
 
 }
 
-interface IEdgeToEdgeFragment : EdgeToEdgeScreen {
+interface IEdgeToEdgeFragment : EdgeToEdgeScreen
 
-    override val clearStatusBar: Boolean
-        get() = false
+interface IEdgeToEdgeActivity : EdgeToEdgeScreen
 
-    override val clearNavigationBar: Boolean
-        get() = false
-}
-
-interface IEdgeToEdgeActivity : EdgeToEdgeScreen {
-
-    override val clearStatusBar: Boolean
-        get() = true
-
-    override val clearNavigationBar: Boolean
-        get() = true
-}
-
-internal fun <S> S.applyEdgeToEdgeIfAvailable() where S : Fragment, S: EdgeToEdgeScreen {
-    applyEdgeToEdgeIfAvailable(requireActivity(), this)
-}
-
-internal fun <S> S.applyEdgeToEdgeIfAvailable() where S : Activity, S: EdgeToEdgeScreen {
-    applyEdgeToEdgeIfAvailable(this, this)
-}
-
-private fun applyEdgeToEdgeIfAvailable(activity: Activity, edgeToEdgeScreen: EdgeToEdgeScreen) {
-    val top = edgeToEdgeScreen.topViews
-    val bottom = edgeToEdgeScreen.bottomViews
-    var left = edgeToEdgeScreen.leftViews
-    var right = edgeToEdgeScreen.rightViews
+fun <S> S.applyEdgeToEdgeIfAvailable() where S : EdgeToEdgeScreen {
+    val top = topViews
+    val bottom = bottomViews
+    var left = leftViews
+    var right = rightViews
 
     if (top.isEmpty() && bottom.isEmpty() && left.isEmpty() && right.isEmpty()) return
 
@@ -76,19 +45,15 @@ private fun applyEdgeToEdgeIfAvailable(activity: Activity, edgeToEdgeScreen: Edg
         left = right.also { right = left }
     }
 
-    if (edgeToEdgeScreen.insetAsPadding) {
-        activity.applyEdgeToEdgePaddingIfAvailable(
-            clearStatusBar = edgeToEdgeScreen.clearStatusBar,
-            clearNavigationBar = edgeToEdgeScreen.clearNavigationBar,
+    if (insetAsPadding) {
+        applyEdgeToEdgePaddingIfAvailable(
             topViews = top,
             bottomViews = bottom,
             leftViews = left,
             rightViews = right,
         )
     } else {
-        activity.applyEdgeToEdgeMarginIfAvailable(
-            clearStatusBar = edgeToEdgeScreen.clearStatusBar,
-            clearNavigationBar = edgeToEdgeScreen.clearNavigationBar,
+        applyEdgeToEdgeMarginIfAvailable(
             topViews = top,
             bottomViews = bottom,
             leftViews = left,
@@ -97,9 +62,7 @@ private fun applyEdgeToEdgeIfAvailable(activity: Activity, edgeToEdgeScreen: Edg
     }
 }
 
-private fun Activity.applyEdgeToEdgePaddingIfAvailable(
-    clearStatusBar: Boolean = true,
-    clearNavigationBar: Boolean = true,
+private fun applyEdgeToEdgePaddingIfAvailable(
     topViews: List<View>,
     bottomViews: List<View>,
     leftViews: List<View>,
@@ -107,8 +70,6 @@ private fun Activity.applyEdgeToEdgePaddingIfAvailable(
 ) {
 
     applyEdgeToEdgeIfAvailable(
-        clearStatusBar = clearStatusBar,
-        clearNavigationBar = clearNavigationBar,
         leftViews = leftViews,
         topViews = topViews,
         rightViews = rightViews,
@@ -127,9 +88,7 @@ private fun Activity.applyEdgeToEdgePaddingIfAvailable(
     }
 }
 
-private fun Activity.applyEdgeToEdgeMarginIfAvailable(
-    clearStatusBar: Boolean = true,
-    clearNavigationBar: Boolean = true,
+private fun applyEdgeToEdgeMarginIfAvailable(
     leftViews: List<View>,
     topViews: List<View>,
     rightViews: List<View>,
@@ -137,8 +96,6 @@ private fun Activity.applyEdgeToEdgeMarginIfAvailable(
 ) {
 
     applyEdgeToEdgeIfAvailable(
-        clearStatusBar = clearStatusBar,
-        clearNavigationBar = clearNavigationBar,
         leftViews = leftViews,
         topViews = topViews,
         rightViews = rightViews,
@@ -154,29 +111,19 @@ private fun Activity.applyEdgeToEdgeMarginIfAvailable(
     }
 }
 
-private fun Activity.applyEdgeToEdgeIfAvailable(
-    clearStatusBar: Boolean = true,
-    clearNavigationBar: Boolean = true,
+private inline fun applyEdgeToEdgeIfAvailable(
     leftViews: List<View>,
     topViews: List<View>,
-    rightViews: List<View> ,
+    rightViews: List<View>,
     bottomViews: List<View>,
-    left: View.() -> Int = { 0 },
-    top: View.() -> Int = { 0 },
-    right: View.() -> Int = { 0 },
-    bottom: View.() -> Int = { 0 },
-    consumer: View.(left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+    crossinline left: View.() -> Int = { 0 },
+    crossinline top: View.() -> Int = { 0 },
+    crossinline right: View.() -> Int = { 0 },
+    crossinline bottom: View.() -> Int = { 0 },
+    crossinline consumer: View.(left: Int, top: Int, right: Int, bottom: Int) -> Unit,
 ) {
     // dark statusbar and navigationbar
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
-
-    val clearStatusBarReally = clearStatusBar &&
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || isDarkThemeApplied)
-
-    val clearNavigationBarReally = clearNavigationBar &&
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || isDarkThemeApplied)
-
-    clearSystemBars(clearStatusBarReally, clearNavigationBarReally)
 
     topViews.forEach {
         it.consumeSystemInsets(left, top, right, bottom) { insets, left, top, right, bottom ->
@@ -203,34 +150,14 @@ private fun Activity.applyEdgeToEdgeIfAvailable(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun Activity.clearSystemBars(
-    clearStatusBar: Boolean = true,
-    clearNavigationBar: Boolean = true,
-) {
-    window.isDrawingUnderSystemBarsAllowed = true
-    if (clearStatusBar) {
-//      window.statusBarColor = ColorUtils.setAlphaComponent(window.statusBarColor, 200)
-        window.statusBarColor = Color.TRANSPARENT
-    }
-    if (clearNavigationBar) {
-        window.apply {
-            navigationBarColor = Color.TRANSPARENT
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                isNavigationBarContrastEnforced = false
-            }
-        }
-    }
-}
-
 @Suppress("NAME_SHADOWING")
 @RequiresApi(Build.VERSION_CODES.KITKAT)
-private fun <T : View> T.consumeSystemInsets(
-    left: T.() -> Int,
-    top: T.() -> Int,
-    right: T.() -> Int,
-    bottom: T.() -> Int,
-    consumer: T.(Insets, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+private inline fun <T : View> T.consumeSystemInsets(
+    crossinline left: T.() -> Int,
+    crossinline top: T.() -> Int,
+    crossinline right: T.() -> Int,
+    crossinline bottom: T.() -> Int,
+    crossinline consumer: T.(Insets, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
 )  = consumeInsets(left, top, right, bottom) { windowInsetsCompat, left, top, right, bottom ->
     consumer(
         windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemBars()),
@@ -238,13 +165,14 @@ private fun <T : View> T.consumeSystemInsets(
     )
 }
 
-fun <T : View> T.consumeInsets(
-    left: T.() -> Int,
-    top: T.() -> Int,
-    right: T.() -> Int,
-    bottom: T.() -> Int,
-    consumer: T.(WindowInsetsCompat, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
+private inline fun <T : View> T.consumeInsets(
+    crossinline left: T.() -> Int,
+    crossinline top: T.() -> Int,
+    crossinline right: T.() -> Int,
+    crossinline bottom: T.() -> Int,
+    crossinline consumer: T.(WindowInsetsCompat, left: Int, top: Int, right: Int, bottom: Int) -> Unit,
 ) {
+
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
 
     val topLazy by lazy { top() }
@@ -252,16 +180,13 @@ fun <T : View> T.consumeInsets(
     val leftLazy by lazy { left() }
     val rightLazy by lazy { right() }
 
-    fun consume(insets: WindowInsetsCompat) {
+    whenAttachedToWindow {
+        val insets = ViewCompat.getRootWindowInsets(this)!!
         consumer(insets, leftLazy, topLazy, rightLazy, bottomLazy)
     }
 
-    whenAttachedToWindow {
-        consume(ViewCompat.getRootWindowInsets(this)!!)
-    }
-
     ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
-        consume(insets)
+        consumer(insets, leftLazy, topLazy, rightLazy, bottomLazy)
         insets
     }
 }
