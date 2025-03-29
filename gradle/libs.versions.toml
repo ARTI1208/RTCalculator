@@ -137,5 +137,3 @@ room-preprocessing = [
 ]
 
 [plugins]
-dagger = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
