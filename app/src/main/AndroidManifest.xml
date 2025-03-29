@@ -28,5 +28,11 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+        
+        <activity
+            android:name=".main.UpdateActivity"
+            android:theme="@style/RT.AppTheme.Launch"
+            android:exported="false"
+            />
     </application>
 </manifest>

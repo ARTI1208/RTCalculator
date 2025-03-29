@@ -3,4 +3,6 @@
     <!-- Common -->
     <string name="app_name">Calculator</string>
 
+    <string name="unsupported_api">Your Android version is not supported by this app version. Consider upgrading to newer version.</string>
+    <string name="download_new_version">Upgrade</string>
 </resources>

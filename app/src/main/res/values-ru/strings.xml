@@ -3,4 +3,6 @@
 
     <string name="app_name">Калькулятор</string>
 
+    <string name="unsupported_api">Ваша версия Android не поддерживается. Пожалуйста, установите более новую версию приложения.</string>
+    <string name="download_new_version">Установить</string>
 </resources>

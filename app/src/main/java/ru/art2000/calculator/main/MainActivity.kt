@@ -1,6 +1,7 @@
 package ru.art2000.calculator.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import by.kirich1409.viewbindingdelegate.CreateMethod
@@ -27,6 +28,12 @@ class MainActivity : AppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(Intent(this, UpdateActivity::class.java))
+            finish()
+            return
+        }
 
         setContentView(binding.root)
 
