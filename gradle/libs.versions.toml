@@ -1,7 +1,7 @@
 [versions]
 minSdk = "21"
-compileSdk = "35"
-targetSdk = "34"
+compileSdk = "36"
+targetSdk = "36"
 
 kotlin = "2.1.20" # https://github.com/jetbrains/kotlin/releases
 ksp = "2.1.20-1.0.32" # https://github.com/google/ksp/releases
