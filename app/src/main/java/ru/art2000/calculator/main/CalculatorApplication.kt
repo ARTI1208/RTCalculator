@@ -6,6 +6,7 @@ import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
 import ru.art2000.calculator.common.AppStartupListener
 import ru.art2000.calculator.common.preferences.GeneralPreferenceHelper
+import ru.art2000.extensions.activities.EdgeToEdgeActivityCallbacks
 import ru.art2000.extensions.preferences.AppTheme
 import ru.art2000.extensions.preferences.listen
 import javax.inject.Inject
@@ -29,6 +30,8 @@ class CalculatorApplication : MultiDexApplication() {
         prefsHelper.appThemeProperty.listen {
             checkNightMode(it)
         }
+
+        registerActivityLifecycleCallbacks(EdgeToEdgeActivityCallbacks())
     }
 
     private fun checkNightMode(theme: AppTheme) {

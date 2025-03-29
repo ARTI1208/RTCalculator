@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
-import ru.art2000.calculator.common.view.AppFragmentMixin
 import ru.art2000.calculator.currency.R
 import ru.art2000.calculator.currency.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.currency.databinding.ModifyCurrenciesLayoutBinding
@@ -20,13 +19,14 @@ import ru.art2000.calculator.currency.model.CurrencyItem
 import ru.art2000.calculator.currency.model.getNameIdentifier
 import ru.art2000.calculator.currency.vm.CurrenciesAddModel
 import ru.art2000.calculator.currency.vm.CurrenciesSettingsModel
+import ru.art2000.extensions.activities.IEdgeToEdgeFragment
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.extensions.views.addOrientationItemDecoration
 
-internal class CurrenciesAddFragment : CommonReplaceableFragment(), AppFragmentMixin {
+internal class CurrenciesAddFragment : CommonReplaceableFragment(), IEdgeToEdgeFragment {
 
     private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
     private val model: CurrenciesAddModel by activityViewModels<CurrenciesSettingsModel>()
@@ -59,11 +59,6 @@ internal class CurrenciesAddFragment : CommonReplaceableFragment(), AppFragmentM
 
     override val bottomViews: List<View>
         get() = listOf(binding.modifyCurrenciesList)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        updateViewOnCreated(view)
-    }
 
     override fun onReselected() {
         binding.modifyCurrenciesList.smoothScrollToPosition(0)

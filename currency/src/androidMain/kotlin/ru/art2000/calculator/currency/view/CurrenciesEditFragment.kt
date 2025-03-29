@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
-import ru.art2000.calculator.common.view.AppFragmentMixin
 import ru.art2000.calculator.currency.R
 import ru.art2000.calculator.currency.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.currency.databinding.ItemEditCurrenciesListBinding
@@ -27,16 +26,17 @@ import ru.art2000.calculator.currency.model.CurrencyItem
 import ru.art2000.calculator.currency.model.getNameIdentifier
 import ru.art2000.calculator.currency.vm.CurrenciesEditModel
 import ru.art2000.calculator.currency.vm.CurrenciesSettingsModel
+import ru.art2000.extensions.activities.IEdgeToEdgeFragment
 import ru.art2000.extensions.activities.consumeInsetsForMargin
 import ru.art2000.extensions.activities.getInt
-import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.collections.LiveList
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
+import ru.art2000.extensions.layout.isLtr
 import ru.art2000.extensions.views.*
 
-internal class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragmentMixin {
+internal class CurrenciesEditFragment : CommonReplaceableFragment(), IEdgeToEdgeFragment {
 
     private var itemTouchHelper: ItemTouchHelper? = null
     private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
@@ -78,11 +78,6 @@ internal class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragment
 
     override val bottomViews: List<View>
         get() = listOf(binding.modifyCurrenciesList)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        updateViewOnCreated(view)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -223,8 +218,6 @@ internal class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragment
             holder.checkBox?.isChecked = selected
         }
 
-        private val ltr = isLtr
-
         inner class Holder private constructor(
             root: View,
             val code: TextView,
@@ -270,7 +263,7 @@ internal class CurrenciesEditFragment : CommonReplaceableFragment(), AppFragment
                     val gestureInsets =
                         windowInsetsCompat.getInsets(WindowInsetsCompat.Type.systemGestures())
                     updateLayoutParams<MarginLayoutParams> {
-                        if (ltr) {
+                        if (isLtr) {
                             updateMargins(
                                 right = right + gestureInsets.right,
                             )

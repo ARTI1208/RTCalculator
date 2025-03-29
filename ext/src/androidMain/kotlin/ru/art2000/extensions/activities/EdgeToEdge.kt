@@ -1,5 +1,6 @@
 package ru.art2000.extensions.activities
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.view.View
@@ -7,15 +8,12 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.Insets
-import androidx.core.text.TextUtilsCompat
 import androidx.core.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import ru.art2000.extensions.views.*
+import ru.art2000.extensions.layout.isLtr
 import ru.art2000.extensions.views.isDarkThemeApplied
 import ru.art2000.extensions.views.isDrawingUnderSystemBarsAllowed
 import ru.art2000.extensions.views.whenAttachedToWindow
-import java.util.*
 
 interface EdgeToEdgeScreen {
 
@@ -47,10 +45,6 @@ interface IEdgeToEdgeFragment : EdgeToEdgeScreen {
 
     override val clearNavigationBar: Boolean
         get() = false
-
-    fun Fragment.applyEdgeToEdgeIfAvailable() {
-        applyEdgeToEdgeIfAvailable(requireActivity())
-    }
 }
 
 interface IEdgeToEdgeActivity : EdgeToEdgeScreen {
@@ -60,17 +54,21 @@ interface IEdgeToEdgeActivity : EdgeToEdgeScreen {
 
     override val clearNavigationBar: Boolean
         get() = true
-
-    fun FragmentActivity.applyEdgeToEdgeIfAvailable() {
-        applyEdgeToEdgeIfAvailable(this)
-    }
 }
 
-private fun EdgeToEdgeScreen.applyEdgeToEdgeIfAvailable(activity: FragmentActivity) {
-    val top = topViews
-    val bottom = bottomViews
-    var left = leftViews
-    var right = rightViews
+internal fun <S> S.applyEdgeToEdgeIfAvailable() where S : Fragment, S: EdgeToEdgeScreen {
+    applyEdgeToEdgeIfAvailable(requireActivity(), this)
+}
+
+internal fun <S> S.applyEdgeToEdgeIfAvailable() where S : Activity, S: EdgeToEdgeScreen {
+    applyEdgeToEdgeIfAvailable(this, this)
+}
+
+private fun applyEdgeToEdgeIfAvailable(activity: Activity, edgeToEdgeScreen: EdgeToEdgeScreen) {
+    val top = edgeToEdgeScreen.topViews
+    val bottom = edgeToEdgeScreen.bottomViews
+    var left = edgeToEdgeScreen.leftViews
+    var right = edgeToEdgeScreen.rightViews
 
     if (top.isEmpty() && bottom.isEmpty() && left.isEmpty() && right.isEmpty()) return
 
@@ -78,10 +76,10 @@ private fun EdgeToEdgeScreen.applyEdgeToEdgeIfAvailable(activity: FragmentActivi
         left = right.also { right = left }
     }
 
-    if (insetAsPadding) {
+    if (edgeToEdgeScreen.insetAsPadding) {
         activity.applyEdgeToEdgePaddingIfAvailable(
-            clearStatusBar = clearStatusBar,
-            clearNavigationBar = clearNavigationBar,
+            clearStatusBar = edgeToEdgeScreen.clearStatusBar,
+            clearNavigationBar = edgeToEdgeScreen.clearNavigationBar,
             topViews = top,
             bottomViews = bottom,
             leftViews = left,
@@ -89,8 +87,8 @@ private fun EdgeToEdgeScreen.applyEdgeToEdgeIfAvailable(activity: FragmentActivi
         )
     } else {
         activity.applyEdgeToEdgeMarginIfAvailable(
-            clearStatusBar = clearStatusBar,
-            clearNavigationBar = clearNavigationBar,
+            clearStatusBar = edgeToEdgeScreen.clearStatusBar,
+            clearNavigationBar = edgeToEdgeScreen.clearNavigationBar,
             topViews = top,
             bottomViews = bottom,
             leftViews = left,
@@ -99,23 +97,7 @@ private fun EdgeToEdgeScreen.applyEdgeToEdgeIfAvailable(activity: FragmentActivi
     }
 }
 
-
-val isLtr: Boolean
-    get() = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR
-
-@Suppress("unused")
-fun Fragment.applyEdgeToEdgePaddingIfAvailable(
-    clearStatusBar: Boolean = false,
-    clearNavigationBar: Boolean = false,
-    topViews: List<View>,
-    bottomViews: List<View>,
-    leftViews: List<View>,
-    rightViews: List<View>,
-) = requireActivity().applyEdgeToEdgePaddingIfAvailable(
-    clearStatusBar, clearNavigationBar, topViews, bottomViews, leftViews, rightViews,
-)
-
-fun FragmentActivity.applyEdgeToEdgePaddingIfAvailable(
+private fun Activity.applyEdgeToEdgePaddingIfAvailable(
     clearStatusBar: Boolean = true,
     clearNavigationBar: Boolean = true,
     topViews: List<View>,
@@ -145,19 +127,7 @@ fun FragmentActivity.applyEdgeToEdgePaddingIfAvailable(
     }
 }
 
-@Suppress("unused")
-fun Fragment.applyEdgeToEdgeMarginIfAvailable(
-    clearStatusBar: Boolean = false,
-    clearNavigationBar: Boolean = false,
-    topViews: List<View>,
-    bottomViews: List<View>,
-    leftViews: List<View>,
-    rightViews: List<View>,
-) = requireActivity().applyEdgeToEdgeMarginIfAvailable(
-    clearStatusBar, clearNavigationBar, topViews, bottomViews, leftViews, rightViews,
-)
-
-fun FragmentActivity.applyEdgeToEdgeMarginIfAvailable(
+private fun Activity.applyEdgeToEdgeMarginIfAvailable(
     clearStatusBar: Boolean = true,
     clearNavigationBar: Boolean = true,
     leftViews: List<View>,
@@ -184,7 +154,7 @@ fun FragmentActivity.applyEdgeToEdgeMarginIfAvailable(
     }
 }
 
-fun FragmentActivity.applyEdgeToEdgeIfAvailable(
+private fun Activity.applyEdgeToEdgeIfAvailable(
     clearStatusBar: Boolean = true,
     clearNavigationBar: Boolean = true,
     leftViews: List<View>,
@@ -195,7 +165,7 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
     top: View.() -> Int = { 0 },
     right: View.() -> Int = { 0 },
     bottom: View.() -> Int = { 0 },
-    consumer: View.(left: Int, top: Int, right: Int, bottom: Int,) -> Unit,
+    consumer: View.(left: Int, top: Int, right: Int, bottom: Int) -> Unit,
 ) {
     // dark statusbar and navigationbar
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
@@ -234,7 +204,7 @@ fun FragmentActivity.applyEdgeToEdgeIfAvailable(
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun FragmentActivity.clearSystemBars(
+fun Activity.clearSystemBars(
     clearStatusBar: Boolean = true,
     clearNavigationBar: Boolean = true,
 ) {

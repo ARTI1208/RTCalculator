@@ -27,7 +27,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import ru.art2000.extensions.activities.isLtr
+import ru.art2000.extensions.layout.isLtr
 import kotlin.math.roundToInt
 
 operator fun TextView.plusAssign(text: CharSequence) {

@@ -10,15 +10,16 @@ import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.viewbinding.ViewBinding
 import ru.art2000.calculator.unit.model.UnitCategory
-import ru.art2000.calculator.common.view.AppFragmentMixin
 import ru.art2000.calculator.unit.model.ViewType
 import ru.art2000.calculator.unit.vm.UnitConverterModel
+import ru.art2000.extensions.activities.IEdgeToEdgeFragment
 import ru.art2000.extensions.activities.getEnum
 import ru.art2000.extensions.arch.assistedViewModel
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import javax.inject.Inject
 
-internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment(), AppFragmentMixin {
+internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment(),
+    IEdgeToEdgeFragment {
 
     companion object {
 
@@ -72,11 +73,6 @@ internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceab
             mBinding = it
             setup()
         }).root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        updateViewOnCreated(view)
     }
 
     override fun onDestroyView() {

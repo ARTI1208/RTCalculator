@@ -26,7 +26,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ru.art2000.calculator.currency.vm.CurrenciesSettingsModel
 import ru.art2000.extensions.activities.consumeInsetsForMargin
-import ru.art2000.extensions.activities.isLtr
 import ru.art2000.extensions.arch.launchRepeatOnStarted
 import ru.art2000.extensions.collections.LiveList.LiveListObserver
 import ru.art2000.extensions.fragments.*
@@ -39,6 +38,7 @@ import ru.art2000.calculator.currency.databinding.ActivityCurrenciesEditorBindin
 import ru.art2000.calculator.currency.model.CurrencyItem
 import ru.art2000.extensions.kt.launchAndCollect
 import ru.art2000.extensions.kt.writeAndUpdateUi
+import ru.art2000.extensions.layout.isLtr
 import ru.art2000.extensions.views.MyFragmentStateAdapter
 import javax.inject.Inject
 
