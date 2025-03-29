@@ -1,3 +1,9 @@
+v1.5.12 (2025-03-29)
+ - App will offer to upgrade to 2.x branch on Android 5+ (API21+). Starting with 1.5.12 you won't be able to use 1.x versions on those Android versions
+ - Change dark theme background color from somewhat green to dark gray
+ - Fix bottom navigation was not black in black theme
+ - Updated dependencies
+
 v1.5.11 (2025-03-28)
  - Restore support for Android 4.1-4.4 (API 16-20). 1.x branch will support these versions, but may not receive some further updates from 2.x branch
  - Updated dependencies
