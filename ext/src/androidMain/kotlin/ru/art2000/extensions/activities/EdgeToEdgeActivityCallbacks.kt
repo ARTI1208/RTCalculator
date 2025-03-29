@@ -9,6 +9,7 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
@@ -19,6 +20,8 @@ class EdgeToEdgeActivityCallbacks : ActivityCallbacksAdapter {
 
     @SuppressLint("UseKtx")
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
+
         if (activity is ComponentActivity) {
 
             // https://stackoverflow.com/questions/79319740/edge-to-edge-doesnt-work-when-activity-recreated-or-appcompatdelegate-setdefaul
@@ -47,6 +50,7 @@ class EdgeToEdgeActivityCallbacks : ActivityCallbacksAdapter {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun Activity.getNavBarColor() =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             Color.TRANSPARENT

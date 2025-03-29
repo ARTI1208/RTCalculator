@@ -1,63 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.RT.AppTheme.Light" parent="Base.RT.v21.AppTheme.Light" />
-
-    <style name="Base.RT.v21.AppTheme.Light" parent="Base.RT.v16.AppTheme.Light">
-        <item name="changelogBackground">@drawable/changelog_background</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
-        <item name="android:statusBarColor">@color/LightTheme_lollipopStatusBackgroundTransparent</item>
-        <item name="android:navigationBarColor">@color/LightTheme_lollipopStatusBackground</item>
+    <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
+        <item name="android:textColor">?colorSecondary</item>
+        <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Dark" parent="Base.RT.v21.AppTheme.Dark" />
+    <style name="RT.Widget.ButtonBar.TextButton.Neutral" parent="Widget.Material3.Button.TextButton.Dialog.Flush">
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
+        <item name="android:textColor">?colorSecondary</item>
+        <item name="rippleColor">?colorSecondaryVariant</item>
+    </style>
 
-    <style name="Base.RT.v21.AppTheme.Dark" parent="Base.RT.v16.AppTheme.Dark">
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="RT.V21.Widget.ScrollView.TopIndicator" />
+
+    <style name="RT.V21.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
+
+    <style name="RT.Widget.Snackbar" parent="Widget.Material3.Snackbar">
+        <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="backgroundTint">?colorSurfaceVariant</item>
+    </style>
+
+    <style name="RT.Widget.Snackbar.TextButton" parent="Widget.Material3.Button.TextButton.Snackbar">
+        <item name="android:textColor">?colorSecondary</item>
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.0</item>
+        <item name="rippleColor">?colorSecondaryVariant</item>
+    </style>
+
+    <style name="RT.Widget.Toolbar" parent="Widget.Material3.Toolbar.Surface">
+    </style>
+
+    <style name="Widget.RT.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.RT.BottomSheet</item>
+        <item name="android:elevation" tools:ignore="NewApi,PrivateResource">@dimen/m3_sys_elevation_level0</item>
+    </style>
+
+    <style name="RT.Design.BottomSheetDialog" parent="RT.v21.Design.BottomSheetDialog" />
+
+    <style name="RT.Design.BottomSheetDialog.Dark" parent="RT.v21.Design.BottomSheetDialog">
         <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="changelogBackground">@drawable/changelog_background</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog.Dark</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 
-    <style name="Base.RT.AppTheme.Black" parent="Base.RT.v21.AppTheme.Black" />
-
-    <style name="Base.RT.v21.AppTheme.Black" parent="Base.RT.v16.AppTheme.Black">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="changelogBackground">@drawable/changelog_background</item>
-        <item name="authorAvatarBackground">@drawable/author_avatar_background</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog.Black</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
+    <style name="RT.Design.BottomSheetDialog.Black" parent="RT.Design.BottomSheetDialog.Dark">
     </style>
 
-    <style name="RT.AppTheme.Battery" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.BatteryBlack" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.System" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.SystemBlack" parent="RT.AppTheme.Light" />
-
-    <style name="RT.AppTheme.Launch" parent="Theme.AppCompat.Light">
-        <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">#00000000</item>
-        <item name="android:navigationBarColor">#00000000</item>
-    </style>
-
-    <style name="Base.RT.v21.Design.BottomSheetDialog" parent="Base.RT.Design.BottomSheetDialog">
+    <style name="RT.v21.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
     </style>
 
-    <style name="RT.Design.BottomSheetDialog" parent="Base.RT.v21.Design.BottomSheetDialog" />
-
-    <style name="RT.Design.BottomSheetDialog.Dark" parent="Base.RT.v21.Design.BottomSheetDialog">
-        <item name="android:navigationBarColor">?colorSurface</item>
+    <style name="ShapeAppearanceOverlay.RT.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/bottom_sheet_corner_radius</item>
+        <item name="cornerSizeTopRight">@dimen/bottom_sheet_corner_radius</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
-    <style name="RT.Design.BottomSheetDialog.Black" parent="Base.RT.v21.Design.BottomSheetDialog">
-        <item name="android:navigationBarColor">?colorSurface</item>
+    <style name="Widget.RT.BottomNavigationView" parent="Widget.Material3.BottomNavigationView" />
+
+    <style name="Widget.RT.BottomNavigationView.Dark" parent="Widget.Material3.BottomNavigationView" />
+
+    <style name="Widget.RT.BottomNavigationView.Black" parent="Widget.Material3.BottomNavigationView">
+        <!-- ensure bottom navigation background won't be changed because of elevation -->
+        <item name="elevation">0dp</item>
     </style>
 
 </resources>

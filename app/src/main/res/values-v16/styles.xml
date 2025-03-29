@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="RT.Widget.ButtonBar.TextButton" parent="Widget.Material3.Button.TextButton.Dialog">
@@ -12,9 +13,9 @@
         <item name="rippleColor">?colorSecondaryVariant</item>
     </style>
 
-    <style name="RT.Widget.ScrollView.TopIndicator" parent="RT.V21.Widget.ScrollView.TopIndicator" />
+    <style name="RT.Widget.ScrollView.TopIndicator" parent="RT.Base.Widget.ScrollView.TopIndicator" />
 
-    <style name="RT.V21.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
+    <style name="RT.Base.Widget.ScrollView.TopIndicator" parent="@android:style/Widget.ScrollView" />
 
     <style name="RT.Widget.Snackbar" parent="Widget.Material3.Snackbar">
         <item name="actionTextColorAlpha">1.0</item>
@@ -46,7 +47,7 @@
     <style name="RT.Design.BottomSheetDialog" parent="RT.v21.Design.BottomSheetDialog" />
 
     <style name="RT.Design.BottomSheetDialog.Dark" parent="RT.v21.Design.BottomSheetDialog">
-        <item name="android:navigationBarColor">?colorSurface</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">?colorSurface</item>
     </style>
 
     <style name="RT.Design.BottomSheetDialog.Black" parent="RT.Design.BottomSheetDialog.Dark">
@@ -54,7 +55,7 @@
 
     <style name="RT.v21.Design.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor" tools:ignore="NewApi">@android:color/transparent</item>
         <item name="bottomSheetStyle">@style/Widget.RT.BottomSheet</item>
     </style>
 
