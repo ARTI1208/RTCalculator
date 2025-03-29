@@ -1,6 +1,5 @@
 package ru.art2000.calculator.common.view
 
-import android.os.Bundle
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -53,9 +52,4 @@ abstract class AppActivity : AutoThemeActivity(), IEdgeToEdgeActivity {
     override fun getDayNightTheme(black: Boolean) = holder.autoThemeData.getDayNightTheme(black)
 
     override fun getThemeResId(theme: AppTheme) = holder.autoThemeData.getThemeRes(theme)
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        applyEdgeToEdgeIfAvailable()
-    }
 }
