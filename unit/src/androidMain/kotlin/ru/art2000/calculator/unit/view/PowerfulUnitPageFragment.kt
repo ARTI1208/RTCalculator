@@ -1,22 +1,22 @@
 package ru.art2000.calculator.unit.view
 
-import android.view.LayoutInflater
+import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
+import ru.art2000.calculator.unit.R
 import ru.art2000.calculator.unit.databinding.UnitFragBinding
 import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.addOrientationItemDecoration
 import ru.art2000.extensions.views.isLandscape
 
 @AndroidEntryPoint
-internal class PowerfulUnitPageFragment : BaseUnitPageFragment<UnitFragBinding>() {
+internal class PowerfulUnitPageFragment : BaseUnitPageFragment(R.layout.unit_frag) {
 
-    override fun inflate(inflater: LayoutInflater, container: ViewGroup?): UnitFragBinding {
-        return UnitFragBinding.inflate(inflater, container, false)
-    }
+    private val binding by viewBinding(UnitFragBinding::bind)
 
-    override fun setup() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.unitRv.apply {
             layoutManager = OrientationManger(requireContext())

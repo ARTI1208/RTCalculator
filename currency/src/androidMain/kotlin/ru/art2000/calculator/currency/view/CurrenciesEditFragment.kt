@@ -16,8 +16,7 @@ import androidx.core.view.updateMargins
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.currency.R
 import ru.art2000.calculator.currency.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.currency.databinding.ItemEditCurrenciesListBinding
@@ -36,16 +35,15 @@ import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.extensions.layout.isLtr
 import ru.art2000.extensions.views.*
 
-internal class CurrenciesEditFragment : CommonReplaceableFragment(), IEdgeToEdgeFragment {
+internal class CurrenciesEditFragment :
+    CommonReplaceableFragment(R.layout.modify_currencies_layout), IEdgeToEdgeFragment {
 
     private var itemTouchHelper: ItemTouchHelper? = null
-    private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(ModifyCurrenciesLayoutBinding::bind)
     private val model: CurrenciesEditModel by activityViewModels<CurrenciesSettingsModel>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.modifyCurrenciesList.apply {
             emptyViewGenerator = { ctx, _, _ ->
@@ -72,8 +70,6 @@ internal class CurrenciesEditFragment : CommonReplaceableFragment(), IEdgeToEdge
                 it.attachToRecyclerView(this)
             }
         }
-
-        return binding.root
     }
 
     override val bottomViews: List<View>

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.core.os.bundleOf
 import androidx.viewbinding.ViewBinding
 import ru.art2000.calculator.unit.model.UnitCategory
@@ -18,8 +19,9 @@ import ru.art2000.extensions.arch.assistedViewModel
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import javax.inject.Inject
 
-internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceableFragment(),
-    IEdgeToEdgeFragment {
+internal abstract class BaseUnitPageFragment(
+    @LayoutRes contentLayoutId: Int = 0,
+) : CommonReplaceableFragment(contentLayoutId), IEdgeToEdgeFragment {
 
     companion object {
 
@@ -28,7 +30,7 @@ internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceab
         private const val CATEGORY_KEY = "category"
 
         @JvmStatic
-        fun newInstance(category: UnitCategory, viewType: ViewType): BaseUnitPageFragment<*> {
+        fun newInstance(category: UnitCategory, viewType: ViewType): BaseUnitPageFragment {
             return when (viewType) {
                 ViewType.SIMPLE -> SimpleUnitPageFragment()
                 ViewType.POWERFUL -> PowerfulUnitPageFragment()
@@ -36,7 +38,7 @@ internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceab
             }.passCategoryToFragment(category)
         }
 
-        private fun BaseUnitPageFragment<*>.passCategoryToFragment(category: UnitCategory): BaseUnitPageFragment<*> {
+        private fun BaseUnitPageFragment.passCategoryToFragment(category: UnitCategory): BaseUnitPageFragment {
             arguments = bundleOf(CATEGORY_KEY to category)
             return this
         }
@@ -46,38 +48,17 @@ internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceab
         requireArguments().getEnum<UnitCategory>(CATEGORY_KEY)!!
     }
 
-    protected val binding: VB
-        get() = mBinding!!
-
-    private var mBinding: VB? = null
-
     @Inject
     lateinit var viewModelFactory: UnitConverterModel.Factory
 
     protected val model by assistedViewModel { viewModelFactory.create(category) }
 
-    abstract fun inflate(inflater: LayoutInflater, container: ViewGroup?): VB
-
-    protected open fun setup() {}
-
     @CallSuper
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        // TODO is this supposed to be here?
         model.updateLocaleSpecific()
-
-        return (mBinding ?: inflate(inflater, container).also {
-            mBinding = it
-            setup()
-        }).root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mBinding = null
     }
 
     protected val converterFunctions by lazy { model.converterFunctions }

@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Space
 import androidx.activity.viewModels
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.art2000.calculator.common.view.AppActivity
 import ru.art2000.calculator.settings.R
 import ru.art2000.calculator.settings.databinding.ActivityAppInfoBinding
@@ -16,11 +14,12 @@ import ru.art2000.calculator.settings.model.AuthorLink
 import ru.art2000.calculator.settings.vm.InfoViewModel
 import ru.art2000.extensions.views.isLandscape
 import androidx.core.net.toUri
+import dev.androidbroadcast.vbpd.viewBinding
 
-internal class InfoActivity : AppActivity() {
+internal class InfoActivity : AppActivity(R.layout.activity_app_info) {
 
     private val model by viewModels<InfoViewModel>()
-    private val binding by viewBinding<ActivityAppInfoBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(ActivityAppInfoBinding::bind)
 
     override val topViews: List<View>
         get() = listOf(binding.appBarLayout)
@@ -40,7 +39,6 @@ internal class InfoActivity : AppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 

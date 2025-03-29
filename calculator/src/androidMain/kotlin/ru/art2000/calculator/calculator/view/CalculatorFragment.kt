@@ -13,13 +13,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sothree.slidinguppanel.PanelSlideListener
 import com.sothree.slidinguppanel.PanelState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.datetime.toJavaLocalDate
 import ru.art2000.calculator.calculator.R
 import ru.art2000.calculator.calculator.databinding.CalculatorLayoutBinding
@@ -39,16 +38,13 @@ import java.util.*
 import ru.art2000.calculator.common.R as CommonR
 
 @AndroidEntryPoint
-internal class CalculatorFragment : MainScreenFragment() {
+internal class CalculatorFragment : MainScreenFragment(R.layout.calculator_layout) {
 
     private val model by viewModels<CalculatorModel>()
-    private val binding by viewBinding<CalculatorLayoutBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(CalculatorLayoutBinding::bind)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         model.updateLocaleSpecific()
 
@@ -112,8 +108,6 @@ internal class CalculatorFragment : MainScreenFragment() {
             }
         }
         setupHistoryPart()
-
-        return binding.root
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

@@ -15,14 +15,13 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.currency.vm.CurrenciesSettingsModel
 import ru.art2000.extensions.activities.consumeInsetsForMargin
 import ru.art2000.extensions.arch.launchRepeatOnStarted
@@ -42,7 +41,7 @@ import ru.art2000.extensions.views.MyFragmentStateAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class CurrenciesSettingsActivity : AppActivity() {
+internal class CurrenciesSettingsActivity : AppActivity(R.layout.activity_currencies_editor) {
 
     private var deselect: MenuItem? = null
     private var select: MenuItem? = null
@@ -58,7 +57,7 @@ internal class CurrenciesSettingsActivity : AppActivity() {
 
     private var deleteTooltip: Snackbar? = null
 
-    private val binding by viewBinding<ActivityCurrenciesEditorBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(ActivityCurrenciesEditorBinding::bind)
     private val model: CurrenciesSettingsModel by viewModels()
 
     @Inject
@@ -66,8 +65,6 @@ internal class CurrenciesSettingsActivity : AppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

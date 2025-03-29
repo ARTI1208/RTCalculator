@@ -1,6 +1,7 @@
 package ru.art2000.calculator.common.view
 
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -14,7 +15,9 @@ import ru.art2000.extensions.preferences.ThemeSettingsHolder
 import ru.art2000.extensions.views.isDarkThemeApplied
 import ru.art2000.extensions.preferences.listen
 
-abstract class AppActivity : AutoThemeActivity(), IEdgeToEdgeActivity {
+abstract class AppActivity(
+    @LayoutRes contentLayoutId: Int = 0,
+) : AutoThemeActivity(contentLayoutId), IEdgeToEdgeActivity {
 
     private val holder by lazy {
         EntryPointAccessors.fromApplication<PreferenceHelperHolder>(this)

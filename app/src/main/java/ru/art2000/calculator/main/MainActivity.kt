@@ -3,10 +3,10 @@ package ru.art2000.calculator.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
+import ru.art2000.calculator.R
 import ru.art2000.calculator.common.model.MainPage
 import ru.art2000.calculator.common.preferences.MainTabData
 import ru.art2000.calculator.common.view.AppActivity
@@ -19,16 +19,14 @@ import ru.art2000.extensions.views.setupWithViewPager2
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppActivity() {
-    private val binding by viewBinding<ActivityMainBinding>(CreateMethod.INFLATE)
+class MainActivity : AppActivity(R.layout.activity_main) {
+    private val binding by viewBinding(ActivityMainBinding::bind)
 
     @Inject
     lateinit var tabDatas: Map<MainPage, @JvmSuppressWildcards MainTabData<*>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(binding.root)
 
         val navigation = binding.navigation as NavigationBarView
 

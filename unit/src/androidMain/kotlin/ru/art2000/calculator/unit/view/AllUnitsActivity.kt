@@ -2,9 +2,8 @@ package ru.art2000.calculator.unit.view
 
 import android.os.Bundle
 import android.view.View
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.common.view.AppActivity
 import ru.art2000.calculator.unit.R
 import ru.art2000.calculator.unit.databinding.ActivityAllUnitsBinding
@@ -17,7 +16,7 @@ import ru.art2000.extensions.views.addOrientationItemDecoration
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class AllUnitsActivity : AppActivity() {
+internal class AllUnitsActivity : AppActivity(R.layout.activity_all_units) {
 
     @Inject
     lateinit var viewModelFactory: UnitConverterModel.Factory
@@ -27,12 +26,10 @@ internal class AllUnitsActivity : AppActivity() {
     }
 
     private val model by assistedViewModel { viewModelFactory.create(category) }
-    private val binding by viewBinding<ActivityAllUnitsBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(ActivityAllUnitsBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(binding.root)
 
         val pos = intent.getIntExtra("highlightPosition", 0)
 

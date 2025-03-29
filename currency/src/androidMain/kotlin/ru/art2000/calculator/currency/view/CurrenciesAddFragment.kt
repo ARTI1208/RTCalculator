@@ -1,6 +1,5 @@
 package ru.art2000.calculator.currency.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +9,7 @@ import androidx.annotation.StringRes
 import androidx.core.util.Consumer
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import ru.art2000.calculator.currency.R
 import ru.art2000.calculator.currency.databinding.ItemAddCurrenciesListBinding
 import ru.art2000.calculator.currency.databinding.ModifyCurrenciesLayoutBinding
@@ -26,16 +24,14 @@ import ru.art2000.extensions.collections.calculateDiff
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
 import ru.art2000.extensions.views.addOrientationItemDecoration
 
-internal class CurrenciesAddFragment : CommonReplaceableFragment(), IEdgeToEdgeFragment {
+internal class CurrenciesAddFragment :
+    CommonReplaceableFragment(R.layout.modify_currencies_layout), IEdgeToEdgeFragment {
 
-    private val binding by viewBinding<ModifyCurrenciesLayoutBinding>(CreateMethod.INFLATE)
+    private val binding by viewBinding(ModifyCurrenciesLayoutBinding::bind)
     private val model: CurrenciesAddModel by activityViewModels<CurrenciesSettingsModel>()
 
-    @SuppressLint("InflateParams")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val addCurrenciesAdapter = AddCurrenciesAdapter()
         binding.modifyCurrenciesList.apply {
@@ -53,8 +49,6 @@ internal class CurrenciesAddFragment : CommonReplaceableFragment(), IEdgeToEdgeF
 
             adapter = addCurrenciesAdapter
         }
-
-        return binding.root
     }
 
     override val bottomViews: List<View>

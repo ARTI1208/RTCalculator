@@ -1,12 +1,15 @@
 package ru.art2000.extensions.activities
 
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import ru.art2000.extensions.preferences.ThemeSettingsHolder
 import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
-abstract class DayNightActivity : AppCompatActivity() {
+abstract class DayNightActivity(
+    @LayoutRes contentLayoutId: Int = 0,
+) : AppCompatActivity(contentLayoutId) {
 
     override fun onResume() {
         super.onResume()
