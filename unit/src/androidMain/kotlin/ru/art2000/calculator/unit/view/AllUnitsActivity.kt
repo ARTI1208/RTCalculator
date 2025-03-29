@@ -12,6 +12,7 @@ import ru.art2000.calculator.unit.model.UnitCategory
 import ru.art2000.calculator.unit.vm.UnitConverterModel
 import ru.art2000.extensions.activities.getEnumExtra
 import ru.art2000.extensions.arch.assistedViewModel
+import ru.art2000.extensions.views.OrientationManger
 import ru.art2000.extensions.views.addOrientationItemDecoration
 import javax.inject.Inject
 
@@ -47,7 +48,7 @@ internal class AllUnitsActivity : AppActivity() {
         )
 
         binding.allUnitsList.apply {
-            layoutManager = ru.art2000.extensions.views.OrientationManger(this@AllUnitsActivity)
+            layoutManager = OrientationManger(this@AllUnitsActivity)
             addOrientationItemDecoration()
             adapter = unitListAdapter
         }
