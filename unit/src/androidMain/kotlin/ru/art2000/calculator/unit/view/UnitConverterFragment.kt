@@ -96,7 +96,7 @@ internal class UnitConverterFragment : MainScreenFragment() {
         }
 
         override fun getItemCount(): Int {
-            return UnitCategory.count
+            return UnitCategory.entries.size
         }
 
         override fun getItemId(position: Int): Long {
