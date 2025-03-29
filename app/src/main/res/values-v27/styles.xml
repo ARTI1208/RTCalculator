@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="RT.AppTheme.Light" parent="RT.v27.AppTheme.Light" />
-    <style name="RT.AppTheme.Dark" parent="RT.v27.AppTheme.Dark" />
-    <style name="RT.AppTheme.Black" parent="RT.v27.AppTheme.Black" />
-
-    <style name="RT.v27.AppTheme.Light" parent="RT.v23.AppTheme.Light">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:windowLightNavigationBar">true</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
-    </style>
-
-    <style name="RT.v27.AppTheme.Dark" parent="RT.v23.AppTheme.Dark">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:windowLightNavigationBar">false</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
-    </style>
-
-    <style name="RT.v27.AppTheme.Black" parent="RT.v23.AppTheme.Black">
-        <item name="android:navigationBarColor">?colorSurface</item>
-        <item name="android:windowLightNavigationBar">false</item>
-        <item name="bottomSheetDialogTheme">@style/RT.Design.BottomSheetDialog</item>
-    </style>
-
     <style name="RT.Design.BottomSheetDialog" parent="RT.V27.Design.BottomSheetDialog" />
 
     <style name="RT.V27.Design.BottomSheetDialog" parent="RT.v21.Design.BottomSheetDialog">
