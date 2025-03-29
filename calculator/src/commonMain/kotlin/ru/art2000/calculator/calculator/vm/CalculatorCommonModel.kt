@@ -343,15 +343,15 @@ internal class CalculatorCommonModel(
     }
 
     private fun ensureErrorDisplayResult(result: String) = when (result) {
-        Calculations.calculationDivideByZero -> getDivideByZeroResult()
-        Calculations.calculationError -> getErrorString()
+        Calculations.CALCULATION_DIVIDE_BY_ZERO -> getDivideByZeroResult()
+        Calculations.CALCULATION_ERROR -> getErrorString()
         else -> result
     }
 
     fun calculateAndFormatForDisplay(expression: String, angleType: AngleType): Pair<String, Boolean> {
         val result = calculations.calculateForDisplay(expression, angleType)
 
-        val err = result == Calculations.calculationError
+        val err = result == Calculations.CALCULATION_ERROR
 
         return ensureErrorDisplayResult(result) to err
     }

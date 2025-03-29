@@ -3,14 +3,14 @@ package ru.art2000.calculator.calculator.view
 import android.graphics.Canvas
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.graphics.drawable.toDrawable
 
 internal class HistoryItemDecoration : ItemDecoration() {
 
     // we want to cache this and not allocate anything repeatedly in the onDraw method
-    private val background by lazy { ColorDrawable(Color.RED) }
+    private val background by lazy { Color.RED.toDrawable() }
 
     override fun onDraw(
         c: Canvas,

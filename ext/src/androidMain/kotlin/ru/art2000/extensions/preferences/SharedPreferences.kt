@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.art2000.extensions.preferences
 
 import android.content.Context

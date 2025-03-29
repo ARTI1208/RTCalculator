@@ -25,7 +25,7 @@ internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceab
 
         const val CONVERT_FROM_KEY = "from"
 
-        private const val categoryKey = "category"
+        private const val CATEGORY_KEY = "category"
 
         @JvmStatic
         fun newInstance(category: UnitCategory, viewType: ViewType): BaseUnitPageFragment<*> {
@@ -37,13 +37,13 @@ internal abstract class BaseUnitPageFragment<VB : ViewBinding> : CommonReplaceab
         }
 
         private fun BaseUnitPageFragment<*>.passCategoryToFragment(category: UnitCategory): BaseUnitPageFragment<*> {
-            arguments = bundleOf(categoryKey to category)
+            arguments = bundleOf(CATEGORY_KEY to category)
             return this
         }
     }
 
     protected val category by lazy {
-        requireArguments().getEnum<UnitCategory>(categoryKey)!!
+        requireArguments().getEnum<UnitCategory>(CATEGORY_KEY)!!
     }
 
     protected val binding: VB

@@ -1,5 +1,6 @@
 package ru.art2000.calculator.common.view
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.View
@@ -15,6 +16,7 @@ import ru.art2000.calculator.common.R
 import ru.art2000.extensions.getColorFromAttribute
 import com.google.android.material.R as MaterialR
 
+@SuppressLint("RestrictedApi") // TODO try rework via style overlay
 fun View.createThemedSnackbar(message: CharSequence, duration: Int): Snackbar {
 
     //Initialization

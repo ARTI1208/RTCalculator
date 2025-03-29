@@ -1,7 +1,6 @@
 package ru.art2000.calculator.calculator.computation
 
 import ru.art2000.calculator.calculator.model.AngleType
-import ru.art2000.calculator.calculator.computation.numbers.DoubleMath
 import ru.art2000.calculator.calculator.computation.numbers.IntField
 import ru.art2000.calculator.calculator.computation.numbers.NumberField
 import kotlin.math.PI

@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.util.*
 
-val fourDigitYearShortFormatter by lazy {
+val fourDigitYearShortFormatter: DateTimeFormatter by lazy {
     val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         Locale.getDefault(Locale.Category.FORMAT)
     else
@@ -27,4 +27,4 @@ val fourDigitYearShortFormatter by lazy {
     DateTimeFormatter.ofPattern(pattern)
 }
 
-fun LocalDate.toViewString() = format(fourDigitYearShortFormatter)
+fun LocalDate.toViewString(): String = format(fourDigitYearShortFormatter)

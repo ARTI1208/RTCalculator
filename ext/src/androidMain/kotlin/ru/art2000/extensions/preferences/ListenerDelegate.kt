@@ -58,10 +58,12 @@ actual class ListenerDelegate<V> actual constructor(
         lifecycleOwner.lifecycle.removeObserver(observer)
     }
 
+    @Suppress("unused")
     actual fun stopListening() {
         stopListening(ProcessLifecycleOwner.get())
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun stopListening(lifecycleOwner: LifecycleOwner, listener: AppPreferences.Listener<V>) {
         onUpdates[lifecycleOwner]?.remove(listener)
     }
@@ -77,6 +79,7 @@ fun <V, D: PreferenceDelegate<V>> D.listen(lifecycleOwner: LifecycleOwner, liste
     return this
 }
 
+@Suppress("unused")
 fun <V, D: PreferenceDelegate<V>> D.stopListening(lifecycleOwner: LifecycleOwner) {
     listenerDelegate.stopListening(lifecycleOwner)
 }

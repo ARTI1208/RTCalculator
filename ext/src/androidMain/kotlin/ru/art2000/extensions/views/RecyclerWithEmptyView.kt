@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class RecyclerWithEmptyView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
+    @SuppressLint("PrivateResource")
     defStyleAttr: Int = R.attr.recyclerViewStyle
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
