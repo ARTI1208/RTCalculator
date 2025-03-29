@@ -10,8 +10,7 @@
         android:name=".main.CalculatorApplication"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/RT.AppTheme.Light"
-        tools:targetApi="tiramisu"
-        tools:ignore="RtlEnabled">
+        tools:targetApi="34">
         <activity
             android:name=".main.MainActivity"
             android:theme="@style/RT.AppTheme.Launch"
