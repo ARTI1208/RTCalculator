@@ -9,10 +9,10 @@ plugins {
     id("convention.android")
 }
 
-val major = 1
-val minor = 5
-val patch = 10
-val code = 24
+val major = 2
+val minor = 0
+val patch = 0
+val code = 100 // 1.x - 1-99; 2.x - 100-199
 
 android {
     namespace = "ru.art2000.calculator"

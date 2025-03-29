@@ -1,3 +1,11 @@
+v2.0.0 (2025-03-29)
+ - New major version. 1.x branch will support Android 4.1-4.4 (API 16-20), but may not receive some further updates from 2.x branch
+ - Support for Android 15 & 16 (API35 & 36)
+ - Fixed paddings when changing theme on Android 15 (API35)
+ - Change dark theme background color from somewhat green to dark gray
+ - Fix bottom navigation was not black in black theme
+ - Updated dependencies
+
 v1.5.10 (2024-10-08)
  - Fix loading currencies data
 
