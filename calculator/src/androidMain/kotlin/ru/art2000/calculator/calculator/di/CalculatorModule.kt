@@ -85,7 +85,7 @@ internal abstract class CalculatorModule {
                     CalculationHistoryMigration1to2(),
                     CalculationHistoryMigration2to3(),
                     CalculationHistoryMigration3to4(),
-                ).fallbackToDestructiveMigrationOnDowngrade()
+                ).fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                 .build()
 
         private class CalculationHistoryMigration1to2 : Migration(1, 2) {
