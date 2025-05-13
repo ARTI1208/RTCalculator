@@ -1,23 +1,18 @@
 package ru.art2000.calculator.unit.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.core.os.bundleOf
-import androidx.viewbinding.ViewBinding
+import androidx.fragment.app.viewModels
 import ru.art2000.calculator.unit.model.UnitCategory
 import ru.art2000.calculator.unit.model.ViewType
 import ru.art2000.calculator.unit.vm.UnitConverterModel
 import ru.art2000.extensions.activities.IEdgeToEdgeFragment
-import ru.art2000.extensions.activities.getEnum
-import ru.art2000.extensions.arch.assistedViewModel
 import ru.art2000.extensions.fragments.CommonReplaceableFragment
-import javax.inject.Inject
 
 internal abstract class BaseUnitPageFragment(
     @LayoutRes contentLayoutId: Int = 0,
@@ -44,14 +39,7 @@ internal abstract class BaseUnitPageFragment(
         }
     }
 
-    protected val category by lazy {
-        requireArguments().getEnum<UnitCategory>(CATEGORY_KEY)!!
-    }
-
-    @Inject
-    lateinit var viewModelFactory: UnitConverterModel.Factory
-
-    protected val model by assistedViewModel { viewModelFactory.create(category) }
+    protected val model by viewModels<UnitConverterModel>()
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

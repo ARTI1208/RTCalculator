@@ -219,10 +219,7 @@ internal class SimpleUnitPageFragment : BaseUnitPageFragment(R.layout.unit_frag_
         binding.buttonExtra.setOnClickListener {
             val intent = Intent(requireContext(), AllUnitsActivity::class.java)
             intent.putExtra("highlightPosition", spinnerFrom.selectedItemPosition)
-            // UnitCategory is defines in common code,
-            // so linter doesn't recognise it as Serializable automatically.
-            // Cast to java enum to fix it (casting to Serializable directly produces warning)
-            intent.putExtra("category", category as Enum<*>)
+            intent.putExtra("category", model.category)
             requireContext().startActivity(intent)
         }
     }

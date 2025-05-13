@@ -7,9 +7,8 @@ import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import androidx.lifecycle.SavedStateHandle
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
 import ru.art2000.calculator.calculator.computation.localizeExpression
@@ -20,18 +19,17 @@ import ru.art2000.calculator.unit.model.UnitCategory
 import ru.art2000.calculator.unit.view.BaseUnitPageFragment.Companion.CONVERT_FROM_KEY
 import ru.art2000.extensions.arch.context
 import java.text.DecimalFormatSymbols
+import javax.inject.Inject
 import ru.art2000.calculator.common.R as CommonR
 
-internal class UnitConverterModel @AssistedInject constructor(
+@HiltViewModel
+internal class UnitConverterModel @Inject constructor(
     @ApplicationContext application: Context,
     functionsProvider: ConverterFunctionsProvider<Int>,
-    @Assisted category: UnitCategory,
+    savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application as Application), ExpressionInputViewModel {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(category: UnitCategory): UnitConverterModel
-    }
+    val category = savedStateHandle.get<UnitCategory>(CATEGORY_KEY)!!
 
     val converterFunctions = functionsProvider.getConverterFunctions(category)
 
@@ -104,5 +102,9 @@ internal class UnitConverterModel @AssistedInject constructor(
         }
 
         return true
+    }
+
+    companion object {
+        private const val CATEGORY_KEY = "category"
     }
 }
