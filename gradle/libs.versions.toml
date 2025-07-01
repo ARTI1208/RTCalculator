@@ -37,7 +37,7 @@ leakcanary = "2.14" # https://github.com/square/leakcanary/releases
 commonsMath = "3.6.1"
 slidingUpPanel = "4.7.1" # https://github.com/hannesa2/AndroidSlidingUpPanel/releases
 
-datetime = "0.6.2" # https://github.com/Kotlin/kotlinx-datetime/releases
+datetime = "0.7.0-0.6.x-compat" # https://github.com/Kotlin/kotlinx-datetime/releases
 coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines/releases
 multiplatformSettings = "1.3.0" # https://github.com/russhwolf/multiplatform-settings/releases
 
