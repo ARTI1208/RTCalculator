@@ -16,7 +16,7 @@ okhttp = "4.12.0" # https://square.github.io/okhttp/changelogs/changelog
 retrofit = "2.11.0" # https://github.com/square/retrofit/releases
 
 # AndroidX: https://developer.android.com/jetpack/androidx/versions
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 constraintlayout = "2.2.1"
 androidx-core = "1.16.0"
 fragment = "1.8.6"
