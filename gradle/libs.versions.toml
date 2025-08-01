@@ -5,7 +5,7 @@ targetSdk = "36"
 
 kotlin = "2.1.20" # https://github.com/jetbrains/kotlin/releases
 ksp = "2.1.20-2.0.1" # https://github.com/google/ksp/releases
-agp = "8.10.0" # https://developer.android.com/build/releases/gradle-plugin
+agp = "8.12.0" # https://developer.android.com/build/releases/gradle-plugin
 javapoet = "1.13.0" # https://github.com/square/javapoet/tags
 java = "17"
 
